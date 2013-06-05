@@ -42,6 +42,7 @@
         android:layout_below="@+id/button_settings"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
+        android:onClick="onClick"
         android:text="@string/button_about" />
 
 </RelativeLayout>
