@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	
+	<string name="about_label_author"><![CDATA[Author: <a href="mailto:artemyankovskiy@gmail.com?subject=PhotoTools">Artem Yankovskiy</a>]]></string>
+	<string name="about_label_license"><![CDATA[<b>Photo Tools</b> distributed on the GPL v3 license. You can get source code on the <a href="https://github.com/yankovskiy/PhotoTools">github.com</a>]]></string>    
+    <string name="about_label_version">Version 0.1</string>    
+    
+    <string name="app_name">Photo Tools</string>        
 
-    <string name="app_name">Photo Tools</string>
-    <string name="action_settings">Settings</string>
-    <string name="button_dofcalc">Depth of Field</string>
-    <string name="button_evpairs">EV Pairs</string>
-    <string name="button_settings">Settings</string>
-    <string name="button_about">About</string>
-    <string name="title_activity_about">About</string>
-    <string name="version_string">Version 0.1</string>
-    <string name="author_string">Author: <a href="http://neverdark.ru/">Artem Yankovskiy</a></string>
-    <string name="license_string"><b>Photo Tools</b> distributed on the GPL v3 license. You can get source code on the <a href="https://github.com/yankovskiy/PhotoTools">github.com</a></string>
+    <string name="dof_button_calculate">Calculate</string>
+    <string name="dof_label_aperture">Aperture:</string>
+    <string name="dof_label_camera">Camera:</string>
+    <string name="dof_label_focalLength">Focal length:</string>    
+    
+    <string name="evpairs_button_calculate">Calculate</string>
+    <string name="evpairs_label_apperture">Aperture:</string>
+    <string name="evpairs_label_currentValues">Current values(all fields must be completed):</string>
+    <string name="evpairs_label_iso">ISO:</string>    
+    <string name="evpairs_label_newValues">New values(one field myst be empty):</string>
+	<string name="evpairs_label_shutterSpeed">Shutter speed:</string>
+        
+    <string name="main_button_about">About</string>
+    <string name="main_button_dofcalc">Depth of Field</string>
+    <string name="main_button_evpairs">EV Pairs</string>
+    <string name="main_button_settings">Settings</string>
+	
+	<string name="title_activity_about">About</string>
     <string name="title_activity_dof">Depth of Field</string>
     <string name="title_activity_evpairs">EV Pairs</string>
     <string name="title_activity_settings">Settings</string>
-    <string name="aperture_string">Aperture:</string>
-    <string name="current_values">Current values(all fields must be completed):</string>
-    <string name="iso">ISO:</string>
-    <string name="shutter_speed">Shutter speed:</string>
-    <string name="new_values">New values(one field myst be empty):</string>
-    <string name="calculate_button">Calculate</string>
+            
 </resources>
