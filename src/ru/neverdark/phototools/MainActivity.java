@@ -13,6 +13,11 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 	}
 
+	/*
+	 * Function called when a view has been clicked.
+	 * 
+	 * @param v - The view that was clicked.
+	 */
 	public void onClick(View v) {
 		Intent intent;
 		switch (v.getId()) {

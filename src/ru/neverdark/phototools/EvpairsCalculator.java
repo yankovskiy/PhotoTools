@@ -1,5 +1,7 @@
 package ru.neverdark.phototools;
 
+import java.util.Arrays;
+
 public class EvpairsCalculator {
 
 	private int mCurrentAperturePosition;
@@ -16,7 +18,7 @@ public class EvpairsCalculator {
 			"1600", "3200", "6400", "12800" };
 	
 	public static final String SHUTTER_SPEED_LIST[]  = { "", "512 min",
-		"256 min", "64 min", "32 min", "16 min", "8 min", "4 min", "2 min",
+		"256 min", "128 min", "64 min", "32 min", "16 min", "8 min", "4 min", "2 min",
 		"1 min", "30 sec", "15 sec", "8 sec", "4 sec", "2 sec", "1 sec",
 		"1/2 sec", "1/4 sec", "1/8 sec", "1/15 sec", "1/30 sec",
 		"1/60 sec", "1/125 sec", "1/250 sec", "1/500 sec", "1/1000 sec",
@@ -126,6 +128,11 @@ public class EvpairsCalculator {
 		mIndex = INVALID_INDEX;
 	}
 	
+	/*
+	 * Function calculates the required value based on indices obtained in the class constructor.
+	 * 
+	 * @return index for the empty spinner or INVALID_INDEX on error
+	 */
 	public int calculate() {				
 		if (mNewAperturePosition == 0) {
 			calculateAperture();
@@ -134,19 +141,111 @@ public class EvpairsCalculator {
 		} else {
 			calculateShutterSpeed();
 		}
-		
+				
 		return mIndex;
 	}
 	
+	/*
+	 * Function calculates the aperture
+	 */
 	private void calculateAperture() {
-		
+		int isoNewIndex = getIsoNewIndex();
+		String shutter = SHUTTER_SPEED_LIST[mNewShutterSpeedPosition];
+
+		if (isoNewIndex != INVALID_INDEX) {
+			for (int i = 0; i < SHUTTER_SPEED_LIST.length - 1; i++) {
+				if (shutter.equals(SHUTTERS_TABLE[isoNewIndex][i])) {
+					mIndex = i + 1;
+					break;
+				}
+			}
+		}
 	}
 	
+	/*
+	 * function calculates the shutter speed
+	 */
 	private void calculateShutterSpeed() {
+		int apertureNewColumnNumber = mNewAperturePosition - 1;
+		int isoNewIndex = getIsoNewIndex();				
 		
+		if (isoNewIndex != INVALID_INDEX) {
+			String shutter = SHUTTERS_TABLE[isoNewIndex][apertureNewColumnNumber];					
+			mIndex = Arrays.asList(SHUTTER_SPEED_LIST).indexOf(shutter);
+		}
+	}
+
+	/*
+	 * function calculates the ISO
+	 */
+	private void calculateIso() {
+		int i;
+		int ev = getEv();
+		int isoLine = INVALID_INDEX;
+		int apertureNewColumnIndex = mNewAperturePosition - 1;
+		String shutter = SHUTTER_SPEED_LIST[mNewShutterSpeedPosition];
+
+		if (ev != INVALID_INDEX) {
+			for (i = 0; i < SHUTTERS_TABLE.length; i++) {
+				if (shutter.equals(SHUTTERS_TABLE[i][apertureNewColumnIndex])) {
+					isoLine = i;
+					break;
+				}
+			}
+
+			if (isoLine != INVALID_INDEX) {
+				for (i = 0; i < ISO_LIST.length - 1; i++) {
+					if (EV_TABLE[isoLine][i] == ev) {
+						mIndex = i + 1;
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	/*
+	 * Function gets the number of exposure pairs that matches the specified parameters
+	 * 
+	 * @return number pf exposure pair or INVLAID_INDEX if EV not found
+	 */
+	private int getEv() {
+		int ev = INVALID_INDEX;
+		int isoCurrentColumnNumber = mCurrentIsoPosition - 1;
+		int apertureCurrentColumnNumber = mCurrentAperturePosition - 1;
+		String currentShutterSpeed = SHUTTER_SPEED_LIST[mCurrentShutterSpeedPosition];
+
+		for (int i = 0; i < SHUTTERS_TABLE.length; i++) {
+			if (currentShutterSpeed
+					.equals(SHUTTERS_TABLE[i][apertureCurrentColumnNumber])) {
+				ev = EV_TABLE[i][isoCurrentColumnNumber];
+				break;
+			}
+		}
+
+		return ev;
 	}
 	
-	private void calculateIso() {
-		
+	/*
+	 * Function determines the index of the ISO
+	 * 
+	 * @return ISO index or INVALID_INDEX if ISO not found
+	 */
+	private int getIsoNewIndex() {
+		int ev = getEv();
+		int index = INVALID_INDEX;
+		int isoNewColumnNumber = mNewIsoPostion - 1;
+
+		if (ev != INVALID_INDEX) {
+			for (int i = 0; i < SHUTTERS_TABLE.length; i++) {
+				if (ev == EV_TABLE[i][isoNewColumnNumber]) {
+					index = i;
+					break;
+				}
+			}
+		}
+
+		return index;
 	}
+		
 }

@@ -80,6 +80,11 @@ public class EvpairsActivity extends Activity {
 				
 	}
 	
+	/*
+	 * Function called when a view has been clicked.
+	 * 
+	 * @param v - The view that was clicked.
+	 */
 	public void onClick(View v) {
 		getSelectedItemsPositions();
 		if (isRequiredFieldsFilled() == true) {
@@ -91,7 +96,7 @@ public class EvpairsActivity extends Activity {
 				int index = evCalc.calculate();
 
 				if (index != EvpairsCalculator.INVALID_INDEX) {
-					fillValueByIndex(index);
+					fillEmptySpinner(index);
 				} else {
 					Toast.makeText(
 							this,
@@ -102,7 +107,12 @@ public class EvpairsActivity extends Activity {
 		}
 	}
 
-	private void fillValueByIndex(int index) {
+	/*
+	 * Function determine empty spinner and sets selelection for him.
+	 * 
+	 * @param index - item index getting from calculations
+	 */
+	private void fillEmptySpinner(int index) {
 		Spinner spinner;
 
 		if (mNewAperturePosition == 0) {
