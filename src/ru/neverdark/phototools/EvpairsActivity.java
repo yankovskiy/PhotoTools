@@ -1,5 +1,6 @@
 package ru.neverdark.phototools;
 
+import ru.neverdark.phototools.evcalculator.EvpairsCalculator;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;

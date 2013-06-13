@@ -1,4 +1,4 @@
-package ru.neverdark.phototools;
+package ru.neverdark.phototools.evcalculator;
 
 import java.util.Arrays;
 

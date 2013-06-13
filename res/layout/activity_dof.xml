@@ -11,6 +11,17 @@
     tools:context=".DofActivity" >
 
     <TextView
+        android:id="@+id/dof_label_vendor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dof_label_vendor" />
+
+    <Spinner
+        android:id="@+id/dof_spinner_vendors"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
         android:id="@+id/dof_label_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,6 +63,7 @@
         android:id="@+id/dof_button_calculate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="onClick"
         android:text="@string/dof_button_calculate" />
 
 </LinearLayout>

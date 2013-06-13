@@ -10,7 +10,8 @@
     <string name="dof_button_calculate">Calculate</string>
     <string name="dof_label_aperture">Aperture:</string>
     <string name="dof_label_camera">Camera:</string>
-    <string name="dof_label_focalLength">Focal length:</string>    
+    <string name="dof_label_focalLength">Focal length:</string>  
+    <string name="dof_label_vendor">Vendor:</string>  
     
     <string name="evpairs_button_calculate">Calculate</string>
     <string name="evpairs_error_calculationProblem">Calculation problem</string>
