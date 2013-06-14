@@ -128,9 +128,8 @@ public class EvpairsCalculator {
 		mIndex = INVALID_INDEX;
 	}
 	
-	/*
+	/**
 	 * Function calculates the required value based on indices obtained in the class constructor.
-	 * 
 	 * @return index for the empty spinner or INVALID_INDEX on error
 	 */
 	public int calculate() {				
@@ -145,7 +144,7 @@ public class EvpairsCalculator {
 		return mIndex;
 	}
 	
-	/*
+	/**
 	 * Function calculates the aperture
 	 */
 	private void calculateAperture() {
@@ -162,8 +161,8 @@ public class EvpairsCalculator {
 		}
 	}
 	
-	/*
-	 * function calculates the shutter speed
+	/**
+	 * Function calculates the shutter speed
 	 */
 	private void calculateShutterSpeed() {
 		int apertureNewColumnNumber = mNewAperturePosition - 1;
@@ -175,8 +174,8 @@ public class EvpairsCalculator {
 		}
 	}
 
-	/*
-	 * function calculates the ISO
+	/**
+	 * Function calculates the ISO
 	 */
 	private void calculateIso() {
 		int i;
@@ -204,7 +203,7 @@ public class EvpairsCalculator {
 		}
 	}
 
-	/*
+	/**
 	 * Function gets the number of exposure pairs that matches the specified parameters
 	 * 
 	 * @return number pf exposure pair or INVLAID_INDEX if EV not found
@@ -226,7 +225,7 @@ public class EvpairsCalculator {
 		return ev;
 	}
 	
-	/*
+	/**
 	 * Function determines the index of the ISO
 	 * 
 	 * @return ISO index or INVALID_INDEX if ISO not found

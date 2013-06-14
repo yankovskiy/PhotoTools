@@ -66,4 +66,10 @@
         android:onClick="onClick"
         android:text="@string/dof_button_calculate" />
 
+    <TextView
+        android:id="@+id/dof_label_hyperFocalResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dof_label_hyperFocal" />
+
 </LinearLayout>

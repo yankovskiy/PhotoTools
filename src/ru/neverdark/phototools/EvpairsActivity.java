@@ -9,8 +9,7 @@ import android.widget.Toast;
 import android.app.Activity;
 
 
-public class EvpairsActivity extends Activity {
-
+public class EvpairsActivity extends Activity {	
 	private Spinner mSpinner_currentAperture;
 	private Spinner mSpinner_currentIso;
 	private Spinner mSpinner_currentShutterSpeed;
@@ -24,9 +23,128 @@ public class EvpairsActivity extends Activity {
 	private int mNewAperturePosition;
 	private int mNewIsoPostion;
 	private int mNewShutterSpeedPosition;
+		
+	/** how much allow filled fields (new fields) */
+	private static final byte MAXIMUM_ALLOWED_FILLED_FIELDS = 2;	
 	
-	private static final byte MAXIMUM_ALLOWED_EMPTY_FIELDS = 2;	
+	/**
+	 * Function determine empty spinner and sets selelection for him.
+	 * @param index - item index getting from calculations
+	 */
+	private void fillEmptySpinner(int index) {
+		Spinner spinner;
+
+		if (mNewAperturePosition == 0) {
+			spinner = (Spinner) findViewById(R.id.evpairs_spinner_newAperture);
+		} else if (mNewIsoPostion == 0) {
+			spinner = (Spinner) findViewById(R.id.evpairs_spinner_newIso);
+		} else {
+			spinner = (Spinner) findViewById(R.id.evpairs_spinner_newShutterSpeed);
+		}
+
+		spinner.setSelection(index);
+	}
 	
+	/**
+	 * Function gets selected items positions for spinner
+	 */
+	private void getSelectedItemsPositions() {
+		mCurrentAperturePosition = mSpinner_currentAperture.getSelectedItemPosition();
+		mCurrentIsoPosition = mSpinner_currentIso.getSelectedItemPosition();
+		mCurrentShutterSpeedPosition = mSpinner_currentShutterSpeed.getSelectedItemPosition();
+		mNewAperturePosition = mSpinner_newAperture.getSelectedItemPosition();
+		mNewIsoPostion = mSpinner_newIso.getSelectedItemPosition();
+		mNewShutterSpeedPosition = mSpinner_newShutterSpeed.getSelectedItemPosition();		
+	}
+
+	/**
+	 * Verifies that only one new fields are empty.
+	 * Function display an error message if new fields does not contain only one empty field
+	 * @return true if new fields contain only one empty field
+	 */
+	private boolean isOnlyOneFieldEmpty() {
+		boolean isOnlyOneEmpty = false;
+		byte notEmptyCount = 0;
+
+		if (mNewAperturePosition > 0) {
+			notEmptyCount++;
+		}
+
+		if (mNewIsoPostion > 0) {
+			notEmptyCount++;
+		}
+
+		if (mNewShutterSpeedPosition > 0) {
+			notEmptyCount++;
+		}
+
+		if (notEmptyCount != MAXIMUM_ALLOWED_FILLED_FIELDS) {
+			Toast.makeText(this,
+					getString(R.string.evpairs_error_onlyOneFieldMustBeEpmty),
+					Toast.LENGTH_SHORT).show();
+		} else {
+			isOnlyOneEmpty = true;
+		}
+
+		return isOnlyOneEmpty;
+	}
+	
+	/**
+	 * Verifies that all required fields are filled.
+	 * Function displays an error message if not all required fields have been filled.
+	 * @return true if all fields are filled or false in other case
+	 */
+	private boolean isRequiredFieldsFilled() {
+		boolean isFilled = false;
+
+		if (mCurrentAperturePosition == 0) {
+			Toast.makeText(this,
+					getString(R.string.evpairs_error_emptyCurrentAperture),
+					Toast.LENGTH_SHORT).show();
+		} else if (mCurrentIsoPosition == 0) {
+			Toast.makeText(this,
+					getString(R.string.evpairs_error_emptyCurrentIso),
+					Toast.LENGTH_SHORT).show();
+		} else if (mCurrentShutterSpeedPosition == 0) {
+			Toast.makeText(this,
+					getString(R.string.evpairs_error_emptyCurrentShutterSpeed),
+					Toast.LENGTH_SHORT).show();
+		} else {
+			isFilled = true;
+		}
+
+		return isFilled;
+	}
+	
+	/**
+	 * Function called when a view has been clicked.
+	 * @param v - The view that was clicked.
+	 */
+	public void onClick(View v) {
+		getSelectedItemsPositions();
+		if (isRequiredFieldsFilled() == true) {
+			if (isOnlyOneFieldEmpty() == true) {
+				EvpairsCalculator evCalc = new EvpairsCalculator(
+						mCurrentAperturePosition, mCurrentIsoPosition,
+						mCurrentShutterSpeedPosition, mNewAperturePosition,
+						mNewIsoPostion, mNewShutterSpeedPosition);
+				int index = evCalc.calculate();
+
+				if (index != EvpairsCalculator.INVALID_INDEX) {
+					fillEmptySpinner(index);
+				} else {
+					Toast.makeText(
+							this,
+							getString(R.string.evpairs_error_calculationProblem),
+							Toast.LENGTH_SHORT).show();
+				}
+			}
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,126 +198,4 @@ public class EvpairsActivity extends Activity {
 		mSpinner_newShutterSpeed.setAdapter(adapter_newShutterSpeed);
 				
 	}
-	
-	/*
-	 * Function called when a view has been clicked.
-	 * 
-	 * @param v - The view that was clicked.
-	 */
-	public void onClick(View v) {
-		getSelectedItemsPositions();
-		if (isRequiredFieldsFilled() == true) {
-			if (isOnlyOneFieldEmpty() == true) {
-				EvpairsCalculator evCalc = new EvpairsCalculator(
-						mCurrentAperturePosition, mCurrentIsoPosition,
-						mCurrentShutterSpeedPosition, mNewAperturePosition,
-						mNewIsoPostion, mNewShutterSpeedPosition);
-				int index = evCalc.calculate();
-
-				if (index != EvpairsCalculator.INVALID_INDEX) {
-					fillEmptySpinner(index);
-				} else {
-					Toast.makeText(
-							this,
-							getString(R.string.evpairs_error_calculationProblem),
-							Toast.LENGTH_SHORT).show();
-				}
-			}
-		}
-	}
-
-	/*
-	 * Function determine empty spinner and sets selelection for him.
-	 * 
-	 * @param index - item index getting from calculations
-	 */
-	private void fillEmptySpinner(int index) {
-		Spinner spinner;
-
-		if (mNewAperturePosition == 0) {
-			spinner = (Spinner) findViewById(R.id.evpairs_spinner_newAperture);
-		} else if (mNewIsoPostion == 0) {
-			spinner = (Spinner) findViewById(R.id.evpairs_spinner_newIso);
-		} else {
-			spinner = (Spinner) findViewById(R.id.evpairs_spinner_newShutterSpeed);
-		}
-
-		spinner.setSelection(index);
-	}
-	
-	/*
-	 * Verifies that all required fields are filled.
-	 * Function displays an error message if not all required fields have been filled.
-	 * 
-	 * @return true if all fields are filled or false in other case
-	 */
-	private boolean isRequiredFieldsFilled() {
-		boolean isFilled = false;
-
-		if (mCurrentAperturePosition == 0) {
-			Toast.makeText(this,
-					getString(R.string.evpairs_error_emptyCurrentAperture),
-					Toast.LENGTH_SHORT).show();
-		} else if (mCurrentIsoPosition == 0) {
-			Toast.makeText(this,
-					getString(R.string.evpairs_error_emptyCurrentIso),
-					Toast.LENGTH_SHORT).show();
-		} else if (mCurrentShutterSpeedPosition == 0) {
-			Toast.makeText(this,
-					getString(R.string.evpairs_error_emptyCurrentShutterSpeed),
-					Toast.LENGTH_SHORT).show();
-		} else {
-			isFilled = true;
-		}
-
-		return isFilled;
-	}
-	
-	/*
-	 * Verifies that only one new fields are empty.
-	 * Function display an error message if new fields does not contain only one empty field
-	 * 
-	 * @return true if new fields contain only one empty field
-	 */
-	private boolean isOnlyOneFieldEmpty() {
-		boolean isOnlyOneEmpty = false;
-		byte notEmptyCount = 0;
-
-		if (mNewAperturePosition > 0) {
-			notEmptyCount++;
-		}
-
-		if (mNewIsoPostion > 0) {
-			notEmptyCount++;
-		}
-
-		if (mNewShutterSpeedPosition > 0) {
-			notEmptyCount++;
-		}
-
-		if (notEmptyCount != MAXIMUM_ALLOWED_EMPTY_FIELDS) {
-			Toast.makeText(this,
-					getString(R.string.evpairs_error_onlyOneFieldMustBeEpmty),
-					Toast.LENGTH_SHORT).show();
-		} else {
-			isOnlyOneEmpty = true;
-		}
-
-		return isOnlyOneEmpty;
-	}
-	
-	/*
-	 * Function gets selected items positions for spinner
-	 */
-	private void getSelectedItemsPositions() {
-		mCurrentAperturePosition = mSpinner_currentAperture.getSelectedItemPosition();
-		mCurrentIsoPosition = mSpinner_currentIso.getSelectedItemPosition();
-		mCurrentShutterSpeedPosition = mSpinner_currentShutterSpeed.getSelectedItemPosition();
-		mNewAperturePosition = mSpinner_newAperture.getSelectedItemPosition();
-		mNewIsoPostion = mSpinner_newIso.getSelectedItemPosition();
-		mNewShutterSpeedPosition = mSpinner_newShutterSpeed.getSelectedItemPosition();		
-	}
-	
-	
-
 }

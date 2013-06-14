@@ -9,10 +9,37 @@ import java.util.List;
  * Date: 6/01/11
  * Time: 2:16 PM
  */
+
 public class FStop {
+    /**
+     * Function gets all FStops
+     * @return FStop list
+     */
+    public static List<FStop> getAllFStops() {
+        return DATABASE;
+    }
+    
+    /**
+     * Function gets the fstop value by name
+     * @param value - aperture name
+     * @return aperture value
+     */
+    public static FStop getFStop(String value) {
+        for (FStop fStop : DATABASE) {
+            if (fStop.getLabel().equals(value)) {
+                return fStop;
+            }
+        }
+        throw new IllegalArgumentException("Unknown fstop value: " + value);
+    }
+
+    /** aperture name */
     private final String mLabel;
+
+    /** aperture value */
     private final BigDecimal mValue;
 
+    /** DATABASE contains all FStops */
     private static final List<FStop> DATABASE = new ArrayList<FStop>();
 
     static {
@@ -59,34 +86,37 @@ public class FStop {
         DATABASE.add(new FStop("64", new BigDecimal("64")));
     }
 
+    /**
+     * Constructor 
+     * @param label - aperture name
+     * @param value - aperture value
+     */
     public FStop(String label, BigDecimal value) {
         mLabel = label;
         mValue = value;
     }
 
+    /**
+     * Function get the aperture name
+     * @return
+     */
     public String getLabel() {
         return mLabel;
     }
-
+    
+    /**
+     * Function get the aperture value 
+     * @return
+     */
     public BigDecimal getValue() {
         return mValue;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         return getLabel();
-    }
-
-    public static List<FStop> getAllFStops() {
-        return DATABASE;
-    }
-
-    public static FStop getFStop(String value) {
-        for (FStop fStop : DATABASE) {
-            if (fStop.getLabel().equals(value)) {
-                return fStop;
-            }
-        }
-        throw new IllegalArgumentException("Unknown fstop value: " + value);
     }
 }

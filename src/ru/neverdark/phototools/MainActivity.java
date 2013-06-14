@@ -7,13 +7,16 @@ import android.view.View;
 
 public class MainActivity extends Activity {
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 	}
 
-	/*
+	/**
 	 * Function called when a view has been clicked.
 	 * 
 	 * @param v - The view that was clicked.
