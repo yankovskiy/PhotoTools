@@ -11,7 +11,7 @@ Getting binary
 ----------
 You can get latest stable build [here](http://neverdark.ru/PhotoTools.apk).
 
-On your device, you must allow the installation of applications not from Google Play.
+On your device, you need allow installation of apps from sources other than the Google Play.
 
 Other information:
 ----------
