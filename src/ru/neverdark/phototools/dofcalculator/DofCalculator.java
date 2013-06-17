@@ -23,22 +23,22 @@ public class DofCalculator {
      * @param coc - circle of confusion in mm
      */
     public DofCalculator(BigDecimal aperture, BigDecimal focusLength, BigDecimal coc) {
-    	mAperture = aperture;
-    	mFocusLength = focusLength;
-    	mCoc = coc;
+        mAperture = aperture;
+        mFocusLength = focusLength;
+        mCoc = coc;
     }
     
-	/**
-	 * Function calculate hyper focal distance
-	 * @return hyper focal distance
-	 */
-	public BigDecimal calculateHyperFocalDistance() {
-		BigDecimal numerator = mFocusLength.pow(2);
-		BigDecimal denominator = mAperture.multiply(mCoc);
-		BigDecimal result = numerator.divide(denominator, RoundingMode.HALF_UP);
-		
-		/* Into meters*/
-		result = result.divide(new BigDecimal("1000"), 2, RoundingMode.HALF_UP);
-		return result;
-	}
+    /**
+     * Function calculate hyper focal distance
+     * @return hyper focal distance
+     */
+    public BigDecimal calculateHyperFocalDistance() {
+        BigDecimal numerator = mFocusLength.pow(2);
+        BigDecimal denominator = mAperture.multiply(mCoc);
+        BigDecimal result = numerator.divide(denominator, RoundingMode.HALF_UP);
+        
+        /* Into meters*/
+        result = result.divide(new BigDecimal("1000"), 2, RoundingMode.HALF_UP);
+        return result;
+    }
 }

@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	
-	<string name="about_label_author"><![CDATA[Author: <a href="mailto:artemyankovskiy@gmail.com?subject=PhotoTools">Artem Yankovskiy</a>]]></string>
-	<string name="about_label_license"><![CDATA[<b>Photo Tools</b> distributed on the GPL v3 license. You can get source code on the <a href="https://github.com/yankovskiy/PhotoTools">github.com</a>]]></string>    
-    <string name="about_label_version">Version 0.1</string>    
+
+    <string name="about_label_author"><![CDATA[Author: <a href="mailto:artemyankovskiy@gmail.com?subject=PhotoTools">Artem Yankovskiy</a>]]></string>
+    <string name="about_label_license"><![CDATA[<b>Photo Tools</b> distributed on the GPL v3 license. You can get source code on the <a href="https://github.com/yankovskiy/PhotoTools">github.com</a>]]></string>    
+    <string name="about_label_version">Version 0.1</string>
     
-    <string name="app_name">Photo Tools</string>        
+    <string name="app_name">Photo Tools</string>
 
     <string name="dof_button_calculate">Calculate</string>
     <string name="dof_error_emptyFocalLength">The focal length must be between 1 and 500</string>
     <string name="dof_label_aperture">Aperture:</string>
     <string name="dof_label_camera">Camera:</string>
-    <string name="dof_label_focalLength">Focal length (must be between 1 and 500mm):</string>  
-    <string name="dof_label_hyperFocal">Hyper focal:</string>    
+    <string name="dof_label_focalLength">Focal length (must be between 1 and 500mm):</string>
+    <string name="dof_label_hyperFocal">Hyper focal:</string>
     <string name="dof_label_meters">meters.</string>
-    <string name="dof_label_vendor">Vendor:</string>  
+    <string name="dof_label_vendor">Vendor:</string>
     
     <string name="evpairs_button_calculate">Calculate</string>
     <string name="evpairs_error_calculationProblem">Calculation problem</string>
     <string name="evpairs_error_emptyCurrentAperture">Current aperture value must be filled</string>
     <string name="evpairs_error_emptyCurrentIso">Current ISO value must be filled</string>
-    <string name="evpairs_error_emptyCurrentShutterSpeed">Current shutter speed must be filled</string>    
+    <string name="evpairs_error_emptyCurrentShutterSpeed">Current shutter speed must be filled</string>
     <string name="evpairs_error_onlyOneFieldMustBeEpmty">Only one new field must be empty</string>
     <string name="evpairs_label_apperture">Aperture:</string>
     <string name="evpairs_label_currentValues">Current values(all fields must be completed):</string>
-    <string name="evpairs_label_iso">ISO:</string>    
+    <string name="evpairs_label_iso">ISO:</string>
     <string name="evpairs_label_newValues">New values(one field myst be empty):</string>
-	<string name="evpairs_label_shutterSpeed">Shutter speed:</string>
-        	
+    <string name="evpairs_label_shutterSpeed">Shutter speed:</string>
+            
     <string name="main_button_about">About</string>
     <string name="main_button_dofcalc">Depth of Field</string>
     <string name="main_button_evpairs">EV Pairs</string>
     <string name="main_button_settings">Settings</string>
-	
-	<string name="title_activity_about">About</string>
+    
+    <string name="title_activity_about">About</string>
     <string name="title_activity_dof">Depth of Field</string>
     <string name="title_activity_evpairs">EV Pairs</string>
     <string name="title_activity_settings">Settings</string>
