@@ -211,8 +211,7 @@ public class DofActivity extends Activity {
 		
 		initAperturesSpinner();
 		initCamerasSpinner();
-		initVendorSpinner();
-		
+		initVendorSpinner();		
 	}
     
     /**
@@ -231,6 +230,8 @@ public class DofActivity extends Activity {
         for (CameraData cameraData : cameraList) {
             cameraSpinnerAdapter.add(cameraData.getModel());
         }
+        
+        getCamerasSpinner().setSelection(0);
 	}
     
     /**

@@ -12,7 +12,8 @@ public class EvpairsCalculator {
 	private int mNewShutterSpeedPosition;
 	private int mIndex;
 	
-	public static final int INVALID_INDEX = -1;
+	/** For error handling. Must not equ with any of exposition pairs. */
+	public static final int INVALID_INDEX = -100;
 	
 	public static final String ISO_LIST[] = { "", "25", "50", "100", "200", "400", "800",
 			"1600", "3200", "6400", "12800" };
@@ -124,7 +125,7 @@ public class EvpairsCalculator {
 		mNewAperturePosition = newAperturePosition;
 		mNewIsoPostion = newIsoPostion;
 		mNewShutterSpeedPosition = newShutterSpeedPosition;
-		
+
 		mIndex = INVALID_INDEX;
 	}
 	

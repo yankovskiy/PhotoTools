@@ -36,9 +36,11 @@ public class MainActivity extends Activity {
 			intent = new Intent(this, EvpairsActivity.class);
 			startActivity(intent);
 			break;
+/*			
 		case R.id.main_button_settings:
 			intent = new Intent(this, SettingsActivity.class);
 			startActivity(intent);
+*/			
 		}
 	}
 }

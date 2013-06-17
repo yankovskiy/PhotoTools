@@ -38,7 +38,7 @@ public class DofCalculator {
 		BigDecimal result = numerator.divide(denominator, RoundingMode.HALF_UP);
 		
 		/* Into meters*/
-		result = result.divide(new BigDecimal("1000"), 3, RoundingMode.HALF_UP);
+		result = result.divide(new BigDecimal("1000"), 2, RoundingMode.HALF_UP);
 		return result;
 	}
 }
