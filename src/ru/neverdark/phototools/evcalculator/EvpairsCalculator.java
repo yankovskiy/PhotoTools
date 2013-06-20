@@ -2,6 +2,8 @@ package ru.neverdark.phototools.evcalculator;
 
 import java.util.Arrays;
 
+import ru.neverdark.phototools.log.Log;
+
 public class EvpairsCalculator {
 
     private int mCurrentAperturePosition;
@@ -153,9 +155,13 @@ public class EvpairsCalculator {
         String shutter = SHUTTER_SPEED_LIST[mNewShutterSpeedPosition];
 
         if (isoNewIndex != INVALID_INDEX) {
-            for (int i = 0; i < SHUTTER_SPEED_LIST.length - 1; i++) {
+            Log.variable("SHUTTER_SPEED_LIST.length", String.valueOf(SHUTTER_SPEED_LIST.length));
+            Log.variable("shutter", shutter);
+            for (int i = 0; i < SHUTTERS_TABLE[isoNewIndex].length; i++) {
+                Log.variable("i", String.valueOf(i));
                 if (shutter.equals(SHUTTERS_TABLE[isoNewIndex][i])) {
                     mIndex = i + 1;
+                    Log.variable("mIndex", String.valueOf(mIndex));
                     break;
                 }
             }

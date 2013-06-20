@@ -3,7 +3,7 @@
 
     <string name="about_label_author"><![CDATA[Author: <a href="mailto:artemyankovskiy@gmail.com?subject=PhotoTools">Artem Yankovskiy</a>]]></string>
     <string name="about_label_license"><![CDATA[<b>Photo Tools</b> distributed on the GPL v3 license. You can get source code on the <a href="https://github.com/yankovskiy/PhotoTools">github.com</a>]]></string>    
-    <string name="about_label_version">Version 0.1</string>
+    <string name="about_label_version">Version 0.1.1</string>
     
     <string name="app_name">Photo Tools</string>
 
