@@ -7,6 +7,7 @@ import ru.neverdark.phototools.dofcalculator.CameraData;
 import ru.neverdark.phototools.dofcalculator.DofCalculator;
 import ru.neverdark.phototools.dofcalculator.FStop;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,9 +20,20 @@ import android.widget.Toast;
 public class DofActivity extends Activity {
 
     /**
+     * Store oldest vendors spinner position
+     */
+    private int mOldVendorPosition = -1;
+    /**
      * Store calculation result
      */
     private BigDecimal mCalculationResult;
+    
+    /**
+     * Names for save preferences
+     */
+    private final String VENDOR_INDEX = "VENDOR_INDEX";
+    private final String CAMERA_INDEX = "CAMERA_INDEX";
+    private final String APERTURE_INDEX = "APERTURE_INDEX";
     
     /**
      * Calculate hyperfocal distance
@@ -157,9 +169,15 @@ public class DofActivity extends Activity {
             vendorAdapter.add(vendor);
         }
         vendorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {                
-                CameraData.Vendor vendor = (CameraData.Vendor) adapterView.getAdapter().getItem(pos);
-                populateCameraByVendor(vendor);                
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+                if (pos != mOldVendorPosition) {
+                    if (mOldVendorPosition != -1) {
+                        CameraData.Vendor vendor = (CameraData.Vendor) adapterView.getAdapter().getItem(pos);
+                        populateCameraByVendor(vendor);
+                        getCamerasSpinner().setSelection(0);
+                    }
+                    mOldVendorPosition = pos;
+                }
             }
             public void onNothingSelected(AdapterView<?> adapterView) { }
         });        
@@ -184,6 +202,38 @@ public class DofActivity extends Activity {
     }
     
     /**
+     * Load positions for spinners from SharedPreferences
+     */
+    private void loadSpinnersPositions() {
+        SharedPreferences preferenced = getPreferences(MODE_PRIVATE);
+        int vendorIndex = preferenced.getInt(VENDOR_INDEX, 0);
+        int cameraIndex = preferenced.getInt(CAMERA_INDEX, 0);
+        int apertureIndex = preferenced.getInt(APERTURE_INDEX, 0);
+        
+        /* checks for no more than the number of elements in the arrays */
+        /* if more than number of elements in the array - set index to zero */
+        if (vendorIndex > getVendorsSpinner().getCount() - 1) {
+            vendorIndex = 0;
+        }
+        
+        getVendorsSpinner().setSelection(vendorIndex);
+
+        populateCameraByVendor(CameraData.Vendor.values()[vendorIndex]);
+
+        if (cameraIndex > getCamerasSpinner().getCount() -1) {
+            cameraIndex = 0;
+        }
+        
+        getCamerasSpinner().setSelection(cameraIndex);
+        
+        if (apertureIndex > getAperturesSpinner().getCount() - 1) {
+            apertureIndex = 0;
+        }
+        
+        getAperturesSpinner().setSelection(apertureIndex);
+    }
+    
+    /**
      * Function called when a view has been clicked.
      * 
      * @param v - The view that was clicked.
@@ -200,7 +250,6 @@ public class DofActivity extends Activity {
             break;
         }
     }
-    
     /* (non-Javadoc)
      * @see android.app.Activity#onCreate(android.os.Bundle)
      */
@@ -211,7 +260,27 @@ public class DofActivity extends Activity {
         
         initAperturesSpinner();
         initCamerasSpinner();
-        initVendorSpinner();        
+        initVendorSpinner();
+    }
+    
+    /* (non-Javadoc)
+     * @see android.app.Activity#onStop()
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        /* saving spinner position */
+        saveSpinnerPositions();
+    }
+    
+    /* (non-Javadoc)
+     * @see android.app.Activity#onStart()
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        /* load spinner positions */
+        loadSpinnersPositions();
     }
     
     /**
@@ -230,8 +299,22 @@ public class DofActivity extends Activity {
         for (CameraData cameraData : cameraList) {
             cameraSpinnerAdapter.add(cameraData.getModel());
         }
+    }
+
+    /**
+     * Save positions spinner positions to SharedPreferenced
+     */
+    private void saveSpinnerPositions() {
+        SharedPreferences preferenced = getPreferences(MODE_PRIVATE);
+        int vendorIndex = getVendorsSpinner().getSelectedItemPosition();
+        int cameraIndex = getCamerasSpinner().getSelectedItemPosition();
+        int apertureIndex = getAperturesSpinner().getSelectedItemPosition();
         
-        getCamerasSpinner().setSelection(0);
+        SharedPreferences.Editor editor = preferenced.edit();
+        editor.putInt(VENDOR_INDEX, vendorIndex);
+        editor.putInt(CAMERA_INDEX, cameraIndex);
+        editor.putInt(APERTURE_INDEX, apertureIndex);
+        editor.commit();
     }
     
     /**
@@ -244,5 +327,4 @@ public class DofActivity extends Activity {
                 getString(resourceId),
                 Toast.LENGTH_LONG).show();
     }
-
 }

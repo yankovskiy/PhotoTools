@@ -95,12 +95,33 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/evpairs_button_calculate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onClick"
-            android:text="@string/evpairs_button_calculate" />
+        <TableLayout
+            android:id="@+id/evpairs_tableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TableRow
+                android:id="@+id/evpairs_tableRow1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/evpairs_button_calculate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onClick"
+                    android:text="@string/evpairs_button_calculate" />
+
+                <Button
+                    android:id="@+id/evpairs_button_clear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:text="@string/evpairs_button_clear" />
+
+            </TableRow>
+        </TableLayout>
 
     </LinearLayout>
 

@@ -13,6 +13,8 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         tools:context=".DofActivity" >
 
         <TextView
@@ -60,8 +62,6 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="number" >
-
-            <requestFocus />
         </EditText>
 
         <Button
