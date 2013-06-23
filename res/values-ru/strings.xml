@@ -8,7 +8,6 @@
     <string name="app_name">Photo Tools</string>
 
     <string name="dof_button_calculate">Расчет</string>
-    <string name="dof_button_clear">Очистить</string>
     <string name="dof_error_emptyFocalLength">Фокусное расстояние должно быть между 1 и 500мм</string>
     <string name="dof_label_aperture">Диафрагма:</string>
     <string name="dof_label_camera">Камера:</string>
@@ -18,6 +17,7 @@
     <string name="dof_label_vendor">Производитель:</string>
     
     <string name="evpairs_button_calculate">Расчет</string>
+    <string name="evpairs_button_clear">Очистить</string>
     <string name="evpairs_error_calculationProblem">Проблемы с расчетом</string>
     <string name="evpairs_error_emptyCurrentAperture">Текущее значение диафрагмы должно быть заполненно</string>
     <string name="evpairs_error_emptyCurrentIso">Текущее значение ISO должно быть заполненно</string>

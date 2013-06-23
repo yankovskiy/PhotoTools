@@ -121,6 +121,29 @@ public class EvpairsActivity extends Activity {
      * @param v - The view that was clicked.
      */
     public void onClick(View v) {
+        switch (v.getId()) {
+        case R.id.evpairs_button_calculate:
+            calculate();
+            break;
+        case R.id.evpairs_button_clear:
+            clearNewValues();
+            break;
+        }
+    }
+    
+    /**
+     * Clears new values
+     */
+    private void clearNewValues() {
+        mSpinner_newAperture.setSelection(0);
+        mSpinner_newIso.setSelection(0);
+        mSpinner_newShutterSpeed.setSelection(0);
+    }
+
+    /**
+     * Calculates EV pairs
+     */
+    private void calculate() {
         getSelectedItemsPositions();
         if (isRequiredFieldsFilled() == true) {
             if (isOnlyOneFieldEmpty() == true) {
@@ -141,7 +164,6 @@ public class EvpairsActivity extends Activity {
             }
         }
     }
-    
     /* (non-Javadoc)
      * @see android.app.Activity#onCreate(android.os.Bundle)
      */

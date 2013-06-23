@@ -7,7 +7,7 @@
     
     <string name="app_name">Photo Tools</string>
 
-    <string name="dof_button_calculate">Calculate</string>
+    <string name="dof_button_calculate">Calculate</string>    
     <string name="dof_error_emptyFocalLength">The focal length must be between 1 and 500</string>
     <string name="dof_label_aperture">Aperture:</string>
     <string name="dof_label_camera">Camera:</string>
