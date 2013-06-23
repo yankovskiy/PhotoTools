@@ -16,3 +16,4 @@ On your device, you need allow installation of apps from sources other than the 
 Other information:
 ----------
 1. [Supported cameras list](https://github.com/yankovskiy/PhotoTools/wiki/Supported-cameras).
+2. [What's new](https://github.com/yankovskiy/PhotoTools/wiki/What%27s-new).
