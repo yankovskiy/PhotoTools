@@ -9,11 +9,16 @@
 
     <string name="dof_button_calculate">Расчет</string>
     <string name="dof_error_emptyFocalLength">Фокусное расстояние должно быть между 1 и 500мм</string>
+    <string name="dof_error_incorrectSubjectDistance">Неверное значение дистанции фокусировки</string>
     <string name="dof_label_aperture">Диафрагма:</string>
     <string name="dof_label_camera">Камера:</string>
+    <string name="dof_label_farLimit">Дальняя граница:</string>
     <string name="dof_label_focalLength">Фокусное расстояние (допустимые значения от 1 до 500мм):</string>  
     <string name="dof_label_hyperFocal">Гиперфокальное расстояние:</string>
     <string name="dof_label_meters">метров.</string>
+    <string name="dof_label_nearLimit">Ближняя граница:</string>
+    <string name="dof_label_subjectDistance">Дистанция фокусировки:</string>
+    <string name="dof_label_total">Всего:</string>
     <string name="dof_label_vendor">Производитель:</string>
     
     <string name="evpairs_button_calculate">Расчет</string>

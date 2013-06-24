@@ -64,6 +64,20 @@
             android:inputType="number" >
         </EditText>
 
+        <TextView
+            android:id="@+id/dof_textView_subjectDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dof_label_subjectDistance" />
+
+        <EditText
+            android:id="@+id/dof_editText_subjectDistance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="numberDecimal" >
+        </EditText>
+
         <Button
             android:id="@+id/dof_button_calculate"
             android:layout_width="wrap_content"
@@ -76,6 +90,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/dof_label_hyperFocal" />
+
+        <TextView
+            android:id="@+id/dof_label_farLimit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dof_label_farLimit" />
+
+        <TextView
+            android:id="@+id/dof_label_nearLimit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dof_label_nearLimit" />
+
+        <TextView
+            android:id="@+id/dof_label_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dof_label_total" />
+
     </LinearLayout>
 
 </ScrollView>

@@ -9,11 +9,16 @@
 
     <string name="dof_button_calculate">Calculate</string>    
     <string name="dof_error_emptyFocalLength">The focal length must be between 1 and 500</string>
+    <string name="dof_error_incorrectSubjectDistance">Incorrect subject distance</string>
     <string name="dof_label_aperture">Aperture:</string>
     <string name="dof_label_camera">Camera:</string>
+    <string name="dof_label_farLimit">Far limit:</string>
     <string name="dof_label_focalLength">Focal length (must be between 1 and 500mm):</string>
     <string name="dof_label_hyperFocal">Hyper focal:</string>
     <string name="dof_label_meters">meters.</string>
+    <string name="dof_label_nearLimit">Near limit:</string>
+    <string name="dof_label_subjectDistance">Subject distance:</string>
+    <string name="dof_label_total">Total:</string>
     <string name="dof_label_vendor">Vendor:</string>
     
     <string name="evpairs_button_calculate">Calculate</string>

@@ -6,6 +6,7 @@ import java.util.List;
 import ru.neverdark.phototools.dofcalculator.CameraData;
 import ru.neverdark.phototools.dofcalculator.DofCalculator;
 import ru.neverdark.phototools.dofcalculator.FStop;
+import ru.neverdark.phototools.log.Log;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,38 +24,62 @@ public class DofActivity extends Activity {
      * Store oldest vendors spinner position
      */
     private int mOldVendorPosition = -1;
-    /**
-     * Store calculation result
-     */
-    private BigDecimal mCalculationResult;
     
     /**
      * Names for save preferences
      */
-    private final String VENDOR_INDEX = "VENDOR_INDEX";
-    private final String CAMERA_INDEX = "CAMERA_INDEX";
     private final String APERTURE_INDEX = "APERTURE_INDEX";
+    private final String CAMERA_INDEX = "CAMERA_INDEX";
+    private final String VENDOR_INDEX = "VENDOR_INDEX";
+    
+    /**
+     * Names for save state for reload TextView text when activity recreated (rotate screen)
+     */
+    private final String STATE_HYPER_FOCAL = "hyperFocal";
+    private final String STATE_FAR_LIMIT = "farLimit";
+    private final String STATE_NEAR_LIMIT = "nearLimit";
+    private final String STATE_TOTAL = "total"; 
     
     /**
      * Calculate hyperfocal distance
+     * @return CalculationResult object
      */
-    private void calculate() {
+    private DofCalculator.CalculationResult calculate() {
         BigDecimal aperture = getSelectedAperture();
         BigDecimal focusLength = getFocalLengthValue();
         BigDecimal coc = CameraData.getCocForCamera(getSelectedVendor(), getSelectedCamera());
-        DofCalculator dofCalculator = new DofCalculator(aperture, focusLength, coc);
-        mCalculationResult = dofCalculator.calculateHyperFocalDistance();
+        BigDecimal subjectDistance = getSubjectDistanceValue();
+        DofCalculator dofCalculator = new DofCalculator(aperture, focusLength, coc, subjectDistance);
+        return dofCalculator.calculate();
     }
     
     /**
      * Function display calculation result in the dof_label_hyperFocal TextView
+     * @param calculationResult CalculationResult object when stores the result of the calculations
      */
-    private void displayCalculationResult() {
-        String result = getString(R.string.dof_label_hyperFocal);
-        result += " " + mCalculationResult.toString();
-        result += " " + getString(R.string.dof_label_meters);
+    private void displayCalculationResult(DofCalculator.CalculationResult calculatioResult) {
+        String meters = " " + getString(R.string.dof_label_meters); 
+        String tmp;
         
-        getHyperFocalResultLabel().setText(result);
+        tmp = getString(R.string.dof_label_hyperFocal) + " "
+                + calculatioResult.getHyperFocal().toString()
+                + meters;
+        getHyperFocalResultLabel().setText(tmp);
+
+        tmp = getString(R.string.dof_label_nearLimit) + " "
+                + calculatioResult.getNearLimit().toString()
+                + meters;
+        getNearLimitResultLabel().setText(tmp);
+
+        tmp = getString(R.string.dof_label_farLimit) + " "
+                + calculatioResult.format(calculatioResult.getFarLimit())
+                + meters;
+        getFarLimitResultLabel().setText(tmp);
+
+        tmp = getString(R.string.dof_label_total) + " "
+                + calculatioResult.format(calculatioResult.getTotal())
+                + meters;
+        getTotalResultLabel().setText(tmp);
     }
     
     /**
@@ -72,21 +97,28 @@ public class DofActivity extends Activity {
     private Spinner getCamerasSpinner() {
         return (Spinner) findViewById(R.id.dof_spinner_cameras);
     }
+    /**
+     * Gets TextView for far limit results
+     * @return The TextView if found or null in other case
+     */
+    private TextView getFarLimitResultLabel() {
+        return (TextView) findViewById(R.id.dof_label_farLimit);
+    }
     
     /**
      * Function get EditText for Focal length
      * @return EditText if found or null in other case
      */
-    private EditText getFocalLengthTextEdit() {
+    private EditText getFocalLengthEditText() {
          return (EditText) findViewById(R.id.dof_editText_focalLength);
     }
-
+    
     /**
      * Function get value of focal length from EditText
      * @return focal length
      */
     private BigDecimal getFocalLengthValue() { 
-        String tmp = getFocalLengthTextEdit().getText().toString();
+        String tmp = getFocalLengthEditText().getText().toString();
         return (new BigDecimal(tmp));
     }
 
@@ -97,6 +129,14 @@ public class DofActivity extends Activity {
     private TextView getHyperFocalResultLabel() {
         return (TextView) findViewById(R.id.dof_label_hyperFocalResult);
     }
+    
+    /**
+     * Gets TextView for near limit results
+     * @return The TextView if found or null in other case
+     */
+    private TextView getNearLimitResultLabel() {
+        return (TextView) findViewById(R.id.dof_label_nearLimit);
+    }
 
     /**
      * Function get selected aperture value from spinner
@@ -105,7 +145,7 @@ public class DofActivity extends Activity {
     private BigDecimal getSelectedAperture() {
         return ((FStop) getAperturesSpinner().getSelectedItem()).getValue();
     }
-
+    
     /**
      * Function get selected camera model from spinner
      * @return camera model
@@ -123,12 +163,38 @@ public class DofActivity extends Activity {
     }
     
     /**
+     * Gets EditText for subject distance
+     * @return EditText if found or null in other case
+     */
+    private EditText getSubjectDistanceEditText() {
+        return (EditText) findViewById(R.id.dof_editText_subjectDistance);
+    }
+    
+    /**
+     * Gets value from subject distance EditText
+     * @return value from subject distance EditText
+     */
+    private BigDecimal getSubjectDistanceValue() {
+        String tmp = getSubjectDistanceEditText().getText().toString();
+        return (new BigDecimal(tmp));
+    }
+    
+
+    /**
+     * Gets TextView for total results
+     * @return The TextView if found or null in other case
+     */
+    private TextView getTotalResultLabel() {
+        return (TextView) findViewById(R.id.dof_label_total);
+    }
+
+    /**
      * Function get spinner contains cameras vendor
      * @return spinner if found or null in other case
      */
     private Spinner getVendorsSpinner() {
         return (Spinner) findViewById(R.id.dof_spinner_vendors);
-    }    
+    }
     
     /**
      * Function for fill apertures spinner
@@ -150,7 +216,7 @@ public class DofActivity extends Activity {
         ArrayAdapter<String> cameraArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
         cameraArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         getCamerasSpinner().setAdapter(cameraArrayAdapter);
-    }
+    }    
     
     /**
      * Function for init vendor spinner.
@@ -189,12 +255,34 @@ public class DofActivity extends Activity {
      */
     private boolean isFocalLengthValid() {
         boolean isValid = false;
-        String focalLength = getFocalLengthTextEdit().getText().toString();
+        String focalLength = getFocalLengthEditText().getText().toString();
         
         if (focalLength.length() > 0) {
             BigDecimal tmp = new BigDecimal(focalLength);
             if (tmp.intValue() > 0 && tmp.intValue() <= 500) {
                 isValid = true;
+            }
+        }
+        
+        return isValid;
+    }
+    
+    /**
+     * Checks subject distance for valid values
+     * @return true if valid or false in other case
+     */
+    private boolean isSubjectDistanceValid() {
+        boolean isValid = false;
+        String subjectDistance = getSubjectDistanceEditText().getText().toString();
+        
+        if (subjectDistance.length() > 0) {
+            try {
+                BigDecimal tmp = new BigDecimal(subjectDistance);
+                if (tmp.floatValue() > 0 && tmp.floatValue() <= 500) {
+                    isValid = true;
+                }
+            } catch (NumberFormatException e) {
+                Log.message("Exception in isSubjectDistanceValid");
             }
         }
         
@@ -242,14 +330,19 @@ public class DofActivity extends Activity {
         switch (v.getId()) {
         case R.id.dof_button_calculate:
             if (isFocalLengthValid()) {
-                calculate();
-                displayCalculationResult();
+                if (isSubjectDistanceValid()) {
+                    DofCalculator.CalculationResult calculationResult = calculate();
+                    displayCalculationResult(calculationResult);
+                } else {
+                    showError(R.string.dof_error_incorrectSubjectDistance);
+                }
             } else {
                 showError(R.string.dof_error_emptyFocalLength);
             }
             break;
         }
     }
+    
     /* (non-Javadoc)
      * @see android.app.Activity#onCreate(android.os.Bundle)
      */
@@ -272,6 +365,18 @@ public class DofActivity extends Activity {
         /* saving spinner position */
         saveSpinnerPositions();
     }
+    /* (non-Javadoc)
+     * @see android.app.Activity#onRestoreInstanceState(android.os.Bundle)
+     */
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        
+        getHyperFocalResultLabel().setText(savedInstanceState.getString(STATE_HYPER_FOCAL));
+        getNearLimitResultLabel().setText(savedInstanceState.getString(STATE_NEAR_LIMIT));
+        getFarLimitResultLabel().setText(savedInstanceState.getString(STATE_FAR_LIMIT));
+        getTotalResultLabel().setText(savedInstanceState.getString(STATE_TOTAL));
+    }
     
     /* (non-Javadoc)
      * @see android.app.Activity#onStart()
@@ -281,6 +386,19 @@ public class DofActivity extends Activity {
         super.onResume();
         /* load spinner positions */
         loadSpinnersPositions();
+    }
+    
+    /* (non-Javadoc)
+     * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+     */
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putString(STATE_HYPER_FOCAL, getHyperFocalResultLabel().getText().toString());
+        savedInstanceState.putString(STATE_FAR_LIMIT, getFarLimitResultLabel().getText().toString());
+        savedInstanceState.putString(STATE_NEAR_LIMIT, getNearLimitResultLabel().getText().toString());
+        savedInstanceState.putString(STATE_TOTAL, getTotalResultLabel().getText().toString());
+        
+        super.onSaveInstanceState(savedInstanceState);
     }
     
     /**
