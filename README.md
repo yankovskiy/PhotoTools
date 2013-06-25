@@ -4,7 +4,7 @@ PhotoTools is a simple application for Android, which can be useful for photogra
 
 At the moment, PhotoTools offers two options:
 
-1. Hyperfocal distance calculator.
+1. Depth of field calculator.
 2. Exposure pairs calculator.
 
 Getting binary
