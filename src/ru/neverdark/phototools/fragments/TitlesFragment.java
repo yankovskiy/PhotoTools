@@ -14,7 +14,7 @@ import com.actionbarsherlock.app.SherlockListFragment;
 public class TitlesFragment extends SherlockListFragment {
     boolean mDualPane;
     int mCurrentCheckPosition = 0;
-    final String[] TITLES = getResources().getStringArray(R.array.main_menuTitles);
+    final String[] TITLES = {"test1", "test2"};//getResources().getStringArray(R.array.main_menuTitles);
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         Log.message("Enter");
@@ -70,14 +70,4 @@ public class TitlesFragment extends SherlockListFragment {
     
     }
     
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        Log.message("Enter");
-        if (container == null) {
-            return null;
-        }
-        
-        return inflater.inflate(R.layout.menu_item, container);
-    }
 }
