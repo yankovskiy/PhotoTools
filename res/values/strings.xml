@@ -43,5 +43,11 @@
     <string name="title_activity_dof">Depth of Field</string>
     <string name="title_activity_evpairs">EV Pairs</string>
     <string name="title_activity_settings">Settings</string>
+    
+    <string-array name="main_menuTitles">
+        <item>@string/main_button_dofcalc</item>
+        <item>@string/main_button_evpairs</item>
+        <item>@string/main_button_about</item>
+    </string-array>
             
 </resources>

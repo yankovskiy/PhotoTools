@@ -327,19 +327,16 @@ public class DofActivity extends Activity {
      * @param v - The view that was clicked.
      */
     public void onClick(View v) {
-        switch (v.getId()) {
-        case R.id.dof_button_calculate:
-            if (isFocalLengthValid()) {
-                if (isSubjectDistanceValid()) {
-                    DofCalculator.CalculationResult calculationResult = calculate();
-                    displayCalculationResult(calculationResult);
-                } else {
-                    showError(R.string.dof_error_incorrectSubjectDistance);
-                }
+
+        if (isFocalLengthValid()) {
+            if (isSubjectDistanceValid()) {
+                DofCalculator.CalculationResult calculationResult = calculate();
+                displayCalculationResult(calculationResult);
             } else {
-                showError(R.string.dof_error_emptyFocalLength);
+                showError(R.string.dof_error_incorrectSubjectDistance);
             }
-            break;
+        } else {
+            showError(R.string.dof_error_emptyFocalLength);
         }
     }
     
