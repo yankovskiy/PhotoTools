@@ -4,7 +4,9 @@ import ru.neverdark.phototools.Constants;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.log.Log;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -66,5 +68,16 @@ public class TitlesFragment extends SherlockListFragment {
     
     private void showActivity(int index) {
     
+    }
+    
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        Log.message("Enter");
+        if (container == null) {
+            return null;
+        }
+        
+        return inflater.inflate(R.layout.menu_item, container);
     }
 }
