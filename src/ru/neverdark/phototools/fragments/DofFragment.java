@@ -1,24 +1,33 @@
-package ru.neverdark.phototools;
+package ru.neverdark.phototools.fragments;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
+import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.R.id;
+import ru.neverdark.phototools.R.layout;
+import ru.neverdark.phototools.R.string;
 import ru.neverdark.phototools.dofcalculator.CameraData;
 import ru.neverdark.phototools.dofcalculator.DofCalculator;
 import ru.neverdark.phototools.dofcalculator.FStop;
 import ru.neverdark.phototools.log.Log;
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class DofActivity extends Activity {
+public class DofFragment extends SherlockFragment {
 
     /**
      * Store oldest vendors spinner position
@@ -87,7 +96,7 @@ public class DofActivity extends Activity {
      * @return Spinner if found or null in other case
      */
     private Spinner getAperturesSpinner() {
-        return (Spinner) findViewById(R.id.dof_spinner_apertures);
+        return (Spinner) getActivity().findViewById(R.id.dof_spinner_apertures);
     }
     
     /**
@@ -95,14 +104,14 @@ public class DofActivity extends Activity {
      * @return Spinner if found or null in other case
      */
     private Spinner getCamerasSpinner() {
-        return (Spinner) findViewById(R.id.dof_spinner_cameras);
+        return (Spinner) getActivity().findViewById(R.id.dof_spinner_cameras);
     }
     /**
      * Gets TextView for far limit results
      * @return The TextView if found or null in other case
      */
     private TextView getFarLimitResultLabel() {
-        return (TextView) findViewById(R.id.dof_label_farLimit);
+        return (TextView) getActivity().findViewById(R.id.dof_label_farLimit);
     }
     
     /**
@@ -110,7 +119,7 @@ public class DofActivity extends Activity {
      * @return EditText if found or null in other case
      */
     private EditText getFocalLengthEditText() {
-         return (EditText) findViewById(R.id.dof_editText_focalLength);
+         return (EditText) getActivity().findViewById(R.id.dof_editText_focalLength);
     }
     
     /**
@@ -127,7 +136,7 @@ public class DofActivity extends Activity {
      * @return The TextView if found or null in other case
      */
     private TextView getHyperFocalResultLabel() {
-        return (TextView) findViewById(R.id.dof_label_hyperFocalResult);
+        return (TextView) getActivity().findViewById(R.id.dof_label_hyperFocalResult);
     }
     
     /**
@@ -135,7 +144,7 @@ public class DofActivity extends Activity {
      * @return The TextView if found or null in other case
      */
     private TextView getNearLimitResultLabel() {
-        return (TextView) findViewById(R.id.dof_label_nearLimit);
+        return (TextView) getActivity().findViewById(R.id.dof_label_nearLimit);
     }
 
     /**
@@ -167,7 +176,7 @@ public class DofActivity extends Activity {
      * @return EditText if found or null in other case
      */
     private EditText getSubjectDistanceEditText() {
-        return (EditText) findViewById(R.id.dof_editText_subjectDistance);
+        return (EditText) getActivity().findViewById(R.id.dof_editText_subjectDistance);
     }
     
     /**
@@ -185,7 +194,7 @@ public class DofActivity extends Activity {
      * @return The TextView if found or null in other case
      */
     private TextView getTotalResultLabel() {
-        return (TextView) findViewById(R.id.dof_label_total);
+        return (TextView) getActivity().findViewById(R.id.dof_label_total);
     }
 
     /**
@@ -193,14 +202,14 @@ public class DofActivity extends Activity {
      * @return spinner if found or null in other case
      */
     private Spinner getVendorsSpinner() {
-        return (Spinner) findViewById(R.id.dof_spinner_vendors);
+        return (Spinner) getActivity().findViewById(R.id.dof_spinner_vendors);
     }
     
     /**
      * Function for fill apertures spinner
      */
     private void initAperturesSpinner() {
-        ArrayAdapter<FStop> apertureAdapter = new ArrayAdapter<FStop>(this, android.R.layout.simple_spinner_item);
+        ArrayAdapter<FStop> apertureAdapter = new ArrayAdapter<FStop>(getActivity(), android.R.layout.simple_spinner_item);
         apertureAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         getAperturesSpinner().setAdapter(apertureAdapter);
 
@@ -213,7 +222,7 @@ public class DofActivity extends Activity {
      * Function for fill camera spinner
      */
     private void initCamerasSpinner() {
-        ArrayAdapter<String> cameraArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> cameraArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);
         cameraArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         getCamerasSpinner().setAdapter(cameraArrayAdapter);
     }    
@@ -227,7 +236,7 @@ public class DofActivity extends Activity {
     private void initVendorSpinner() {
         Spinner vendorSpinner = getVendorsSpinner();
 
-        ArrayAdapter<CameraData.Vendor> vendorAdapter = new ArrayAdapter<CameraData.Vendor>(this, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CameraData.Vendor> vendorAdapter = new ArrayAdapter<CameraData.Vendor>(getActivity(), android.R.layout.simple_spinner_item);
         vendorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         vendorSpinner.setAdapter(vendorAdapter);
         
@@ -293,7 +302,7 @@ public class DofActivity extends Activity {
      * Load positions for spinners from SharedPreferences
      */
     private void loadSpinnersPositions() {
-        SharedPreferences preferenced = getPreferences(MODE_PRIVATE);
+        SharedPreferences preferenced = getActivity().getPreferences(getActivity().MODE_PRIVATE);
         int vendorIndex = preferenced.getInt(VENDOR_INDEX, 0);
         int cameraIndex = preferenced.getInt(CAMERA_INDEX, 0);
         int apertureIndex = preferenced.getInt(APERTURE_INDEX, 0);
@@ -321,36 +330,32 @@ public class DofActivity extends Activity {
         getAperturesSpinner().setSelection(apertureIndex);
     }
     
-    /**
-     * Function called when a view has been clicked.
-     * 
-     * @param v - The view that was clicked.
-     */
-    public void onClick(View v) {
 
-        if (isFocalLengthValid()) {
-            if (isSubjectDistanceValid()) {
-                DofCalculator.CalculationResult calculationResult = calculate();
-                displayCalculationResult(calculationResult);
-            } else {
-                showError(R.string.dof_error_incorrectSubjectDistance);
-            }
-        } else {
-            showError(R.string.dof_error_emptyFocalLength);
-        }
-    }
-    
-    /* (non-Javadoc)
-     * @see android.app.Activity#onCreate(android.os.Bundle)
-     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dof);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.activity_dof, container, false);
+        Button calculateButton = (Button) view.findViewById(R.id.dof_button_calculate);
+        if (calculateButton != null) {
+            calculateButton.setOnClickListener(new OnClickListener() {
+                
+                @Override
+                public void onClick(View v) {
+                    if (isFocalLengthValid()) {
+                        if (isSubjectDistanceValid()) {
+                            DofCalculator.CalculationResult calculationResult = calculate();
+                            displayCalculationResult(calculationResult);
+                        } else {
+                            showError(R.string.dof_error_incorrectSubjectDistance);
+                        }
+                    } else {
+                        showError(R.string.dof_error_emptyFocalLength);
+                    }
+                }
+            });
+        }
         
-        initAperturesSpinner();
-        initCamerasSpinner();
-        initVendorSpinner();
+        return view;
     }
     
     /* (non-Javadoc)
@@ -362,17 +367,21 @@ public class DofActivity extends Activity {
         /* saving spinner position */
         saveSpinnerPositions();
     }
-    /* (non-Javadoc)
-     * @see android.app.Activity#onRestoreInstanceState(android.os.Bundle)
-     */
+    
     @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         
-        getHyperFocalResultLabel().setText(savedInstanceState.getString(STATE_HYPER_FOCAL));
-        getNearLimitResultLabel().setText(savedInstanceState.getString(STATE_NEAR_LIMIT));
-        getFarLimitResultLabel().setText(savedInstanceState.getString(STATE_FAR_LIMIT));
-        getTotalResultLabel().setText(savedInstanceState.getString(STATE_TOTAL));
+        initAperturesSpinner();
+        initCamerasSpinner();
+        initVendorSpinner();
+        
+        if (savedInstanceState != null) {
+            getHyperFocalResultLabel().setText(savedInstanceState.getString(STATE_HYPER_FOCAL));
+            getNearLimitResultLabel().setText(savedInstanceState.getString(STATE_NEAR_LIMIT));
+            getFarLimitResultLabel().setText(savedInstanceState.getString(STATE_FAR_LIMIT));
+            getTotalResultLabel().setText(savedInstanceState.getString(STATE_TOTAL));
+        }
     }
     
     /* (non-Javadoc)
@@ -420,7 +429,7 @@ public class DofActivity extends Activity {
      * Save positions spinner positions to SharedPreferenced
      */
     private void saveSpinnerPositions() {
-        SharedPreferences preferenced = getPreferences(MODE_PRIVATE);
+        SharedPreferences preferenced = getActivity().getPreferences(getActivity().MODE_PRIVATE);
         int vendorIndex = getVendorsSpinner().getSelectedItemPosition();
         int cameraIndex = getCamerasSpinner().getSelectedItemPosition();
         int apertureIndex = getAperturesSpinner().getSelectedItemPosition();
@@ -438,7 +447,7 @@ public class DofActivity extends Activity {
      */
     private void showError(int resourceId) {
         Toast.makeText(
-                this,
+                getActivity(),
                 getString(resourceId),
                 Toast.LENGTH_LONG).show();
     }

@@ -24,32 +24,16 @@
         </activity>
         <activity
             android:name="ru.neverdark.phototools.AboutActivity"
-            android:label="@string/title_activity_about"
-            android:parentActivityName="ru.neverdark.phototools.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ru.neverdark.phototools.MainActivity" />
-        </activity>
-        <activity
-            android:name="ru.neverdark.phototools.DofActivity"
-            android:label="@string/title_activity_dof"
-            android:parentActivityName="ru.neverdark.phototools.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ru.neverdark.phototools.MainActivity" />
-        </activity>
+            android:label="@string/title_activity_about" />
         <activity
             android:name="ru.neverdark.phototools.EvpairsActivity"
-            android:label="@string/title_activity_evpairs"
-            android:parentActivityName="ru.neverdark.phototools.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ru.neverdark.phototools.MainActivity" />
-        </activity>
+            android:label="@string/title_activity_evpairs" />
         <activity
             android:name="ru.neverdark.phototools.SettingsActivity"
-            android:label="@string/title_activity_settings" >
-        </activity>
+            android:label="@string/title_activity_settings" />
+
+        <activity android:name="ru.neverdark.phototools.DetailsActivity" />
+        
     </application>
 
 </manifest>

@@ -15,7 +15,7 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        tools:context=".DofActivity" >
+        tools:context=".DofFragment" >
 
         <TextView
             android:id="@+id/dof_label_vendor"
@@ -82,7 +82,6 @@
             android:id="@+id/dof_button_calculate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onClick"
             android:text="@string/dof_button_calculate" />
 
         <TextView
