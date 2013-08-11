@@ -6,13 +6,11 @@ import java.util.List;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.R.id;
-import ru.neverdark.phototools.R.layout;
-import ru.neverdark.phototools.R.string;
 import ru.neverdark.phototools.dofcalculator.CameraData;
 import ru.neverdark.phototools.dofcalculator.DofCalculator;
 import ru.neverdark.phototools.dofcalculator.FStop;
 import ru.neverdark.phototools.log.Log;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,6 +25,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Fragment contains Depth of Field calculator UI
+ */
 public class DofFragment extends SherlockFragment {
 
     /**
@@ -302,7 +303,7 @@ public class DofFragment extends SherlockFragment {
      * Load positions for spinners from SharedPreferences
      */
     private void loadSpinnersPositions() {
-        SharedPreferences preferenced = getActivity().getPreferences(getActivity().MODE_PRIVATE);
+        SharedPreferences preferenced = getActivity().getPreferences(Context.MODE_PRIVATE);
         int vendorIndex = preferenced.getInt(VENDOR_INDEX, 0);
         int cameraIndex = preferenced.getInt(CAMERA_INDEX, 0);
         int apertureIndex = preferenced.getInt(APERTURE_INDEX, 0);
@@ -331,8 +332,12 @@ public class DofFragment extends SherlockFragment {
     }
     
 
+    /* (non-Javadoc)
+     * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.message("Enter");
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.activity_dof, container, false);
         Button calculateButton = (Button) view.findViewById(R.id.dof_button_calculate);
@@ -355,11 +360,13 @@ public class DofFragment extends SherlockFragment {
             });
         }
         
+        
         return view;
     }
     
+
     /* (non-Javadoc)
-     * @see android.app.Activity#onStop()
+     * @see android.support.v4.app.Fragment#onPause()
      */
     @Override
     public void onPause() {
@@ -368,8 +375,12 @@ public class DofFragment extends SherlockFragment {
         saveSpinnerPositions();
     }
     
+    /* (non-Javadoc)
+     * @see android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)
+     */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        Log.message("Enter");
         super.onActivityCreated(savedInstanceState);
         
         initAperturesSpinner();
@@ -399,6 +410,7 @@ public class DofFragment extends SherlockFragment {
      */
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
+        Log.message("Enter");
         savedInstanceState.putString(STATE_HYPER_FOCAL, getHyperFocalResultLabel().getText().toString());
         savedInstanceState.putString(STATE_FAR_LIMIT, getFarLimitResultLabel().getText().toString());
         savedInstanceState.putString(STATE_NEAR_LIMIT, getNearLimitResultLabel().getText().toString());
@@ -429,7 +441,7 @@ public class DofFragment extends SherlockFragment {
      * Save positions spinner positions to SharedPreferenced
      */
     private void saveSpinnerPositions() {
-        SharedPreferences preferenced = getActivity().getPreferences(getActivity().MODE_PRIVATE);
+        SharedPreferences preferenced = getActivity().getPreferences(Context.MODE_PRIVATE);
         int vendorIndex = getVendorsSpinner().getSelectedItemPosition();
         int cameraIndex = getCamerasSpinner().getSelectedItemPosition();
         int apertureIndex = getAperturesSpinner().getSelectedItemPosition();

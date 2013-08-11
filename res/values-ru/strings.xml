@@ -13,11 +13,11 @@
     <string name="dof_label_aperture">Диафрагма:</string>
     <string name="dof_label_camera">Камера:</string>
     <string name="dof_label_farLimit">Дальняя граница:</string>
-    <string name="dof_label_focalLength">Фокусное расстояние (допустимые значения от 1 до 500мм):</string>  
-    <string name="dof_label_hyperFocal">Гиперфокальное расстояние:</string>
+    <string name="dof_label_focalLength">Фокусное расстояние</string>  
+    <string name="dof_label_hyperFocal">Гиперфокал:</string>
     <string name="dof_label_meters">метров.</string>
     <string name="dof_label_nearLimit">Ближняя граница:</string>
-    <string name="dof_label_subjectDistance">Дистанция фокусировки:</string>
+    <string name="dof_label_subjectDistance">Дистанция фокусировки</string>
     <string name="dof_label_total">Всего:</string>
     <string name="dof_label_vendor">Производитель:</string>
     

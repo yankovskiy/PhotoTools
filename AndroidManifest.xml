@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.neverdark.phototools"
-    android:versionCode="2"
+    android:versionCode="40"
     android:versionName="0.4-dev" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="4"
         android:targetSdkVersion="18" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"        
+        android:label="@string/app_name"
         android:theme="@style/Theme.Sherlock.Light.DarkActionBar" >
         <activity
             android:name="ru.neverdark.phototools.MainActivity"
@@ -22,15 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="ru.neverdark.phototools.AboutActivity"
-            android:label="@string/title_activity_about" />
-        <activity
-            android:name="ru.neverdark.phototools.EvpairsActivity"
-            android:label="@string/title_activity_evpairs" />
-        <activity
-            android:name="ru.neverdark.phototools.SettingsActivity"
-            android:label="@string/title_activity_settings" />
 
         <activity android:name="ru.neverdark.phototools.DetailsActivity" />
         

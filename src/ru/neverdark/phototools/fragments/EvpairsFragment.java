@@ -1,15 +1,25 @@
-package ru.neverdark.phototools;
+package ru.neverdark.phototools.fragments;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
+import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.evcalculator.EvpairsCalculator;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
-import android.app.Activity;
 
 
-public class EvpairsActivity extends Activity {
+/**
+ * Fragment contains EV Pairs calculator UI
+ */
+public class EvpairsFragment extends SherlockFragment {
+    private View mView;
+    
     private Spinner mSpinner_currentAperture;
     private Spinner mSpinner_currentIso;
     private Spinner mSpinner_currentShutterSpeed;
@@ -35,11 +45,11 @@ public class EvpairsActivity extends Activity {
         Spinner spinner;
 
         if (mNewAperturePosition == 0) {
-            spinner = (Spinner) findViewById(R.id.evpairs_spinner_newAperture);
+            spinner = (Spinner) getActivity().findViewById(R.id.evpairs_spinner_newAperture);
         } else if (mNewIsoPostion == 0) {
-            spinner = (Spinner) findViewById(R.id.evpairs_spinner_newIso);
+            spinner = (Spinner) getActivity().findViewById(R.id.evpairs_spinner_newIso);
         } else {
-            spinner = (Spinner) findViewById(R.id.evpairs_spinner_newShutterSpeed);
+            spinner = (Spinner) getActivity().findViewById(R.id.evpairs_spinner_newShutterSpeed);
         }
 
         spinner.setSelection(index);
@@ -79,7 +89,7 @@ public class EvpairsActivity extends Activity {
         }
 
         if (notEmptyCount != MAXIMUM_ALLOWED_FILLED_FIELDS) {
-            Toast.makeText(this,
+            Toast.makeText(getActivity(),
                     getString(R.string.evpairs_error_onlyOneFieldMustBeEpmty),
                     Toast.LENGTH_SHORT).show();
         } else {
@@ -98,15 +108,15 @@ public class EvpairsActivity extends Activity {
         boolean isFilled = false;
 
         if (mCurrentAperturePosition == 0) {
-            Toast.makeText(this,
+            Toast.makeText(getActivity(),
                     getString(R.string.evpairs_error_emptyCurrentAperture),
                     Toast.LENGTH_SHORT).show();
         } else if (mCurrentIsoPosition == 0) {
-            Toast.makeText(this,
+            Toast.makeText(getActivity(),
                     getString(R.string.evpairs_error_emptyCurrentIso),
                     Toast.LENGTH_SHORT).show();
         } else if (mCurrentShutterSpeedPosition == 0) {
-            Toast.makeText(this,
+            Toast.makeText(getActivity(),
                     getString(R.string.evpairs_error_emptyCurrentShutterSpeed),
                     Toast.LENGTH_SHORT).show();
         } else {
@@ -115,21 +125,7 @@ public class EvpairsActivity extends Activity {
 
         return isFilled;
     }
-    
-    /**
-     * Function called when a view has been clicked.
-     * @param v - The view that was clicked.
-     */
-    public void onClick(View v) {
-        switch (v.getId()) {
-        case R.id.evpairs_button_calculate:
-            calculate();
-            break;
-        case R.id.evpairs_button_clear:
-            clearNewValues();
-            break;
-        }
-    }
+
     
     /**
      * Clears new values
@@ -157,67 +153,94 @@ public class EvpairsActivity extends Activity {
                     fillEmptySpinner(index);
                 } else {
                     Toast.makeText(
-                            this,
+                            getActivity(),
                             getString(R.string.evpairs_error_calculationProblem),
                             Toast.LENGTH_SHORT).show();
                 }
             }
         }
     }
+
     /* (non-Javadoc)
-     * @see android.app.Activity#onCreate(android.os.Bundle)
+     * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_evpairs);        
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        mView = inflater.inflate(R.layout.activity_evpairs, container, false);
         
         /* Create link between resource and object */
-        mSpinner_currentAperture = (Spinner) findViewById(R.id.evpairs_spinner_currentAperture);
-        mSpinner_currentIso = (Spinner) findViewById(R.id.evpairs_spinner_currentIso);
-        mSpinner_currentShutterSpeed = (Spinner) findViewById(R.id.evpairs_spinner_currentShutterSpeed);
+        mSpinner_currentAperture = (Spinner) mView.findViewById(R.id.evpairs_spinner_currentAperture);
+        mSpinner_currentIso = (Spinner) mView.findViewById(R.id.evpairs_spinner_currentIso);
+        mSpinner_currentShutterSpeed = (Spinner) mView.findViewById(R.id.evpairs_spinner_currentShutterSpeed);
 
-        mSpinner_newAperture = (Spinner) findViewById(R.id.evpairs_spinner_newAperture);
-        mSpinner_newIso = (Spinner) findViewById(R.id.evpairs_spinner_newIso);
-        mSpinner_newShutterSpeed = (Spinner) findViewById(R.id.evpairs_spinner_newShutterSpeed);
+        mSpinner_newAperture = (Spinner) mView.findViewById(R.id.evpairs_spinner_newAperture);
+        mSpinner_newIso = (Spinner) mView.findViewById(R.id.evpairs_spinner_newIso);
+        mSpinner_newShutterSpeed = (Spinner) mView.findViewById(R.id.evpairs_spinner_newShutterSpeed);
         
         
         /* Load data from arrays */
         ArrayAdapter<String> adapter_currentAperture = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item,
+                getActivity(), android.R.layout.simple_spinner_item,
                 EvpairsCalculator.APERTURE_LIST);
         adapter_currentAperture.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner_currentAperture.setAdapter(adapter_currentAperture);
         
         ArrayAdapter<String> adapter_currentIso = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item,
+                getActivity(), android.R.layout.simple_spinner_item,
                 EvpairsCalculator.ISO_LIST);
         adapter_currentIso.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner_currentIso.setAdapter(adapter_currentIso);
         
         ArrayAdapter<String> adapter_currentShutterSpeed = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item,
+                getActivity(), android.R.layout.simple_spinner_item,
                 EvpairsCalculator.SHUTTER_SPEED_LIST);
         adapter_currentShutterSpeed.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner_currentShutterSpeed.setAdapter(adapter_currentShutterSpeed);
 
         ArrayAdapter<String> adapter_newAperture = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item,
+                getActivity(), android.R.layout.simple_spinner_item,
                 EvpairsCalculator.APERTURE_LIST);
         adapter_newAperture.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner_newAperture.setAdapter(adapter_newAperture);
         
         ArrayAdapter<String> adapter_newIso = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item,
+                getActivity(), android.R.layout.simple_spinner_item,
                 EvpairsCalculator.ISO_LIST);
         adapter_newIso.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner_newIso.setAdapter(adapter_newIso);
         
         ArrayAdapter<String> adapter_newShutterSpeed = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item,
+                getActivity(), android.R.layout.simple_spinner_item,
                 EvpairsCalculator.SHUTTER_SPEED_LIST);
         adapter_newShutterSpeed.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner_newShutterSpeed.setAdapter(adapter_newShutterSpeed);
+        
+        setClickListener();
+        
+        return mView;
+    }
+    
+    /**
+     * Sets OnClickListener to buttons on the fragment
+     */
+    private void setClickListener() {
+        OnClickListener clickListener = new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                case R.id.evpairs_button_calculate:
+                    calculate();
+                    break;
+                case R.id.evpairs_button_clear:
+                    clearNewValues();
+                    break;
+                }
+            }
+        };
 
+        mView.findViewById(R.id.evpairs_button_calculate).setOnClickListener(clickListener);
+        mView.findViewById(R.id.evpairs_button_clear).setOnClickListener(clickListener);
     }
 }

@@ -4,6 +4,7 @@ import ru.neverdark.phototools.Constants;
 import ru.neverdark.phototools.DetailsActivity;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.log.Log;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -12,16 +13,25 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
 
+/**
+ * Fragment for navigation list
+ */
 public class TitlesFragment extends SherlockListFragment {
-    boolean mDualPane;
-    int mCurrentCheckPosition = 0;
+    private DofFragment mDofFragment;
+    private AboutFragment mAboutFragment;
+    private EvpairsFragment mEvFragment;
+    private boolean mDualPane;
+    private int mCurrentCheckPosition = 0;
     
+    /* (non-Javadoc)
+     * @see android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)
+     */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         Log.message("Enter");
         super.onActivityCreated(savedInstanceState);
         final String[] TITLES = getResources().getStringArray(R.array.main_menuTitles);
-        
+
         setListAdapter(new ArrayAdapter<String>(getActivity(),
                 R.layout.menu_item,
                 R.id.menuItem_label_title,
@@ -32,7 +42,7 @@ public class TitlesFragment extends SherlockListFragment {
         
         if (savedInstanceState != null) {
             mCurrentCheckPosition = savedInstanceState.getInt(Constants.CURRENT_CHOICE, 0);
-        }
+        } 
         
         if (mDualPane) {
             getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -41,6 +51,9 @@ public class TitlesFragment extends SherlockListFragment {
     }
     
     
+    /* (non-Javadoc)
+     * @see android.support.v4.app.Fragment#onSaveInstanceState(android.os.Bundle)
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         Log.message("Enter");
@@ -49,15 +62,20 @@ public class TitlesFragment extends SherlockListFragment {
         outState.putInt(Constants.CURRENT_CHOICE, mCurrentCheckPosition);
     }
     
+    /* (non-Javadoc)
+     * @see android.support.v4.app.ListFragment#onListItemClick(android.widget.ListView, android.view.View, int, long)
+     */
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         Log.message("Enter");
         showDetails(position);
     }
     
+    /**
+     * Shows fragment if application runned on the Tablet or activity for other case
+     */
     private void showDetails(int index) {
         Log.message("Enter");
-        mCurrentCheckPosition = index;
 
         if (mDualPane == true) {
             getListView().setItemChecked(index, true);
@@ -65,23 +83,102 @@ public class TitlesFragment extends SherlockListFragment {
         } else {
             showActivity(index);
         }
+        
+        setCurentCheckPosition(index);
     }
     
+    /**
+     * Sets current position for navigation list
+     * @param index
+     */
+    private void setCurentCheckPosition(int index) {
+        mCurrentCheckPosition = index;
+    }
+    
+    /**
+     * Shows fragment by index
+     * @param index fragment index for shown
+     */
     private void showFragment(int index) {
         Log.message("Enter");
-/*
-        DetailsFragment details = (DetailsFragment) getFragmentManager().findFragmentById(R.id.main_detailFragment);
-        if (details == null || details.getShownIndex() != index) {
-            details = DetailsFragment.newInstance(index);
+
+        switch (index) {
+        case Constants.DOF_CHOICE:
+            replaceFragment(mDofFragment, index);
+            break;
+        case Constants.EV_CHOICE:
+            replaceFragment(mEvFragment, index);
+        case Constants.ABOUT_CHOICE:
+            replaceFragment(mAboutFragment, index);
+            break;
+        }
+    }
+    
+    
+    /**
+     * Replace current fragment to other
+     * @param details new fragment object
+     * @param index index fragment
+     */
+    private void replaceFragment(Fragment details, int index) {
+        Log.message("Enter");
+        boolean isOperationNeed = false;
+        
+        switch (index) {
+        case Constants.DOF_CHOICE:
+            try {
+                details = (DofFragment) getFragmentManager().findFragmentById(
+                        R.id.main_detailFragment);
+            } catch (ClassCastException e) {
+                Log.message("Exception: " + e.getMessage());
+            }
+
+            if (details == null) {
+                details = new DofFragment();
+                isOperationNeed = true;
+            }
+            break;
+        case Constants.EV_CHOICE:
+            try {
+                details = (EvpairsFragment) getFragmentManager().findFragmentById(
+                        R.id.main_detailFragment);
+            } catch (ClassCastException e) {
+                Log.message("Exception: " + e.getMessage());
+            }
+
+            if (details == null) {
+                details = new EvpairsFragment();
+                isOperationNeed = true;
+            }
+            break;
+        case Constants.ABOUT_CHOICE:
             
+            try {
+                details = (AboutFragment) getFragmentManager()
+                        .findFragmentById(R.id.main_detailFragment);
+            } catch (ClassCastException e) {
+                Log.message("Exception: " + e.getMessage());
+            }
+
+            if (details == null) {
+                details = new AboutFragment();
+                isOperationNeed = true;
+            }
+            break;
+        }
+
+        if (isOperationNeed == true) {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.main_detailFragment, details);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commit();
         }
-*/
     }
     
+    /**
+     * Shows activity by index
+     * @param index activity index for shown
+     */
     private void showActivity(int index) {
         Log.message("Enter");
         Intent intent = new Intent();
