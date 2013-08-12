@@ -28,11 +28,11 @@
     <string name="evpairs_error_emptyCurrentIso">Current ISO value must be filled</string>
     <string name="evpairs_error_emptyCurrentShutterSpeed">Current shutter speed must be filled</string>
     <string name="evpairs_error_onlyOneFieldMustBeEpmty">Only one new field must be empty</string>
-    <string name="evpairs_label_apperture">Aperture:</string>
+    <string name="evpairs_label_apperture">Select a aperture</string>
     <string name="evpairs_label_currentValues">Current values(all fields must be completed):</string>
-    <string name="evpairs_label_iso">ISO:</string>
+    <string name="evpairs_label_iso">Select a ISO</string>
     <string name="evpairs_label_newValues">New values(one field myst be empty):</string>
-    <string name="evpairs_label_shutterSpeed">Shutter speed:</string>
+    <string name="evpairs_label_shutterSpeed">Select a shutter speed</string>
             
     <string name="main_button_about">About</string>
     <string name="main_button_dofcalc">Depth of Field</string>

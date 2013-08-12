@@ -1,4 +1,4 @@
-package ru.neverdark.phototools;
+package ru.neverdark.phototools.ui;
 
 import ru.neverdark.phototools.log.Log;
 import android.annotation.SuppressLint;
