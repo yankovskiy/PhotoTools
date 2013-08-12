@@ -6,6 +6,6 @@
     android:layout_height="wrap_content"
     android:ellipsize="marquee"
     android:singleLine="true"
-    android:text="@string/evpairs_label_apperture"
+    android:text="@string/evpairs_label_iso"
     android:textColor="#808080"
     android:textSize="18sp" />

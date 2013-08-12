@@ -4,6 +4,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.evcalculator.EvpairsCalculator;
+import ru.neverdark.phototools.ui.NothingSelectedSpinnerAdapter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 
@@ -184,40 +186,39 @@ public class EvpairsFragment extends SherlockFragment {
                 getActivity(), android.R.layout.simple_spinner_item,
                 EvpairsCalculator.APERTURE_LIST);
         adapter_currentAperture.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner_currentAperture.setAdapter(adapter_currentAperture);
+        setSpinnerAdapter(adapter_currentAperture, mSpinner_currentAperture, R.layout.aperture_spinner);
         
         ArrayAdapter<String> adapter_currentIso = new ArrayAdapter<String>(
                 getActivity(), android.R.layout.simple_spinner_item,
                 EvpairsCalculator.ISO_LIST);
         adapter_currentIso.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner_currentIso.setAdapter(adapter_currentIso);
+        setSpinnerAdapter(adapter_currentIso, mSpinner_currentIso, R.layout.iso_spinner);
         
         ArrayAdapter<String> adapter_currentShutterSpeed = new ArrayAdapter<String>(
                 getActivity(), android.R.layout.simple_spinner_item,
                 EvpairsCalculator.SHUTTER_SPEED_LIST);
         adapter_currentShutterSpeed.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner_currentShutterSpeed.setAdapter(adapter_currentShutterSpeed);
+        setSpinnerAdapter(adapter_currentShutterSpeed, mSpinner_currentShutterSpeed, R.layout.shutter_spinner);
 
         ArrayAdapter<String> adapter_newAperture = new ArrayAdapter<String>(
                 getActivity(), android.R.layout.simple_spinner_item,
                 EvpairsCalculator.APERTURE_LIST);
         adapter_newAperture.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner_newAperture.setAdapter(adapter_newAperture);
+        setSpinnerAdapter(adapter_newAperture, mSpinner_newAperture, R.layout.aperture_spinner);
         
         ArrayAdapter<String> adapter_newIso = new ArrayAdapter<String>(
                 getActivity(), android.R.layout.simple_spinner_item,
                 EvpairsCalculator.ISO_LIST);
         adapter_newIso.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner_newIso.setAdapter(adapter_newIso);
+        setSpinnerAdapter(adapter_newIso, mSpinner_newIso, R.layout.iso_spinner);
         
         ArrayAdapter<String> adapter_newShutterSpeed = new ArrayAdapter<String>(
                 getActivity(), android.R.layout.simple_spinner_item,
                 EvpairsCalculator.SHUTTER_SPEED_LIST);
         adapter_newShutterSpeed.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner_newShutterSpeed.setAdapter(adapter_newShutterSpeed);
+        setSpinnerAdapter(adapter_newShutterSpeed, mSpinner_newShutterSpeed, R.layout.shutter_spinner);
         
         setClickListener();
-        
         return mView;
     }
     
@@ -242,5 +243,19 @@ public class EvpairsFragment extends SherlockFragment {
 
         mView.findViewById(R.id.evpairs_button_calculate).setOnClickListener(clickListener);
         mView.findViewById(R.id.evpairs_button_clear).setOnClickListener(clickListener);
+    }
+    
+    /**
+     * Sets NothingSelectedSpinnerAdapter for spinner
+     * @param spinnerAdapter wrapped adapter 
+     * @param spinner spinner for sets adapter
+     * @param layoutId layout id for nothing selected spinner
+     */
+    private void setSpinnerAdapter(SpinnerAdapter adapter, Spinner spinner, int layoutId) {
+        spinner.setAdapter(
+                new NothingSelectedSpinnerAdapter(
+                      adapter,
+                      layoutId,
+                      getActivity()));
     }
 }

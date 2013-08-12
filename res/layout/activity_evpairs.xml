@@ -17,112 +17,82 @@
 
         <TextView
             android:id="@+id/evpairs_label_currentValues"
-            android:layout_width="wrap_content"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/evpairs_label_currentValues"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/evpairs_label_currentApperture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/evpairs_label_apperture" />
+            android:textColor="@color/headear" />
 
         <Spinner
             android:id="@+id/evpairs_spinner_currentAperture"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/evpairs_label_currentIso"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/evpairs_label_iso" />
+            android:prompt="@string/evpairs_label_selectAperture"
+            android:spinnerMode="dialog" />
 
         <Spinner
             android:id="@+id/evpairs_spinner_currentIso"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/evpairs_label_currentShutterSpeed"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/evpairs_label_shutterSpeed" />
+            android:prompt="@string/evpairs_label_selectIso"
+            android:spinnerMode="dialog" />
 
         <Spinner
             android:id="@+id/evpairs_spinner_currentShutterSpeed"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:prompt="@string/evpairs_label_selectShutterSpeed"
+            android:spinnerMode="dialog" />
 
         <TextView
             android:id="@+id/evpairs_label_newValues"
-            android:layout_width="wrap_content"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/evpairs_label_newValues"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/evpairs_label_newApperture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/evpairs_label_apperture" />
+            android:textColor="@color/headear" />
 
         <Spinner
             android:id="@+id/evpairs_spinner_newAperture"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/evpairs_label_newIso"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/evpairs_label_iso" />
+            android:prompt="@string/evpairs_label_selectAperture"
+            android:spinnerMode="dialog" />
 
         <Spinner
             android:id="@+id/evpairs_spinner_newIso"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/evpairs_label_newShutterSpeed"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/evpairs_label_shutterSpeed" />
+            android:prompt="@string/evpairs_label_selectIso"
+            android:spinnerMode="dialog" />
 
         <Spinner
             android:id="@+id/evpairs_spinner_newShutterSpeed"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:prompt="@string/evpairs_label_selectShutterSpeed"
+            android:spinnerMode="dialog" />
 
-        <TableLayout
-            android:id="@+id/evpairs_tableLayout"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <TableRow
-                android:id="@+id/evpairs_tableRow1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+            <Button
+                android:id="@+id/evpairs_button_calculate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:text="@string/evpairs_button_calculate" />
 
-                <Button
-                    android:id="@+id/evpairs_button_calculate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onClick"
-                    android:text="@string/evpairs_button_calculate" />
+            <Button
+                android:id="@+id/evpairs_button_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:onClick="onClick"
+                android:text="@string/evpairs_button_clear" />
 
-                <Button
-                    android:id="@+id/evpairs_button_clear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:onClick="onClick"
-                    android:text="@string/evpairs_button_clear" />
-
-            </TableRow>
-        </TableLayout>
-
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

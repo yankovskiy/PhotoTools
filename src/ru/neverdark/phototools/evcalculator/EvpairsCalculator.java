@@ -170,7 +170,7 @@ public class EvpairsCalculator {
         int isoNewIndex = getIsoNewIndex();                
         
         if (isoNewIndex != INVALID_INDEX) {
-            String shutter = SHUTTERS_TABLE[isoNewIndex][apertureNewColumnNumber];                    
+            String shutter = SHUTTERS_TABLE[isoNewIndex][apertureNewColumnNumber];
             mIndex = Arrays.asList(SHUTTER_SPEED_LIST).indexOf(shutter);
         }
     }
