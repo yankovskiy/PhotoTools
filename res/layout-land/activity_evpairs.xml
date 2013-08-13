@@ -39,17 +39,19 @@
                 android:id="@+id/evpairs_spinner_currentIso"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:prompt="@string/evpairs_label_selectIso"
                 android:spinnerMode="dialog" />
-        </LinearLayout>
 
-        <Spinner
-            android:id="@+id/evpairs_spinner_currentShutterSpeed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:prompt="@string/evpairs_label_selectShutterSpeed"
-            android:spinnerMode="dialog" />
+            <Spinner
+                android:id="@+id/evpairs_spinner_currentShutterSpeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:prompt="@string/evpairs_label_selectShutterSpeed"
+                android:spinnerMode="dialog" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/evpairs_label_newValues"
@@ -75,17 +77,19 @@
                 android:id="@+id/evpairs_spinner_newIso"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:prompt="@string/evpairs_label_selectIso"
                 android:spinnerMode="dialog" />
-        </LinearLayout>
 
-        <Spinner
-            android:id="@+id/evpairs_spinner_newShutterSpeed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:prompt="@string/evpairs_label_selectShutterSpeed"
-            android:spinnerMode="dialog" />
+            <Spinner
+                android:id="@+id/evpairs_spinner_newShutterSpeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:prompt="@string/evpairs_label_selectShutterSpeed"
+                android:spinnerMode="dialog" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

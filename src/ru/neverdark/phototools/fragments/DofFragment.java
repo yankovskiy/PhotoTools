@@ -10,18 +10,21 @@ import ru.neverdark.phototools.dofcalculator.CameraData;
 import ru.neverdark.phototools.dofcalculator.DofCalculator;
 import ru.neverdark.phototools.dofcalculator.FStop;
 import ru.neverdark.phototools.log.Log;
+import ru.neverdark.phototools.ui.NothingSelectedSpinnerAdapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -210,13 +213,18 @@ public class DofFragment extends SherlockFragment {
      * Function for fill apertures spinner
      */
     private void initAperturesSpinner() {
+        Spinner spinner = getAperturesSpinner();
         ArrayAdapter<FStop> apertureAdapter = new ArrayAdapter<FStop>(getActivity(), android.R.layout.simple_spinner_item);
         apertureAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        getAperturesSpinner().setAdapter(apertureAdapter);
+        spinner.setAdapter(apertureAdapter);
 
         for (FStop fstop : FStop.getAllFStops()) {
             apertureAdapter.add(fstop);
         }
+        
+        setLongClick(spinner);
+        setSpinnerAdapter(apertureAdapter, spinner, R.layout.aperture_spinner);
+        
     }
     
     /**
@@ -346,15 +354,19 @@ public class DofFragment extends SherlockFragment {
                 
                 @Override
                 public void onClick(View v) {
-                    if (isFocalLengthValid()) {
-                        if (isSubjectDistanceValid()) {
-                            DofCalculator.CalculationResult calculationResult = calculate();
-                            displayCalculationResult(calculationResult);
+                    if (isApertureSelected()) {
+                        if (isFocalLengthValid()) {
+                            if (isSubjectDistanceValid()) {
+                                DofCalculator.CalculationResult calculationResult = calculate();
+                                displayCalculationResult(calculationResult);
+                            } else {
+                                showError(R.string.dof_error_incorrectSubjectDistance);
+                            }
                         } else {
-                            showError(R.string.dof_error_incorrectSubjectDistance);
+                            showError(R.string.dof_error_emptyFocalLength);
                         }
                     } else {
-                        showError(R.string.dof_error_emptyFocalLength);
+                        showError(R.string.dof_error_apertureNotSelected);
                     }
                 }
             });
@@ -364,7 +376,14 @@ public class DofFragment extends SherlockFragment {
         return view;
     }
     
-
+    /**
+     * Checks aperture spinner for selected values
+     * @return true if aperture selected or false in other case
+     */
+    private boolean isApertureSelected() {
+        Log.message("Enter");
+        return getAperturesSpinner().getSelectedItemPosition() > 0;
+    }
     /* (non-Javadoc)
      * @see android.support.v4.app.Fragment#onPause()
      */
@@ -462,5 +481,35 @@ public class DofFragment extends SherlockFragment {
                 getActivity(),
                 getString(resourceId),
                 Toast.LENGTH_LONG).show();
+    }
+    
+    /**
+     * Sets long click listener for one spinner
+     * @param spinner spinner for sets long click listener
+     */
+    private void setLongClick(final Spinner spinner) {
+        spinner.setOnLongClickListener(new OnLongClickListener() {
+            
+            @Override
+            public boolean onLongClick(View arg0) {
+                // TODO Auto-generated method stub
+                spinner.setSelection(0);
+                return true;
+            }
+        });
+    }
+    
+    /**
+     * Sets NothingSelectedSpinnerAdapter for spinner
+     * @param spinnerAdapter wrapped adapter 
+     * @param spinner spinner for sets adapter
+     * @param layoutId layout id for nothing selected spinner
+     */
+    private void setSpinnerAdapter(SpinnerAdapter adapter, Spinner spinner, int layoutId) {
+        spinner.setAdapter(
+                new NothingSelectedSpinnerAdapter(
+                      adapter,
+                      layoutId,
+                      getActivity()));
     }
 }

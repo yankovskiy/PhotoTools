@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
+import android.view.View.OnLongClickListener;
 
 
 /**
@@ -219,7 +220,37 @@ public class EvpairsFragment extends SherlockFragment {
         setSpinnerAdapter(adapter_newShutterSpeed, mSpinner_newShutterSpeed, R.layout.shutter_spinner);
         
         setClickListener();
+        setLongClickListeners();
         return mView;
+    }
+    
+    
+    /**
+     * Sets long click listeners for all spinner
+     */
+    private void setLongClickListeners() {
+        setLongClick(mSpinner_currentAperture);
+        setLongClick(mSpinner_currentIso);
+        setLongClick(mSpinner_currentShutterSpeed);
+        setLongClick(mSpinner_newAperture);
+        setLongClick(mSpinner_newIso);
+        setLongClick(mSpinner_newShutterSpeed);
+    }
+    
+    /**
+     * Sets long click listener for one spinner
+     * @param spinner spinner for sets long click listener
+     */
+    private void setLongClick(final Spinner spinner) {
+        spinner.setOnLongClickListener(new OnLongClickListener() {
+            
+            @Override
+            public boolean onLongClick(View arg0) {
+                // TODO Auto-generated method stub
+                spinner.setSelection(0);
+                return true;
+            }
+        });
     }
     
     /**

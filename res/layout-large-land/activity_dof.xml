@@ -17,65 +17,50 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         tools:context=".DofFragment" >
 
-       <LinearLayout
+        <TextView
+            android:id="@+id/dof_label_camera"
+            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal" >
+            android:text="@string/dof_label_camera"
+            android:textColor="@color/headear" />
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/dof_label_camera"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dof_label_camera" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <Spinner
-                        android:id="@+id/dof_spinner_vendors"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <Spinner
-                        android:id="@+id/dof_spinner_cameras"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/dof_label_aperture"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dof_label_aperture" />
-
-                <Spinner
-                    android:id="@+id/dof_spinner_apertures"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
+
+            <Spinner
+                android:id="@+id/dof_spinner_vendors"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Spinner
+                android:id="@+id/dof_spinner_cameras"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/dof_label_shootingOptions"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dof_label_shootingOptions"
+            android:textColor="@color/headear" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <Spinner
+                android:id="@+id/dof_spinner_apertures"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:prompt="@string/common_label_selectAperture"
+                android:spinnerMode="dialog" />
 
             <EditText
                 android:id="@+id/dof_editText_focalLength"
@@ -85,7 +70,6 @@
                 android:ems="10"
                 android:hint="@string/dof_label_focalLength"
                 android:inputType="number" >
-
             </EditText>
 
             <EditText
@@ -98,12 +82,19 @@
                 android:inputType="numberDecimal" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/dof_label_calculationResult"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dof_label_calculationResult"
+            android:textColor="@color/headear" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" 
-            android:baselineAligned="false">
+            android:baselineAligned="false"
+            android:orientation="horizontal" >
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -142,7 +133,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/dof_label_total" />
             </LinearLayout>
-
         </LinearLayout>
 
         <Button
@@ -150,7 +140,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/dof_button_calculate" />
-
     </LinearLayout>
 
 </ScrollView>
