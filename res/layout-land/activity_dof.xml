@@ -33,13 +33,17 @@
                 android:id="@+id/dof_spinner_vendors"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:prompt="@string/dof_label_selectVendor"
+                android:spinnerMode="dialog" />
 
             <Spinner
                 android:id="@+id/dof_spinner_cameras"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:prompt="@string/dof_label_selectModel"
+                android:spinnerMode="dialog" />
         </LinearLayout>
 
         <TextView

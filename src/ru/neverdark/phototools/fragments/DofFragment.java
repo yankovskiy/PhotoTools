@@ -222,7 +222,7 @@ public class DofFragment extends SherlockFragment {
             apertureAdapter.add(fstop);
         }
         
-        setLongClick(spinner);
+        setSpinnerLongClick(spinner);
         setSpinnerAdapter(apertureAdapter, spinner, R.layout.aperture_spinner);
         
     }
@@ -405,6 +405,7 @@ public class DofFragment extends SherlockFragment {
         initAperturesSpinner();
         initCamerasSpinner();
         initVendorSpinner();
+        initEditText();
         
         if (savedInstanceState != null) {
             getHyperFocalResultLabel().setText(savedInstanceState.getString(STATE_HYPER_FOCAL));
@@ -412,6 +413,14 @@ public class DofFragment extends SherlockFragment {
             getFarLimitResultLabel().setText(savedInstanceState.getString(STATE_FAR_LIMIT));
             getTotalResultLabel().setText(savedInstanceState.getString(STATE_TOTAL));
         }
+    }
+    
+    /**
+     * Inits EditText objects for handling LongClick event
+     */
+    private void initEditText() {
+        setEditTextLongClick(getFocalLengthEditText());
+        setEditTextLongClick(getSubjectDistanceEditText());
     }
     
     /* (non-Javadoc)
@@ -484,15 +493,29 @@ public class DofFragment extends SherlockFragment {
     }
     
     /**
+     * Sets long click listener for EditText
+     * @param editText EditText for sets long click listener
+     */
+    private void setEditTextLongClick(final EditText editText) {
+        editText.setOnLongClickListener(new OnLongClickListener() {
+            
+            @Override
+            public boolean onLongClick(View arg0) {
+                editText.setText("");
+                return true;
+            }
+        });
+    }
+    
+    /**
      * Sets long click listener for one spinner
      * @param spinner spinner for sets long click listener
      */
-    private void setLongClick(final Spinner spinner) {
+    private void setSpinnerLongClick(final Spinner spinner) {
         spinner.setOnLongClickListener(new OnLongClickListener() {
             
             @Override
             public boolean onLongClick(View arg0) {
-                // TODO Auto-generated method stub
                 spinner.setSelection(0);
                 return true;
             }

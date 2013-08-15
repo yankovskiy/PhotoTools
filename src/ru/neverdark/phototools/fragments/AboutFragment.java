@@ -27,18 +27,17 @@ public class AboutFragment extends SherlockFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.activity_about, container, false);
  
-
         /* For clickable links */
         TextView labelAuthor = (TextView) view.findViewById(R.id.about_label_author);
         labelAuthor.setText(Html
                 .fromHtml(getString(R.string.about_label_author)));
         labelAuthor.setMovementMethod(LinkMovementMethod.getInstance());
 
-        TextView labelLicense = (TextView) view.findViewById(R.id.about_label_license);
+        TextView labelLicense = (TextView) view.findViewById(R.id.about_label_licenseInformation);
         labelLicense.setText(Html
-                .fromHtml(getString(R.string.about_label_license)));
+                .fromHtml(getString(R.string.about_label_licenseInformation)));
         labelLicense.setMovementMethod(LinkMovementMethod.getInstance());
-
+        
         TextView labelVersion = (TextView) view.findViewById(R.id.about_label_version);
         String version = getString(R.string.about_label_version);
         try {
