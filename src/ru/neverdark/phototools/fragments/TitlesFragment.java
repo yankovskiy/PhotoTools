@@ -6,6 +6,7 @@ import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.log.Log;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -77,16 +78,45 @@ public class TitlesFragment extends SherlockListFragment {
     private void showDetails(int index) {
         Log.message("Enter");
 
-        if (mDualPane == true) {
-            getListView().setItemChecked(index, true);
-            showFragment(index);
+        if (index == Constants.RATE_CHOICE) {
+            gotoMarket();
+        } else if (index == Constants.FEEDBACK_CHOICE) {
+            sendEmail();
         } else {
-            showActivity(index);
+            if (mDualPane == true) {
+                getListView().setItemChecked(index, true);
+                showFragment(index);
+            } else {
+                showActivity(index);
+            }
+
+            setCurentCheckPosition(index);
         }
-        
-        setCurentCheckPosition(index);
     }
     
+    /**
+     * Sends email to application author
+     */
+    private void sendEmail() {
+        Intent mailIntent = new Intent(Intent.ACTION_SEND);
+        mailIntent.setType("plain/text");
+        mailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.common_emailAuthor)});
+        mailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+        startActivity(Intent.createChooser(mailIntent,
+                getString(R.string.common_selectEmailApplication)));
+    }
+
+
+    /**
+     * Opens market detail application page
+     */
+    private void gotoMarket() {
+        Intent marketIntent = new Intent(Intent.ACTION_VIEW);
+        marketIntent.setData(Uri.parse("market://details?id=ru.neverdark.photools"));
+        startActivity(marketIntent);
+    }
+
+
     /**
      * Sets current position for navigation list
      * @param index

@@ -36,6 +36,8 @@
     <string name="common_label_selectAperture">Select a aperture</string>
     <string name="common_label_dof">DoF calculator</string>
     <string name="common_label_evpairs">EV Pairs</string>
+    <string name="common_emailAuthor">artemyankovskiy@gmail.com</string>
+    <string name="common_selectEmailApplication">Select email application</string>
     
     <string name="evpairs_button_calculate">Calculate</string>
     <string name="evpairs_button_clear">Clear</string>

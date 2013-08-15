@@ -35,6 +35,7 @@
     <string name="common_label_selectAperture">Выберите диафрагму</string>
     <string name="common_label_dof">ГРИП калькулятор</string>
     <string name="common_label_evpairs">EV Пары</string>
+    <string name="common_selectEmailApplication">Выберите приложение для отправки email</string>
     
     <string name="evpairs_button_calculate">Расчет</string>
     <string name="evpairs_button_clear">Очистить</string>
