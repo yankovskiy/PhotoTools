@@ -14,7 +14,7 @@
 
     <string name="dof_button_calculate">Расчет</string>
     <string name="dof_error_apertureNotSelected">Диафрагма должна быть выбрана</string>
-    <string name="dof_error_emptyFocalLength">Фокусное расстояние должно быть между 1 и 500мм</string>
+    <string name="dof_error_emptyFocalLength">Фокусное расстояние должно быть между 1 и 500 мм</string>
     <string name="dof_error_incorrectSubjectDistance">Неверное значение дистанции фокусировки</string>
     <string name="dof_label_aperture">[Диафрагма..]</string>
     <string name="dof_label_camera">Модель камеры</string>
@@ -33,16 +33,16 @@
     
     <string name="common_label_aperture">[Диафрагма..]</string>
     <string name="common_label_selectAperture">Выберите диафрагму</string>
-    <string name="common_label_dof">ГРИП калькулятор</string>
+    <string name="common_label_dof">ГРИП-калькулятор</string>
     <string name="common_label_evpairs">EV Пары</string>
     <string name="common_selectEmailApplication">Выберите приложение для отправки email</string>
     
     <string name="evpairs_button_calculate">Расчет</string>
     <string name="evpairs_button_clear">Очистить</string>
     <string name="evpairs_error_calculationProblem">Проблемы с расчетом</string>
-    <string name="evpairs_error_emptyCurrentAperture">Текущее значение диафрагмы должно быть заполненно</string>
-    <string name="evpairs_error_emptyCurrentIso">Текущее значение ISO должно быть заполненно</string>
-    <string name="evpairs_error_emptyCurrentShutterSpeed">Текущее значение выдержки должно быть заполненно</string>
+    <string name="evpairs_error_emptyCurrentAperture">Текущее значение диафрагмы должно быть заполнено</string>
+    <string name="evpairs_error_emptyCurrentIso">Текущее значение ISO должно быть заполнено</string>
+    <string name="evpairs_error_emptyCurrentShutterSpeed">Текущее значение выдержки должно быть заполнено</string>
     <string name="evpairs_error_onlyOneFieldMustBeEpmty">Должно быть только одно пустое поле</string>
     <string name="evpairs_label_apperture">[Диафрагма..]</string>
     <string name="evpairs_label_selectAperture">Выберите диафрагму</string>
@@ -54,13 +54,13 @@
     <string name="evpairs_label_selectShutterSpeed">Выберите выдержку</string>
             
     <string name="main_button_about">О программе</string>
-    <string name="main_button_dofcalc">ГРИП калькулятор</string>
+    <string name="main_button_dofcalc">ГРИП-калькулятор</string>
     <string name="main_button_evpairs">EV Пары</string>
     <string name="main_button_feedback">Обратная связь</string>
     <string name="main_button_rateMe">Оценить</string>
     
     
-    <string name="title_activity_dof">ГРИП калькулятор</string>
+    <string name="title_activity_dof">ГРИП-калькулятор</string>
     <string name="title_activity_evpairs">EV Пары</string>
     <string name="title_activity_settings">Настройки</string>
             

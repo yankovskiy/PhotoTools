@@ -26,6 +26,7 @@ public class CheckableRelativeLayout extends RelativeLayout implements Checkable
     /* (non-Javadoc)
      * @see android.widget.Checkable#setChecked(boolean)
      */
+    @SuppressWarnings("deprecation")
     @SuppressLint("NewApi")
     public void setChecked(boolean checked) {
         Log.message("Enter");
