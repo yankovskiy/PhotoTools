@@ -1,69 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="about_label_author"><![CDATA[Author: <a href="mailto:artemyankovskiy@gmail.com?subject=PhotoTools">Artem Yankovskiy</a>]]></string>
-    <string name="about_label_licenseInformation"><![CDATA[<b>Photo Tools</b> distributed on the GPL v3 license. You can get source code on the <a href="https://github.com/yankovskiy/PhotoTools">github.com</a>]]></string>    
-    <string name="about_label_version">Version:</string>
+    <string name="app_name">PhotoTools</string>
+    <string name="common_emailAuthor">artemyankovskiy@gmail.com</string>
+    
+    <string name="about_label_author"><![CDATA[Автор: <a href="mailto:artemyankovskiy@gmail.com?subject=PhotoTools">Артем Янковский</a>]]></string>
+    <string name="about_label_licenseInformation"><![CDATA[<b>Photo Tools</b> распространяется по лицензии GPL v3. Вы можете получить исходный код на <a href="https://github.com/yankovskiy/PhotoTools">github.com</a>]]></string>
+    <string name="about_label_version">Версия:</string>
     <string name="about_label_dofManual">Для расчета глубины резкости изображаемого пространства выберите из списков свою модель камеры, диафрагму. Укажите фокусное расстояние, с которого будет производиться съемка, а также дистанцию фокусировки. После чего нажмите кнопку \"расчет\".</string>
     <string name="about_label_evPairsManual">Окно разделено на две части: \"Текущие значения\" и \"Новые значения\".В \"Текущих значениях\" должны быть заполнены все параметры, при которых производится съемка в настоящий момент. В окно \"Новые значения\" вносятся желаемые параметры съемки, кроме того, который необходимо рассчитать. Поле с искомым параметром нужно оставить пустым. После нажатия на кнопку \"Расчет\" пустое поле в окне \"Новые значения\" рассчитается и заполнится автоматически. Для очистки окна \"Новые значения\" нажмите кнопку \"Очистить\".</string>
-    <string name="about_label_commonInformation">Common information</string>
+    <string name="about_label_commonInformation">Общая информация</string>
     <string name="about_label_commonManual">Для очистки поля с выбранным значением нажмите и удерживайте его.</string>
-    <string name="about_label_license">License information</string>
+    <string name="about_label_license">Информация о лицензии</string>
     
     <string name="app_name">Photo Tools</string>
 
-    <string name="dof_button_calculate">Calculate</string>
-    <string name="dof_error_apertureNotSelected">Aperture must be selected</string>
-    <string name="dof_error_emptyFocalLength">The focal length must be between 1 and 500</string>
-    <string name="dof_error_incorrectSubjectDistance">Incorrect subject distance</string>
-    <string name="dof_label_shootingOptions">Shooting options</string>
-    <string name="dof_label_aperture">[Aperture..]</string>
-    <string name="dof_label_camera">Camera model</string>
-    <string name="dof_label_calculationResult">Calculation result</string>
-    <string name="dof_label_farLimit">Far limit:</string>
-    <string name="dof_label_focalLength">Focal length</string>
-    <string name="dof_label_hyperFocal">Hyper focal:</string>
-    <string name="dof_label_meters">meters.</string>
-    <string name="dof_label_nearLimit">Near limit:</string>
-    <string name="dof_label_subjectDistance">Subject distance</string>
-    <string name="dof_label_total">Total:</string>
-    <string name="dof_label_vendor">Vendor:</string>
-    <string name="dof_label_selectVendor">Select a vendor</string>
-    <string name="dof_label_selectModel">Select a model</string>
+    <string name="dof_button_calculate">Расчет</string>
+    <string name="dof_error_apertureNotSelected">Диафрагма должна быть выбрана</string>
+    <string name="dof_error_emptyFocalLength">Фокусное расстояние должно быть между 1 и 500 мм</string>
+    <string name="dof_error_incorrectSubjectDistance">Неверное значение дистанции фокусировки</string>
+    <string name="dof_label_aperture">[Диафрагма..]</string>
+    <string name="dof_label_camera">Модель камеры</string>
+    <string name="dof_label_calculationResult">Результаты расчетов</string>
+    <string name="dof_label_farLimit">Дальняя граница:</string>
+    <string name="dof_label_focalLength">Фокусное расстояние</string>  
+    <string name="dof_label_hyperFocal">Гиперфокал:</string>
+    <string name="dof_label_meters">метров.</string>
+    <string name="dof_label_nearLimit">Ближняя граница:</string>
+    <string name="dof_label_shootingOptions">Параметры съемки</string>
+    <string name="dof_label_subjectDistance">Дистанция фокусировки</string>
+    <string name="dof_label_total">Всего:</string>
+    <string name="dof_label_vendor">Производитель:</string>
+    <string name="dof_label_selectVendor">Выберите фирму</string>
+    <string name="dof_label_selectModel">Выберите модель</string>
     
+    <string name="common_label_aperture">[Диафрагма..]</string>
+    <string name="common_label_selectAperture">Выберите диафрагму</string>
+    <string name="common_label_dof">ГРИП-калькулятор</string>
+    <string name="common_label_evpairs">EV Пары</string>
+    <string name="common_selectEmailApplication">Выберите приложение для отправки email</string>
     
-    <string name="common_label_aperture">[Aperture..]</string>
-    <string name="common_label_selectAperture">Select a aperture</string>
-    <string name="common_label_dof">DoF-calculator</string>
-    <string name="common_label_evpairs">EV Pairs</string>
-    <string name="common_emailAuthor">artemyankovskiy@gmail.com</string>
-    <string name="common_selectEmailApplication">Select email application</string>
-    
-    <string name="evpairs_button_calculate">Calculate</string>
-    <string name="evpairs_button_clear">Clear</string>
-    <string name="evpairs_error_calculationProblem">Calculation problem</string>
-    <string name="evpairs_error_emptyCurrentAperture">Current aperture value must be filled</string>
-    <string name="evpairs_error_emptyCurrentIso">Current ISO value must be filled</string>
-    <string name="evpairs_error_emptyCurrentShutterSpeed">Current shutter speed must be filled</string>
-    <string name="evpairs_error_onlyOneFieldMustBeEpmty">Only one new field must be empty</string>
-    <string name="evpairs_label_apperture">[Aperture..]</string>
-    <string name="evpairs_label_selectAperture">Select a aperture</string>
-    <string name="evpairs_label_currentValues">Current values</string>
+    <string name="evpairs_button_calculate">Расчет</string>
+    <string name="evpairs_button_clear">Очистить</string>
+    <string name="evpairs_error_calculationProblem">Проблемы с расчетом</string>
+    <string name="evpairs_error_emptyCurrentAperture">Текущее значение диафрагмы должно быть заполнено</string>
+    <string name="evpairs_error_emptyCurrentIso">Текущее значение ISO должно быть заполнено</string>
+    <string name="evpairs_error_emptyCurrentShutterSpeed">Текущее значение выдержки должно быть заполнено</string>
+    <string name="evpairs_error_onlyOneFieldMustBeEpmty">Должно быть только одно пустое поле</string>
+    <string name="evpairs_label_apperture">[Диафрагма..]</string>
+    <string name="evpairs_label_selectAperture">Выберите диафрагму</string>
+    <string name="evpairs_label_currentValues">Текущие значения</string>
     <string name="evpairs_label_iso">[ISO..]</string>
-    <string name="evpairs_label_selectIso">Select a ISO</string>
-    <string name="evpairs_label_newValues">New values</string>
-    <string name="evpairs_label_shutterSpeed">[Shutter speed..]</string>
-    <string name="evpairs_label_selectShutterSpeed">Select a shutter speed</string>
+    <string name="evpairs_label_selectIso">Выберите ISO</string>
+    <string name="evpairs_label_newValues">Новые значения</string>
+    <string name="evpairs_label_shutterSpeed">[Выдержка..]</string>
+    <string name="evpairs_label_selectShutterSpeed">Выберите выдержку</string>
             
-    <string name="main_button_about">About</string>
-    <string name="main_button_dofcalc">Depth of Field</string>
-    <string name="main_button_evpairs">EV Pairs</string>
-    <string name="main_button_feedback">Feedback</string>
-    <string name="main_button_rateMe">Rate</string>
+    <string name="main_button_about">О программе</string>
+    <string name="main_button_dofcalc">ГРИП-калькулятор</string>
+    <string name="main_button_evpairs">EV Пары</string>
+    <string name="main_button_feedback">Обратная связь</string>
+    <string name="main_button_rateMe">Оценить</string>
     
-    <string name="title_activity_about">About</string>
-    <string name="title_activity_dof">Depth of Field</string>
-    <string name="title_activity_evpairs">EV Pairs</string>
+    
+    <string name="title_activity_dof">ГРИП-калькулятор</string>
+    <string name="title_activity_evpairs">EV Пары</string>
+    <string name="title_activity_settings">Настройки</string>
     
     <string-array name="main_menuTitles">
         <item>@string/main_button_dofcalc</item>
