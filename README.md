@@ -10,6 +10,7 @@ At the moment, PhotoTools offers two options:
 Supporting android version and devices
 ----------
 PhotoTools supported android version from 1.6 to 4.3.
+
 PhotoTools supported handset and tablets from many vendors.
 
 Getting binary
