@@ -112,7 +112,7 @@ public class TitlesFragment extends SherlockListFragment {
      */
     private void gotoMarket() {
         Intent marketIntent = new Intent(Intent.ACTION_VIEW);
-        marketIntent.setData(Uri.parse("market://details?id=ru.neverdark.photools"));
+        marketIntent.setData(Uri.parse("market://details?id=ru.neverdark.phototools"));
         startActivity(marketIntent);
     }
 

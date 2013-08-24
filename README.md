@@ -14,9 +14,7 @@ PhotoTools supported handset and tablets from many vendors.
 
 Getting binary
 ----------
-You can get latest stable build [here](http://neverdark.ru/PhotoTools.apk).
-
-On your device, you need allow installation of apps from sources other than the Google Play.
+You can get latest stable build [here](https://play.google.com/store/apps/details?id=ru.neverdark.phototools).
 
 Other information:
 ----------
