@@ -1,43 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (C) 2013 Artem Yankovskiy (artemyankovskiy@gmail.com).
+      This program is free software: you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as published by
+      the Free Software Foundation, either version 3 of the License, or
+      (at your option) any later version.
+  
+      This program is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU General Public License for more details.
+  
+      You should have received a copy of the GNU General Public License
+      along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
-    <string name="app_name">PhotoTools</string>
-    <string name="common_emailAuthor">artemyankovskiy@gmail.com</string>
-    
+
     <string name="about_label_author"><![CDATA[Автор: <a href="mailto:artemyankovskiy@gmail.com?subject=PhotoTools">Артем Янковский</a>]]></string>
-    <string name="about_label_licenseInformation"><![CDATA[<b>Photo Tools</b> распространяется по лицензии GPL v3. Вы можете получить исходный код на <a href="https://github.com/yankovskiy/PhotoTools">github.com</a>]]></string>
-    <string name="about_label_version">Версия:</string>
-    <string name="about_label_dofManual">Для расчета глубины резкости изображаемого пространства выберите из списков свою модель камеры, диафрагму. Укажите фокусное расстояние, с которого будет производиться съемка, а также дистанцию фокусировки. После чего нажмите кнопку \"расчет\".</string>
-    <string name="about_label_evPairsManual">Окно разделено на две части: \"Текущие значения\" и \"Новые значения\".В \"Текущих значениях\" должны быть заполнены все параметры, при которых производится съемка в настоящий момент. В окно \"Новые значения\" вносятся желаемые параметры съемки, кроме того, который необходимо рассчитать. Поле с искомым параметром нужно оставить пустым. После нажатия на кнопку \"Расчет\" пустое поле в окне \"Новые значения\" рассчитается и заполнится автоматически. Для очистки окна \"Новые значения\" нажмите кнопку \"Очистить\".</string>
     <string name="about_label_commonInformation">Общая информация</string>
     <string name="about_label_commonManual">Для очистки поля с выбранным значением нажмите и удерживайте его.</string>
+    <string name="about_label_dof">ГРИП-калькулятор</string>
+    <string name="about_label_dofManual">Для расчета глубины резкости изображаемого пространства выберите из списков свою модель камеры, диафрагму. Укажите фокусное расстояние, с которого будет производиться съемка, а также дистанцию фокусировки. После чего нажмите кнопку \"расчет\".</string>
+    <string name="about_label_evpairs">EV Пары</string>
+    <string name="about_label_evPairsManual">Окно разделено на две части: \"Текущие значения\" и \"Новые значения\".В \"Текущих значениях\" должны быть заполнены все параметры, при которых производится съемка в настоящий момент. В окно \"Новые значения\" вносятся желаемые параметры съемки, кроме того, который необходимо рассчитать. Поле с искомым параметром нужно оставить пустым. После нажатия на кнопку \"Расчет\" пустое поле в окне \"Новые значения\" рассчитается и заполнится автоматически. Для очистки окна \"Новые значения\" нажмите кнопку \"Очистить\".</string>
     <string name="about_label_license">Информация о лицензии</string>
+    <string name="about_label_licenseInformation"><![CDATA[<b>Photo Tools</b> распространяется по лицензии GPL v3. Вы можете получить исходный код на <a href="https://github.com/yankovskiy/PhotoTools">github.com</a>]]></string>
+    <string name="about_label_version">Версия:</string>
     
     <string name="app_name">Photo Tools</string>
-
+    
     <string name="dof_button_calculate">Расчет</string>
     <string name="dof_error_apertureNotSelected">Диафрагма должна быть выбрана</string>
     <string name="dof_error_emptyFocalLength">Фокусное расстояние должно быть между 1 и 500 мм</string>
     <string name="dof_error_incorrectSubjectDistance">Неверное значение дистанции фокусировки</string>
     <string name="dof_label_aperture">[Диафрагма..]</string>
-    <string name="dof_label_camera">Модель камеры</string>
     <string name="dof_label_calculationResult">Результаты расчетов</string>
+    <string name="dof_label_camera">Модель камеры</string>
     <string name="dof_label_farLimit">Дальняя граница:</string>
-    <string name="dof_label_focalLength">Фокусное расстояние</string>  
+    <string name="dof_label_focalLength">Фокусное расстояние</string>
     <string name="dof_label_hyperFocal">Гиперфокал:</string>
     <string name="dof_label_meters">метров.</string>
     <string name="dof_label_nearLimit">Ближняя граница:</string>
+    <string name="dof_label_selectAperture">Выберите диафрагму</string>
+    <string name="dof_label_selectModel">Выберите модель</string>
+    <string name="dof_label_selectVendor">Выберите фирму</string>
     <string name="dof_label_shootingOptions">Параметры съемки</string>
     <string name="dof_label_subjectDistance">Дистанция фокусировки</string>
     <string name="dof_label_total">Всего:</string>
     <string name="dof_label_vendor">Производитель:</string>
-    <string name="dof_label_selectVendor">Выберите фирму</string>
-    <string name="dof_label_selectModel">Выберите модель</string>
-    
-    <string name="common_label_aperture">[Диафрагма..]</string>
-    <string name="common_label_selectAperture">Выберите диафрагму</string>
-    <string name="common_label_dof">ГРИП-калькулятор</string>
-    <string name="common_label_evpairs">EV Пары</string>
-    <string name="common_selectEmailApplication">Выберите приложение для отправки email</string>
     
     <string name="evpairs_button_calculate">Расчет</string>
     <string name="evpairs_button_clear">Очистить</string>
@@ -47,31 +57,45 @@
     <string name="evpairs_error_emptyCurrentShutterSpeed">Текущее значение выдержки должно быть заполнено</string>
     <string name="evpairs_error_onlyOneFieldMustBeEpmty">Должно быть только одно пустое поле</string>
     <string name="evpairs_label_apperture">[Диафрагма..]</string>
-    <string name="evpairs_label_selectAperture">Выберите диафрагму</string>
     <string name="evpairs_label_currentValues">Текущие значения</string>
     <string name="evpairs_label_iso">[ISO..]</string>
-    <string name="evpairs_label_selectIso">Выберите ISO</string>
     <string name="evpairs_label_newValues">Новые значения</string>
-    <string name="evpairs_label_shutterSpeed">[Выдержка..]</string>
+    <string name="evpairs_label_selectAperture">Выберите диафрагму</string>
+    <string name="evpairs_label_selectIso">Выберите ISO</string>
     <string name="evpairs_label_selectShutterSpeed">Выберите выдержку</string>
-            
+    <string name="evpairs_label_shutterSpeed">[Выдержка..]</string>
+    
+    <string name="locationSelection_label_currentLocation">Текущее местоположение</string>
+    <string name="locationSelection_label_pointOnMap">Точка на карте</string>
+    <string name="locationSelection_label_selectLocation">Выберите местоположение</string>
+    <string-array name="locationSelection_titles">
+        <item>@string/locationSelection_label_currentLocation</item>    <!-- 0 -->
+        <item>@string/locationSelection_label_pointOnMap</item>         <!-- 1 -->
+    </string-array>
+    
     <string name="main_button_about">О программе</string>
     <string name="main_button_dofcalc">ГРИП-калькулятор</string>
     <string name="main_button_evpairs">EV Пары</string>
     <string name="main_button_feedback">Обратная связь</string>
     <string name="main_button_rateMe">Оценить</string>
-    
-    
-    <string name="title_activity_dof">ГРИП-калькулятор</string>
-    <string name="title_activity_evpairs">EV Пары</string>
-    <string name="title_activity_settings">Настройки</string>
-    
+    <string name="main_button_sunset">Закаты и рассветы</string>
+
     <string-array name="main_menuTitles">
-        <item>@string/main_button_dofcalc</item>
-        <item>@string/main_button_evpairs</item>
-        <item>@string/main_button_rateMe</item>
-        <item>@string/main_button_feedback</item>
-        <item>@string/main_button_about</item>
+        <item>@string/main_button_dofcalc</item>    <!-- 0 -->
+        <item>@string/main_button_evpairs</item>    <!-- 1 -->
+        <item>@string/main_button_sunset</item>     <!-- 2 -->
+        <item>@string/main_button_rateMe</item>     <!-- 3 -->
+        <item>@string/main_button_feedback</item>   <!-- 4 -->
+        <item>@string/main_button_about</item>      <!-- 5 -->
     </string-array>
-            
+    
+    <string name="sunset_button_calculate">Расчет</string>
+    <string name="sunset_label_date">Дата</string>
+    <string name="sunset_label_location">Местоположение</string>
+
+    <string name="titles_emailAuthor">artemyankovskiy@gmail.com</string>
+    <string name="title_activity_map">Выберите место</string>
+    <string name="titles_selectEmailApplication">Выберите приложение для отправки email</string>
+    
+
 </resources>

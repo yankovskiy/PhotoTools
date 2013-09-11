@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2013 Artem Yankovskiy (artemyankovskiy@gmail.com).
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * 
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ * 
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
 import ru.neverdark.phototools.Constants;
@@ -10,6 +25,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -18,9 +34,6 @@ import com.actionbarsherlock.app.SherlockListFragment;
  * Fragment for navigation list
  */
 public class TitlesFragment extends SherlockListFragment {
-    private DofFragment mDofFragment;
-    private AboutFragment mAboutFragment;
-    private EvpairsFragment mEvFragment;
     private boolean mDualPane;
     private int mCurrentCheckPosition = 0;
     
@@ -46,7 +59,7 @@ public class TitlesFragment extends SherlockListFragment {
         } 
         
         if (mDualPane) {
-            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
             showDetails(mCurrentCheckPosition);
         }
     }
@@ -85,7 +98,7 @@ public class TitlesFragment extends SherlockListFragment {
         } else {
             if (mDualPane == true) {
                 getListView().setItemChecked(index, true);
-                showFragment(index);
+                replaceFragment(index);
             } else {
                 showActivity(index);
             }
@@ -100,10 +113,10 @@ public class TitlesFragment extends SherlockListFragment {
     private void sendEmail() {
         Intent mailIntent = new Intent(Intent.ACTION_SEND);
         mailIntent.setType("plain/text");
-        mailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.common_emailAuthor)});
+        mailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.titles_emailAuthor)});
         mailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
         startActivity(Intent.createChooser(mailIntent,
-                getString(R.string.common_selectEmailApplication)));
+                getString(R.string.titles_selectEmailApplication)));
     }
 
 
@@ -125,72 +138,39 @@ public class TitlesFragment extends SherlockListFragment {
         mCurrentCheckPosition = index;
     }
     
-    /**
-     * Shows fragment by index
-     * @param index fragment index for shown
-     */
-    private void showFragment(int index) {
-        Log.message("Enter");
-
-        switch (index) {
-        case Constants.DOF_CHOICE:
-            replaceFragment(mDofFragment, index);
-            break;
-        case Constants.EV_CHOICE:
-            replaceFragment(mEvFragment, index);
-        case Constants.ABOUT_CHOICE:
-            replaceFragment(mAboutFragment, index);
-            break;
-        }
-    }
     
     
     /**
      * Replace current fragment to other
-     * @param details new fragment object
      * @param index index fragment
      */
-    private void replaceFragment(Fragment details, int index) {
+    private void replaceFragment(int index) {
         Log.message("Enter");
         boolean isOperationNeed = false;
+        Fragment details = getFragmentManager().findFragmentById(
+                R.id.main_detailFragment);
         
         switch (index) {
         case Constants.DOF_CHOICE:
-            try {
-                details = (DofFragment) getFragmentManager().findFragmentById(
-                        R.id.main_detailFragment);
-            } catch (ClassCastException e) {
-                Log.message("Exception: " + e.getMessage());
-            }
-
-            if (details == null) {
+            if ((details instanceof DofFragment) == false) {
                 details = new DofFragment();
                 isOperationNeed = true;
             }
             break;
         case Constants.EV_CHOICE:
-            try {
-                details = (EvpairsFragment) getFragmentManager().findFragmentById(
-                        R.id.main_detailFragment);
-            } catch (ClassCastException e) {
-                Log.message("Exception: " + e.getMessage());
-            }
-
-            if (details == null) {
+            if ((details instanceof EvpairsFragment) == false) {
                 details = new EvpairsFragment();
                 isOperationNeed = true;
             }
             break;
-        case Constants.ABOUT_CHOICE:
-            
-            try {
-                details = (AboutFragment) getFragmentManager()
-                        .findFragmentById(R.id.main_detailFragment);
-            } catch (ClassCastException e) {
-                Log.message("Exception: " + e.getMessage());
+        case Constants.SUNSET_CHOICE:
+            if ((details instanceof SunsetFragment) == false) {
+                details = new SunsetFragment();
+                isOperationNeed = true;
             }
-
-            if (details == null) {
+            break;
+        case Constants.ABOUT_CHOICE:
+            if ((details instanceof AboutFragment) == false) {
                 details = new AboutFragment();
                 isOperationNeed = true;
             }

@@ -13,25 +13,34 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package ru.neverdark.phototools;
+package ru.neverdark.phototools.fragments;
 
+import ru.neverdark.phototools.Constants;
 import ru.neverdark.phototools.log.Log;
-
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.os.Bundle;
+import android.widget.DatePicker;
+import com.actionbarsherlock.app.SherlockDialogFragment;
 
-public class MainActivity extends SherlockFragmentActivity {
+/**
+ * Dialog fragment with DatePicker
+ */
+public class DateFragment extends SherlockDialogFragment implements DatePickerDialog.OnDateSetListener {
 
-    /* (non-Javadoc)
-     * @see android.app.Activity#onCreate(android.os.Bundle)
-     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.message("Enter");
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        int year = getArguments().getInt(Constants.DATE_YEAR);
+        int month = getArguments().getInt(Constants.DATE_MONTH);
+        int day = getArguments().getInt(Constants.DATE_DAY);
+        return new DatePickerDialog(getActivity(), this, year, month, day);
     }
     
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear,
+            int dayOfMonth) {
+        Log.message("Enter");
+        SunsetFragment.setDate(year, monthOfYear, dayOfMonth);
+    }
 }
-

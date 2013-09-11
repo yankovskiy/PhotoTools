@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (C) 2013 Artem Yankovskiy (artemyankovskiy@gmail.com).
+      This program is free software: you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as published by
+      the Free Software Foundation, either version 3 of the License, or
+      (at your option) any later version.
+  
+      This program is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU General Public License for more details.
+  
+      You should have received a copy of the GNU General Public License
+      along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.neverdark.phototools"
-    android:versionCode="41"
-    android:versionName="0.4.1" >
+    android:versionCode="50"
+    android:versionName="0.5-dev" >
 
+    <!-- Used by the API to download map tiles from Google Maps servers. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Allows the API to check the connection status in order to determine whether data can be downloaded. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Allows the API to cache map tile data in the device's external storage area. -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Allows the API to access Google web-based services. -->
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <!-- Allows the API to use WiFi or mobile cell data (or both) to determine the device's location. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- Allows the API to use the Global Positioning System (GPS) to determine the device's location to within a very small area. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- OpenGL ES version 2 -->
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <!-- Supported version from 2.2 to 4.3 -->
     <uses-sdk
-        android:minSdkVersion="4"
+        android:minSdkVersion="8"
         android:targetSdkVersion="18" />
 
     <application
@@ -13,6 +46,11 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.Sherlock.Light.DarkActionBar" >
+        <!--  Debug API Key for Google Maps v2 -->
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBVWCHA_dNC3IL1_ryCvN62L5-zyu6s0s4" />
+
         <activity
             android:name="ru.neverdark.phototools.MainActivity"
             android:label="@string/app_name" >
@@ -22,9 +60,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name="ru.neverdark.phototools.DetailsActivity" />
-        
+        <activity
+            android:name="ru.neverdark.phototools.MapActivity"
+            android:label="@string/title_activity_map" >
+        </activity>
     </application>
 
 </manifest>
