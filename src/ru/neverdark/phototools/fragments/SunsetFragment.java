@@ -209,27 +209,23 @@ public class SunsetFragment extends SherlockFragment {
         Log.message("Enter");
     }
     
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    /**
+     * Handling location selection
+     * @param locationSelectionId location selection id item 
+     */
+    public void handleLocationSelection(final int locationSelectionId) {
         Log.message("Enter");
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-        case Constants.DIALOG_FRAGMENT:
-            if (resultCode == Activity.RESULT_OK) {
-                int locationSelectionId = data.getIntExtra(Constants.LOCATION_SELECTION_ID, 0);
-                switch (locationSelectionId) {
-                case Constants.LOCATION_CURRENT_POSITION_CHOICE:
-                    Log.message("LOCATION_CURRENT_POSITION_CHOICE");
-                    break;
-                case Constants.LOCATION_POINT_ON_MAP_CHOICE:
-                    Log.message("LOCATION_CURRENT_POSITION_CHOICE");
-                    break;
-                default:
-                    break;
-                }
-            } 
-
+        
+        switch (locationSelectionId) {
+        case Constants.LOCATION_CURRENT_POSITION_CHOICE:
+            handleCurrentLocation();
+            break;
+        case Constants.LOCATION_POINT_ON_MAP_CHOICE:
+            handlePointOnMap();
+            break;
+        default:
             break;
         }
     }
+    
 }

@@ -63,9 +63,8 @@ public class LocationSelectionFragment extends SherlockDialogFragment {
             public void onItemClick(AdapterView<?> parent, View itemClicked, int position,
                     long id) {
                 Log.message("Enter");
-                Intent intent = new Intent();
-                intent.putExtra(Constants.LOCATION_SELECTION_ID, position);
-                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+                
+                ((SunsetFragment)getTargetFragment()).handleLocationSelection(position);
                 dialog.dismiss();
             }
         });
