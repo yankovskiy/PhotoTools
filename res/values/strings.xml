@@ -89,6 +89,8 @@
         <item>@string/main_button_about</item>      <!-- 5 -->
     </string-array>
     
+    <string name="map_button_confirmSelection">Подтвердить выбор</string>
+    
     <string name="sunset_button_calculate">Расчет</string>
     <string name="sunset_label_date">Дата</string>
     <string name="sunset_label_location">Местоположение</string>

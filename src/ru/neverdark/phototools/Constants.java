@@ -41,5 +41,9 @@ public class Constants {
     
     public static final byte DIALOG_FRAGMENT = 0;
     
-    public static final String LOCATION_SELECTION_ID = "ru.neverdark.phototools.locationSelectionId";
+    public static final String LOCATION_LATITUDE = "ru.neverdark.phototools.locationLatitude";
+    public static final String LOCATION_LONGITUDE = "ru.neverdark.phototools.locationLongitude";
+    public static final String LOCATION_IS_SAVE = "ru.neverdark.phototools.isSaveLocation";
+    
+    public static final float MAP_CAMERA_ZOOM = 17.0f; 
 }
