@@ -13,11 +13,10 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package ru.neverdark.phototools.evcalculator;
+package ru.neverdark.phototools.utils;
 
 import java.util.Arrays;
 
-import ru.neverdark.phototools.log.Log;
 
 public class EvpairsCalculator {
 

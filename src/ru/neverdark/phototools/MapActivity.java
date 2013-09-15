@@ -15,24 +15,31 @@
  ******************************************************************************/
 package ru.neverdark.phototools;
 
-import ru.neverdark.phototools.log.Log;
+import ru.neverdark.phototools.utils.Constants;
+import ru.neverdark.phototools.utils.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MapActivity extends SherlockFragmentActivity {
+public class MapActivity extends SherlockFragmentActivity implements
+        OnMapLongClickListener {
 
     private GoogleMap mMap;
     private Button mButtonDone;
+    private Marker mMarker;
+    private LatLng mMarkerPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +59,10 @@ public class MapActivity extends SherlockFragmentActivity {
         if (mMap == null) {
             mMap = ((SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map)).getMap();
-        }
 
-        mMap.setMyLocationEnabled(true);
+            mMap.setMyLocationEnabled(true);
+            mMap.setOnMapLongClickListener(this);
+        }
 
         if (savedInstanceState == null) {
             /* gets current coord if have */
@@ -72,7 +80,24 @@ public class MapActivity extends SherlockFragmentActivity {
                 mMap.moveCamera(CameraUpdateFactory
                         .newCameraPosition(currentPosition));
             }
+        } else {
+            mMarkerPosition = savedInstanceState.getParcelable(Constants.MAP_MARKER_POSITION);
+            setMarker();
         }
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        Log.message("Enter");
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(Constants.MAP_MARKER_POSITION, mMarkerPosition);
+    }
+
+    @Override
+    public void onMapLongClick(LatLng point) {
+        Log.message("Enter");
+        mMarkerPosition = point;
+        setMarker();
     }
 
     /**
@@ -107,6 +132,14 @@ public class MapActivity extends SherlockFragmentActivity {
      * old marker and set new marker in new position
      */
     private void setMarker() {
+        Log.message("Enter");
+
+        /* If we have marker - destroy */
+        if (mMarker != null) {
+            mMap.clear();
+        }
+        mMarker = mMap.addMarker(new MarkerOptions().position(mMarkerPosition));
+        setButtonVisible(true);
 
     }
 
@@ -116,8 +149,14 @@ public class MapActivity extends SherlockFragmentActivity {
      * @param view
      *            for handle onClick event
      */
-    private void onClick(View view) {
-
+    public void onClick(View view) {
+        Log.message("Enter");
+        Intent intent = new Intent();
+        intent.putExtra(Constants.LOCATION_LATITUDE, mMarkerPosition.latitude);
+        intent.putExtra(Constants.LOCATION_LONGITUDE, mMarkerPosition.longitude);
+        setResult(RESULT_OK, intent);
+        finish();
     }
+    
 
 }

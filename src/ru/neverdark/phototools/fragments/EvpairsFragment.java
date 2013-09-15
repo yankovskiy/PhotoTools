@@ -18,8 +18,8 @@ package ru.neverdark.phototools.fragments;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.evcalculator.EvpairsCalculator;
 import ru.neverdark.phototools.ui.NothingSelectedSpinnerAdapter;
+import ru.neverdark.phototools.utils.EvpairsCalculator;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;

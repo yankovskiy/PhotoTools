@@ -13,7 +13,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package ru.neverdark.phototools;
+package ru.neverdark.phototools.utils;
 
 /**
  * Constants for PhotoTools application
@@ -46,4 +46,6 @@ public class Constants {
     public static final String LOCATION_IS_SAVE = "ru.neverdark.phototools.isSaveLocation";
     
     public static final float MAP_CAMERA_ZOOM = 17.0f; 
+    
+    public static final String MAP_MARKER_POSITION = "mapMarkerPosition";
 }

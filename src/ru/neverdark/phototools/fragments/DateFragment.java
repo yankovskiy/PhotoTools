@@ -15,8 +15,8 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
-import ru.neverdark.phototools.Constants;
-import ru.neverdark.phototools.log.Log;
+import ru.neverdark.phototools.utils.Constants;
+import ru.neverdark.phototools.utils.Log;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;

@@ -19,7 +19,8 @@ import ru.neverdark.phototools.fragments.AboutFragment;
 import ru.neverdark.phototools.fragments.DofFragment;
 import ru.neverdark.phototools.fragments.EvpairsFragment;
 import ru.neverdark.phototools.fragments.SunsetFragment;
-import ru.neverdark.phototools.log.Log;
+import ru.neverdark.phototools.utils.Constants;
+import ru.neverdark.phototools.utils.Log;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;

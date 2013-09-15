@@ -15,7 +15,6 @@
  ******************************************************************************/
 package ru.neverdark.phototools.utils;
 
-import ru.neverdark.phototools.log.Log;
 import android.app.Service;
 import android.content.Intent;
 import android.location.Location;

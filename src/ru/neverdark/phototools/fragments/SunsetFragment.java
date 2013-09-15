@@ -18,12 +18,13 @@ package ru.neverdark.phototools.fragments;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import ru.neverdark.phototools.Constants;
 import ru.neverdark.phototools.MapActivity;
 import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.log.Log;
+import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.GeoLocationService;
+import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.GeoLocationService.GeoLocationBinder;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -189,9 +190,12 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void handlePointOnMap() {
         Log.message("Enter");
-        showMap();
-        mSelectionId = Constants.LOCATION_POINT_ON_MAP_CHOICE;
-        setTextLocation();
+        Intent mapIntent = new Intent(getActivity(), MapActivity.class);
+
+        mapIntent.putExtra(Constants.LOCATION_LATITUDE, mLatitude);
+        mapIntent.putExtra(Constants.LOCATION_LONGITUDE, mLongitude);
+
+        startActivityForResult(mapIntent, Constants.LOCATION_POINT_ON_MAP_CHOICE);
     }
 
     /**
@@ -219,9 +223,10 @@ public class SunsetFragment extends SherlockFragment {
         setOnClickListeners(mEditTextLocation);
 
         if (savedInstanceState != null) {
-            // Load date
-            // Load location
-
+            mLatitude  = savedInstanceState.getDouble(Constants.LOCATION_LATITUDE, 0.0);
+            mLongitude = savedInstanceState.getDouble(Constants.LOCATION_LONGITUDE, 0.0);
+            Log.variable("mLatitude", String.valueOf(mLatitude));
+            Log.variable("mLongitude", String.valueOf(mLongitude));
         } else {
             initDate();
             setTextLocation();
@@ -239,9 +244,13 @@ public class SunsetFragment extends SherlockFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
+    public void onSaveInstanceState(Bundle outState) {
         Log.message("Enter");
-
+        super.onSaveInstanceState(outState);
+        outState.putDouble(Constants.LOCATION_LATITUDE, mLatitude);
+        outState.putDouble(Constants.LOCATION_LONGITUDE, mLongitude);
+        Log.variable("mLatitude", String.valueOf(mLatitude));
+        Log.variable("mLongitude", String.valueOf(mLongitude));
     }
 
     @Override
@@ -326,20 +335,21 @@ public class SunsetFragment extends SherlockFragment {
                 Constants.LOCATION_SELECTION_DIALOG);
     }
 
-    /**
-     * Shows map for selection position
-     */
-    private void showMap() {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.message("Enter");
-
-        Intent mapIntent = new Intent(getActivity(), MapActivity.class);
-
-        mapIntent.putExtra(Constants.LOCATION_LATITUDE, mLatitude);
-        mapIntent.putExtra(Constants.LOCATION_LONGITUDE, mLongitude);
-
-        startActivity(mapIntent);
+        if (requestCode == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
+            if (resultCode == Activity.RESULT_OK) {
+                mLatitude = data.getDoubleExtra(Constants.LOCATION_LATITUDE, 0.0);
+                mLongitude = data.getDoubleExtra(Constants.LOCATION_LONGITUDE, 0.0);
+                Log.variable("mLatitude", String.valueOf(mLatitude));
+                Log.variable("mLongitude", String.valueOf(mLongitude));
+                mSelectionId = Constants.LOCATION_POINT_ON_MAP_CHOICE;
+                setTextLocation();
+            }
+        }
     }
-
+    
     /**
      * Function to show settings alert dialog On pressing Settings button will
      * launch Settings Options

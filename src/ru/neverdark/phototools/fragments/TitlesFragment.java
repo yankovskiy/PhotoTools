@@ -15,10 +15,10 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
-import ru.neverdark.phototools.Constants;
 import ru.neverdark.phototools.DetailsActivity;
 import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.log.Log;
+import ru.neverdark.phototools.utils.Constants;
+import ru.neverdark.phototools.utils.Log;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;

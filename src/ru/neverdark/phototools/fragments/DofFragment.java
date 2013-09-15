@@ -21,11 +21,11 @@ import java.util.List;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.dofcalculator.CameraData;
-import ru.neverdark.phototools.dofcalculator.DofCalculator;
-import ru.neverdark.phototools.dofcalculator.FStop;
-import ru.neverdark.phototools.log.Log;
 import ru.neverdark.phototools.ui.NothingSelectedSpinnerAdapter;
+import ru.neverdark.phototools.utils.Log;
+import ru.neverdark.phototools.utils.dofcalculator.CameraData;
+import ru.neverdark.phototools.utils.dofcalculator.DofCalculator;
+import ru.neverdark.phototools.utils.dofcalculator.FStop;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;

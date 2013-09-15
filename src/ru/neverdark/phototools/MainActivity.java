@@ -15,7 +15,7 @@
  ******************************************************************************/
 package ru.neverdark.phototools;
 
-import ru.neverdark.phototools.log.Log;
+import ru.neverdark.phototools.utils.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
