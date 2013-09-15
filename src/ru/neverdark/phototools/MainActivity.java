@@ -23,7 +23,9 @@ import android.os.Bundle;
 
 public class MainActivity extends SherlockFragmentActivity {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see android.app.Activity#onCreate(android.os.Bundle)
      */
     @Override
@@ -31,7 +33,9 @@ public class MainActivity extends SherlockFragmentActivity {
         Log.message("Enter");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (savedInstanceState == null) {
+            Log.saveLogcatToFile();
+        }
     }
-    
-}
 
+}

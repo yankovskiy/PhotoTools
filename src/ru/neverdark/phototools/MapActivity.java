@@ -26,55 +26,98 @@ import com.google.android.gms.maps.model.LatLng;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 public class MapActivity extends SherlockFragmentActivity {
 
     private GoogleMap mMap;
     private Button mButtonDone;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.message("Enter");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        initMap();
+        bindObjectsToResources();
+        initMap(savedInstanceState);
     }
 
     /**
      * Inits Google Map
      */
-    private void initMap() {
+    private void initMap(Bundle savedInstanceState) {
+        Log.message("Enter");
         if (mMap == null) {
             mMap = ((SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map)).getMap();
         }
 
-        if (mMap != null) {
-            mMap.setMyLocationEnabled(true);
-        }
+        mMap.setMyLocationEnabled(true);
 
-        /* loads current coord if have */
-        Intent intent = getIntent();
-        Double latitude = intent.getDoubleExtra(Constants.LOCATION_LATITUDE, 0);
-        Double longitude = intent.getDoubleExtra(Constants.LOCATION_LONGITUDE,
-                0);
+        if (savedInstanceState == null) {
+            /* gets current coord if have */
+            Intent intent = getIntent();
+            Double latitude = intent.getDoubleExtra(
+                    Constants.LOCATION_LATITUDE, 0);
+            Double longitude = intent.getDoubleExtra(
+                    Constants.LOCATION_LONGITUDE, 0);
 
-        /* checks for coordinates was received */
-        if ((latitude != 0) || (longitude != 0)) {
-            CameraPosition currentPosition = new CameraPosition.Builder()
-                    .target(new LatLng(latitude, longitude)).zoom(Constants.MAP_CAMERA_ZOOM).build();
-            mMap.moveCamera(CameraUpdateFactory
-                    .newCameraPosition(currentPosition));
+            /* checks for coordinates was received */
+            if ((latitude != 0) || (longitude != 0)) {
+                CameraPosition currentPosition = new CameraPosition.Builder()
+                        .target(new LatLng(latitude, longitude))
+                        .zoom(Constants.MAP_CAMERA_ZOOM).build();
+                mMap.moveCamera(CameraUpdateFactory
+                        .newCameraPosition(currentPosition));
+            }
         }
     }
-    
+
     /**
      * Binds classes objects to resources
      */
     private void bindObjectsToResources() {
+        Log.message("Enter");
         mButtonDone = (Button) findViewById(R.id.map_button_done);
+    }
+
+    /**
+     * Sets visible property for Done button
+     * 
+     * @param isVisible
+     *            true for Done button visible, false for invisible
+     */
+    private void setButtonVisible(final boolean isVisible) {
+        Log.message("Enter");
+        int visible;
+
+        if (isVisible) {
+            visible = View.VISIBLE;
+        } else {
+            visible = View.INVISIBLE;
+        }
+
+        mButtonDone.setVisibility(visible);
+    }
+
+    /**
+     * Sets marker to the long tap position If marker already exists - remove
+     * old marker and set new marker in new position
+     */
+    private void setMarker() {
+
+    }
+
+    /**
+     * OnClick handler for views
+     * 
+     * @param view
+     *            for handle onClick event
+     */
+    private void onClick(View view) {
+
     }
 
 }

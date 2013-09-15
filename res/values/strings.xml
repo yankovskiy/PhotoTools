@@ -91,6 +91,11 @@
     
     <string name="map_button_confirmSelection">Подтвердить выбор</string>
     
+    <string name="sunset_alert_message">Неудается определить местоположение. Вы хотите перейти в настройки?</string>
+    <string name="sunset_alert_title">Определение местоположения</string>
+    <string name="sunset_alert_positive">Настройки</string>
+    <string name="sunset_alert_negative">Отмена</string>
+    
     <string name="sunset_button_calculate">Расчет</string>
     <string name="sunset_label_date">Дата</string>
     <string name="sunset_label_location">Местоположение</string>

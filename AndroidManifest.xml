@@ -65,6 +65,7 @@
             android:name="ru.neverdark.phototools.MapActivity"
             android:label="@string/title_activity_map" >
         </activity>
+        <service android:name="ru.neverdark.phototools.utils.GeoLocationService"/>
     </application>
 
 </manifest>
