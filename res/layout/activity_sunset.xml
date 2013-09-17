@@ -14,20 +14,16 @@
       You should have received a copy of the GNU General Public License
       along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/sunsnet_ScrollView"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sunset_LinearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin" >
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/sunset_LinearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/sunset_label_date"
@@ -68,6 +64,16 @@
             android:layout_height="wrap_content"
             android:text="@string/sunset_button_calculate" />
 
-    </LinearLayout>
+        <ScrollView
+            android:id="@+id/sunset_ScrollView_calculationResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-</ScrollView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+            </LinearLayout>
+        </ScrollView>
+
+</LinearLayout>

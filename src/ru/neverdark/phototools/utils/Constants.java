@@ -44,6 +44,18 @@ public class Constants {
     public static final String LOCATION_LATITUDE = "ru.neverdark.phototools.locationLatitude";
     public static final String LOCATION_LONGITUDE = "ru.neverdark.phototools.locationLongitude";
     public static final String LOCATION_IS_SAVE = "ru.neverdark.phototools.isSaveLocation";
+    public static final String LOCATION_SELECTION_ID = "locationSelectionId";
+    public static final String LOCATION_TIMEZONE = "timeZone"; 
+    
+    public static final String LOCATION_OFFICIAL_SUNRISE = "locaionOfficialSunrise";
+    public static final String LOCATION_OFFICIAL_SUNSET = "locationOfficialSunset";
+    public static final String LOCATION_ASTRO_SUNRISE = "locationAstroSunrise";
+    public static final String LOCATION_ASTRO_SUNSET = "locationAstroSunset";
+    public static final String LOCATION_NAUTICAL_SUNRISE = "locationNauticalSunrise";
+    public static final String LOCATION_NAUTICAL_SUNSET = "locationNauticalSunset";
+    public static final String LOCATION_CIVIL_SUNRISE = "locationCivilSunrise";
+    public static final String LOCATION_CIVIL_SUNSET = "locationCivilSunset";
+    public static final String LOCATION_IS_VISIVLE_RESULT = "locationIsVisibleResult";
     
     public static final float MAP_CAMERA_ZOOM = 17.0f; 
     

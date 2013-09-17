@@ -15,8 +15,25 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import ru.neverdark.phototools.MapActivity;
 import ru.neverdark.phototools.R;
@@ -31,6 +48,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
@@ -41,11 +60,109 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
+import com.luckycatlabs.sunrisesunset.dto.Location;
 
 /**
  * Fragment contains sunrise / sunset UI
  */
 public class SunsetFragment extends SherlockFragment {
+    /**
+     * Thread for getting timeZone from Google Online Map If Internet connection
+     * does not available we have use devices TimeZone
+     */
+    private class Task implements Runnable {
+
+        /**
+         * Checks connection status
+         * 
+         * @return true if device online, false in other case
+         */
+        private boolean isOnline() {
+            Log.message("Enter");
+            ConnectivityManager cm = (ConnectivityManager) mContext
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getActiveNetworkInfo();
+            if (netInfo != null && netInfo.isConnected()) {
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * Reads TimeZone from Google Json
+         * 
+         * @return TimeZone JSON from Google Json or empty if cannot determine
+         */
+        private String readTimeZoneJson() {
+            Log.message("Enter");
+            StringBuilder builder = new StringBuilder();
+            Calendar calendar = Calendar.getInstance(TimeZone
+                    .getTimeZone("GMT"));
+            calendar.set(mYear, mMonth, mDay);
+            /* Gets desired time as seconds since midnight, January 1, 1970 UTC */
+            Long timestamp = calendar.getTimeInMillis() / 1000;
+
+            String url_format = "https://maps.googleapis.com/maps/api/timezone/json?location=%f,%f&timestamp=%d&sensor=false";
+            String url = String.format(Locale.US, url_format, mLatitude,
+                    mLongitude, timestamp);
+            Log.variable("url", url);
+
+            HttpClient client = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(url);
+            try {
+                HttpResponse response = client.execute(httpGet);
+                StatusLine statusLine = response.getStatusLine();
+                int statusCode = statusLine.getStatusCode();
+                if (statusCode == HttpStatus.SC_OK) {
+                    HttpEntity entity = response.getEntity();
+                    InputStream content = entity.getContent();
+                    BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(content));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        builder.append(line);
+                    }
+                } else {
+                    Log.message("Download fail");
+                }
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return builder.toString();
+        }
+
+        @Override
+        public void run() {
+            Log.message("Enter");
+            /* we have internet, download json from timeZone google service */
+            if (isOnline()) {
+                Log.message("Get Time Zone from Google");
+                String json = readTimeZoneJson();
+                Log.variable("json", json);
+
+                /* JSON data not empty, parse it */
+                if (json.isEmpty() == false) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(json);
+                        String timeZoneId = jsonObject.getString("timeZoneId");
+                        Log.variable("timeZoneId", timeZoneId);
+                        mTimeZone = TimeZone.getTimeZone(timeZoneId);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        setDefaultTimeZone();
+                    }
+
+                }
+            } else {
+                Log.message("Device offline. Use device timezone");
+                setDefaultTimeZone();
+            }
+        }
+    }
+
     /**
      * Sets date and update EditText
      * 
@@ -76,8 +193,7 @@ public class SunsetFragment extends SherlockFragment {
                 java.util.Locale.getDefault());
         mEditTextDate.setText(sdf.format(localCalendar.getTime()));
     }
-
-    private Context context;
+    private Context mContext;
     private View mView;
     private static EditText mEditTextDate;
     private Button mButtonCalculate;
@@ -87,7 +203,9 @@ public class SunsetFragment extends SherlockFragment {
     private static int mDay;
     private double mLatitude;
     private double mLongitude;
+    private boolean mIsVisibleResult = false;
 
+    private TimeZone mTimeZone;
     private int mSelectionId;
     private ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -96,20 +214,29 @@ public class SunsetFragment extends SherlockFragment {
             Log.message("Enter");
             GeoLocationBinder binder = (GeoLocationBinder) service;
             mGeoLocationService = binder.getService();
-            bound = true;
+            mBound = true;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             Log.message("Enter");
-            bound = false;
+            mBound = false;
         }
     };
+
     private Intent mSerivceIntent;
 
     private GeoLocationService mGeoLocationService;
 
-    private boolean bound = false;
+    private boolean mBound = false;
+    private String mOfficialSunrise;
+    private String mOfficialSunset;
+    private String mAstroSunrise;
+    private String mAstroSunset;
+    private String mNauticalSunrise;
+    private String mNauticalSunset;
+    private String mCivilSunrise;
+    private String mCivilSunset;
 
     /**
      * Binds classes objects to resources
@@ -129,8 +256,8 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void bindToGeoService() {
         Log.message("Enter");
-        mSerivceIntent = new Intent(context, GeoLocationService.class);
-        context.bindService(mSerivceIntent, mServiceConnection,
+        mSerivceIntent = new Intent(mContext, GeoLocationService.class);
+        mContext.bindService(mSerivceIntent, mServiceConnection,
                 Context.BIND_AUTO_CREATE);
     }
 
@@ -139,20 +266,54 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void calculateSunset() {
         Log.message("Enter");
+        
+        if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
+            setDefaultTimeZone();
+            getCurrentLocation();
+        }
+        
+        Location location = new Location(mLatitude, mLongitude);
+        SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(
+                location, mTimeZone);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(mYear, mMonth, mDay);
+        
+        mOfficialSunrise = calculator.getOfficialSunriseForDate(calendar);
+        mOfficialSunset = calculator.getOfficialSunsetForDate(calendar);
+
+        mAstroSunrise = calculator.getAstronomicalSunriseForDate(calendar);
+        mAstroSunset = calculator.getAstronomicalSunsetForDate(calendar);
+        
+        mNauticalSunrise = calculator.getNauticalSunriseForDate(calendar);
+        mNauticalSunset = calculator.getNauticalSunsetForDate(calendar);
+        
+        mCivilSunrise = calculator.getCivilSunriseForDate(calendar);
+        mCivilSunset = calculator.getCivilSunriseForDate(calendar);        
+        
+        mIsVisibleResult = true;
+        setVisibleCalculculationResult();
     }
 
     /**
-     * Gets current location 
+     * Gets current location
      */
     private void getCurrentLocation() {
         Log.message("Enter");
-        
+
         if (mGeoLocationService.canGetLocation()) {
             mLatitude = mGeoLocationService.getLatitude();
             mLongitude = mGeoLocationService.getLongitude();
             Log.variable("mlatitude", String.valueOf(mLatitude));
             Log.variable("mlongitude", String.valueOf(mLongitude));
-        } 
+        }
+    }
+
+    /**
+     * Gets Timezone from Google Online Map
+     */
+    private void getTimeZoneFromGoogle() {
+        Log.message("Enter");
+        new Thread(new Task()).start();
     }
 
     /**
@@ -172,7 +333,6 @@ public class SunsetFragment extends SherlockFragment {
      */
     public void handleLocationSelection(final int locationSelectionId) {
         Log.message("Enter");
-        getCurrentLocation();
         switch (locationSelectionId) {
         case Constants.LOCATION_CURRENT_POSITION_CHOICE:
             handleCurrentLocation();
@@ -190,12 +350,14 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void handlePointOnMap() {
         Log.message("Enter");
+        getCurrentLocation();
         Intent mapIntent = new Intent(getActivity(), MapActivity.class);
 
         mapIntent.putExtra(Constants.LOCATION_LATITUDE, mLatitude);
         mapIntent.putExtra(Constants.LOCATION_LONGITUDE, mLongitude);
 
-        startActivityForResult(mapIntent, Constants.LOCATION_POINT_ON_MAP_CHOICE);
+        startActivityForResult(mapIntent,
+                Constants.LOCATION_POINT_ON_MAP_CHOICE);
     }
 
     /**
@@ -210,12 +372,32 @@ public class SunsetFragment extends SherlockFragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.message("Enter");
+        if (requestCode == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
+            if (resultCode == Activity.RESULT_OK) {
+                mLatitude = data.getDoubleExtra(Constants.LOCATION_LATITUDE,
+                        0.0);
+                mLongitude = data.getDoubleExtra(Constants.LOCATION_LONGITUDE,
+                        0.0);
+
+                getTimeZoneFromGoogle();
+
+                Log.variable("mLatitude", String.valueOf(mLatitude));
+                Log.variable("mLongitude", String.valueOf(mLongitude));
+                mSelectionId = Constants.LOCATION_POINT_ON_MAP_CHOICE;
+                setTextLocation();
+            }
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         Log.message("Enter");
         super.onCreateView(inflater, container, savedInstanceState);
         mView = inflater.inflate(R.layout.activity_sunset, container, false);
-        context = mView.getContext();
+        mContext = mView.getContext();
 
         bindObjectsToResources();
         setOnClickListeners(mEditTextDate);
@@ -223,19 +405,53 @@ public class SunsetFragment extends SherlockFragment {
         setOnClickListeners(mEditTextLocation);
 
         if (savedInstanceState != null) {
-            mLatitude  = savedInstanceState.getDouble(Constants.LOCATION_LATITUDE, 0.0);
-            mLongitude = savedInstanceState.getDouble(Constants.LOCATION_LONGITUDE, 0.0);
-            Log.variable("mLatitude", String.valueOf(mLatitude));
-            Log.variable("mLongitude", String.valueOf(mLongitude));
+            mLatitude = savedInstanceState.getDouble(
+                    Constants.LOCATION_LATITUDE, 0.0);
+            mLongitude = savedInstanceState.getDouble(
+                    Constants.LOCATION_LONGITUDE, 0.0);
+            mSelectionId = savedInstanceState.getInt(
+                    Constants.LOCATION_SELECTION_ID,
+                    Constants.LOCATION_CURRENT_POSITION_CHOICE);
+            String timeZoneId = savedInstanceState.getString(
+                    Constants.LOCATION_TIMEZONE, TimeZone.getDefault().getID());
+            mTimeZone = TimeZone.getTimeZone(timeZoneId);
+
+            mIsVisibleResult = savedInstanceState.getBoolean(
+                    Constants.LOCATION_IS_VISIVLE_RESULT, false);
+            mAstroSunrise = savedInstanceState.getString(
+                    Constants.LOCATION_ASTRO_SUNRISE, "");
+            mAstroSunset = savedInstanceState.getString(
+                    Constants.LOCATION_ASTRO_SUNSET, "");
+            mCivilSunrise = savedInstanceState.getString(
+                    Constants.LOCATION_CIVIL_SUNRISE, "");
+            mCivilSunset = savedInstanceState.getString(
+                    Constants.LOCATION_CIVIL_SUNSET, "");
+            mNauticalSunrise = savedInstanceState.getString(
+                    Constants.LOCATION_NAUTICAL_SUNRISE, "");
+            mNauticalSunset = savedInstanceState.getString(
+                    Constants.LOCATION_NAUTICAL_SUNSET, "");
+            mOfficialSunrise = savedInstanceState.getString(
+                    Constants.LOCATION_OFFICIAL_SUNRISE, "");
+            mOfficialSunset = savedInstanceState.getString(
+                    Constants.LOCATION_OFFICIAL_SUNSET, "");
+
         } else {
             initDate();
             setTextLocation();
         }
         updateDate();
+        setVisibleCalculculationResult();
 
         return mView;
     }
 
+    /**
+     * Sets visible calculation result scrollView
+     */
+    private void setVisibleCalculculationResult() {
+        
+    }
+    
     @Override
     public void onPause() {
         Log.message("Enter");
@@ -249,8 +465,21 @@ public class SunsetFragment extends SherlockFragment {
         super.onSaveInstanceState(outState);
         outState.putDouble(Constants.LOCATION_LATITUDE, mLatitude);
         outState.putDouble(Constants.LOCATION_LONGITUDE, mLongitude);
-        Log.variable("mLatitude", String.valueOf(mLatitude));
-        Log.variable("mLongitude", String.valueOf(mLongitude));
+        outState.putInt(Constants.LOCATION_SELECTION_ID, mSelectionId);
+
+        if (mTimeZone != null) {
+            outState.putString(Constants.LOCATION_TIMEZONE, mTimeZone.getID());
+        }
+        
+        outState.putBoolean(Constants.LOCATION_IS_VISIVLE_RESULT, mIsVisibleResult);
+        outState.putString(Constants.LOCATION_ASTRO_SUNRISE, mAstroSunrise);
+        outState.putString(Constants.LOCATION_ASTRO_SUNSET, mAstroSunset);
+        outState.putString(Constants.LOCATION_CIVIL_SUNRISE, mCivilSunrise);
+        outState.putString(Constants.LOCATION_CIVIL_SUNSET, mCivilSunset);
+        outState.putString(Constants.LOCATION_NAUTICAL_SUNRISE, mNauticalSunrise);
+        outState.putString(Constants.LOCATION_NAUTICAL_SUNSET, mNauticalSunset);
+        outState.putString(Constants.LOCATION_OFFICIAL_SUNRISE, mOfficialSunrise);
+        outState.putString(Constants.LOCATION_OFFICIAL_SUNSET, mOfficialSunset);
     }
 
     @Override
@@ -258,6 +487,13 @@ public class SunsetFragment extends SherlockFragment {
         Log.message("Enter");
         super.onStart();
         bindToGeoService();
+    }
+
+    /**
+     * Sets default timezone
+     */
+    private void setDefaultTimeZone() {
+        mTimeZone = TimeZone.getDefault();
     }
 
     /**
@@ -278,9 +514,11 @@ public class SunsetFragment extends SherlockFragment {
                     showDatePicker();
                     break;
                 case R.id.sunset_button_calculate:
+                    /* if we have coordinates, calculation sunset / sunrise */
                     if (mGeoLocationService.canGetLocation()) {
                         calculateSunset();
-                    } else {
+                    /* we dont't have coordinates and we try getting current location, show alert dialog */
+                    } else if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE){
                         showSettingsAlert();
                     }
                     break;
@@ -335,28 +573,13 @@ public class SunsetFragment extends SherlockFragment {
                 Constants.LOCATION_SELECTION_DIALOG);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.message("Enter");
-        if (requestCode == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
-            if (resultCode == Activity.RESULT_OK) {
-                mLatitude = data.getDoubleExtra(Constants.LOCATION_LATITUDE, 0.0);
-                mLongitude = data.getDoubleExtra(Constants.LOCATION_LONGITUDE, 0.0);
-                Log.variable("mLatitude", String.valueOf(mLatitude));
-                Log.variable("mLongitude", String.valueOf(mLongitude));
-                mSelectionId = Constants.LOCATION_POINT_ON_MAP_CHOICE;
-                setTextLocation();
-            }
-        }
-    }
-    
     /**
      * Function to show settings alert dialog On pressing Settings button will
      * launch Settings Options
      * */
     private void showSettingsAlert() {
         Log.message("Enter");
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
         // Setting Dialog Title
         alertDialog.setTitle(R.string.sunset_alert_title);
@@ -371,7 +594,7 @@ public class SunsetFragment extends SherlockFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(
                                 Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        context.startActivity(intent);
+                        mContext.startActivity(intent);
                     }
                 });
 
@@ -393,9 +616,9 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void unbindFromGeoService() {
         Log.message("Enter");
-        if (bound == true) {
-            context.unbindService(mServiceConnection);
-            bound = false;
+        if (mBound == true) {
+            mContext.unbindService(mServiceConnection);
+            mBound = false;
         }
     }
 }
