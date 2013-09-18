@@ -82,7 +82,9 @@ public class MapActivity extends SherlockFragmentActivity implements
             }
         } else {
             mMarkerPosition = savedInstanceState.getParcelable(Constants.MAP_MARKER_POSITION);
-            setMarker();
+            if (mMarkerPosition != null) {
+                setMarker();
+            }
         }
     }
     

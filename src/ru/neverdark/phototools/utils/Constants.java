@@ -56,6 +56,7 @@ public class Constants {
     public static final String LOCATION_CIVIL_SUNRISE = "locationCivilSunrise";
     public static final String LOCATION_CIVIL_SUNSET = "locationCivilSunset";
     public static final String LOCATION_IS_VISIVLE_RESULT = "locationIsVisibleResult";
+    public static final byte LOCATION_GETTING_TIMEZONE = 1;
     
     public static final float MAP_CAMERA_ZOOM = 17.0f; 
     

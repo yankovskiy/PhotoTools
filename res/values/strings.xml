@@ -65,7 +65,7 @@
     <string name="evpairs_label_selectShutterSpeed">Выберите выдержку</string>
     <string name="evpairs_label_shutterSpeed">[Выдержка..]</string>
     
-    <string name="locationSelection_label_currentLocation">Текущее местоположение</string>
+    <string name="locationSelection_label_currentLocation">Мое местоположение</string>
     <string name="locationSelection_label_pointOnMap">Точка на карте</string>
     <string name="locationSelection_label_selectLocation">Выберите местоположение</string>
     <string-array name="locationSelection_titles">
@@ -99,6 +99,16 @@
     <string name="sunset_button_calculate">Расчет</string>
     <string name="sunset_label_date">Дата</string>
     <string name="sunset_label_location">Местоположение</string>
+    <string name="sunset_label_calculationResult">Результаты расчетов</string>
+    <string name="sunset_label_sunrise">Рассвет:</string>
+    <string name="sunset_label_sunset">Закат:</string>
+    <string name="sunset_label_astroSunrise">Астрономический рассвет:</string>
+    <string name="sunset_label_astroSunset">Астрономическиие сумерки:</string>
+    <string name="sunset_label_nauticalSunrise">Навигационный рассвет:</string>
+    <string name="sunset_label_nauticalSunset">Навигационные сумерки:</string>
+    <string name="sunset_label_civilSunrise">Гражданский рассвет:</string>
+    <string name="sunset_label_civilSunset">Гражданские сумерки:</string>
+    <string name="sunset_label_timeZone">Временная зона:</string>
 
     <string name="titles_emailAuthor">artemyankovskiy@gmail.com</string>
     <string name="title_activity_map">Выберите место</string>
