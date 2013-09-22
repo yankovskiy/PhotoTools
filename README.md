@@ -2,14 +2,15 @@ PhotoTools
 ==========
 PhotoTools is a simple application for Android, which can be useful for photographers.
 
-At the moment, PhotoTools offers two options:
+At the moment, PhotoTools offers three options:
 
 1. Depth of field calculator.
 2. Exposure pairs calculator.
+3. Sunset/sunrise calculator.
 
 Supporting android version and devices
 ----------
-PhotoTools supported android version from 1.6 to 4.3.
+PhotoTools supported android version from 2.2 to 4.3.
 
 PhotoTools supported handset and tablets from many vendors.
 
