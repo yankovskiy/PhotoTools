@@ -105,7 +105,10 @@ public class GeoLocationService extends Service implements LocationListener {
             Location location;
 
             if (provider == LocationManager.GPS_PROVIDER && mIsNetworkEnabled) {
-                /* we sets coordinates from network until getting coordinates from GPS*/
+                /*
+                 * we sets coordinates from network until getting coordinates
+                 * from GPS
+                 */
                 Log.message("Used network coordinates");
                 location = mLocationManager
                         .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);

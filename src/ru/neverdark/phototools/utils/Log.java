@@ -22,36 +22,9 @@ import android.os.Environment;
 
 public class Log {
     /** true if DEBUG enabled or false if DEBUG disable */
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     /** true if write log to file or false in other case */
     private static final boolean WRITE_FILE = false;
-
-    /**
-     * Function logged message to the LogCat as information message
-     * 
-     * @param message
-     *            message for logging
-     */
-    public static void message(String message) {
-        if (DEBUG == true) {
-            log(message);
-        }
-    }
-
-    /**
-     * Function logged values to the LogCat as information message
-     * 
-     * @param variable
-     *            variable name for logging
-     * @param value
-     *            value of the variable
-     */
-    public static void variable(String variable, String value) {
-        if (DEBUG == true) {
-            String message = variable + " = " + value;
-            log(message);
-        }
-    }
 
     /**
      * Logs message with class name, method name and line number
@@ -68,9 +41,21 @@ public class Log {
     }
 
     /**
-     * Saves messages from logcat to file
-     * This function must be called only once from application
-     * !!! WARNING: This function erase all previous logcat messages from your devices
+     * Function logged message to the LogCat as information message
+     * 
+     * @param message
+     *            message for logging
+     */
+    public static void message(String message) {
+        if (DEBUG == true) {
+            log(message);
+        }
+    }
+
+    /**
+     * Saves messages from logcat to file This function must be called only once
+     * from application !!! WARNING: This function erase all previous logcat
+     * messages from your devices
      */
     public static void saveLogcatToFile() {
         if (DEBUG == true && WRITE_FILE == true) {
@@ -84,6 +69,21 @@ public class Log {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * Function logged values to the LogCat as information message
+     * 
+     * @param variable
+     *            variable name for logging
+     * @param value
+     *            value of the variable
+     */
+    public static void variable(String variable, String value) {
+        if (DEBUG == true) {
+            String message = variable + " = " + value;
+            log(message);
         }
     }
 }

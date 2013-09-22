@@ -30,6 +30,7 @@
         android:orientation="vertical" >
 
         <LinearLayout
+            android:baselineAligned="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
@@ -104,233 +105,210 @@
                 android:text="@string/sunset_label_calculationResult"
                 android:textColor="@color/headear" />
 
-            <LinearLayout
+            <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="match_parent" >
 
-                <TableLayout
+                <TableRow
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" >
+                    android:layout_height="wrap_content"
+                    android:padding="3dp" >
 
-                    <TableRow
+                    <TextView
+                        android:id="@+id/sunset_label_sunrise"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text="@string/sunset_label_sunrise"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/sunset_label_sunrise"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/sunset_label_sunrise"
-                            android:textStyle="bold" />
-                    </TableRow>
-
-                    <TableRow
+                    <TextView
+                        android:id="@+id/sunset_label_sunriseResult"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
 
-                        <TextView
-                            android:id="@+id/sunset_label_civilSunrise"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/sunset_label_civilSunrise"
-                            android:textStyle="bold" />
-                    </TableRow>
-
-                    <TableRow
+                    <TextView
+                        android:id="@+id/sunset_label_sunset"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text="@string/sunset_label_sunset"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/sunset_label_nauticalSunrise"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/sunset_label_nauticalSunrise"
-                            android:textStyle="bold" />
-                    </TableRow>
-
-                    <TableRow
+                    <TextView
+                        android:id="@+id/sunset_label_sunsetResult"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </TableRow>
 
-                        <TextView
-                            android:id="@+id/sunset_label_astrolSunrise"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/sunset_label_astroSunrise"
-                            android:textStyle="bold" />
-                    </TableRow>
+                <TableRow android:background="#cecece" >
 
-                    <TableRow
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp" />
+                </TableRow>
 
-                        <TextView
-                            android:id="@+id/sunset_label_timeZone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/sunset_label_timeZone"
-                            android:textStyle="bold" />
-                    </TableRow>
-                </TableLayout>
-
-                <TableLayout
+                <TableRow
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" >
+                    android:layout_height="wrap_content"
+                    android:padding="3dp" >
 
-                    <TableRow
+                    <TextView
+                        android:id="@+id/sunset_label_civilSunrise"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text="@string/sunset_label_civilSunrise"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/sunset_label_sunriseResult"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </TableRow>
-
-                    <TableRow
+                    <TextView
+                        android:id="@+id/sunset_label_civilSunriseResult"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
 
-                        <TextView
-                            android:id="@+id/sunset_label_civilSunriseResult"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </TableRow>
-
-                    <TableRow
+                    <TextView
+                        android:id="@+id/sunset_label_civilSunset"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text="@string/sunset_label_civilSunset"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/sunset_label_nauticalSunriseResult"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </TableRow>
-
-                    <TableRow
+                    <TextView
+                        android:id="@+id/sunset_label_civilSunsetResult"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </TableRow>
 
-                        <TextView
-                            android:id="@+id/sunset_label_astrolSunriseResult"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </TableRow>
+                <TableRow android:background="#cecece" >
 
-                    <TableRow
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp" />
+                </TableRow>
 
-                        <TextView
-                            android:id="@+id/sunset_label_timeZoneResult"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </TableRow>
-                </TableLayout>
-
-                <TableLayout
+                <TableRow
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" >
+                    android:layout_height="wrap_content"
+                    android:padding="3dp" >
 
-                    <TableRow
+                    <TextView
+                        android:id="@+id/sunset_label_nauticalSunrise"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text="@string/sunset_label_nauticalSunrise"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/sunset_label_sunset"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/sunset_label_sunset"
-                            android:textStyle="bold" />
-                    </TableRow>
-
-                    <TableRow
+                    <TextView
+                        android:id="@+id/sunset_label_nauticalSunriseResult"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
 
-                        <TextView
-                            android:id="@+id/sunset_label_civilSunset"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/sunset_label_civilSunset"
-                            android:textStyle="bold" />
-                    </TableRow>
-
-                    <TableRow
+                    <TextView
+                        android:id="@+id/sunset_label_nauticalSunset"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text="@string/sunset_label_nauticalSunset"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/sunset_label_nauticalSunset"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/sunset_label_nauticalSunset"
-                            android:textStyle="bold" />
-                    </TableRow>
-
-                    <TableRow
+                    <TextView
+                        android:id="@+id/sunset_label_nauticalSunsetResult"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </TableRow>
 
-                        <TextView
-                            android:id="@+id/sunset_label_astrolSunset"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/sunset_label_astroSunset"
-                            android:textStyle="bold" />
-                    </TableRow>
-                </TableLayout>
+                <TableRow android:background="#cecece" >
 
-                <TableLayout
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp" />
+                </TableRow>
+
+                <TableRow
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" >
+                    android:layout_height="wrap_content"
+                    android:padding="3dp" >
 
-                    <TableRow
+                    <TextView
+                        android:id="@+id/sunset_label_astrolSunrise"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text="@string/sunset_label_astroSunrise"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/sunset_label_sunsetResult"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </TableRow>
-
-                    <TableRow
+                    <TextView
+                        android:id="@+id/sunset_label_astrolSunriseResult"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
 
-                        <TextView
-                            android:id="@+id/sunset_label_civilSunsetResult"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </TableRow>
-
-                    <TableRow
+                    <TextView
+                        android:id="@+id/sunset_label_astrolSunset"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text="@string/sunset_label_astroSunset"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/sunset_label_nauticalSunsetResult"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </TableRow>
-
-                    <TableRow
+                    <TextView
+                        android:id="@+id/sunset_label_astrolSunsetResult"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </TableRow>
 
-                        <TextView
-                            android:id="@+id/sunset_label_astrolSunsetResult"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </TableRow>
-                </TableLayout>
+                <TableRow android:background="#cecece" >
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp" >
+
+                    <TextView
+                        android:id="@+id/sunset_label_timeZone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text="@string/sunset_label_timeZone"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/sunset_label_timeZoneResult"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </TableRow>
+
+                <TableRow android:background="#cecece" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp" />
+                </TableRow>
+            </TableLayout>
         </LinearLayout>
     </LinearLayout>
 

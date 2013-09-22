@@ -93,6 +93,46 @@
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        
+        <TextView
+            android:id="@+id/about_label_sunsetSunrise"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_label_sunsetSunrise"
+            android:textColor="@color/headear" />
+        
+        <TextView
+            android:id="@+id/about_label_sunsetSunriseManual"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_label_sunsetSunriseManual" />
+        
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        
+        <TextView
+            android:id="@+id/about_label_sunsetMap"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_label_sunsetMap"
+            android:textColor="@color/headear" />
+        
+        <TextView
+            android:id="@+id/about_label_sunsetMapManual"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_label_sunsetMapManual" />
+        
+        
+        
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/about_label_commonInformation"

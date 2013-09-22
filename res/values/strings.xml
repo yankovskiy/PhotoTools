@@ -24,7 +24,10 @@
     <string name="about_label_evpairs">EV Пары</string>
     <string name="about_label_evPairsManual">Окно разделено на две части: \"Текущие значения\" и \"Новые значения\".В \"Текущих значениях\" должны быть заполнены все параметры, при которых производится съемка в настоящий момент. В окно \"Новые значения\" вносятся желаемые параметры съемки, кроме того, который необходимо рассчитать. Поле с искомым параметром нужно оставить пустым. После нажатия на кнопку \"Расчет\" пустое поле в окне \"Новые значения\" рассчитается и заполнится автоматически. Для очистки окна \"Новые значения\" нажмите кнопку \"Очистить\".</string>
     <string name="about_label_license">Информация о лицензии</string>
-    <string name="about_label_licenseInformation"><![CDATA[<b>Photo Tools</b> распространяется по лицензии GPL v3. Вы можете получить исходный код на <a href="https://github.com/yankovskiy/PhotoTools">github.com</a>]]></string>
+    <string name="about_label_sunsetSunrise">Закаты и рассветы</string>
+    <string name="about_label_sunsetSunriseManual">Для расчета времени заката и рассвета на определенный день выберите интересующую вас дату. Для выбора местоположения, отличного от текущего, выберите в \"Местоположении\" пункт \"Точка на карте\". Для произведения расчета нажмите кнопку \"Расчет\". Примечание: в случае невозможности определения временной зоны для выбранного местоположения используется временная зона вашего устройства.</string>
+    <string name="about_label_sunsetMap">Карта</string>
+    <string name="about_label_sunsetMapManual">Для выбора конкретного местоположения на карте нажмите и удерживайте искомую точку. После появления на карте маркера нажмите \"Подтвердить выбор\". Примечание: может быть установлен только один маркер.</string>    <string name="about_label_licenseInformation"><![CDATA[<b>Photo Tools</b> распространяется по лицензии GPL v3. Вы можете получить исходный код на <a href="https://github.com/yankovskiy/PhotoTools">github.com</a>]]></string>
     <string name="about_label_version">Версия:</string>
     
     <string name="app_name">Photo Tools</string>
@@ -68,6 +71,7 @@
     <string name="locationSelection_label_currentLocation">Мое местоположение</string>
     <string name="locationSelection_label_pointOnMap">Точка на карте</string>
     <string name="locationSelection_label_selectLocation">Выберите местоположение</string>
+    
     <string-array name="locationSelection_titles">
         <item>@string/locationSelection_label_currentLocation</item>    <!-- 0 -->
         <item>@string/locationSelection_label_pointOnMap</item>         <!-- 1 -->
@@ -91,7 +95,7 @@
     
     <string name="map_button_confirmSelection">Подтвердить выбор</string>
     
-    <string name="sunset_alert_message">Неудается определить местоположение. Вы хотите перейти в настройки?</string>
+    <string name="sunset_alert_message">Не удается определить местоположение. Перейти в настройки?</string>
     <string name="sunset_alert_title">Определение местоположения</string>
     <string name="sunset_alert_positive">Настройки</string>
     <string name="sunset_alert_negative">Отмена</string>
