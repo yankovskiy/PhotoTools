@@ -236,20 +236,28 @@ public class SunsetFragment extends SherlockFragment {
     private boolean mBound = false;
     private String mOfficialSunrise;
     private TextView mOfficialSunriseResult;
+    private TextView mLabelOfficialSunrise;
     private String mOfficialSunset;
     private TextView mOfficialSunsetResult;
+    private TextView mLabelOfficialSunset;
     private String mAstroSunrise;
     private TextView mAstroSunriseResult;
+    private TextView mLabelAstroSunrise;
     private String mAstroSunset;
     private TextView mAstroSunsetResult;
+    private TextView mLabelAstroSunset;
     private String mNauticalSunrise;
     private TextView mNauticalSunriseResult;
+    private TextView mLabelNauticalSunrise;
     private String mNauticalSunset;
     private TextView mNauticalSunsetResult;
+    private TextView mLabelNauticalSunset;
     private String mCivilSunrise;
     private TextView mCivilSunriseResult;
+    private TextView mLabelCivilSunrise;
     private String mCivilSunset;
     private TextView mCivilSunsetResult;
+    private TextView mLabelCivilSunset;
     private LinearLayout mLinearLayoutCalculationResult;
     private TextView mSunsetTimeZoneResult;
 
@@ -284,6 +292,26 @@ public class SunsetFragment extends SherlockFragment {
                 .findViewById(R.id.sunset_label_civilSunriseResult);
         mCivilSunsetResult = (TextView) mView
                 .findViewById(R.id.sunset_label_civilSunsetResult);
+        
+        mLabelOfficialSunrise = (TextView) mView
+                .findViewById(R.id.sunset_label_sunrise);
+        mLabelOfficialSunset = (TextView) mView
+                .findViewById(R.id.sunset_label_sunset);
+
+        mLabelAstroSunrise = (TextView) mView
+                .findViewById(R.id.sunset_label_astrolSunrise);
+        mLabelAstroSunset = (TextView) mView
+                .findViewById(R.id.sunset_label_astrolSunset);
+
+        mLabelNauticalSunrise = (TextView) mView
+                .findViewById(R.id.sunset_label_nauticalSunrise);
+        mLabelNauticalSunset = (TextView) mView
+                .findViewById(R.id.sunset_label_nauticalSunset);
+
+        mLabelCivilSunrise = (TextView) mView
+                .findViewById(R.id.sunset_label_civilSunrise);
+        mLabelCivilSunset = (TextView) mView
+                .findViewById(R.id.sunset_label_civilSunset);
 
         mLinearLayoutCalculationResult = (LinearLayout) mView
                 .findViewById(R.id.sunsnet_LinearLayout_calculationResult);
@@ -460,9 +488,19 @@ public class SunsetFragment extends SherlockFragment {
         mContext = mView.getContext();
 
         bindObjectsToResources();
+        
         setOnClickListeners(mEditTextDate);
         setOnClickListeners(mButtonCalculate);
         setOnClickListeners(mEditTextLocation);
+        setOnClickListeners(mLabelAstroSunrise);
+        setOnClickListeners(mLabelAstroSunset);
+        setOnClickListeners(mLabelCivilSunrise);
+        setOnClickListeners(mLabelCivilSunset);
+        setOnClickListeners(mLabelNauticalSunrise);
+        setOnClickListeners(mLabelNauticalSunset);
+        setOnClickListeners(mLabelOfficialSunrise);
+        setOnClickListeners(mLabelOfficialSunset);
+        
         setEditTextLongClick(mEditTextDate);
         setEditTextLongClick(mEditTextLocation);
 
@@ -601,6 +639,31 @@ public class SunsetFragment extends SherlockFragment {
                 case R.id.sunset_editText_date:
                     showDatePicker();
                     break;
+                case R.id.sunset_label_astrolSunrise:
+                    showInformationDialog(Constants.INFORMATION_ASTRO_SUNRISE);
+                    break;
+                case R.id.sunset_label_astrolSunset:
+                    showInformationDialog(Constants.INFORMATION_ASTRO_SUNSET);
+                    break;
+                case R.id.sunset_label_civilSunrise:
+                    showInformationDialog(Constants.INFORMATION_CIVIL_SUNRISE);
+                    break;
+                case R.id.sunset_label_civilSunset:
+                    showInformationDialog(Constants.INFORMATION_CIVIL_SUNSET);
+                    break;
+                case R.id.sunset_label_nauticalSunrise:
+                    showInformationDialog(Constants.INFORMATION_NAUTICAL_SUNRISE);
+                    break;
+                case R.id.sunset_label_nauticalSunset:
+                    showInformationDialog(Constants.INFORMATION_NAUTICAL_SUNSET);
+                    break;
+                case R.id.sunset_label_sunrise:
+                    showInformationDialog(Constants.INFORMATION_SUNRISE);
+                    break;
+                case R.id.sunset_label_sunset:
+                    showInformationDialog(Constants.INFORMATION_SUNSET);
+                    break;
+                    
                 case R.id.sunset_button_calculate:
                     /* if we have coordinates, calculation sunset / sunrise */
                     if (mGeoLocationService.canGetLocation()) {
@@ -727,6 +790,74 @@ public class SunsetFragment extends SherlockFragment {
         alertDialog.show();
     }
 
+    /**
+     * Shows information dialog with description for sunset/sunrise type
+     * @param messageId Id message for displaying
+     */
+    private void showInformationDialog(final int messageId) {
+        Log.message("Enter");
+        String title = "";
+        String message = "";
+        
+        switch (messageId) {
+        case Constants.INFORMATION_SUNRISE:
+            title = getString(R.string.information_title_sunrise);
+            message = getString(R.string.information_message_sunrise);
+            break;
+        case Constants.INFORMATION_SUNSET:
+            title = getString(R.string.information_title_sunset);
+            message = getString(R.string.information_message_sunset);
+            break;
+        case Constants.INFORMATION_ASTRO_SUNRISE:
+            title = getString(R.string.information_title_astroSunrise);
+            message = getString(R.string.information_message_astroSunrise);
+            break;
+        case Constants.INFORMATION_ASTRO_SUNSET:
+            title = getString(R.string.information_title_astroSunset);
+            message = getString(R.string.information_message_astroSunset);
+            break;
+        case Constants.INFORMATION_NAUTICAL_SUNRISE:
+            title = getString(R.string.information_title_nauticalSunrise);
+            message = getString(R.string.information_message_nauticalSunrise);
+            break;
+        case Constants.INFORMATION_NAUTICAL_SUNSET:
+            title = getString(R.string.information_title_nauticalSunset);
+            message = getString(R.string.information_message_nauticalSunset);
+            break;
+        case Constants.INFORMATION_CIVIL_SUNRISE:
+            title = getString(R.string.information_title_civilSunrise);
+            message = getString(R.string.information_message_civilSunrise);
+            break;
+        case Constants.INFORMATION_CIVIL_SUNSET:
+            title = getString(R.string.information_title_civilSunset);
+            message = getString(R.string.information_message_civilSunset);
+            break;
+        }
+        
+        Log.variable("title", title);
+        Log.variable("message", message);
+        
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+
+        // Setting Dialog Title
+        alertDialog.setTitle(title);
+
+        // Setting Dialog Message
+        alertDialog.setMessage(message);
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton(R.string.information_button_close,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        // Showing Alert Message
+        alertDialog.show();
+        
+    }
     /**
      * Unbinds from GeoLocationService
      */
