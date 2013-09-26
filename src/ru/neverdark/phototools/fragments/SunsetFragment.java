@@ -678,6 +678,7 @@ public class SunsetFragment extends SherlockFragment {
                     break;
                 case R.id.sunset_editText_location:
                     showLocationSelectionDialog();
+                    break;
                 }
             }
         });
@@ -758,36 +759,8 @@ public class SunsetFragment extends SherlockFragment {
      * */
     private void showSettingsAlert() {
         Log.message("Enter");
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-
-        // Setting Dialog Title
-        alertDialog.setTitle(R.string.sunset_alert_title);
-
-        // Setting Dialog Message
-        alertDialog.setMessage(R.string.sunset_alert_message);
-
-        // On pressing Settings button
-        alertDialog.setPositiveButton(R.string.sunset_alert_positive,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(
-                                Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        mContext.startActivity(intent);
-                    }
-                });
-
-        // on pressing cancel button
-        alertDialog.setNegativeButton(R.string.sunset_alert_negative,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-        // Showing Alert Message
-        alertDialog.show();
+        AlertFragment alertFragment = new AlertFragment();
+        alertFragment.show(getFragmentManager(), Constants.ALERT_DIALOG);
     }
 
     /**
@@ -796,67 +769,11 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void showInformationDialog(final int messageId) {
         Log.message("Enter");
-        String title = "";
-        String message = "";
-        
-        switch (messageId) {
-        case Constants.INFORMATION_SUNRISE:
-            title = getString(R.string.information_title_sunrise);
-            message = getString(R.string.information_message_sunrise);
-            break;
-        case Constants.INFORMATION_SUNSET:
-            title = getString(R.string.information_title_sunset);
-            message = getString(R.string.information_message_sunset);
-            break;
-        case Constants.INFORMATION_ASTRO_SUNRISE:
-            title = getString(R.string.information_title_astroSunrise);
-            message = getString(R.string.information_message_astroSunrise);
-            break;
-        case Constants.INFORMATION_ASTRO_SUNSET:
-            title = getString(R.string.information_title_astroSunset);
-            message = getString(R.string.information_message_astroSunset);
-            break;
-        case Constants.INFORMATION_NAUTICAL_SUNRISE:
-            title = getString(R.string.information_title_nauticalSunrise);
-            message = getString(R.string.information_message_nauticalSunrise);
-            break;
-        case Constants.INFORMATION_NAUTICAL_SUNSET:
-            title = getString(R.string.information_title_nauticalSunset);
-            message = getString(R.string.information_message_nauticalSunset);
-            break;
-        case Constants.INFORMATION_CIVIL_SUNRISE:
-            title = getString(R.string.information_title_civilSunrise);
-            message = getString(R.string.information_message_civilSunrise);
-            break;
-        case Constants.INFORMATION_CIVIL_SUNSET:
-            title = getString(R.string.information_title_civilSunset);
-            message = getString(R.string.information_message_civilSunset);
-            break;
-        }
-        
-        Log.variable("title", title);
-        Log.variable("message", message);
-        
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-
-        // Setting Dialog Title
-        alertDialog.setTitle(title);
-
-        // Setting Dialog Message
-        alertDialog.setMessage(message);
-
-        // on pressing cancel button
-        alertDialog.setNegativeButton(R.string.information_button_close,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-        // Showing Alert Message
-        alertDialog.show();
-        
+        InfoFragment infoFragment = new InfoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.INFORMATION_MESSAGE_ID, messageId);
+        infoFragment.setArguments(bundle);
+        infoFragment.show(getFragmentManager(), Constants.INFORMATION_DIALOG);
     }
     /**
      * Unbinds from GeoLocationService

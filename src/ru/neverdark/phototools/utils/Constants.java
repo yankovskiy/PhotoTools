@@ -70,4 +70,9 @@ public class Constants {
     public static final int INFORMATION_NAUTICAL_SUNSET = 5;
     public static final int INFORMATION_CIVIL_SUNRISE = 6;
     public static final int INFORMATION_CIVIL_SUNSET = 7;
+    
+    public static final String INFORMATION_MESSAGE_ID = "informationMessageId";
+    public static final String INFORMATION_DIALOG = "informationDialog";
+    
+    public static final String ALERT_DIALOG = "alertDialog";
 }
