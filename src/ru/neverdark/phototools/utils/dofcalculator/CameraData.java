@@ -256,6 +256,23 @@ public class CameraData {
         DATABASE.put(Vendor.SONY, sonyCameras);
         sonyCameras.add(new CameraData(Vendor.SONY, "DSLR-A580", new BigDecimal("23.5"), new BigDecimal("4912")));
         DATABASE.put(Vendor.SONY, sonyCameras);
+        sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A33", new BigDecimal("23.5"), new BigDecimal("4592")));
+        DATABASE.put(Vendor.SONY, sonyCameras);
+        sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A35", new BigDecimal("23.5"), new BigDecimal("4912")));
+        DATABASE.put(Vendor.SONY, sonyCameras);
+        sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A37", new BigDecimal("23.5"), new BigDecimal("4912")));
+        DATABASE.put(Vendor.SONY, sonyCameras);
+        sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A55", new BigDecimal("23.5"), new BigDecimal("4912")));
+        DATABASE.put(Vendor.SONY, sonyCameras);
+        sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A57", new BigDecimal("23.5"), new BigDecimal("5456")));
+        DATABASE.put(Vendor.SONY, sonyCameras);
+        sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A65", new BigDecimal("23.5"), new BigDecimal("6000")));
+        DATABASE.put(Vendor.SONY, sonyCameras);
+        sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A77", new BigDecimal("23.5"), new BigDecimal("6000")));
+        DATABASE.put(Vendor.SONY, sonyCameras);
+        sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A99", new BigDecimal("35.8"), new BigDecimal("6000")));
+        DATABASE.put(Vendor.SONY, sonyCameras);
+
     }
     
     /**

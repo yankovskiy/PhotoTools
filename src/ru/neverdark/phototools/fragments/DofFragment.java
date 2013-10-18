@@ -56,7 +56,7 @@ public class DofFragment extends SherlockFragment {
     /**
      * Names for save preferences
      */
-    private final String APERTURE_INDEX = "APERTURE_INDEX";
+    //private final String APERTURE_INDEX = "APERTURE_INDEX";
     private final String CAMERA_INDEX = "CAMERA_INDEX";
     private final String VENDOR_INDEX = "VENDOR_INDEX";
     
@@ -329,7 +329,7 @@ public class DofFragment extends SherlockFragment {
         SharedPreferences preferenced = getActivity().getPreferences(Context.MODE_PRIVATE);
         int vendorIndex = preferenced.getInt(VENDOR_INDEX, 0);
         int cameraIndex = preferenced.getInt(CAMERA_INDEX, 0);
-        int apertureIndex = preferenced.getInt(APERTURE_INDEX, 0);
+        //int apertureIndex = preferenced.getInt(APERTURE_INDEX, 0);
         
         /* checks for no more than the number of elements in the arrays */
         /* if more than number of elements in the array - set index to zero */
@@ -347,11 +347,13 @@ public class DofFragment extends SherlockFragment {
         
         getCamerasSpinner().setSelection(cameraIndex);
         
+        /*
         if (apertureIndex > getAperturesSpinner().getCount() - 1) {
             apertureIndex = 0;
         }
         
         getAperturesSpinner().setSelection(apertureIndex);
+        */
     }
     
 
@@ -487,12 +489,12 @@ public class DofFragment extends SherlockFragment {
         SharedPreferences preferenced = getActivity().getPreferences(Context.MODE_PRIVATE);
         int vendorIndex = getVendorsSpinner().getSelectedItemPosition();
         int cameraIndex = getCamerasSpinner().getSelectedItemPosition();
-        int apertureIndex = getAperturesSpinner().getSelectedItemPosition();
+        //int apertureIndex = getAperturesSpinner().getSelectedItemPosition();
         
         SharedPreferences.Editor editor = preferenced.edit();
         editor.putInt(VENDOR_INDEX, vendorIndex);
         editor.putInt(CAMERA_INDEX, cameraIndex);
-        editor.putInt(APERTURE_INDEX, apertureIndex);
+        //editor.putInt(APERTURE_INDEX, apertureIndex);
         editor.commit();
     }
     
