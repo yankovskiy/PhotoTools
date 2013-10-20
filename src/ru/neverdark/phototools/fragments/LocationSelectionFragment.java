@@ -16,11 +16,8 @@
 package ru.neverdark.phototools.fragments;
 
 import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,33 +36,41 @@ public class LocationSelectionFragment extends SherlockDialogFragment {
         dialog.setTitle(R.string.locationSelection_label_selectLocation);
         return dialog;
     }
-    
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         Log.message("Enter");
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.activity_location_selection, container, false); 
-        
-        ListView listView = (ListView) view.findViewById(R.id.locationSelection_listView);
+        View view = inflater.inflate(R.layout.activity_location_selection,
+                container, false);
+
+        ListView listView = (ListView) view
+                .findViewById(R.id.locationSelection_listView);
         setOnItemClickListener(listView, this);
         return view;
     }
-    
+
     /**
      * Sets on item click listener for ListView
-     * @param listView ListView for settings onItemClickListener
-     * @param dialog dialog object for closing after handling event
+     * 
+     * @param listView
+     *            ListView for settings onItemClickListener
+     * @param dialog
+     *            dialog object for closing after handling event
      */
-    public void setOnItemClickListener(ListView listView, final SherlockDialogFragment dialog) {
+    public void setOnItemClickListener(ListView listView,
+            final SherlockDialogFragment dialog) {
         Log.message("Enter");
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View itemClicked, int position,
-                    long id) {
+            public void onItemClick(AdapterView<?> parent, View itemClicked,
+                    int position, long id) {
                 Log.message("Enter");
                 dialog.dismiss();
-                ((SunsetFragment)getTargetFragment()).handleLocationSelection(position);
-                
+                ((SunsetFragment) getTargetFragment())
+                        .handleLocationSelection(position);
+
             }
         });
     }

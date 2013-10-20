@@ -16,7 +16,9 @@
 package ru.neverdark.phototools.db;
 
 import ru.neverdark.phototools.utils.Log;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -43,24 +45,33 @@ public class LocationsDbAdapter {
     }
 
     /**
-     * Opens database
-     * 
-     * @return LocationDbAdapter object for feature operations with table
-     * @throws SQLException
-     */
-    public LocationsDbAdapter open() throws SQLException {
-        Log.message("Enter");
-        mDatabaseHelper = new DatabaseHelper(mContext);
-        mDatabase = mDatabaseHelper.getWritableDatabase();
-        return this;
-    }
-
-    /**
      * Closes database
      */
     public void close() {
         Log.message("Enter");
         mDatabaseHelper.close();
+    }
+
+    /**
+     * Creates ContentValues for insert or update to database
+     * 
+     * @param locationName
+     *            location name
+     * @param latitude
+     *            location latitude
+     * @param longitude
+     *            location longitude
+     * @return ContentValues object
+     */
+    private ContentValues CreateContentValues(String locationName,
+            double latitude, double longitude) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_LOCATION_NAME, locationName);
+        contentValues.put(KEY_LATITUDE, latitude);
+        contentValues.put(KEY_LONGITUDE, longitude);
+        contentValues.put(KEY_LAST_ACCESS, "date('now')");
+
+        return contentValues;
     }
 
     /**
@@ -76,8 +87,111 @@ public class LocationsDbAdapter {
      */
     public long createLocation(String locationName, double latitude,
             double longitude) {
-        // TODO
-        return -1;
+        Log.message("Enter");
+        ContentValues insertValues = CreateContentValues(locationName,
+                latitude, longitude);
+
+        return mDatabase.insert(TABLE_NAME, null, insertValues);
+    }
+
+    /**
+     * Deletes location by recordId
+     * 
+     * @param recordId
+     *            recordId in Location table
+     * @return true if delete success or false in othe case
+     */
+    public boolean deleteLocation(long recordId) {
+        Log.message("Enter");
+        String where = KEY_ROWID + " = ?";
+        String[] whereArgs = { String.valueOf(recordId) };
+
+        return mDatabase.delete(TABLE_NAME, where, whereArgs) > 0;
+    }
+
+    /**
+     * Fetches all locations from database
+     * 
+     * @return Cursor contains all records from Locations table
+     */
+    public Cursor fetchAllLocations() {
+        String[] columns = { KEY_ROWID, KEY_LOCATION_NAME };
+        return mDatabase.query(TABLE_NAME, columns, null, null, null, null,
+                KEY_LAST_ACCESS + " DESC");
+    }
+
+    /**
+     * Fetches single location from database
+     * 
+     * @param recordId
+     *            record Id for selection
+     * @return Cursor contains record from Locations table
+     */
+    public Cursor fetchSingleLocation(long recordId) {
+        String[] columns = { KEY_ROWID, KEY_LOCATION_NAME, KEY_LATITUDE,
+                KEY_LONGITUDE };
+        String where = KEY_ROWID + " = ?";
+        String[] whereArgs = { String.valueOf(recordId) };
+        Cursor cursor = mDatabase.query(true, TABLE_NAME, columns, where,
+                whereArgs, null, null, null, null, null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+
+        return cursor;
+    }
+
+    /**
+     * Checks Location table for location with the same name
+     * 
+     * @param locationName
+     *            location name for checks
+     * @return true if location exist, false if location not found in database
+     */
+    public boolean isLocationExists(String locationName) {
+        Log.message("Enter");
+        boolean exists = false;
+        String where = KEY_LOCATION_NAME + " = ?";
+        String[] whereArgs = { locationName };
+        Cursor cursor = mDatabase.query(true, TABLE_NAME,
+                new String[] { KEY_ROWID }, where, whereArgs, null, null, null,
+                null, null);
+
+        if (cursor != null) {
+            exists = cursor.getCount() > 0;
+            cursor.close();
+        }
+
+        return exists;
+    }
+
+    /**
+     * Opens database
+     * 
+     * @return LocationDbAdapter object for feature operations with table
+     * @throws SQLException
+     */
+    public LocationsDbAdapter open() throws SQLException {
+        Log.message("Enter");
+        mDatabaseHelper = new DatabaseHelper(mContext);
+        mDatabase = mDatabaseHelper.getWritableDatabase();
+        return this;
+    }
+
+    /**
+     * Updates last_access field for current timestamp
+     * 
+     * @param recordId
+     *            if of record in Location table
+     */
+    public void udateLastAccessTime(long recordId) {
+        Log.message("Enter");
+        String where = KEY_ROWID + " = ?";
+        String[] whereArgs = { String.valueOf(recordId) };
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_LAST_ACCESS, "datetime('now')");
+        mDatabase.update(TABLE_NAME, contentValues, where, whereArgs);
     }
 
     /**
@@ -94,40 +208,12 @@ public class LocationsDbAdapter {
      */
     public void updateLocation(long recordId, String locationName,
             double latitude, double longitude) {
-        // TODO
-    }
+        Log.message("Enter");
+        String where = KEY_ROWID + " = ?";
+        String[] whereArgs = { String.valueOf(recordId) };
 
-    /**
-     * Deletes location by recordId
-     * 
-     * @param recordId
-     *            recordId in Location table
-     * @return true if delete success or false in othe case
-     */
-    public boolean deleteLocation(long recordId) {
-        // TODO
-        return false;
-    }
-
-    /**
-     * Updates last_access field for current timestamp
-     * 
-     * @param recordId
-     *            if of record in Location table
-     */
-    public void udateLastAccessTime(long recordId) {
-        // TODO
-    }
-
-    /**
-     * Checks Location table for location with the same name
-     * 
-     * @param locationName
-     *            location name for checks
-     * @return true if location exist, false if location not found in database
-     */
-    public boolean isLocationExists(String locationName) {
-        // TODO
-        return false;
+        ContentValues updateValues = CreateContentValues(locationName,
+                latitude, longitude);
+        mDatabase.update(TABLE_NAME, updateValues, where, whereArgs);
     }
 }

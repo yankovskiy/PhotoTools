@@ -21,20 +21,19 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * A helper class to manage database creation and version management. 
+ * A helper class to manage database creation and version management.
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "applicationdata";
     private static final int DATABASE_VERSION = 1;
     private static final String CREATE_LOCATIONS_QUERY = "create table locations (_id integer primary key autoincrement, location_name text not null, latitude real not null, longitude real not null, last_access integer not null);";
-
     private static final String RESERVED_QUERY = "insert into locations values (1, 'reserved', 0, 0, 0);";
-    
+
     public DatabaseHelper(Context context) {
-       super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
-    
+
     @Override
     public void onCreate(SQLiteDatabase database) {
         Log.message("Enter");
@@ -43,7 +42,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase database, int oldVersion,
+            int newVersion) {
         Log.message("Enter");
         // TODO need write
     }
