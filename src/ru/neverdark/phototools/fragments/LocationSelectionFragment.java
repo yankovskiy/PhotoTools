@@ -23,11 +23,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 public class LocationSelectionFragment extends SherlockDialogFragment {
+
+    private View mView;
+    private ListView mListView;
+
+    /**
+     * Binds classes objects to resources
+     */
+    private void bindObjectsToResources() {
+        mListView = (ListView) mView
+                .findViewById(R.id.locationSelection_listView);
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -37,32 +49,41 @@ public class LocationSelectionFragment extends SherlockDialogFragment {
         return dialog;
     }
 
+    /**
+     * Fills list view
+     */
+    private void fillData() {
+        Log.message("Enter");
+        final String[] items = getResources().getStringArray(
+                R.array.locationSelection_titles);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                R.layout.location_row, R.id.locationRow_label, items);
+        mListView.setAdapter(adapter);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         Log.message("Enter");
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.activity_location_selection,
+        mView = inflater.inflate(R.layout.activity_location_selection,
                 container, false);
 
-        ListView listView = (ListView) view
-                .findViewById(R.id.locationSelection_listView);
-        setOnItemClickListener(listView, this);
-        return view;
+        bindObjectsToResources();
+        setOnItemClickListener(this);
+        fillData();
+        return mView;
     }
 
     /**
      * Sets on item click listener for ListView
      * 
-     * @param listView
-     *            ListView for settings onItemClickListener
      * @param dialog
      *            dialog object for closing after handling event
      */
-    public void setOnItemClickListener(ListView listView,
-            final SherlockDialogFragment dialog) {
+    public void setOnItemClickListener(final SherlockDialogFragment dialog) {
         Log.message("Enter");
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View itemClicked,
                     int position, long id) {

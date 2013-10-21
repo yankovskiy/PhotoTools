@@ -115,8 +115,9 @@ public class LocationsDbAdapter {
      * @return Cursor contains all records from Locations table
      */
     public Cursor fetchAllLocations() {
-        String[] columns = { KEY_ROWID, KEY_LOCATION_NAME };
-        return mDatabase.query(TABLE_NAME, columns, null, null, null, null,
+        String[] columns = { KEY_ROWID, KEY_LOCATION_NAME, KEY_LATITUDE, KEY_LONGITUDE };
+        String where = KEY_ROWID + " > 1";
+        return mDatabase.query(TABLE_NAME, columns, where, null, null, null,
                 KEY_LAST_ACCESS + " DESC");
     }
 

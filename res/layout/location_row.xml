@@ -26,9 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_centerInParent="true"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="20sp" />
+        android:layout_centerInParent="true" />
 
     <ImageView
         android:id="@+id/locationRow_image_remove"
@@ -37,7 +35,7 @@
         android:layout_alignParentRight="true"
 
         android:layout_centerInParent="true"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="5dp"
         android:src="@drawable/ic_action_remove" />
 
     <ImageView
@@ -45,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="5dp"
         android:layout_centerInParent="true"
         android:layout_toLeftOf="@+id/locationRow_image_remove"
         android:src="@drawable/ic_action_edit" />
