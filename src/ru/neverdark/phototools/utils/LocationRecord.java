@@ -23,4 +23,14 @@ public class LocationRecord {
     public String locationName;
     public double latitude;
     public double longitude;
+
+    public LocationRecord(long _id, String locationName, double latitude,
+            double longitude) {
+        super();
+        this._id = _id;
+        this.locationName = locationName;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
 }

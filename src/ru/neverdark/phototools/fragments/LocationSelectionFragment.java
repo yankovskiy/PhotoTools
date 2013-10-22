@@ -15,7 +15,11 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
+import java.util.ArrayList;
+
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.utils.LocationAdapter;
+import ru.neverdark.phototools.utils.LocationRecord;
 import ru.neverdark.phototools.utils.Log;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -23,7 +27,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
@@ -41,24 +44,31 @@ public class LocationSelectionFragment extends SherlockDialogFragment {
                 .findViewById(R.id.locationSelection_listView);
     }
 
+    /**
+     * Fills list view
+     */
+    private void fillData() {
+        Log.message("Enter");
+
+        ArrayList<LocationRecord> arrayList = new ArrayList<LocationRecord>();
+        arrayList.add(new LocationRecord(0,
+                getString(R.string.locationSelection_label_currentLocation), 0,
+                0));
+        arrayList.add(new LocationRecord(1,
+                getString(R.string.locationSelection_label_pointOnMap), 0, 0));
+
+        LocationAdapter adapter = new LocationAdapter(mView.getContext(),
+                R.layout.location_row, arrayList);
+
+        mListView.setAdapter(adapter);
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.message("Enter");
         Dialog dialog = new Dialog(getActivity());
         dialog.setTitle(R.string.locationSelection_label_selectLocation);
         return dialog;
-    }
-
-    /**
-     * Fills list view
-     */
-    private void fillData() {
-        Log.message("Enter");
-        final String[] items = getResources().getStringArray(
-                R.array.locationSelection_titles);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                R.layout.location_row, R.id.locationRow_label, items);
-        mListView.setAdapter(adapter);
     }
 
     @Override
