@@ -34,8 +34,9 @@ import android.widget.TextView;
 public class LocationAdapter extends ArrayAdapter<LocationRecord> {
     private Context mContext;
     private int mResource;
-    private ArrayList<LocationRecord> mObjects = new ArrayList<LocationRecord> ();
     
+    private ArrayList<LocationRecord> mObjects = new ArrayList<LocationRecord>();
+
     public LocationAdapter(Context context, int resource,
             ArrayList<LocationRecord> objects) {
         super(context, resource, objects);
@@ -44,48 +45,62 @@ public class LocationAdapter extends ArrayAdapter<LocationRecord> {
         mResource = resource;
         mObjects = objects;
     }
-    
+
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         Log.message("Enter");
-        // TODO
         View row = convertView;
         LocationHolder holder = null;
-        
+
         if (row == null) {
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+            LayoutInflater inflater = (LayoutInflater) mContext
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(mResource, parent, false);
             holder = new LocationHolder();
-            holder.locationRow_image_edit = (ImageView) row.findViewById(R.id.locationRow_image_edit);
-            holder.locationRow_image_remove = (ImageView) row.findViewById(R.id.locationRow_image_remove);
-            holder.locationRow_label = (TextView) row.findViewById(R.id.locationRow_label);
+            holder.locationRow_image_edit = (ImageView) row
+                    .findViewById(R.id.locationRow_image_edit);
+            holder.locationRow_image_remove = (ImageView) row
+                    .findViewById(R.id.locationRow_image_remove);
+            holder.locationRow_label = (TextView) row
+                    .findViewById(R.id.locationRow_label);
             row.setTag(holder);
         } else {
             holder = (LocationHolder) row.getTag();
         }
-        
+
         LocationRecord record = mObjects.get(position);
         holder.locationRow_label.setText(record.locationName);
         
-        holder.locationRow_image_edit.setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
-                Log.message("Enter");
-                // TODO edit
-            }
-        });
-        
-        holder.locationRow_image_remove.setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
-                Log.message("Enter");
-                // TODO remove
-                
-            }
-        });
-        
+        // TODO need change "<=" to ">"
+        /* if is not current location and not point on map */
+        if (position <= Constants.LOCATION_POINT_ON_MAP_CHOICE) {
+            holder.locationRow_image_edit.setVisibility(View.VISIBLE);
+            holder.locationRow_image_remove.setVisibility(View.VISIBLE);
+                        
+            holder.locationRow_image_edit
+                    .setOnClickListener(new OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            Log.message("Enter");
+                            Log.message("Edit #" + String.valueOf(position));
+                        }
+                    });
+
+            holder.locationRow_image_remove
+                    .setOnClickListener(new OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            Log.message("Enter");
+                            Log.message("Remove #" + String.valueOf(position));
+                            // TODO remove
+
+                        }
+                    });
+
+        }
+
         return row;
     }
 

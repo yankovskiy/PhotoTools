@@ -742,6 +742,7 @@ public class SunsetFragment extends SherlockFragment {
         dateFragment.show(getFragmentManager(), Constants.DATE_PICKER_DIALOG);
     }
 
+    
     /**
      * Shows location selection dialog
      */
