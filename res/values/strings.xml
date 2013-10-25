@@ -104,6 +104,14 @@
     <string name="sunset_alert_positive">Настройки</string>
     <string name="sunset_alert_negative">Отмена</string>
     
+    <!--  new -->
+    <string name="sunset_deleteConfirm_title">Подтверждение удаления</string>
+    <string name="sunset_deleteConfirm_message">Вы действительно хотите удалить запись \"%s\"?</string>
+    <string name="sunset_deleteConfirm_positive">Да</string>
+    <string name="sunset_deleteConfirm_negative">Нет</string>
+    <!--  end new -->
+    
+    
     <string name="sunset_button_calculate">Расчет</string>
     <string name="sunset_label_date">Дата</string>
     <string name="sunset_label_location">Местоположение</string>

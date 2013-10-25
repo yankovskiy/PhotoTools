@@ -115,6 +115,7 @@ public class LocationsDbAdapter {
      * @return Cursor contains all records from Locations table
      */
     public Cursor fetchAllLocations() {
+        Log.message("Enter");
         String[] columns = { KEY_ROWID, KEY_LOCATION_NAME, KEY_LATITUDE, KEY_LONGITUDE };
         String where = KEY_ROWID + " > 1";
         return mDatabase.query(TABLE_NAME, columns, where, null, null, null,
@@ -129,12 +130,13 @@ public class LocationsDbAdapter {
      * @return Cursor contains record from Locations table
      */
     public Cursor fetchSingleLocation(long recordId) {
+        Log.message("Enter");
         String[] columns = { KEY_ROWID, KEY_LOCATION_NAME, KEY_LATITUDE,
                 KEY_LONGITUDE };
         String where = KEY_ROWID + " = ?";
         String[] whereArgs = { String.valueOf(recordId) };
-        Cursor cursor = mDatabase.query(true, TABLE_NAME, columns, where,
-                whereArgs, null, null, null, null, null);
+        Cursor cursor = mDatabase.query(TABLE_NAME, columns, where,
+                whereArgs, null, null, null);
 
         if (cursor != null) {
             cursor.moveToFirst();
@@ -155,9 +157,9 @@ public class LocationsDbAdapter {
         boolean exists = false;
         String where = KEY_LOCATION_NAME + " = ?";
         String[] whereArgs = { locationName };
-        Cursor cursor = mDatabase.query(true, TABLE_NAME,
-                new String[] { KEY_ROWID }, where, whereArgs, null, null, null,
-                null, null);
+        Cursor cursor = mDatabase.query(TABLE_NAME,
+                new String[] { KEY_ROWID }, where, whereArgs, null, null, null
+                );
 
         if (cursor != null) {
             exists = cursor.getCount() > 0;

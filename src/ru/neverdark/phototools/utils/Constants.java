@@ -75,4 +75,6 @@ public class Constants {
     public static final String INFORMATION_DIALOG = "informationDialog";
     
     public static final String ALERT_DIALOG = "alertDialog";
+    public static final String DELETE_DIALOG = "deleteDialog";
+    public static final String DELETE_LOCATION_NAME = "deleteLocationName";
 }

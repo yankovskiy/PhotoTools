@@ -32,5 +32,9 @@ public class LocationRecord {
         this.latitude = latitude;
         this.longitude = longitude;
     }
+    
+    public LocationRecord() {
+        super();
+    }
 
 }

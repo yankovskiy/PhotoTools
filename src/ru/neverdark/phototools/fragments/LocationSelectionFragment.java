@@ -18,10 +18,14 @@ package ru.neverdark.phototools.fragments;
 import java.util.ArrayList;
 
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.db.LocationsDbAdapter;
 import ru.neverdark.phototools.utils.LocationAdapter;
+import ru.neverdark.phototools.utils.LocationAdapter.LocationImageChangeListener;
+import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.LocationRecord;
 import ru.neverdark.phototools.utils.Log;
 import android.app.Dialog;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,10 +35,15 @@ import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
-public class LocationSelectionFragment extends SherlockDialogFragment {
+public class LocationSelectionFragment extends SherlockDialogFragment implements
+        LocationImageChangeListener {
 
     private View mView;
     private ListView mListView;
+    private ArrayList<LocationRecord> mArrayList;
+    private LocationsDbAdapter mDbAdapter;
+    private Cursor mCursor;
+    private LocationAdapter mAdapter;
 
     /**
      * Binds classes objects to resources
@@ -50,17 +59,62 @@ public class LocationSelectionFragment extends SherlockDialogFragment {
     private void fillData() {
         Log.message("Enter");
 
-        ArrayList<LocationRecord> arrayList = new ArrayList<LocationRecord>();
-        arrayList.add(new LocationRecord(0,
+        if (mArrayList == null) {
+            mArrayList = new ArrayList<LocationRecord>();
+        } else {
+            mArrayList.clear();
+        }
+
+        loadStaticData();
+        loadDynamicData();
+
+        if (mAdapter == null) {
+            mAdapter = new LocationAdapter(mView.getContext(),
+                    R.layout.location_row, mArrayList, this);
+        }
+
+        mListView.setAdapter(mAdapter);
+    }
+
+    /**
+     * Loads dynamic data from database to the ListView
+     */
+    private void loadDynamicData() {
+        Log.message("Enter");
+
+        mCursor = mDbAdapter.fetchAllLocations();
+        final int KEY_ROWID = mCursor
+                .getColumnIndex(LocationsDbAdapter.KEY_ROWID);
+        final int KEY_LOCATION_NAME = mCursor
+                .getColumnIndex(LocationsDbAdapter.KEY_LOCATION_NAME);
+        final int KEY_LATITUDE = mCursor
+                .getColumnIndex(LocationsDbAdapter.KEY_LATITUDE);
+        final int KEY_LONGITUDE = mCursor
+                .getColumnIndex(LocationsDbAdapter.KEY_LONGITUDE);
+
+        while (mCursor.moveToNext()) {
+            LocationRecord dbRecord = new LocationRecord();
+            dbRecord._id = mCursor.getLong(KEY_ROWID);
+            dbRecord.locationName = mCursor.getString(KEY_LOCATION_NAME);
+            dbRecord.latitude = mCursor.getDouble(KEY_LATITUDE);
+            dbRecord.longitude = mCursor.getDouble(KEY_LONGITUDE);
+            mArrayList.add(dbRecord);
+            dbRecord = null;
+        }
+
+        mCursor.close();
+    }
+
+    /**
+     * Loads static data to the ListView
+     */
+    private void loadStaticData() {
+        Log.message("Enter");
+        mArrayList.add(new LocationRecord(0,
                 getString(R.string.locationSelection_label_currentLocation), 0,
                 0));
-        arrayList.add(new LocationRecord(1,
+        mArrayList.add(new LocationRecord(1,
                 getString(R.string.locationSelection_label_pointOnMap), 0, 0));
-
-        LocationAdapter adapter = new LocationAdapter(mView.getContext(),
-                R.layout.location_row, arrayList);
-
-        mListView.setAdapter(adapter);
     }
 
     @Override
@@ -81,8 +135,28 @@ public class LocationSelectionFragment extends SherlockDialogFragment {
 
         bindObjectsToResources();
         setOnItemClickListener(this);
-        fillData();
+
         return mView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mDbAdapter == null) {
+            mDbAdapter = new LocationsDbAdapter(mView.getContext());
+        }
+
+        mDbAdapter.open();
+
+        fillData();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mDbAdapter != null) {
+            mDbAdapter.close();
+        }
     }
 
     /**
@@ -106,4 +180,32 @@ public class LocationSelectionFragment extends SherlockDialogFragment {
         });
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * ru.neverdark.phototools.utils.LocationAdapter.LocationImageChangeListener
+     * #onLocationImageEdit(int)
+     */
+    @Override
+    public void onLocationImageEdit(int position) {
+        Log.message("Enter");
+        Log.variable("position", String.valueOf(position));
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * ru.neverdark.phototools.utils.LocationAdapter.LocationImageChangeListener
+     * #onLocationImageRemove(int)
+     */
+    @Override
+    public void onLocationImageRemove(int position) {
+        Log.message("Enter");
+        Log.variable("position", String.valueOf(position));
+        ConfirmDeleteFragment deleteFragment = new ConfirmDeleteFragment(mAdapter.getItem(position).locationName);
+        deleteFragment.show(getFragmentManager(), Constants.DELETE_DIALOG);
+    }
 }

@@ -32,18 +32,37 @@ import android.widget.TextView;
  * A class provide adapter for locations
  */
 public class LocationAdapter extends ArrayAdapter<LocationRecord> {
+    /**
+     * Interface for LocationImageChangeListener
+     */
+    public interface LocationImageChangeListener{
+        /**
+         * Listener for handling Edit image clicked
+         * @param position position in ListView
+         */
+        public void onLocationImageEdit(int position);
+        /**
+         * Listener for handling Remove image clicked
+         * @param position position in ListView
+         */
+        public void onLocationImageRemove(int position);
+    }
+    
+    private LocationImageChangeListener mCallback;
+    
     private Context mContext;
     private int mResource;
     
     private ArrayList<LocationRecord> mObjects = new ArrayList<LocationRecord>();
 
     public LocationAdapter(Context context, int resource,
-            ArrayList<LocationRecord> objects) {
+            ArrayList<LocationRecord> objects, LocationImageChangeListener callback) {
         super(context, resource, objects);
         Log.message("Enter");
         mContext = context;
         mResource = resource;
         mObjects = objects;
+        mCallback = callback;
     }
 
     @Override
@@ -83,7 +102,7 @@ public class LocationAdapter extends ArrayAdapter<LocationRecord> {
                         @Override
                         public void onClick(View v) {
                             Log.message("Enter");
-                            Log.message("Edit #" + String.valueOf(position));
+                            mCallback.onLocationImageEdit(position);
                         }
                     });
 
@@ -93,9 +112,7 @@ public class LocationAdapter extends ArrayAdapter<LocationRecord> {
                         @Override
                         public void onClick(View v) {
                             Log.message("Enter");
-                            Log.message("Remove #" + String.valueOf(position));
-                            // TODO remove
-
+                            mCallback.onLocationImageRemove(position);
                         }
                     });
 
