@@ -40,6 +40,7 @@ public class Constants {
     public static final String LOCATION_SELECTION_DIALOG = "locationSelectionDialog";
     
     public static final byte DIALOG_FRAGMENT = 0;
+    public static final byte DELETE_DIALOG_FRAGMENT = 1;
     
     public static final String LOCATION_LATITUDE = "ru.neverdark.phototools.locationLatitude";
     public static final String LOCATION_LONGITUDE = "ru.neverdark.phototools.locationLongitude";
@@ -77,4 +78,5 @@ public class Constants {
     public static final String ALERT_DIALOG = "alertDialog";
     public static final String DELETE_DIALOG = "deleteDialog";
     public static final String DELETE_LOCATION_NAME = "deleteLocationName";
+    public static final String DELETE_LOCATION_POSITION = "deleteLocationPosition";
 }

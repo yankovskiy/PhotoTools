@@ -90,9 +90,8 @@ public class LocationAdapter extends ArrayAdapter<LocationRecord> {
         LocationRecord record = mObjects.get(position);
         holder.locationRow_label.setText(record.locationName);
         
-        // TODO need change "<=" to ">"
         /* if is not current location and not point on map */
-        if (position <= Constants.LOCATION_POINT_ON_MAP_CHOICE) {
+        if (position > Constants.LOCATION_POINT_ON_MAP_CHOICE) {
             holder.locationRow_image_edit.setVisibility(View.VISIBLE);
             holder.locationRow_image_remove.setVisibility(View.VISIBLE);
                         
@@ -116,6 +115,9 @@ public class LocationAdapter extends ArrayAdapter<LocationRecord> {
                         }
                     });
 
+        } else {
+            holder.locationRow_image_edit.setVisibility(View.GONE);
+            holder.locationRow_image_remove.setVisibility(View.GONE);
         }
 
         return row;

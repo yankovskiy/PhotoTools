@@ -24,20 +24,24 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 /**
  * Implements delete confirmation dialog
  */
 public class ConfirmDeleteFragment extends SherlockDialogFragment {
+
     private String mLocationName;
-    
-    public ConfirmDeleteFragment(String locationName) {
-        super();
-        this.mLocationName = locationName;
+    private int mPosition;
+
+    static public ConfirmDeleteFragment NewInstance(String locationName,
+            int position) {
+        ConfirmDeleteFragment deleteDialog = new ConfirmDeleteFragment();
+        deleteDialog.mLocationName = locationName;
+        deleteDialog.mPosition = position;
+        return deleteDialog;
     }
-    
+
     public ConfirmDeleteFragment() {
         super();
     }
@@ -45,12 +49,18 @@ public class ConfirmDeleteFragment extends SherlockDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.message("Enter");
-        
+
         if (savedInstanceState != null) {
-            mLocationName = savedInstanceState.getString(Constants.DELETE_LOCATION_NAME);
+            mLocationName = savedInstanceState
+                    .getString(Constants.DELETE_LOCATION_NAME);
+            mPosition = savedInstanceState
+                    .getInt(Constants.DELETE_LOCATION_POSITION);
         }
-        
-        String message = String.format(Locale.US, getString(R.string.sunset_deleteConfirm_message), mLocationName);
+
+        String message = String
+                .format(Locale.US,
+                        getString(R.string.sunset_deleteConfirm_message),
+                        mLocationName);
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
 
         // Setting Dialog Title
@@ -59,12 +69,14 @@ public class ConfirmDeleteFragment extends SherlockDialogFragment {
         // Setting Dialog Message
         alertDialog.setMessage(message);
 
-        // On pressing Settings button
+        // On pressing Delete button
         alertDialog.setPositiveButton(R.string.sunset_deleteConfirm_positive,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // TODO
+                        dialog.dismiss();
+                        ((LocationSelectionFragment) getTargetFragment())
+                                .deleteLocation(mPosition);
                     }
                 });
 
@@ -80,9 +92,10 @@ public class ConfirmDeleteFragment extends SherlockDialogFragment {
         // Showing Alert Message
         return alertDialog.create();
     }
-    
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(Constants.DELETE_LOCATION_NAME, mLocationName);
+        outState.putInt(Constants.DELETE_LOCATION_POSITION, mPosition);
     }
 }

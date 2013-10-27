@@ -105,7 +105,6 @@ public class LocationsDbAdapter {
         Log.message("Enter");
         String where = KEY_ROWID + " = ?";
         String[] whereArgs = { String.valueOf(recordId) };
-
         return mDatabase.delete(TABLE_NAME, where, whereArgs) > 0;
     }
 
@@ -180,6 +179,14 @@ public class LocationsDbAdapter {
         mDatabaseHelper = new DatabaseHelper(mContext);
         mDatabase = mDatabaseHelper.getWritableDatabase();
         return this;
+    }
+    
+    /**
+     * Returns true if the database is currently open. 
+     * @return true if the database is currently open. 
+     */
+    public boolean isOpen() {
+        return mDatabase.isOpen();
     }
 
     /**

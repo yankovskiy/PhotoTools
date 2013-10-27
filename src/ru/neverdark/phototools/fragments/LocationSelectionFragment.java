@@ -142,6 +142,7 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
     @Override
     public void onResume() {
         super.onResume();
+        Log.message("Enter");
         if (mDbAdapter == null) {
             mDbAdapter = new LocationsDbAdapter(mView.getContext());
         }
@@ -149,11 +150,14 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
         mDbAdapter.open();
 
         fillData();
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        Log.message("Enter");
+
         if (mDbAdapter != null) {
             mDbAdapter.close();
         }
@@ -194,18 +198,33 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * ru.neverdark.phototools.utils.LocationAdapter.LocationImageChangeListener
-     * #onLocationImageRemove(int)
+    /* (non-Javadoc)
+     * @see ru.neverdark.phototools.utils.LocationAdapter.LocationImageChangeListener#onLocationImageRemove(int)
      */
-    @Override
     public void onLocationImageRemove(int position) {
         Log.message("Enter");
         Log.variable("position", String.valueOf(position));
-        ConfirmDeleteFragment deleteFragment = new ConfirmDeleteFragment(mAdapter.getItem(position).locationName);
+
+        ConfirmDeleteFragment deleteFragment = ConfirmDeleteFragment
+                .NewInstance(mAdapter.getItem(position).locationName, position);
+        deleteFragment
+                .setTargetFragment(this, Constants.DELETE_DIALOG_FRAGMENT);
         deleteFragment.show(getFragmentManager(), Constants.DELETE_DIALOG);
+    }
+
+    /**
+     * Delete selected location from database and listView
+     * @param position location position for delete
+     */
+    public void deleteLocation(final int position) {
+        Log.message("Enter");
+        Log.variable("Position", String.valueOf(position));
+
+        LocationRecord record = mAdapter.getItem(position);
+
+        mDbAdapter.deleteLocation(record._id);
+        mAdapter.remove(record);
+        mAdapter.notifyDataSetChanged();
+
     }
 }
