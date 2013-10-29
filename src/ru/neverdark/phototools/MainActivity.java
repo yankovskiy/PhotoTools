@@ -36,6 +36,10 @@ public class MainActivity extends SherlockFragmentActivity {
         if (savedInstanceState == null) {
             Log.saveLogcatToFile();
         }
+        
+        ChangeLog cl = new ChangeLog(this);
+        if (cl.firstRun())
+            cl.getLogDialog().show();
     }
 
 }

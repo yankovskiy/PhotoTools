@@ -41,14 +41,12 @@ public class MapActivity extends SherlockFragmentActivity implements
     private Marker mMarker;
     private LatLng mMarkerPosition;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    /**
+     * Binds classes objects to resources
+     */
+    private void bindObjectsToResources() {
         Log.message("Enter");
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
-
-        bindObjectsToResources();
-        initMap(savedInstanceState);
+        mButtonDone = (Button) findViewById(R.id.map_button_done);
     }
 
     /**
@@ -88,11 +86,29 @@ public class MapActivity extends SherlockFragmentActivity implements
         }
     }
     
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
+    /**
+     * OnClick handler for views
+     * 
+     * @param view
+     *            for handle onClick event
+     */
+    public void onClick(View view) {
         Log.message("Enter");
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(Constants.MAP_MARKER_POSITION, mMarkerPosition);
+        Intent intent = new Intent();
+        intent.putExtra(Constants.LOCATION_LATITUDE, mMarkerPosition.latitude);
+        intent.putExtra(Constants.LOCATION_LONGITUDE, mMarkerPosition.longitude);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        Log.message("Enter");
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_map);
+
+        bindObjectsToResources();
+        initMap(savedInstanceState);
     }
 
     @Override
@@ -102,12 +118,11 @@ public class MapActivity extends SherlockFragmentActivity implements
         setMarker();
     }
 
-    /**
-     * Binds classes objects to resources
-     */
-    private void bindObjectsToResources() {
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
         Log.message("Enter");
-        mButtonDone = (Button) findViewById(R.id.map_button_done);
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(Constants.MAP_MARKER_POSITION, mMarkerPosition);
     }
 
     /**
@@ -143,21 +158,6 @@ public class MapActivity extends SherlockFragmentActivity implements
         mMarker = mMap.addMarker(new MarkerOptions().position(mMarkerPosition));
         setButtonVisible(true);
 
-    }
-
-    /**
-     * OnClick handler for views
-     * 
-     * @param view
-     *            for handle onClick event
-     */
-    public void onClick(View view) {
-        Log.message("Enter");
-        Intent intent = new Intent();
-        intent.putExtra(Constants.LOCATION_LATITUDE, mMarkerPosition.latitude);
-        intent.putExtra(Constants.LOCATION_LONGITUDE, mMarkerPosition.longitude);
-        setResult(RESULT_OK, intent);
-        finish();
     }
     
 

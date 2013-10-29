@@ -104,14 +104,6 @@
     <string name="sunset_alert_positive">Настройки</string>
     <string name="sunset_alert_negative">Отмена</string>
     
-    <!--  new -->
-    <string name="sunset_deleteConfirm_title">Подтверждение удаления</string>
-    <string name="sunset_deleteConfirm_message">Вы действительно хотите удалить запись \"%s\"?</string>
-    <string name="sunset_deleteConfirm_positive">Да</string>
-    <string name="sunset_deleteConfirm_negative">Нет</string>
-    <!--  end new -->
-    
-    
     <string name="sunset_button_calculate">Расчет</string>
     <string name="sunset_label_date">Дата</string>
     <string name="sunset_label_location">Местоположение</string>
@@ -165,5 +157,24 @@
         погоду можно выполнять любой вид работ без дополнительного освещения.</string>
     
     <string name="information_button_close">Закрыть</string>
-
+    
+    <!--  new -->
+    <string name="changelog_full_title">Список изменений</string>
+    <string name="changelog_title">Что нового</string>
+    <string name="changelog_ok_button">OK</string>
+    <string name="changelog_show_full">далее&#8230;</string>
+    
+    <string name="dialogConfirmCreate_checkbox_isSave">Сохранить местоположение?</string>
+    <string name="dialogConfirmCreate_label_locationName">Название местоположения</string>
+    <string name="dialogConfirmCreate_title">Подтверждение выбора</string>
+    <string name="dialogConfirmCreate_message">Вы действительно хотите выбрать это местоположение?</string>
+    <string name="dialogConfirmCreate_positive">Да</string>
+    <string name="dialogConfirmCreate_negative">Нет</string>
+    
+    <string name="sunset_deleteConfirm_title">Подтверждение удаления</string>
+    <string name="sunset_deleteConfirm_message">Вы действительно хотите удалить запись \"%s\"?</string>
+    <string name="sunset_deleteConfirm_positive">Да</string>
+    <string name="sunset_deleteConfirm_negative">Нет</string>
+    
+    <!-- end new --> 
 </resources>
