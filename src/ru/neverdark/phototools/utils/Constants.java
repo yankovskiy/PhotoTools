@@ -77,6 +77,10 @@ public class Constants {
     
     public static final String ALERT_DIALOG = "alertDialog";
     public static final String DELETE_DIALOG = "deleteDialog";
+    public static final String CONFIRM_DIALOG = "confirmDialog";
+    
     public static final String DELETE_LOCATION_NAME = "deleteLocationName";
     public static final String DELETE_LOCATION_POSITION = "deleteLocationPosition";
+    
+    public static final String CONFIRM_CREATION_ISVISIBLE = "isVisible";
 }

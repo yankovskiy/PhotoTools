@@ -15,6 +15,7 @@
  ******************************************************************************/
 package ru.neverdark.phototools;
 
+import ru.neverdark.phototools.fragments.ConfirmCreateFragment;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
 
@@ -94,11 +95,25 @@ public class MapActivity extends SherlockFragmentActivity implements
      */
     public void onClick(View view) {
         Log.message("Enter");
+        
+        showConfirmDialog();
+        // TODO вынести следующие строки в отдельную функцию
+        /*
         Intent intent = new Intent();
         intent.putExtra(Constants.LOCATION_LATITUDE, mMarkerPosition.latitude);
         intent.putExtra(Constants.LOCATION_LONGITUDE, mMarkerPosition.longitude);
-        setResult(RESULT_OK, intent);
+        setResult(RESULT_OK, intent); 
         finish();
+        */
+    }
+    
+    /**
+     * Shows confirmation dialog
+     */
+    private void showConfirmDialog() {
+        Log.message("Enter");
+        ConfirmCreateFragment confirmDialog = new ConfirmCreateFragment();
+        confirmDialog.show(getSupportFragmentManager(), Constants.CONFIRM_DIALOG);
     }
 
     @Override
@@ -116,6 +131,26 @@ public class MapActivity extends SherlockFragmentActivity implements
         Log.message("Enter");
         mMarkerPosition = point;
         setMarker();
+    }
+    
+    /**
+     * Handles getting information from Confirmation dialog
+     * @param locationName location name
+     */
+    public void handleConfirmDialog(String locationName) {
+        
+        if (locationName != null) {
+            saveDataToDatabase(locationName);
+        }
+    }
+
+    /**
+     * Saves data to the database
+     * @param locationName location name for save into database
+     */
+    private void saveDataToDatabase(String locationName) {
+        // TODO Auto-generated method stub
+        
     }
 
     @Override

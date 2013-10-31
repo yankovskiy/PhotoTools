@@ -22,13 +22,6 @@
     android:orientation="vertical"
     android:padding="15dp" >
 
-    <TextView
-        android:id="@+id/dialogConfirmCreate_label_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/dialogConfirmCreate_message"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
     <EditText
         android:id="@+id/dialogConfirmCreate_editText"
         android:layout_width="match_parent"

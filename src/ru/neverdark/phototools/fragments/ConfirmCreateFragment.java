@@ -15,7 +15,9 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
+import ru.neverdark.phototools.MapActivity;
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -36,6 +38,7 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
     private View mView;
     private EditText mEditText_locationName;
     private AlertDialog.Builder mAlertDialog;
+    private boolean mIsVisible;
     
     /**
      * Binds classes objects to resources
@@ -57,7 +60,14 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        String locationName = null;
+                        
+                        if (isSaveChecked()) {
+                            locationName = mEditText_locationName.getText().toString();
+                        }
+                        
                         dialog.dismiss();
+                        ((MapActivity)getActivity()).handleConfirmDialog(locationName);
                     }
                 });
 
@@ -107,12 +117,25 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
         mAlertDialog = new AlertDialog.Builder(getActivity());
         mAlertDialog.setView(mView);
         
-        // Setting Dialog Title
+        
         mAlertDialog.setTitle(R.string.dialogConfirmCreate_title);
-        // TODO нужно попробовать сделать setMessage, как это будет выглядеть
+        
+        mAlertDialog.setMessage(R.string.dialogConfirmCreate_message);
         setOnClickListeners();
+
+        if (savedInstanceState != null) {
+            mIsVisible = savedInstanceState.getBoolean(Constants.CONFIRM_CREATION_ISVISIBLE);
+            mCheckBox_isSave.setChecked(mIsVisible);
+            setLocationNameVisible(mIsVisible);
+        }
 
         // Showing Alert Message
         return mAlertDialog.create();
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle putInstanseState) {
+        mIsVisible = isSaveChecked();
+        putInstanseState.putBoolean(Constants.CONFIRM_CREATION_ISVISIBLE, mIsVisible);
     }
 }
