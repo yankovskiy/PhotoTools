@@ -39,18 +39,76 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
     private EditText mEditText_locationName;
     private AlertDialog.Builder mAlertDialog;
     private boolean mIsVisible;
-    
+
     /**
      * Binds classes objects to resources
      */
     private void bindObjectToResource() {
         Log.message("Enter");
-        mView = View.inflate(getSherlockActivity(), R.layout.dialog_confirm_create, null);
-        
-        mCheckBox_isSave = (CheckBox) mView.findViewById(R.id.dialogConfirmCreate_checkbox_isSave);
-        mEditText_locationName = (EditText) mView.findViewById(R.id.dialogConfirmCreate_editText);
+        mView = View.inflate(getSherlockActivity(),
+                R.layout.dialog_confirm_create, null);
+
+        mCheckBox_isSave = (CheckBox) mView
+                .findViewById(R.id.dialogConfirmCreate_checkbox_isSave);
+        mEditText_locationName = (EditText) mView
+                .findViewById(R.id.dialogConfirmCreate_editText);
     }
-    
+
+    /**
+     * Returns true if "Is Save" checkbox checked
+     * 
+     * @return true if "Is Save" checkbox checked, false in other case
+     */
+    private boolean isSaveChecked() {
+        return mCheckBox_isSave.isChecked();
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Log.message("Enter");
+
+        bindObjectToResource();
+
+        mAlertDialog = new AlertDialog.Builder(getActivity());
+        mAlertDialog.setView(mView);
+
+        mAlertDialog.setTitle(R.string.dialogConfirmCreate_title);
+
+        mAlertDialog.setMessage(R.string.dialogConfirmCreate_message);
+        setOnClickListeners();
+
+        if (savedInstanceState != null) {
+            mIsVisible = savedInstanceState
+                    .getBoolean(Constants.CONFIRM_CREATION_ISVISIBLE);
+            setLocationNameVisible(mIsVisible);
+        }
+
+        // Showing Alert Message
+        return mAlertDialog.create();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle putInstanseState) {
+        super.onSaveInstanceState(putInstanseState);
+        mIsVisible = isSaveChecked();
+        putInstanseState.putBoolean(Constants.CONFIRM_CREATION_ISVISIBLE,
+                mIsVisible);
+    }
+
+    /**
+     * Sets visible or invisible state for Location Name field
+     * 
+     * @param isVisible
+     *            - true for Location Name visible
+     */
+    private void setLocationNameVisible(boolean isVisible) {
+        if (isVisible) {
+            mEditText_locationName.setVisibility(View.VISIBLE);
+        } else {
+            mEditText_locationName.setVisibility(View.GONE);
+        }
+    }
+
     /**
      * Sets onClickListeners for UI objects
      */
@@ -61,13 +119,15 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String locationName = null;
-                        
+
                         if (isSaveChecked()) {
-                            locationName = mEditText_locationName.getText().toString();
+                            locationName = mEditText_locationName.getText()
+                                    .toString();
                         }
-                        
+
                         dialog.dismiss();
-                        ((MapActivity)getActivity()).handleConfirmDialog(locationName);
+                        ((MapActivity) getActivity())
+                                .handleConfirmDialog(locationName);
                     }
                 });
 
@@ -79,63 +139,12 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
                         dialog.cancel();
                     }
                 });
-        
+
         mCheckBox_isSave.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 setLocationNameVisible(isSaveChecked());
             }
         });
-    }
-    
-    /**
-     * Sets visible or invisible state for Location Name field
-     * @param isVisible - true for Location Name visible
-     */
-    private void setLocationNameVisible(boolean isVisible) {
-        if (isVisible) {
-            mEditText_locationName.setVisibility(View.VISIBLE);
-        } else {
-            mEditText_locationName.setVisibility(View.GONE);
-        }
-    }
-    
-    /**
-     * Returns true if "Is Save" checkbox checked
-     * @return true if "Is Save" checkbox checked, false in other case
-     */
-    private boolean isSaveChecked() {
-        return mCheckBox_isSave.isChecked();
-    }
-    
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.message("Enter");
-        
-        bindObjectToResource();
-        
-        mAlertDialog = new AlertDialog.Builder(getActivity());
-        mAlertDialog.setView(mView);
-        
-        
-        mAlertDialog.setTitle(R.string.dialogConfirmCreate_title);
-        
-        mAlertDialog.setMessage(R.string.dialogConfirmCreate_message);
-        setOnClickListeners();
-
-        if (savedInstanceState != null) {
-            mIsVisible = savedInstanceState.getBoolean(Constants.CONFIRM_CREATION_ISVISIBLE);
-            mCheckBox_isSave.setChecked(mIsVisible);
-            setLocationNameVisible(mIsVisible);
-        }
-
-        // Showing Alert Message
-        return mAlertDialog.create();
-    }
-    
-    @Override
-    public void onSaveInstanceState(Bundle putInstanseState) {
-        mIsVisible = isSaveChecked();
-        putInstanseState.putBoolean(Constants.CONFIRM_CREATION_ISVISIBLE, mIsVisible);
     }
 }
