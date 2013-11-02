@@ -36,120 +36,98 @@ import com.actionbarsherlock.app.SherlockListFragment;
 public class TitlesFragment extends SherlockListFragment {
     private boolean mDualPane;
     private int mCurrentCheckPosition = 0;
-    
-    /* (non-Javadoc)
-     * @see android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)
-     */
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        Log.message("Enter");
-        super.onActivityCreated(savedInstanceState);
-        final String[] TITLES = getResources().getStringArray(R.array.main_menuTitles);
 
-        setListAdapter(new ArrayAdapter<String>(getActivity(),
-                R.layout.menu_item,
-                R.id.menuItem_label_title,
-                TITLES));
-        
-        View detailsFrame = getActivity().findViewById(R.id.main_detailFragment);
-        mDualPane = detailsFrame != null && detailsFrame.getVisibility() == View.VISIBLE;
-        
-        if (savedInstanceState != null) {
-            mCurrentCheckPosition = savedInstanceState.getInt(Constants.CURRENT_CHOICE, 0);
-        } 
-        
-        if (mDualPane) {
-            getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-            showDetails(mCurrentCheckPosition);
-        }
-    }
-    
-    
-    /* (non-Javadoc)
-     * @see android.support.v4.app.Fragment#onSaveInstanceState(android.os.Bundle)
-     */
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        Log.message("Enter");
-        super.onSaveInstanceState(outState);
-        
-        outState.putInt(Constants.CURRENT_CHOICE, mCurrentCheckPosition);
-    }
-    
-    /* (non-Javadoc)
-     * @see android.support.v4.app.ListFragment#onListItemClick(android.widget.ListView, android.view.View, int, long)
-     */
-    @Override
-    public void onListItemClick(ListView listView, View view, int position, long id) {
-        Log.message("Enter");
-        showDetails(position);
-    }
-    
     /**
-     * Shows fragment if application runned on the Tablet or activity for other case
+     * Opens market detail application page for donate app
      */
-    private void showDetails(int index) {
-        Log.message("Enter");
-
-        if (index == Constants.RATE_CHOICE) {
-            gotoMarket();
-        } else if (index == Constants.FEEDBACK_CHOICE) {
-            sendEmail();
-        } else {
-            if (mDualPane == true) {
-                getListView().setItemChecked(index, true);
-                replaceFragment(index);
-            } else {
-                showActivity(index);
-            }
-
-            setCurentCheckPosition(index);
-        }
+    private void gotoDonate() {
+        Intent marketIntent = new Intent(Intent.ACTION_VIEW);
+        marketIntent.setData(Uri
+                .parse("market://details?id=ru.neverdark.phototoolsdonate"));
+        startActivity(marketIntent);
     }
-    
-    /**
-     * Sends email to application author
-     */
-    private void sendEmail() {
-        Intent mailIntent = new Intent(Intent.ACTION_SEND);
-        mailIntent.setType("plain/text");
-        mailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.titles_emailAuthor)});
-        mailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-        startActivity(Intent.createChooser(mailIntent,
-                getString(R.string.titles_selectEmailApplication)));
-    }
-
 
     /**
      * Opens market detail application page
      */
     private void gotoMarket() {
         Intent marketIntent = new Intent(Intent.ACTION_VIEW);
-        marketIntent.setData(Uri.parse("market://details?id=ru.neverdark.phototools"));
+        marketIntent.setData(Uri
+                .parse("market://details?id=ru.neverdark.phototools"));
         startActivity(marketIntent);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)
+     */
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        Log.message("Enter");
+        super.onActivityCreated(savedInstanceState);
+        final String[] TITLES = getResources().getStringArray(
+                R.array.main_menuTitles);
+
+        setListAdapter(new ArrayAdapter<String>(getActivity(),
+                R.layout.menu_item, R.id.menuItem_label_title, TITLES));
+
+        View detailsFrame = getActivity()
+                .findViewById(R.id.main_detailFragment);
+        mDualPane = detailsFrame != null
+                && detailsFrame.getVisibility() == View.VISIBLE;
+
+        if (savedInstanceState != null) {
+            mCurrentCheckPosition = savedInstanceState.getInt(
+                    Constants.CURRENT_CHOICE, 0);
+        }
+
+        if (mDualPane) {
+            getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+            showDetails(mCurrentCheckPosition);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * android.support.v4.app.ListFragment#onListItemClick(android.widget.ListView
+     * , android.view.View, int, long)
+     */
+    @Override
+    public void onListItemClick(ListView listView, View view, int position,
+            long id) {
+        Log.message("Enter");
+        showDetails(position);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * android.support.v4.app.Fragment#onSaveInstanceState(android.os.Bundle)
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        Log.message("Enter");
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(Constants.CURRENT_CHOICE, mCurrentCheckPosition);
+    }
 
     /**
-     * Sets current position for navigation list
-     * @param index
-     */
-    private void setCurentCheckPosition(int index) {
-        mCurrentCheckPosition = index;
-    }
-    
-    
-    
-    /**
      * Replace current fragment to other
-     * @param index index fragment
+     * 
+     * @param index
+     *            index fragment
      */
     private void replaceFragment(int index) {
         Log.message("Enter");
         boolean isOperationNeed = false;
         Fragment details = getFragmentManager().findFragmentById(
                 R.id.main_detailFragment);
-        
+
         switch (index) {
         case Constants.DOF_CHOICE:
             if ((details instanceof DofFragment) == false) {
@@ -184,10 +162,34 @@ public class TitlesFragment extends SherlockListFragment {
             ft.commit();
         }
     }
-    
+
+    /**
+     * Sends email to application author
+     */
+    private void sendEmail() {
+        Intent mailIntent = new Intent(Intent.ACTION_SEND);
+        mailIntent.setType("plain/text");
+        mailIntent.putExtra(Intent.EXTRA_EMAIL,
+                new String[] { getString(R.string.titles_emailAuthor) });
+        mailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+        startActivity(Intent.createChooser(mailIntent,
+                getString(R.string.titles_selectEmailApplication)));
+    }
+
+    /**
+     * Sets current position for navigation list
+     * 
+     * @param index
+     */
+    private void setCurentCheckPosition(int index) {
+        mCurrentCheckPosition = index;
+    }
+
     /**
      * Shows activity by index
-     * @param index activity index for shown
+     * 
+     * @param index
+     *            activity index for shown
      */
     private void showActivity(int index) {
         Log.message("Enter");
@@ -196,5 +198,30 @@ public class TitlesFragment extends SherlockListFragment {
         intent.putExtra(Constants.SHOWN_INDEX, index);
         startActivity(intent);
     }
-    
+
+    /**
+     * Shows fragment if application runned on the Tablet or activity for other
+     * case
+     */
+    private void showDetails(int index) {
+        Log.message("Enter");
+
+        if (index == Constants.RATE_CHOICE) {
+            gotoMarket();
+        } else if (index == Constants.DONATE_CHOICE) {
+            gotoDonate();
+        } else if (index == Constants.FEEDBACK_CHOICE) {
+            sendEmail();
+        } else {
+            if (mDualPane == true) {
+                getListView().setItemChecked(index, true);
+                replaceFragment(index);
+            } else {
+                showActivity(index);
+            }
+
+            setCurentCheckPosition(index);
+        }
+    }
+
 }

@@ -83,6 +83,7 @@
     
     <string name="main_button_about">О программе</string>
     <string name="main_button_dofcalc">ГРИП-калькулятор</string>
+    <string name="main_button_donate">Донат</string>
     <string name="main_button_evpairs">EV Пары</string>
     <string name="main_button_feedback">Обратная связь</string>
     <string name="main_button_rateMe">Оценить</string>
@@ -94,7 +95,8 @@
         <item>@string/main_button_sunset</item>     <!-- 2 -->
         <item>@string/main_button_rateMe</item>     <!-- 3 -->
         <item>@string/main_button_feedback</item>   <!-- 4 -->
-        <item>@string/main_button_about</item>      <!-- 5 -->
+        <item>@string/main_button_donate</item>     <!-- 5 -->
+        <item>@string/main_button_about</item>      <!-- 6 -->
     </string-array>
     
     <string name="map_button_confirmSelection">Подтвердить выбор</string>

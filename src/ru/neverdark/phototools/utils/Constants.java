@@ -27,7 +27,8 @@ public class Constants {
     public static final byte SUNSET_CHOICE = 2;
     public static final byte RATE_CHOICE = 3;
     public static final byte FEEDBACK_CHOICE = 4;
-    public static final byte ABOUT_CHOICE = 5;
+    public static final byte DONATE_CHOICE = 5;
+    public static final byte ABOUT_CHOICE = 6;
     
     public static final String DATE_YEAR = "year";
     public static final String DATE_MONTH = "month";
