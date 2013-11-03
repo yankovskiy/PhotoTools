@@ -15,6 +15,7 @@
  ******************************************************************************/
 package ru.neverdark.phototools;
 
+import ru.neverdark.phototools.db.LocationsDbAdapter;
 import ru.neverdark.phototools.fragments.ConfirmCreateFragment;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
@@ -41,6 +42,8 @@ public class MapActivity extends SherlockFragmentActivity implements
     private Button mButtonDone;
     private Marker mMarker;
     private LatLng mMarkerPosition;
+    private int mAction;
+    private long mRecordId;
 
     /**
      * Binds classes objects to resources
@@ -48,6 +51,32 @@ public class MapActivity extends SherlockFragmentActivity implements
     private void bindObjectsToResources() {
         Log.message("Enter");
         mButtonDone = (Button) findViewById(R.id.map_button_done);
+    }
+
+    /**
+     * Handles getting information from Confirmation dialog
+     * 
+     * @param locationName
+     *            location name
+     */
+    public void handleConfirmDialog(String locationName) {
+        Log.message("Enter");
+
+        Intent intent = new Intent();
+        intent.putExtra(Constants.LOCATION_LATITUDE, mMarkerPosition.latitude);
+        intent.putExtra(Constants.LOCATION_LONGITUDE, mMarkerPosition.longitude);
+
+        if (locationName != null) {
+            saveDataToDatabase(locationName);
+            intent.putExtra(Constants.LOCATION_NAME, locationName);
+        } else {
+            mRecordId = Constants.LOCATION_POINT_ON_MAP_CHOICE;
+        }
+
+        intent.putExtra(Constants.LOCATION_RECORD_ID, mRecordId);
+
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     /**
@@ -71,6 +100,15 @@ public class MapActivity extends SherlockFragmentActivity implements
             Double longitude = intent.getDoubleExtra(
                     Constants.LOCATION_LONGITUDE, 0);
 
+            /* gets action */
+            mAction = intent.getIntExtra(Constants.LOCATION_ACTION,
+                    Constants.LOCATION_ACTION_ADD);
+
+            if (mAction == Constants.LOCATION_ACTION_EDIT) {
+                mRecordId = intent.getLongExtra(Constants.LOCATION_RECORD_ID,
+                        Constants.LOCATION_POINT_ON_MAP_CHOICE);
+            }
+
             /* checks for coordinates was received */
             if ((latitude != 0) || (longitude != 0)) {
                 CameraPosition currentPosition = new CameraPosition.Builder()
@@ -80,13 +118,15 @@ public class MapActivity extends SherlockFragmentActivity implements
                         .newCameraPosition(currentPosition));
             }
         } else {
-            mMarkerPosition = savedInstanceState.getParcelable(Constants.MAP_MARKER_POSITION);
+            mMarkerPosition = savedInstanceState
+                    .getParcelable(Constants.MAP_MARKER_POSITION);
+            mAction = savedInstanceState.getInt(Constants.MAP_ACTION_DATA);
             if (mMarkerPosition != null) {
                 setMarker();
             }
         }
     }
-    
+
     /**
      * OnClick handler for views
      * 
@@ -95,25 +135,8 @@ public class MapActivity extends SherlockFragmentActivity implements
      */
     public void onClick(View view) {
         Log.message("Enter");
-        
+
         showConfirmDialog();
-        // TODO вынести следующие строки в отдельную функцию
-        /*
-        Intent intent = new Intent();
-        intent.putExtra(Constants.LOCATION_LATITUDE, mMarkerPosition.latitude);
-        intent.putExtra(Constants.LOCATION_LONGITUDE, mMarkerPosition.longitude);
-        setResult(RESULT_OK, intent); 
-        finish();
-        */
-    }
-    
-    /**
-     * Shows confirmation dialog
-     */
-    private void showConfirmDialog() {
-        Log.message("Enter");
-        ConfirmCreateFragment confirmDialog = new ConfirmCreateFragment();
-        confirmDialog.show(getSupportFragmentManager(), Constants.CONFIRM_DIALOG);
     }
 
     @Override
@@ -132,32 +155,37 @@ public class MapActivity extends SherlockFragmentActivity implements
         mMarkerPosition = point;
         setMarker();
     }
-    
-    /**
-     * Handles getting information from Confirmation dialog
-     * @param locationName location name
-     */
-    public void handleConfirmDialog(String locationName) {
-        
-        if (locationName != null) {
-            saveDataToDatabase(locationName);
-        }
-    }
-
-    /**
-     * Saves data to the database
-     * @param locationName location name for save into database
-     */
-    private void saveDataToDatabase(String locationName) {
-        // TODO Auto-generated method stub
-        
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         Log.message("Enter");
         super.onSaveInstanceState(outState);
         outState.putParcelable(Constants.MAP_MARKER_POSITION, mMarkerPosition);
+        outState.putInt(Constants.MAP_ACTION_DATA, mAction);
+    }
+
+    /**
+     * Saves data to the database
+     * 
+     * @param locationName
+     *            location name for save into database
+     */
+    private void saveDataToDatabase(String locationName) {
+        Log.message("Enter");
+
+        LocationsDbAdapter dbAdapter = new LocationsDbAdapter(
+                getApplicationContext());
+        dbAdapter.open();
+
+        if (mAction == Constants.LOCATION_ACTION_ADD) {
+            mRecordId = dbAdapter.createLocation(locationName,
+                    mMarkerPosition.latitude, mMarkerPosition.longitude);
+        } else if (mAction == Constants.LOCATION_ACTION_EDIT) {
+            dbAdapter.updateLocation(mRecordId, locationName,
+                    mMarkerPosition.latitude, mMarkerPosition.longitude);
+        }
+
+        dbAdapter.close();
     }
 
     /**
@@ -194,6 +222,15 @@ public class MapActivity extends SherlockFragmentActivity implements
         setButtonVisible(true);
 
     }
-    
+
+    /**
+     * Shows confirmation dialog
+     */
+    private void showConfirmDialog() {
+        Log.message("Enter");
+        ConfirmCreateFragment confirmDialog = new ConfirmCreateFragment();
+        confirmDialog.show(getSupportFragmentManager(),
+                Constants.CONFIRM_DIALOG);
+    }
 
 }

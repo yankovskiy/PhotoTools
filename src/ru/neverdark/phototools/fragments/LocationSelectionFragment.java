@@ -225,6 +225,5 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
         mDbAdapter.deleteLocation(record._id);
         mAdapter.remove(record);
         mAdapter.notifyDataSetChanged();
-
     }
 }

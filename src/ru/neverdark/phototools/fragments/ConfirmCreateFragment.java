@@ -17,6 +17,7 @@ package ru.neverdark.phototools.fragments;
 
 import ru.neverdark.phototools.MapActivity;
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.db.LocationsDbAdapter;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
 import android.app.AlertDialog;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
@@ -119,15 +121,40 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String locationName = null;
+                        boolean isError = false;
 
                         if (isSaveChecked()) {
                             locationName = mEditText_locationName.getText()
                                     .toString();
-                        }
 
+                            if (locationName.length() == 0) {
+                                showErrorMessage(R.string.dialogConfirmCreate_error_emptyLocationName);
+                                isError = true;
+                            } else {
+
+                                LocationsDbAdapter dbAdapter = new LocationsDbAdapter(
+                                        mView.getContext());
+                                dbAdapter.open();
+                                boolean isExists = dbAdapter
+                                        .isLocationExists(locationName);
+
+                                dbAdapter.close();
+
+                                if (isExists == true) {
+                                    showErrorMessage(R.string.dialogConfirmCreate_error_alreayExist);
+                                    isError = true;
+                                }
+
+                            }
+                        }
+                        
+                        if (isError == false) {
+                            ((MapActivity) getActivity())
+                                    .handleConfirmDialog(locationName);
+                        }
+                        
                         dialog.dismiss();
-                        ((MapActivity) getActivity())
-                                .handleConfirmDialog(locationName);
+
                     }
                 });
 
@@ -146,5 +173,16 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
                 setLocationNameVisible(isSaveChecked());
             }
         });
+    }
+
+    /**
+     * Shows error message by resourceId
+     * 
+     * @param resourceId
+     *            string resource id contains error message
+     */
+    private void showErrorMessage(int resourceId) {
+        Toast.makeText(mView.getContext(), resourceId, Toast.LENGTH_LONG)
+                .show();
     }
 }

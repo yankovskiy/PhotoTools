@@ -172,11 +172,14 @@
     <string name="dialogConfirmCreate_message">Вы действительно хотите выбрать это местоположение?</string>
     <string name="dialogConfirmCreate_positive">Да</string>
     <string name="dialogConfirmCreate_negative">Нет</string>
+    <string name="dialogConfirmCreate_error_emptyLocationName">Название местоположения не может быть пустым</string>
+    <string name="dialogConfirmCreate_error_alreayExist">Местоположение с таким названием уже есть</string>
     
     <string name="sunset_deleteConfirm_title">Подтверждение удаления</string>
     <string name="sunset_deleteConfirm_message">Вы действительно хотите удалить запись \"%s\"?</string>
     <string name="sunset_deleteConfirm_positive">Да</string>
     <string name="sunset_deleteConfirm_negative">Нет</string>
+    
     
     <!-- end new --> 
 </resources>

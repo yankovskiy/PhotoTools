@@ -42,17 +42,14 @@ import ru.neverdark.phototools.utils.GeoLocationService;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.GeoLocationService.GeoLocationBinder;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -211,7 +208,7 @@ public class SunsetFragment extends SherlockFragment {
     private boolean mIsVisibleResult = false;
 
     private TimeZone mTimeZone;
-    private int mSelectionId;
+    private long mSelectionId;
     private ServiceConnection mServiceConnection = new ServiceConnection() {
 
         @Override
@@ -260,6 +257,7 @@ public class SunsetFragment extends SherlockFragment {
     private TextView mLabelCivilSunset;
     private LinearLayout mLinearLayoutCalculationResult;
     private TextView mSunsetTimeZoneResult;
+    private String mLocationName;
 
     /**
      * Binds classes objects to resources
@@ -292,7 +290,7 @@ public class SunsetFragment extends SherlockFragment {
                 .findViewById(R.id.sunset_label_civilSunriseResult);
         mCivilSunsetResult = (TextView) mView
                 .findViewById(R.id.sunset_label_civilSunsetResult);
-        
+
         mLabelOfficialSunrise = (TextView) mView
                 .findViewById(R.id.sunset_label_sunrise);
         mLabelOfficialSunset = (TextView) mView
@@ -426,6 +424,8 @@ public class SunsetFragment extends SherlockFragment {
         getCurrentLocation();
         Intent mapIntent = new Intent(getActivity(), MapActivity.class);
 
+        mapIntent.putExtra(Constants.LOCATION_ACTION,
+                Constants.LOCATION_ACTION_ADD);
         mapIntent.putExtra(Constants.LOCATION_LATITUDE, mLatitude);
         mapIntent.putExtra(Constants.LOCATION_LONGITUDE, mLongitude);
 
@@ -468,12 +468,12 @@ public class SunsetFragment extends SherlockFragment {
                         0.0);
                 mLongitude = data.getDoubleExtra(Constants.LOCATION_LONGITUDE,
                         0.0);
+                mLocationName = data.getStringExtra(Constants.LOCATION_NAME);
+                mSelectionId = data.getLongExtra(Constants.LOCATION_RECORD_ID,
+                        Constants.LOCATION_POINT_ON_MAP_CHOICE);
 
                 getTimeZoneFromGoogle();
 
-                Log.variable("mLatitude", String.valueOf(mLatitude));
-                Log.variable("mLongitude", String.valueOf(mLongitude));
-                mSelectionId = Constants.LOCATION_POINT_ON_MAP_CHOICE;
                 setTextLocation();
             }
         }
@@ -488,7 +488,7 @@ public class SunsetFragment extends SherlockFragment {
         mContext = mView.getContext();
 
         bindObjectsToResources();
-        
+
         setOnClickListeners(mEditTextDate);
         setOnClickListeners(mButtonCalculate);
         setOnClickListeners(mEditTextLocation);
@@ -500,7 +500,7 @@ public class SunsetFragment extends SherlockFragment {
         setOnClickListeners(mLabelNauticalSunset);
         setOnClickListeners(mLabelOfficialSunrise);
         setOnClickListeners(mLabelOfficialSunset);
-        
+
         setEditTextLongClick(mEditTextDate);
         setEditTextLongClick(mEditTextLocation);
 
@@ -509,9 +509,10 @@ public class SunsetFragment extends SherlockFragment {
                     Constants.LOCATION_LATITUDE, 0.0);
             mLongitude = savedInstanceState.getDouble(
                     Constants.LOCATION_LONGITUDE, 0.0);
-            mSelectionId = savedInstanceState.getInt(
+            mSelectionId = savedInstanceState.getLong(
                     Constants.LOCATION_SELECTION_ID,
                     Constants.LOCATION_CURRENT_POSITION_CHOICE);
+            Log.variable("mSelectionId", String.valueOf(mSelectionId));
             String timeZoneId = savedInstanceState
                     .getString(Constants.LOCATION_TIMEZONE);
             if (timeZoneId == null) {
@@ -537,6 +538,8 @@ public class SunsetFragment extends SherlockFragment {
                     .getString(Constants.LOCATION_OFFICIAL_SUNRISE));
             mOfficialSunset = nullToEmpty(savedInstanceState
                     .getString(Constants.LOCATION_OFFICIAL_SUNSET));
+            mLocationName = nullToEmpty(savedInstanceState
+                    .getString(Constants.LOCATION_NAME_DATA));
 
         } else {
             initDate();
@@ -561,8 +564,9 @@ public class SunsetFragment extends SherlockFragment {
         super.onSaveInstanceState(outState);
         outState.putDouble(Constants.LOCATION_LATITUDE, mLatitude);
         outState.putDouble(Constants.LOCATION_LONGITUDE, mLongitude);
-        outState.putInt(Constants.LOCATION_SELECTION_ID, mSelectionId);
-
+        outState.putLong(Constants.LOCATION_SELECTION_ID, mSelectionId);
+        Log.variable("mSelectionId", String.valueOf(mSelectionId));
+        
         if (mTimeZone != null) {
             outState.putString(Constants.LOCATION_TIMEZONE, mTimeZone.getID());
         }
@@ -579,6 +583,7 @@ public class SunsetFragment extends SherlockFragment {
         outState.putString(Constants.LOCATION_OFFICIAL_SUNRISE,
                 mOfficialSunrise);
         outState.putString(Constants.LOCATION_OFFICIAL_SUNSET, mOfficialSunset);
+        outState.putString(Constants.LOCATION_NAME_DATA, mLocationName);
     }
 
     @Override
@@ -663,7 +668,7 @@ public class SunsetFragment extends SherlockFragment {
                 case R.id.sunset_label_sunset:
                     showInformationDialog(Constants.INFORMATION_SUNSET);
                     break;
-                    
+
                 case R.id.sunset_button_calculate:
                     /* if we have coordinates, calculation sunset / sunrise */
                     if (mGeoLocationService.canGetLocation()) {
@@ -689,17 +694,14 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void setTextLocation() {
         Log.message("Enter");
-        switch (mSelectionId) {
-        case Constants.LOCATION_CURRENT_POSITION_CHOICE:
+        if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
             mEditTextLocation
                     .setText(R.string.locationSelection_label_currentLocation);
-            break;
-        case Constants.LOCATION_POINT_ON_MAP_CHOICE:
+        } else if (mSelectionId == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
             mEditTextLocation
                     .setText(R.string.locationSelection_label_pointOnMap);
-            break;
-        default:
-            break;
+        } else {
+            mEditTextLocation.setText(mLocationName);
         }
     }
 
@@ -742,7 +744,21 @@ public class SunsetFragment extends SherlockFragment {
         dateFragment.show(getFragmentManager(), Constants.DATE_PICKER_DIALOG);
     }
 
-    
+    /**
+     * Shows information dialog with description for sunset/sunrise type
+     * 
+     * @param messageId
+     *            Id message for displaying
+     */
+    private void showInformationDialog(final int messageId) {
+        Log.message("Enter");
+        InfoFragment infoFragment = new InfoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.INFORMATION_MESSAGE_ID, messageId);
+        infoFragment.setArguments(bundle);
+        infoFragment.show(getFragmentManager(), Constants.INFORMATION_DIALOG);
+    }
+
     /**
      * Shows location selection dialog
      */
@@ -764,18 +780,6 @@ public class SunsetFragment extends SherlockFragment {
         alertFragment.show(getFragmentManager(), Constants.ALERT_DIALOG);
     }
 
-    /**
-     * Shows information dialog with description for sunset/sunrise type
-     * @param messageId Id message for displaying
-     */
-    private void showInformationDialog(final int messageId) {
-        Log.message("Enter");
-        InfoFragment infoFragment = new InfoFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt(Constants.INFORMATION_MESSAGE_ID, messageId);
-        infoFragment.setArguments(bundle);
-        infoFragment.show(getFragmentManager(), Constants.INFORMATION_DIALOG);
-    }
     /**
      * Unbinds from GeoLocationService
      */

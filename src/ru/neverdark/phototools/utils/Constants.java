@@ -45,9 +45,17 @@ public class Constants {
     
     public static final String LOCATION_LATITUDE = "ru.neverdark.phototools.locationLatitude";
     public static final String LOCATION_LONGITUDE = "ru.neverdark.phototools.locationLongitude";
-    public static final String LOCATION_IS_SAVE = "ru.neverdark.phototools.isSaveLocation";
     public static final String LOCATION_SELECTION_ID = "locationSelectionId";
-    public static final String LOCATION_TIMEZONE = "timeZone"; 
+    public static final String LOCATION_TIMEZONE = "timeZone";
+    
+    public static final byte LOCATION_ACTION_ADD = 0;
+    public static final byte LOCATION_ACTION_EDIT = 1;
+    public static final String MAP_ACTION_DATA = "mapAction";
+    public static final String LOCATION_ACTION_DATA = "locationAction";
+    public static final String LOCATION_ACTION = "ru.neverdark.phototools.locationAction";
+    public static final String LOCATION_RECORD_ID = "ru.neverdark.phototools.recordId";
+    public static final String LOCATION_NAME = "ru.neverdark.phototools.locationName";
+    public static final String LOCATION_NAME_DATA = "locationName";
     
     public static final String LOCATION_OFFICIAL_SUNRISE = "locaionOfficialSunrise";
     public static final String LOCATION_OFFICIAL_SUNSET = "locationOfficialSunset";
@@ -58,7 +66,6 @@ public class Constants {
     public static final String LOCATION_CIVIL_SUNRISE = "locationCivilSunrise";
     public static final String LOCATION_CIVIL_SUNSET = "locationCivilSunset";
     public static final String LOCATION_IS_VISIVLE_RESULT = "locationIsVisibleResult";
-    public static final byte LOCATION_GETTING_TIMEZONE = 1;
     
     public static final float MAP_CAMERA_ZOOM = 17.0f; 
     
