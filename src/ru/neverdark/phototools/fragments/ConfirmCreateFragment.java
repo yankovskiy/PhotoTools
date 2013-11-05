@@ -31,7 +31,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
-
+// TODO переделать на прием имени места и названия операции
 /**
  * Implements confirm creation dialog
  */
@@ -146,6 +146,8 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
                                 }
 
                             }
+                        } else {
+                            locationName = null;
                         }
                         
                         if (isError == false) {

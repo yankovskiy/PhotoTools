@@ -177,8 +177,11 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
                     int position, long id) {
                 Log.message("Enter");
                 dialog.dismiss();
+                
+                LocationRecord record = mAdapter.getItem(position);
+                
                 ((SunsetFragment) getTargetFragment())
-                        .handleLocationSelection(position);
+                        .handleLocationSelection(record);
 
             }
         });
@@ -195,7 +198,11 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
     public void onLocationImageEdit(int position) {
         Log.message("Enter");
         Log.variable("position", String.valueOf(position));
+        this.dismiss();
+        
+        LocationRecord record = mAdapter.getItem(position);
 
+        ((SunsetFragment) getTargetFragment()).handleEditCustomLocation(record);
     }
 
     /* (non-Javadoc)

@@ -39,6 +39,7 @@ import ru.neverdark.phototools.MapActivity;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.GeoLocationService;
+import ru.neverdark.phototools.utils.LocationRecord;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.GeoLocationService.GeoLocationBinder;
 import android.app.Activity;
@@ -392,30 +393,59 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void handleCurrentLocation() {
         Log.message("Enter");
-        mSelectionId = Constants.LOCATION_CURRENT_POSITION_CHOICE;
+        //mSelectionId = Constants.LOCATION_CURRENT_POSITION_CHOICE;
         setTextLocation();
     }
 
     /**
      * Handling location selection
      * 
-     * @param locationSelectionId
-     *            location selection id item
+     * @param locationRecord object contains row from database
      */
-    public void handleLocationSelection(final int locationSelectionId) {
+    public void handleLocationSelection(final LocationRecord locationRecord) {
         Log.message("Enter");
-        switch (locationSelectionId) {
-        case Constants.LOCATION_CURRENT_POSITION_CHOICE:
+        mSelectionId = locationRecord._id;
+        
+        if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
             handleCurrentLocation();
-            break;
-        case Constants.LOCATION_POINT_ON_MAP_CHOICE:
+        } else if (mSelectionId == Constants.LOCATION_POINT_ON_MAP_CHOICE){
             handlePointOnMap();
-            break;
-        default:
-            break;
+        } else {
+            Log.variable("mSelectionId", String.valueOf(mSelectionId));
+            handleCustomLocation(locationRecord);
         }
     }
 
+    /**
+     * Handles custom location on the map
+     * @param locationRecord object contains row from database
+     */
+    private void handleCustomLocation(final LocationRecord locationRecord) {
+        Log.message("Enter");
+        
+        mLatitude = locationRecord.latitude;
+        mLongitude = locationRecord.longitude;
+        mLocationName = locationRecord.locationName;
+        mSelectionId = locationRecord._id;
+        setTextLocation();
+    }
+    
+    /**
+     * Handles edit custom location. Opens map with marker and name from selected location
+     * @param locationRecord object contains row from database
+     */
+    public void handleEditCustomLocation(final LocationRecord locationRecord) {
+        Log.message("Enter");
+        Intent mapIntent = new Intent(getActivity(), MapActivity.class);
+        mapIntent.putExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_EDIT);
+        mapIntent.putExtra(Constants.LOCATION_LATITUDE, locationRecord.latitude);
+        mapIntent.putExtra(Constants.LOCATION_LONGITUDE, locationRecord.longitude);
+        mapIntent.putExtra(Constants.LOCATION_RECORD_ID, locationRecord._id);
+        mapIntent.putExtra(Constants.LOCATION_NAME, locationRecord.locationName);
+        
+        startActivityForResult(mapIntent, Constants.LOCATION_POINT_ON_MAP_CHOICE);
+    }
+    
     /**
      * Handles point of map selection
      */
@@ -462,6 +492,7 @@ public class SunsetFragment extends SherlockFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.message("Enter");
+        // TODO сделать проверку на редактирование
         if (requestCode == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
             if (resultCode == Activity.RESULT_OK) {
                 mLatitude = data.getDoubleExtra(Constants.LOCATION_LATITUDE,

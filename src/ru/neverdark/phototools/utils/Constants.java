@@ -50,7 +50,11 @@ public class Constants {
     
     public static final byte LOCATION_ACTION_ADD = 0;
     public static final byte LOCATION_ACTION_EDIT = 1;
+    
     public static final String MAP_ACTION_DATA = "mapAction";
+    public static final String MAP_RECORD_ID = "mapRecordId";
+    public static final String MAP_LOCATION_NAME = "mapLocationName";
+    
     public static final String LOCATION_ACTION_DATA = "locationAction";
     public static final String LOCATION_ACTION = "ru.neverdark.phototools.locationAction";
     public static final String LOCATION_RECORD_ID = "ru.neverdark.phototools.recordId";

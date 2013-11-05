@@ -44,7 +44,8 @@ public class MapActivity extends SherlockFragmentActivity implements
     private LatLng mMarkerPosition;
     private int mAction;
     private long mRecordId;
-
+    private String mLocationName;
+    // TODO реализовать редактрование
     /**
      * Binds classes objects to resources
      */
@@ -107,6 +108,7 @@ public class MapActivity extends SherlockFragmentActivity implements
             if (mAction == Constants.LOCATION_ACTION_EDIT) {
                 mRecordId = intent.getLongExtra(Constants.LOCATION_RECORD_ID,
                         Constants.LOCATION_POINT_ON_MAP_CHOICE);
+                mLocationName = intent.getStringExtra(Constants.LOCATION_NAME);
             }
 
             /* checks for coordinates was received */
@@ -121,6 +123,8 @@ public class MapActivity extends SherlockFragmentActivity implements
             mMarkerPosition = savedInstanceState
                     .getParcelable(Constants.MAP_MARKER_POSITION);
             mAction = savedInstanceState.getInt(Constants.MAP_ACTION_DATA);
+            mRecordId = savedInstanceState.getLong(Constants.MAP_RECORD_ID);
+            mLocationName = savedInstanceState.getString(Constants.MAP_LOCATION_NAME);
             if (mMarkerPosition != null) {
                 setMarker();
             }
@@ -162,6 +166,8 @@ public class MapActivity extends SherlockFragmentActivity implements
         super.onSaveInstanceState(outState);
         outState.putParcelable(Constants.MAP_MARKER_POSITION, mMarkerPosition);
         outState.putInt(Constants.MAP_ACTION_DATA, mAction);
+        outState.putLong(Constants.MAP_RECORD_ID, mRecordId);
+        outState.putString(Constants.MAP_LOCATION_NAME, mLocationName);
     }
 
     /**
@@ -228,6 +234,7 @@ public class MapActivity extends SherlockFragmentActivity implements
      */
     private void showConfirmDialog() {
         Log.message("Enter");
+        // TODO переделать на передачу имени и название операции
         ConfirmCreateFragment confirmDialog = new ConfirmCreateFragment();
         confirmDialog.show(getSupportFragmentManager(),
                 Constants.CONFIRM_DIALOG);
