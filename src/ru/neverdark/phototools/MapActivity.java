@@ -45,7 +45,6 @@ public class MapActivity extends SherlockFragmentActivity implements
     private int mAction;
     private long mRecordId;
     private String mLocationName;
-    // TODO реализовать редактрование
     /**
      * Binds classes objects to resources
      */
@@ -234,8 +233,7 @@ public class MapActivity extends SherlockFragmentActivity implements
      */
     private void showConfirmDialog() {
         Log.message("Enter");
-        // TODO переделать на передачу имени и название операции
-        ConfirmCreateFragment confirmDialog = new ConfirmCreateFragment();
+        ConfirmCreateFragment confirmDialog = ConfirmCreateFragment.NewInstance(mAction, mLocationName);
         confirmDialog.show(getSupportFragmentManager(),
                 Constants.CONFIRM_DIALOG);
     }

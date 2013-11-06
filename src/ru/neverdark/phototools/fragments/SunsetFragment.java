@@ -385,6 +385,7 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void getTimeZoneFromGoogle() {
         Log.message("Enter");
+        mTimeZone = null;
         new Thread(new Task()).start();
     }
 
@@ -393,22 +394,23 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void handleCurrentLocation() {
         Log.message("Enter");
-        //mSelectionId = Constants.LOCATION_CURRENT_POSITION_CHOICE;
+        // mSelectionId = Constants.LOCATION_CURRENT_POSITION_CHOICE;
         setTextLocation();
     }
 
     /**
      * Handling location selection
      * 
-     * @param locationRecord object contains row from database
+     * @param locationRecord
+     *            object contains row from database
      */
     public void handleLocationSelection(final LocationRecord locationRecord) {
         Log.message("Enter");
         mSelectionId = locationRecord._id;
-        
+
         if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
             handleCurrentLocation();
-        } else if (mSelectionId == Constants.LOCATION_POINT_ON_MAP_CHOICE){
+        } else if (mSelectionId == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
             handlePointOnMap();
         } else {
             Log.variable("mSelectionId", String.valueOf(mSelectionId));
@@ -418,34 +420,45 @@ public class SunsetFragment extends SherlockFragment {
 
     /**
      * Handles custom location on the map
-     * @param locationRecord object contains row from database
+     * 
+     * @param locationRecord
+     *            object contains row from database
      */
     private void handleCustomLocation(final LocationRecord locationRecord) {
         Log.message("Enter");
-        
+
         mLatitude = locationRecord.latitude;
         mLongitude = locationRecord.longitude;
         mLocationName = locationRecord.locationName;
         mSelectionId = locationRecord._id;
+        getTimeZoneFromGoogle();
         setTextLocation();
     }
-    
+
     /**
-     * Handles edit custom location. Opens map with marker and name from selected location
-     * @param locationRecord object contains row from database
+     * Handles edit custom location. Opens map with marker and name from
+     * selected location
+     * 
+     * @param locationRecord
+     *            object contains row from database
      */
     public void handleEditCustomLocation(final LocationRecord locationRecord) {
         Log.message("Enter");
         Intent mapIntent = new Intent(getActivity(), MapActivity.class);
-        mapIntent.putExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_EDIT);
-        mapIntent.putExtra(Constants.LOCATION_LATITUDE, locationRecord.latitude);
-        mapIntent.putExtra(Constants.LOCATION_LONGITUDE, locationRecord.longitude);
+        mapIntent.putExtra(Constants.LOCATION_ACTION,
+                Constants.LOCATION_ACTION_EDIT);
+        mapIntent
+                .putExtra(Constants.LOCATION_LATITUDE, locationRecord.latitude);
+        mapIntent.putExtra(Constants.LOCATION_LONGITUDE,
+                locationRecord.longitude);
         mapIntent.putExtra(Constants.LOCATION_RECORD_ID, locationRecord._id);
-        mapIntent.putExtra(Constants.LOCATION_NAME, locationRecord.locationName);
-        
-        startActivityForResult(mapIntent, Constants.LOCATION_POINT_ON_MAP_CHOICE);
+        mapIntent
+                .putExtra(Constants.LOCATION_NAME, locationRecord.locationName);
+
+        startActivityForResult(mapIntent,
+                Constants.LOCATION_POINT_ON_MAP_CHOICE);
     }
-    
+
     /**
      * Handles point of map selection
      */
@@ -492,7 +505,6 @@ public class SunsetFragment extends SherlockFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.message("Enter");
-        // TODO сделать проверку на редактирование
         if (requestCode == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
             if (resultCode == Activity.RESULT_OK) {
                 mLatitude = data.getDoubleExtra(Constants.LOCATION_LATITUDE,
@@ -597,7 +609,7 @@ public class SunsetFragment extends SherlockFragment {
         outState.putDouble(Constants.LOCATION_LONGITUDE, mLongitude);
         outState.putLong(Constants.LOCATION_SELECTION_ID, mSelectionId);
         Log.variable("mSelectionId", String.valueOf(mSelectionId));
-        
+
         if (mTimeZone != null) {
             outState.putString(Constants.LOCATION_TIMEZONE, mTimeZone.getID());
         }
@@ -701,15 +713,20 @@ public class SunsetFragment extends SherlockFragment {
                     break;
 
                 case R.id.sunset_button_calculate:
-                    /* if we have coordinates, calculation sunset / sunrise */
-                    if (mGeoLocationService.canGetLocation()) {
+
+                    if (mSelectionId > Constants.LOCATION_CURRENT_POSITION_CHOICE) {
                         calculateSunset();
-                        /*
-                         * we dont't have coordinates and we try getting current
-                         * location, show alert dialog
-                         */
-                    } else if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
-                        showSettingsAlert();
+                    } else {
+                        /* if we have coordinates, calculation sunset / sunrise */
+                        if (mGeoLocationService.canGetLocation()) {
+                            calculateSunset();
+                            /*
+                             * we dont't have coordinates and we try getting
+                             * current location, show alert dialog
+                             */
+                        } else {
+                            showSettingsAlert();
+                        }
                     }
                     break;
                 case R.id.sunset_editText_location:

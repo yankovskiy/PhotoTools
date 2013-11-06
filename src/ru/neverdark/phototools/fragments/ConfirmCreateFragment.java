@@ -31,16 +31,38 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
-// TODO переделать на прием имени места и названия операции
+
 /**
  * Implements confirm creation dialog
  */
 public class ConfirmCreateFragment extends SherlockDialogFragment {
+    /**
+     * Creates and return new ConfirmCreateFragment object
+     * 
+     * @param action
+     *            LOCATION_ACTION_ADD or LOCATION_ACTION_EDIT
+     * @param locationName
+     *            the name of edited location
+     * @return ConfirmCreateFragment object
+     */
+    public static ConfirmCreateFragment NewInstance(int action,
+            String locationName) {
+        Log.message("Enter");
+        ConfirmCreateFragment dialog = new ConfirmCreateFragment();
+        dialog.mAction = action;
+        dialog.mLocationName = locationName;
+
+        return dialog;
+    }
+    
     private CheckBox mCheckBox_isSave;
     private View mView;
     private EditText mEditText_locationName;
     private AlertDialog.Builder mAlertDialog;
     private boolean mIsVisible;
+    private String mLocationName;
+
+    private int mAction;
 
     /**
      * Binds classes objects to resources
@@ -57,6 +79,16 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
     }
 
     /**
+     * Inits edit mode. Load location name and set checkbox to save state
+     */
+    private void initEditMode() {
+        Log.message("Enter");
+        setLocationNameVisible(true);
+        mCheckBox_isSave.setChecked(true);
+        mEditText_locationName.setText(mLocationName);
+    }
+
+    /**
      * Returns true if "Is Save" checkbox checked
      * 
      * @return true if "Is Save" checkbox checked, false in other case
@@ -70,6 +102,10 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
         Log.message("Enter");
 
         bindObjectToResource();
+
+        if (mAction == Constants.LOCATION_ACTION_EDIT) {
+            initEditMode();
+        }
 
         mAlertDialog = new AlertDialog.Builder(getActivity());
         mAlertDialog.setView(mView);
@@ -149,12 +185,12 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
                         } else {
                             locationName = null;
                         }
-                        
+
                         if (isError == false) {
                             ((MapActivity) getActivity())
                                     .handleConfirmDialog(locationName);
                         }
-                        
+
                         dialog.dismiss();
 
                     }

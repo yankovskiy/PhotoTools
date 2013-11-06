@@ -50,7 +50,7 @@
         <!--  Debug API Key for Google Maps v2 -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBVWCHA_dNC3IL1_ryCvN62L5-zyu6s0s4" />
+            android:value="AIzaSyBKV2HlbGALt4iaC89PEK1TF9J_18MFJck" />
 
         <activity
             android:name="ru.neverdark.phototools.MainActivity"
