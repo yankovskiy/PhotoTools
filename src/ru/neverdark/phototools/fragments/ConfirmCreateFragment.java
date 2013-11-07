@@ -51,7 +51,8 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
         ConfirmCreateFragment dialog = new ConfirmCreateFragment();
         dialog.mAction = action;
         dialog.mLocationName = locationName;
-
+        dialog.mIsEdit = (action == Constants.LOCATION_ACTION_EDIT);
+        
         return dialog;
     }
     
@@ -63,6 +64,7 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
     private String mLocationName;
 
     private int mAction;
+    private boolean mIsEdit;
 
     /**
      * Binds classes objects to resources
@@ -119,8 +121,8 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
             mIsVisible = savedInstanceState
                     .getBoolean(Constants.CONFIRM_CREATION_ISVISIBLE);
             setLocationNameVisible(mIsVisible);
-        }
-
+            mIsEdit = savedInstanceState.getBoolean(Constants.CONFIRM_CREATION_ISEDIT);
+        } 
         // Showing Alert Message
         return mAlertDialog.create();
     }
@@ -131,6 +133,7 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
         mIsVisible = isSaveChecked();
         putInstanseState.putBoolean(Constants.CONFIRM_CREATION_ISVISIBLE,
                 mIsVisible);
+        putInstanseState.putBoolean(Constants.CONFIRM_CREATION_ISEDIT, mIsEdit);
     }
 
     /**
@@ -166,7 +169,8 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
                             if (locationName.length() == 0) {
                                 showErrorMessage(R.string.dialogConfirmCreate_error_emptyLocationName);
                                 isError = true;
-                            } else {
+                                /* if not edit mode - check for location exist */
+                            } else if (mIsEdit == false){
 
                                 LocationsDbAdapter dbAdapter = new LocationsDbAdapter(
                                         mView.getContext());

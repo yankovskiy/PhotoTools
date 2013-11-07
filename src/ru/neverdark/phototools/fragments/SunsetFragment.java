@@ -49,6 +49,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
@@ -60,6 +61,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
@@ -73,7 +75,40 @@ public class SunsetFragment extends SherlockFragment {
      * Thread for getting timeZone from Google Online Map If Internet connection
      * does not available we have use devices TimeZone
      */
-    private class Task implements Runnable {
+    private class TimeZoneFromGoogle extends AsyncTask<Void, Void, Integer> {
+        private final int STATUS_SUCCESS = 0;
+        private final int STATUS_FAIL = 1;
+
+        @Override
+        protected Integer doInBackground(Void... arg0) {
+            Log.message("Enter");
+            int status = STATUS_FAIL;
+
+            /* we have internet, download json from timeZone google service */
+            if (isOnline()) {
+                Log.message("Get Time Zone from Google");
+                String json = readTimeZoneJson();
+                Log.variable("json", json);
+
+                /* JSON data not empty, parse it */
+                if (json.length() != 0) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(json);
+                        String timeZoneId = jsonObject.getString("timeZoneId");
+                        Log.variable("timeZoneId", timeZoneId);
+                        mTimeZone = TimeZone.getTimeZone(timeZoneId);
+                        status = STATUS_SUCCESS;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            } else {
+                Log.message("Device offline.");
+            }
+
+            return status;
+        }
 
         /**
          * Checks connection status
@@ -89,6 +124,19 @@ public class SunsetFragment extends SherlockFragment {
                 return true;
             }
             return false;
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            switch (result) {
+            case STATUS_SUCCESS:
+                showInformationMesssage(R.string.sunset_information_timeZoneSuccess);
+                break;
+            case STATUS_FAIL:
+                mTimeZone = null;
+                showInformationMesssage(R.string.sunset_information_timeZoneFail);
+                break;
+            }
         }
 
         /**
@@ -135,34 +183,6 @@ public class SunsetFragment extends SherlockFragment {
             }
             return builder.toString();
         }
-
-        @Override
-        public void run() {
-            Log.message("Enter");
-
-            /* we have internet, download json from timeZone google service */
-            if (isOnline()) {
-                Log.message("Get Time Zone from Google");
-                String json = readTimeZoneJson();
-                Log.variable("json", json);
-
-                /* JSON data not empty, parse it */
-                if (json.length() != 0) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(json);
-                        String timeZoneId = jsonObject.getString("timeZoneId");
-                        Log.variable("timeZoneId", timeZoneId);
-                        mTimeZone = TimeZone.getTimeZone(timeZoneId);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            } else {
-                Log.message("Device offline. Use device timezone");
-                setDefaultTimeZone();
-            }
-        }
     }
 
     /**
@@ -197,7 +217,9 @@ public class SunsetFragment extends SherlockFragment {
     }
 
     private Context mContext;
+
     private View mView;
+
     private static EditText mEditTextDate;
     private Button mButtonCalculate;
     private EditText mEditTextLocation;
@@ -207,9 +229,9 @@ public class SunsetFragment extends SherlockFragment {
     private double mLatitude;
     private double mLongitude;
     private boolean mIsVisibleResult = false;
-
     private TimeZone mTimeZone;
     private long mSelectionId;
+
     private ServiceConnection mServiceConnection = new ServiceConnection() {
 
         @Override
@@ -226,13 +248,13 @@ public class SunsetFragment extends SherlockFragment {
             mBound = false;
         }
     };
-
     private Intent mSerivceIntent;
-
     private GeoLocationService mGeoLocationService;
 
     private boolean mBound = false;
+
     private String mOfficialSunrise;
+
     private TextView mOfficialSunriseResult;
     private TextView mLabelOfficialSunrise;
     private String mOfficialSunset;
@@ -385,8 +407,9 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void getTimeZoneFromGoogle() {
         Log.message("Enter");
-        mTimeZone = null;
-        new Thread(new Task()).start();
+        showInformationMesssage(R.string.sunset_information_timeZoneStart);
+        TimeZoneFromGoogle timeZoneFromGoogle = new TimeZoneFromGoogle();
+        timeZoneFromGoogle.execute();
     }
 
     /**
@@ -396,26 +419,6 @@ public class SunsetFragment extends SherlockFragment {
         Log.message("Enter");
         // mSelectionId = Constants.LOCATION_CURRENT_POSITION_CHOICE;
         setTextLocation();
-    }
-
-    /**
-     * Handling location selection
-     * 
-     * @param locationRecord
-     *            object contains row from database
-     */
-    public void handleLocationSelection(final LocationRecord locationRecord) {
-        Log.message("Enter");
-        mSelectionId = locationRecord._id;
-
-        if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
-            handleCurrentLocation();
-        } else if (mSelectionId == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
-            handlePointOnMap();
-        } else {
-            Log.variable("mSelectionId", String.valueOf(mSelectionId));
-            handleCustomLocation(locationRecord);
-        }
     }
 
     /**
@@ -457,6 +460,26 @@ public class SunsetFragment extends SherlockFragment {
 
         startActivityForResult(mapIntent,
                 Constants.LOCATION_POINT_ON_MAP_CHOICE);
+    }
+
+    /**
+     * Handling location selection
+     * 
+     * @param locationRecord
+     *            object contains row from database
+     */
+    public void handleLocationSelection(final LocationRecord locationRecord) {
+        Log.message("Enter");
+        mSelectionId = locationRecord._id;
+
+        if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
+            handleCurrentLocation();
+        } else if (mSelectionId == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
+            handlePointOnMap();
+        } else {
+            Log.variable("mSelectionId", String.valueOf(mSelectionId));
+            handleCustomLocation(locationRecord);
+        }
     }
 
     /**
@@ -808,6 +831,16 @@ public class SunsetFragment extends SherlockFragment {
     }
 
     /**
+     * Shows information message
+     * 
+     * @param resourceId
+     *            string Id contains information message
+     */
+    private void showInformationMesssage(int resourceId) {
+        Toast.makeText(mContext, resourceId, Toast.LENGTH_LONG).show();
+    }
+
+    /**
      * Shows location selection dialog
      */
     private void showLocationSelectionDialog() {
@@ -826,6 +859,13 @@ public class SunsetFragment extends SherlockFragment {
         Log.message("Enter");
         AlertFragment alertFragment = new AlertFragment();
         alertFragment.show(getFragmentManager(), Constants.ALERT_DIALOG);
+    }
+
+    /**
+     * Shows TimeZone selection dialog
+     */
+    private void showTimeZoneSelectionDialog() {
+        // TODO написать код в 0.6.1
     }
 
     /**

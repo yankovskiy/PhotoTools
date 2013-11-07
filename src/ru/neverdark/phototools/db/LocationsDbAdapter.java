@@ -15,6 +15,9 @@
  ******************************************************************************/
 package ru.neverdark.phototools.db;
 
+import java.util.Calendar;
+import java.util.TimeZone;
+
 import ru.neverdark.phototools.utils.Log;
 import android.content.ContentValues;
 import android.content.Context;
@@ -69,7 +72,7 @@ public class LocationsDbAdapter {
         contentValues.put(KEY_LOCATION_NAME, locationName);
         contentValues.put(KEY_LATITUDE, latitude);
         contentValues.put(KEY_LONGITUDE, longitude);
-        contentValues.put(KEY_LAST_ACCESS, "date('now')");
+        contentValues.put(KEY_LAST_ACCESS, getTimeStamp());
 
         return contentValues;
     }
@@ -115,7 +118,8 @@ public class LocationsDbAdapter {
      */
     public Cursor fetchAllLocations() {
         Log.message("Enter");
-        String[] columns = { KEY_ROWID, KEY_LOCATION_NAME, KEY_LATITUDE, KEY_LONGITUDE };
+        String[] columns = { KEY_ROWID, KEY_LOCATION_NAME, KEY_LATITUDE,
+                KEY_LONGITUDE };
         String where = KEY_ROWID + " > 1";
         return mDatabase.query(TABLE_NAME, columns, where, null, null, null,
                 KEY_LAST_ACCESS + " DESC");
@@ -134,14 +138,25 @@ public class LocationsDbAdapter {
                 KEY_LONGITUDE };
         String where = KEY_ROWID + " = ?";
         String[] whereArgs = { String.valueOf(recordId) };
-        Cursor cursor = mDatabase.query(TABLE_NAME, columns, where,
-                whereArgs, null, null, null);
+        Cursor cursor = mDatabase.query(TABLE_NAME, columns, where, whereArgs,
+                null, null, null);
 
         if (cursor != null) {
             cursor.moveToFirst();
         }
 
         return cursor;
+    }
+
+    /**
+     * Gets current unix time
+     * 
+     * @return current unix time
+     */
+    private long getTimeStamp() {
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        /* Gets desired time as seconds since midnight, January 1, 1970 UTC */
+        return calendar.getTimeInMillis() / 1000;
     }
 
     /**
@@ -156,9 +171,8 @@ public class LocationsDbAdapter {
         boolean exists = false;
         String where = KEY_LOCATION_NAME + " = ?";
         String[] whereArgs = { locationName };
-        Cursor cursor = mDatabase.query(TABLE_NAME,
-                new String[] { KEY_ROWID }, where, whereArgs, null, null, null
-                );
+        Cursor cursor = mDatabase.query(TABLE_NAME, new String[] { KEY_ROWID },
+                where, whereArgs, null, null, null);
 
         if (cursor != null) {
             exists = cursor.getCount() > 0;
@@ -166,6 +180,15 @@ public class LocationsDbAdapter {
         }
 
         return exists;
+    }
+
+    /**
+     * Returns true if the database is currently open.
+     * 
+     * @return true if the database is currently open.
+     */
+    public boolean isOpen() {
+        return mDatabase.isOpen();
     }
 
     /**
@@ -180,14 +203,6 @@ public class LocationsDbAdapter {
         mDatabase = mDatabaseHelper.getWritableDatabase();
         return this;
     }
-    
-    /**
-     * Returns true if the database is currently open. 
-     * @return true if the database is currently open. 
-     */
-    public boolean isOpen() {
-        return mDatabase.isOpen();
-    }
 
     /**
      * Updates last_access field for current timestamp
@@ -200,7 +215,7 @@ public class LocationsDbAdapter {
         String where = KEY_ROWID + " = ?";
         String[] whereArgs = { String.valueOf(recordId) };
         ContentValues contentValues = new ContentValues();
-        contentValues.put(KEY_LAST_ACCESS, "datetime('now')");
+        contentValues.put(KEY_LAST_ACCESS, getTimeStamp());
         mDatabase.update(TABLE_NAME, contentValues, where, whereArgs);
     }
 

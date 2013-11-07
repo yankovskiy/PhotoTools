@@ -180,6 +180,9 @@
     <string name="sunset_deleteConfirm_positive">Да</string>
     <string name="sunset_deleteConfirm_negative">Нет</string>
     
-    
+    <string name="sunset_information_timeZoneStart">Определение временной зоны. Подождите.</string>
+    <string name="sunset_information_timeZoneSuccess">Временная зона успешно определена.</string>
+    <string name="sunset_information_timeZoneFail">Неудалось определить временную зону. 
+        Будет использована временная зона вашего устройства.</string>
     <!-- end new --> 
 </resources>

@@ -54,6 +54,23 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
     }
 
     /**
+     * Delete selected location from database and listView
+     * 
+     * @param position
+     *            location position for delete
+     */
+    public void deleteLocation(final int position) {
+        Log.message("Enter");
+        Log.variable("Position", String.valueOf(position));
+
+        LocationRecord record = mAdapter.getItem(position);
+
+        mDbAdapter.deleteLocation(record._id);
+        mAdapter.remove(record);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    /**
      * Fills list view
      */
     private void fillData() {
@@ -139,6 +156,52 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
         return mView;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * ru.neverdark.phototools.utils.LocationAdapter.LocationImageChangeListener
+     * #onLocationImageEdit(int)
+     */
+    @Override
+    public void onLocationImageEdit(int position) {
+        Log.message("Enter");
+        Log.variable("position", String.valueOf(position));
+        this.dismiss();
+
+        LocationRecord record = mAdapter.getItem(position);
+
+        ((SunsetFragment) getTargetFragment()).handleEditCustomLocation(record);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * ru.neverdark.phototools.utils.LocationAdapter.LocationImageChangeListener
+     * #onLocationImageRemove(int)
+     */
+    public void onLocationImageRemove(int position) {
+        Log.message("Enter");
+        Log.variable("position", String.valueOf(position));
+
+        ConfirmDeleteFragment deleteFragment = ConfirmDeleteFragment
+                .NewInstance(mAdapter.getItem(position).locationName, position);
+        deleteFragment
+                .setTargetFragment(this, Constants.DELETE_DIALOG_FRAGMENT);
+        deleteFragment.show(getFragmentManager(), Constants.DELETE_DIALOG);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.message("Enter");
+
+        if (mDbAdapter != null) {
+            mDbAdapter.close();
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -151,16 +214,6 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
 
         fillData();
 
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.message("Enter");
-
-        if (mDbAdapter != null) {
-            mDbAdapter.close();
-        }
     }
 
     /**
@@ -177,60 +230,15 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
                     int position, long id) {
                 Log.message("Enter");
                 dialog.dismiss();
-                
+
                 LocationRecord record = mAdapter.getItem(position);
-                
+
+                mDbAdapter.udateLastAccessTime(record._id);
+
                 ((SunsetFragment) getTargetFragment())
                         .handleLocationSelection(record);
 
             }
         });
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * ru.neverdark.phototools.utils.LocationAdapter.LocationImageChangeListener
-     * #onLocationImageEdit(int)
-     */
-    @Override
-    public void onLocationImageEdit(int position) {
-        Log.message("Enter");
-        Log.variable("position", String.valueOf(position));
-        this.dismiss();
-        
-        LocationRecord record = mAdapter.getItem(position);
-
-        ((SunsetFragment) getTargetFragment()).handleEditCustomLocation(record);
-    }
-
-    /* (non-Javadoc)
-     * @see ru.neverdark.phototools.utils.LocationAdapter.LocationImageChangeListener#onLocationImageRemove(int)
-     */
-    public void onLocationImageRemove(int position) {
-        Log.message("Enter");
-        Log.variable("position", String.valueOf(position));
-
-        ConfirmDeleteFragment deleteFragment = ConfirmDeleteFragment
-                .NewInstance(mAdapter.getItem(position).locationName, position);
-        deleteFragment
-                .setTargetFragment(this, Constants.DELETE_DIALOG_FRAGMENT);
-        deleteFragment.show(getFragmentManager(), Constants.DELETE_DIALOG);
-    }
-
-    /**
-     * Delete selected location from database and listView
-     * @param position location position for delete
-     */
-    public void deleteLocation(final int position) {
-        Log.message("Enter");
-        Log.variable("Position", String.valueOf(position));
-
-        LocationRecord record = mAdapter.getItem(position);
-
-        mDbAdapter.deleteLocation(record._id);
-        mAdapter.remove(record);
-        mAdapter.notifyDataSetChanged();
     }
 }

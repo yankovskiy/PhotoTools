@@ -101,13 +101,15 @@ public class MapActivity extends SherlockFragmentActivity implements
                     Constants.LOCATION_LONGITUDE, 0);
 
             /* gets action */
-            mAction = intent.getIntExtra(Constants.LOCATION_ACTION,
+            mAction = intent.getByteExtra(Constants.LOCATION_ACTION,
                     Constants.LOCATION_ACTION_ADD);
 
             if (mAction == Constants.LOCATION_ACTION_EDIT) {
                 mRecordId = intent.getLongExtra(Constants.LOCATION_RECORD_ID,
                         Constants.LOCATION_POINT_ON_MAP_CHOICE);
                 mLocationName = intent.getStringExtra(Constants.LOCATION_NAME);
+                mMarkerPosition = new LatLng(latitude, longitude);
+                setMarker();
             }
 
             /* checks for coordinates was received */

@@ -95,4 +95,5 @@ public class Constants {
     public static final String DELETE_LOCATION_POSITION = "deleteLocationPosition";
     
     public static final String CONFIRM_CREATION_ISVISIBLE = "isVisible";
+    public static final String CONFIRM_CREATION_ISEDIT = "isEdit";
 }
