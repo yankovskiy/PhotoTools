@@ -19,7 +19,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.ui.NothingSelectedSpinnerAdapter;
-import ru.neverdark.phototools.utils.EvpairsCalculator;
+import ru.neverdark.phototools.utils.evcalculator.EvCalculator;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -161,13 +161,15 @@ public class EvpairsFragment extends SherlockFragment {
         getSelectedItemsPositions();
         if (isRequiredFieldsFilled() == true) {
             if (isOnlyOneFieldEmpty() == true) {
-                EvpairsCalculator evCalc = new EvpairsCalculator(
+                EvCalculator evCalc = new EvCalculator();
+                evCalc.prepare(
                         mCurrentAperturePosition, mCurrentIsoPosition,
                         mCurrentShutterSpeedPosition, mNewAperturePosition,
                         mNewIsoPostion, mNewShutterSpeedPosition);
+                
                 int index = evCalc.calculate();
 
-                if (index != EvpairsCalculator.INVALID_INDEX) {
+                if (index != EvCalculator.INVALID_INDEX) {
                     fillEmptySpinner(index);
                 } else {
                     Toast.makeText(
@@ -196,41 +198,43 @@ public class EvpairsFragment extends SherlockFragment {
         mSpinner_newIso = (Spinner) mView.findViewById(R.id.evpairs_spinner_newIso);
         mSpinner_newShutterSpeed = (Spinner) mView.findViewById(R.id.evpairs_spinner_newShutterSpeed);
         
+        // TODO вызвать EvCalculator.initArrays
+        // TODO сделать загрузку и сохранение шага в преференсах
         
         /* Load data from arrays */
         ArrayAdapter<String> adapter_currentAperture = new ArrayAdapter<String>(
                 getActivity(), android.R.layout.simple_spinner_item,
-                EvpairsCalculator.APERTURE_LIST);
+                EvCalculator.APERTURE_LIST);
         adapter_currentAperture.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         setSpinnerAdapter(adapter_currentAperture, mSpinner_currentAperture, R.layout.aperture_spinner);
         
         ArrayAdapter<String> adapter_currentIso = new ArrayAdapter<String>(
                 getActivity(), android.R.layout.simple_spinner_item,
-                EvpairsCalculator.ISO_LIST);
+                EvCalculator.ISO_LIST);
         adapter_currentIso.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         setSpinnerAdapter(adapter_currentIso, mSpinner_currentIso, R.layout.iso_spinner);
         
         ArrayAdapter<String> adapter_currentShutterSpeed = new ArrayAdapter<String>(
                 getActivity(), android.R.layout.simple_spinner_item,
-                EvpairsCalculator.SHUTTER_SPEED_LIST);
+                EvCalculator.SHUTTER_SPEED_LIST);
         adapter_currentShutterSpeed.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         setSpinnerAdapter(adapter_currentShutterSpeed, mSpinner_currentShutterSpeed, R.layout.shutter_spinner);
 
         ArrayAdapter<String> adapter_newAperture = new ArrayAdapter<String>(
                 getActivity(), android.R.layout.simple_spinner_item,
-                EvpairsCalculator.APERTURE_LIST);
+                EvCalculator.APERTURE_LIST);
         adapter_newAperture.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         setSpinnerAdapter(adapter_newAperture, mSpinner_newAperture, R.layout.aperture_spinner);
         
         ArrayAdapter<String> adapter_newIso = new ArrayAdapter<String>(
                 getActivity(), android.R.layout.simple_spinner_item,
-                EvpairsCalculator.ISO_LIST);
+                EvCalculator.ISO_LIST);
         adapter_newIso.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         setSpinnerAdapter(adapter_newIso, mSpinner_newIso, R.layout.iso_spinner);
         
         ArrayAdapter<String> adapter_newShutterSpeed = new ArrayAdapter<String>(
                 getActivity(), android.R.layout.simple_spinner_item,
-                EvpairsCalculator.SHUTTER_SPEED_LIST);
+                EvCalculator.SHUTTER_SPEED_LIST);
         adapter_newShutterSpeed.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         setSpinnerAdapter(adapter_newShutterSpeed, mSpinner_newShutterSpeed, R.layout.shutter_spinner);
         
@@ -261,7 +265,6 @@ public class EvpairsFragment extends SherlockFragment {
             
             @Override
             public boolean onLongClick(View arg0) {
-                // TODO Auto-generated method stub
                 spinner.setSelection(0);
                 return true;
             }
