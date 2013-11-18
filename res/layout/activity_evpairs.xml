@@ -101,7 +101,20 @@
             android:layout_height="wrap_content"
             android:prompt="@string/evpairs_label_selectShutterSpeed"
             android:spinnerMode="dialog" />
+        
+        <TextView
+            android:id="@+id/evpairs_label_step"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/evpairs_label_step"
+            android:textColor="@color/headear" />
 
+        <Spinner
+            android:id="@+id/evpairs_spinner_step"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:entries="@array/evpairs_label_steps"/>
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
