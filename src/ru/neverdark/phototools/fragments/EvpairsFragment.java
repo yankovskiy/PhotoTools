@@ -60,6 +60,15 @@ public class EvpairsFragment extends SherlockFragment {
     private EvCalculator mEvCalculator;
 
     private String STEP_INDEX = "STEP_INDEX";
+    
+    private String CURRENT_APERTURE_INDEX = "CURRENT_APERTURE_INDEX";
+    private String CURRENT_ISO_INDEX = "CURRENT_ISO_INDEX";
+    private String CURRENT_SHUTTER_INDEX = "CURRENT_SHUTTER_INDEX";
+    
+    private String NEW_APERTURE_INDEX = "NEW_APERTURE_INDEX";
+    private String NEW_ISO_INDEX = "NEW_ISO_INDEX";
+    private String NEW_SHUTTER_INDEX = "NEW_SHUTTER_INDEX";
+    
 
     /** how much allow filled fields (new fields) */
     private static final byte MAXIMUM_ALLOWED_FILLED_FIELDS = 2;
@@ -90,6 +99,22 @@ public class EvpairsFragment extends SherlockFragment {
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        
+        getSelectedItemsPositions();
+        
+        outState.putInt(CURRENT_APERTURE_INDEX, mCurrentAperturePosition);
+        outState.putInt(CURRENT_ISO_INDEX, mCurrentIsoPosition);
+        outState.putInt(CURRENT_SHUTTER_INDEX, mCurrentShutterSpeedPosition);
+        
+        outState.putInt(NEW_APERTURE_INDEX, mNewAperturePosition);
+        outState.putInt(NEW_ISO_INDEX, mNewIsoPostion);
+        outState.putInt(NEW_SHUTTER_INDEX, mNewShutterSpeedPosition);
+    }
+    
+    
     /**
      * Clears new values
      */
@@ -135,6 +160,19 @@ public class EvpairsFragment extends SherlockFragment {
         mNewIsoPostion = mSpinner_newIso.getSelectedItemPosition();
         mNewShutterSpeedPosition = mSpinner_newShutterSpeed
                 .getSelectedItemPosition();
+    }
+    
+    /**
+     * Sets selected items position for spinner
+     */
+    private void setSelectedItemsPositions() {
+        mSpinner_currentAperture.setSelection(mCurrentAperturePosition);
+        mSpinner_currentIso.setSelection(mCurrentIsoPosition);
+        mSpinner_currentShutterSpeed.setSelection(mCurrentShutterSpeedPosition);
+        
+        mSpinner_newAperture.setSelection(mNewAperturePosition);
+        mSpinner_newIso.setSelection(mNewIsoPostion);
+        mSpinner_newShutterSpeed.setSelection(mNewShutterSpeedPosition);
     }
 
     /**
@@ -249,8 +287,7 @@ public class EvpairsFragment extends SherlockFragment {
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner_step.setAdapter(adapter_step);
         loadStep();
-        updateStep(mSpinner_step.getSelectedItemPosition());
-
+        
         mSpinner_step.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             @Override
@@ -261,11 +298,25 @@ public class EvpairsFragment extends SherlockFragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // TODO Auto-generated method stub
-
             }
         });
 
+        /* restore spinner position after device rotation */
+        /*
+        if (savedInstanceState != null) {
+            
+            mCurrentAperturePosition = savedInstanceState.getInt(CURRENT_APERTURE_INDEX);
+            mCurrentIsoPosition = savedInstanceState.getInt(CURRENT_ISO_INDEX);
+            mCurrentShutterSpeedPosition = savedInstanceState.getInt(CURRENT_SHUTTER_INDEX);
+            
+            mNewAperturePosition = savedInstanceState.getInt(NEW_APERTURE_INDEX);
+            mNewIsoPostion = savedInstanceState.getInt(NEW_ISO_INDEX);
+            mNewShutterSpeedPosition = savedInstanceState.getInt(NEW_SHUTTER_INDEX);
+            
+            setSelectedItemsPositions();
+            
+        }
+*/
         setClickListener();
         setLongClickListeners();
 
