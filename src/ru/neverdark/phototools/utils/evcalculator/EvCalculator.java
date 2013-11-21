@@ -55,13 +55,13 @@ public class EvCalculator {
             int newAperturePosition, int newIsoPostion,
             int newShutterSpeedPosition) {
 
-        mCurrentAperturePosition = currentAperturePosition;
-        mCurrentIsoPosition = currentIsoPosition;
-        mCurrentShutterSpeedPosition = currentShutterSpeedPosition;
+        mCurrentAperturePosition = currentAperturePosition - 1;
+        mCurrentIsoPosition = currentIsoPosition - 1;
+        mCurrentShutterSpeedPosition = currentShutterSpeedPosition - 1;
 
-        mNewAperturePosition = newAperturePosition;
-        mNewIsoPostion = newIsoPostion;
-        mNewShutterSpeedPosition = newShutterSpeedPosition;
+        mNewAperturePosition = newAperturePosition - 1;
+        mNewIsoPostion = newIsoPostion -1;
+        mNewShutterSpeedPosition = newShutterSpeedPosition  - 1;
 
         mIndex = INVALID_INDEX;
     }
@@ -129,7 +129,7 @@ public class EvCalculator {
             calculateShutterSpeed();
         }
                 
-        return mIndex;
+        return (++mIndex);
     }
     
     /**

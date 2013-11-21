@@ -31,8 +31,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.View.OnLongClickListener;
 
@@ -48,7 +51,8 @@ public class EvpairsFragment extends SherlockFragment {
     private Spinner mSpinner_newAperture;
     private Spinner mSpinner_newIso;
     private Spinner mSpinner_newShutterSpeed;
-    private Spinner mSpinner_step;
+    
+    private SeekBar mSeekBar_step;
 
     private int mCurrentAperturePosition;
     private int mCurrentIsoPosition;
@@ -56,22 +60,17 @@ public class EvpairsFragment extends SherlockFragment {
     private int mNewAperturePosition;
     private int mNewIsoPostion;
     private int mNewShutterSpeedPosition;
+    
+    private String mSteps[];
 
     private EvCalculator mEvCalculator;
 
     private String STEP_INDEX = "STEP_INDEX";
-    
-    private String CURRENT_APERTURE_INDEX = "CURRENT_APERTURE_INDEX";
-    private String CURRENT_ISO_INDEX = "CURRENT_ISO_INDEX";
-    private String CURRENT_SHUTTER_INDEX = "CURRENT_SHUTTER_INDEX";
-    
-    private String NEW_APERTURE_INDEX = "NEW_APERTURE_INDEX";
-    private String NEW_ISO_INDEX = "NEW_ISO_INDEX";
-    private String NEW_SHUTTER_INDEX = "NEW_SHUTTER_INDEX";
-    
 
     /** how much allow filled fields (new fields) */
     private static final byte MAXIMUM_ALLOWED_FILLED_FIELDS = 2;
+
+    private TextView mLabelStep;
 
     /**
      * Calculates EV pairs
@@ -99,22 +98,6 @@ public class EvpairsFragment extends SherlockFragment {
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        
-        getSelectedItemsPositions();
-        
-        outState.putInt(CURRENT_APERTURE_INDEX, mCurrentAperturePosition);
-        outState.putInt(CURRENT_ISO_INDEX, mCurrentIsoPosition);
-        outState.putInt(CURRENT_SHUTTER_INDEX, mCurrentShutterSpeedPosition);
-        
-        outState.putInt(NEW_APERTURE_INDEX, mNewAperturePosition);
-        outState.putInt(NEW_ISO_INDEX, mNewIsoPostion);
-        outState.putInt(NEW_SHUTTER_INDEX, mNewShutterSpeedPosition);
-    }
-    
-    
     /**
      * Clears new values
      */
@@ -160,19 +143,6 @@ public class EvpairsFragment extends SherlockFragment {
         mNewIsoPostion = mSpinner_newIso.getSelectedItemPosition();
         mNewShutterSpeedPosition = mSpinner_newShutterSpeed
                 .getSelectedItemPosition();
-    }
-    
-    /**
-     * Sets selected items position for spinner
-     */
-    private void setSelectedItemsPositions() {
-        mSpinner_currentAperture.setSelection(mCurrentAperturePosition);
-        mSpinner_currentIso.setSelection(mCurrentIsoPosition);
-        mSpinner_currentShutterSpeed.setSelection(mCurrentShutterSpeedPosition);
-        
-        mSpinner_newAperture.setSelection(mNewAperturePosition);
-        mSpinner_newIso.setSelection(mNewIsoPostion);
-        mSpinner_newShutterSpeed.setSelection(mNewShutterSpeedPosition);
     }
 
     /**
@@ -239,12 +209,12 @@ public class EvpairsFragment extends SherlockFragment {
     /**
      * Load saved steps from shared prefs
      */
-    public void loadStep() {
+    private void loadStep() {
         SharedPreferences preferenced = getActivity().getPreferences(
                 Context.MODE_PRIVATE);
 
         int stepIndex = preferenced.getInt(STEP_INDEX, EvCalculator.FULL_STOP);
-        mSpinner_step.setSelection(stepIndex);
+        mSeekBar_step.setProgress(stepIndex);
     }
 
     /*
@@ -275,48 +245,38 @@ public class EvpairsFragment extends SherlockFragment {
         mSpinner_newShutterSpeed = (Spinner) mView
                 .findViewById(R.id.evpairs_spinner_newShutterSpeed);
 
-        mSpinner_step = (Spinner) mView.findViewById(R.id.evpairs_spinner_step);
-
+        mSeekBar_step = (SeekBar) mView.findViewById(R.id.evpairs_seekBar_step);
+        mLabelStep = (TextView) mView.findViewById(R.id.evpairs_label_step);
+        
+        mSteps = getResources().getStringArray(R.array.evpairs_label_steps);
+        
         mEvCalculator = new EvCalculator();
 
         /* Load data from arrays */
-        ArrayAdapter<String> adapter_step = new ArrayAdapter<String>(
-                getActivity(), android.R.layout.simple_spinner_item,
-                getResources().getStringArray(R.array.evpairs_label_steps));
-        adapter_step
-                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner_step.setAdapter(adapter_step);
         loadStep();
+        updateStep(mSeekBar_step.getProgress());
         
-        mSpinner_step.setOnItemSelectedListener(new OnItemSelectedListener() {
-
+        mSeekBar_step.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+            
             @Override
-            public void onItemSelected(AdapterView<?> parentView,
-                    View selectedItemView, int position, long id) {
-                updateStep(position);
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+                
             }
-
+            
             @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,
+                    boolean fromUser) {
+                updateStep(progress);
             }
         });
-
-        /* restore spinner position after device rotation */
-        /*
-        if (savedInstanceState != null) {
-            
-            mCurrentAperturePosition = savedInstanceState.getInt(CURRENT_APERTURE_INDEX);
-            mCurrentIsoPosition = savedInstanceState.getInt(CURRENT_ISO_INDEX);
-            mCurrentShutterSpeedPosition = savedInstanceState.getInt(CURRENT_SHUTTER_INDEX);
-            
-            mNewAperturePosition = savedInstanceState.getInt(NEW_APERTURE_INDEX);
-            mNewIsoPostion = savedInstanceState.getInt(NEW_ISO_INDEX);
-            mNewShutterSpeedPosition = savedInstanceState.getInt(NEW_SHUTTER_INDEX);
-            
-            setSelectedItemsPositions();
-            
-        }
-*/
+        
         setClickListener();
         setLongClickListeners();
 
@@ -332,10 +292,10 @@ public class EvpairsFragment extends SherlockFragment {
     /**
      * Save selected step into shared prefs
      */
-    public void saveStep() {
+    private void saveStep() {
         SharedPreferences preferenced = getActivity().getPreferences(
                 Context.MODE_PRIVATE);
-        int stepIndex = mSpinner_step.getSelectedItemPosition();
+        int stepIndex = mSeekBar_step.getProgress();
 
         SharedPreferences.Editor editor = preferenced.edit();
         editor.putInt(STEP_INDEX, stepIndex);
@@ -419,7 +379,7 @@ public class EvpairsFragment extends SherlockFragment {
      * @param step
      *            step for expsoure (FULL_STOP, HALF_STOP, THIRD_STOP)
      */
-    public void updateStep(final int step) {
+    private void updateStep(final int step) {
         Log.enter();
 
         mEvCalculator.initArrays(step);
@@ -470,5 +430,8 @@ public class EvpairsFragment extends SherlockFragment {
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         setSpinnerAdapter(adapter_newShutterSpeed, mSpinner_newShutterSpeed,
                 R.layout.shutter_spinner);
+        
+        String text = getString(R.string.evpairs_label_step).concat(" ").concat(mSteps[step]);
+        mLabelStep.setText(text);
     }
 }

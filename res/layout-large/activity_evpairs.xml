@@ -112,11 +112,12 @@
             android:text="@string/evpairs_label_step"
             android:textColor="@color/headear" />
 
-        <Spinner
-            android:id="@+id/evpairs_spinner_step"
+        <SeekBar
+            android:id="@+id/evpairs_seekBar_step"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/evpairs_label_steps" />
+            android:layout_height="wrap_content" 
+            android:max="2"
+            android:progress="0"/>
 
         <LinearLayout
             android:layout_width="match_parent"
