@@ -63,6 +63,14 @@ public class EvCalculator {
         mNewIsoPostion = newIsoPostion -1;
         mNewShutterSpeedPosition = newShutterSpeedPosition  - 1;
 
+        Log.variable("mCurrentAperturePosition", String.valueOf(mCurrentAperturePosition));
+        Log.variable("mCurrentIsoPosition", String.valueOf(mCurrentIsoPosition));
+        Log.variable("mCurrentShutterSpeedPosition", String.valueOf(mCurrentShutterSpeedPosition));
+        
+        Log.variable("mNewAperturePosition", String.valueOf(mNewAperturePosition));
+        Log.variable("mNewIsoPostion", String.valueOf(mNewIsoPostion));
+        Log.variable("mNewShutterSpeedPosition", String.valueOf(mNewShutterSpeedPosition));
+        
         mIndex = INVALID_INDEX;
     }
     
@@ -74,12 +82,15 @@ public class EvCalculator {
         switch (evStep) {
         case FULL_STOP:
             mEvTable = new EvFullTable();
+            Log.message("EV FULL");
             break;
         case HALF_STOP:
             mEvTable = new EvHalfTable();
+            Log.message("Ev HALF");
             break;
         case THIRD_STOP:
             mEvTable = new  EvThirdTable();
+            Log.message("Ev THIRD");
             break;
         }
         
@@ -121,15 +132,18 @@ public class EvCalculator {
      * @return index for the empty spinner or INVALID_INDEX on error
      */
     public int calculate() {
-        if (mNewAperturePosition == 0) {
+        if (mNewAperturePosition == -1) {
             calculateAperture();
-        } else if (mNewIsoPostion == 0) {
+        } else if (mNewIsoPostion == -1) {
             calculateIso();
         } else {
             calculateShutterSpeed();
         }
                 
-        return (++mIndex);
+        mIndex++;
+        Log.variable("mIndex", String.valueOf("mIndex"));
+        
+        return mIndex;
     }
     
     /**
@@ -138,11 +152,15 @@ public class EvCalculator {
     private void calculateAperture() {
         int isoNewIndex = getIsoNewIndex();
         String shutter = SHUTTER_SPEED_LIST[mNewShutterSpeedPosition];
+        
+        Log.variable("shutter", String.valueOf(shutter));
+        Log.variable("isoNewIndex", String.valueOf(isoNewIndex));
 
         if (isoNewIndex != INVALID_INDEX) {
             for (int i = 0; i < SHUTTERS_TABLE[isoNewIndex].length; i++) {
                 if (shutter.equals(SHUTTERS_TABLE[isoNewIndex][i])) {
                     mIndex = i;
+                    Log.variable("mIndex", String.valueOf(mIndex));
                     break;
                 }
             }
@@ -155,10 +173,14 @@ public class EvCalculator {
     private void calculateShutterSpeed() {
         int apertureNewColumnNumber = mNewAperturePosition;
         int isoNewIndex = getIsoNewIndex();
+        Log.variable("isoNewIndex", String.valueOf(isoNewIndex));
         
         if (isoNewIndex != INVALID_INDEX) {
             String shutter = SHUTTERS_TABLE[isoNewIndex][apertureNewColumnNumber];
             mIndex = Arrays.asList(SHUTTER_SPEED_LIST).indexOf(shutter);
+            
+            Log.variable("shutter", shutter);
+            Log.variable("mIndex", String.valueOf(mIndex));
         }
     }
 
@@ -172,6 +194,10 @@ public class EvCalculator {
         int apertureNewColumnIndex = mNewAperturePosition;
         String shutter = SHUTTER_SPEED_LIST[mNewShutterSpeedPosition];
 
+        Log.variable("ev", String.valueOf(ev));
+        Log.variable("apertureNewColumnIndex", String.valueOf(apertureNewColumnIndex));
+        Log.variable("shutter", shutter);
+        
         if (ev != INVALID_INDEX) {
             for (i = 0; i < SHUTTERS_TABLE.length; i++) {
                 if (shutter.equals(SHUTTERS_TABLE[i][apertureNewColumnIndex])) {
@@ -179,11 +205,14 @@ public class EvCalculator {
                     break;
                 }
             }
-
+            
+            Log.variable("isoLine", String.valueOf(isoLine));
+            
             if (isoLine != INVALID_INDEX) {
                 for (i = 0; i < ISO_LIST.length - 1; i++) {
                     if (EV_TABLE[isoLine][i] == ev) {
                         mIndex = i;
+                        Log.variable("mIndex", String.valueOf(mIndex));
                         break;
                     }
                 }
@@ -202,10 +231,13 @@ public class EvCalculator {
         int apertureCurrentColumnNumber = mCurrentAperturePosition;
         String currentShutterSpeed = SHUTTER_SPEED_LIST[mCurrentShutterSpeedPosition];
 
+        Log.variable("currentShutterSpeed", currentShutterSpeed);
+        
         for (int i = 0; i < SHUTTERS_TABLE.length; i++) {
             if (currentShutterSpeed
                     .equals(SHUTTERS_TABLE[i][apertureCurrentColumnNumber])) {
                 ev = EV_TABLE[i][isoCurrentColumnNumber];
+                Log.variable("ev", String.valueOf(ev));
                 break;
             }
         }
@@ -223,10 +255,13 @@ public class EvCalculator {
         int index = INVALID_INDEX;
         int isoNewColumnNumber = mNewIsoPostion;
 
+        Log.variable("ev", String.valueOf(ev));
+        
         if (ev != INVALID_INDEX) {
             for (int i = 0; i < SHUTTERS_TABLE.length; i++) {
                 if (ev == EV_TABLE[i][isoNewColumnNumber]) {
                     index = i;
+                    Log.variable("index", String.valueOf(index));
                     break;
                 }
             }
