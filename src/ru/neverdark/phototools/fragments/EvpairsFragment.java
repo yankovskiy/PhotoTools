@@ -28,8 +28,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -51,7 +49,7 @@ public class EvpairsFragment extends SherlockFragment {
     private Spinner mSpinner_newAperture;
     private Spinner mSpinner_newIso;
     private Spinner mSpinner_newShutterSpeed;
-    
+
     private SeekBar mSeekBar_step;
 
     private int mCurrentAperturePosition;
@@ -60,7 +58,7 @@ public class EvpairsFragment extends SherlockFragment {
     private int mNewAperturePosition;
     private int mNewIsoPostion;
     private int mNewShutterSpeedPosition;
-    
+
     private String mSteps[];
 
     private EvCalculator mEvCalculator;
@@ -247,36 +245,36 @@ public class EvpairsFragment extends SherlockFragment {
 
         mSeekBar_step = (SeekBar) mView.findViewById(R.id.evpairs_seekBar_step);
         mLabelStep = (TextView) mView.findViewById(R.id.evpairs_label_step);
-        
+
         mSteps = getResources().getStringArray(R.array.evpairs_label_steps);
-        
+
         mEvCalculator = new EvCalculator();
 
         /* Load data from arrays */
         loadStep();
         updateStep(mSeekBar_step.getProgress());
-        
+
         mSeekBar_step.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-            
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
-                
-            }
-            
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
-                
-            }
-            
+
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress,
                     boolean fromUser) {
                 updateStep(progress);
             }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+
+            }
         });
-        
+
         setClickListener();
         setLongClickListeners();
 
@@ -430,8 +428,9 @@ public class EvpairsFragment extends SherlockFragment {
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         setSpinnerAdapter(adapter_newShutterSpeed, mSpinner_newShutterSpeed,
                 R.layout.shutter_spinner);
-        
-        String text = getString(R.string.evpairs_label_step).concat(" ").concat(mSteps[step]);
+
+        String text = getString(R.string.evpairs_label_step).concat(" ")
+                .concat(mSteps[step]);
         mLabelStep.setText(text);
     }
 }
