@@ -134,7 +134,7 @@ public class SunsetFragment extends SherlockFragment {
                 break;
             case STATUS_FAIL:
                 mTimeZone = null;
-                showInformationMesssage(R.string.sunset_information_timeZoneFail);
+                // showInformationMesssage(R.string.sunset_information_timeZoneFail);
                 break;
             }
         }
@@ -363,7 +363,8 @@ public class SunsetFragment extends SherlockFragment {
         }
 
         if (mTimeZone == null) {
-            setDefaultTimeZone();
+            showTimeZoneSelectionDialog();
+            return;
         }
 
         Location location = new Location(mLatitude, mLongitude);
@@ -802,6 +803,16 @@ public class SunsetFragment extends SherlockFragment {
     }
 
     /**
+     * Sets mTimeZone to tz and calculate
+     * 
+     * @param tz
+     */
+    public void setZoneAndCalculate(TimeZone tz) {
+        mTimeZone = tz;
+        calculateSunset();
+    }
+
+    /**
      * Shows date picker dialog
      */
     private void showDatePicker() {
@@ -865,7 +876,10 @@ public class SunsetFragment extends SherlockFragment {
      * Shows TimeZone selection dialog
      */
     private void showTimeZoneSelectionDialog() {
-        // TODO написать код в 0.6.1
+        Log.enter();
+        ZonePicker dialog = new ZonePicker();
+        dialog.setTargetFragment(this, Constants.DIALOG_FRAGMENT);
+        dialog.show(getFragmentManager(), ZonePicker.DIALOG);
     }
 
     /**

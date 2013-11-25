@@ -5,20 +5,20 @@ package ru.neverdark.phototools.utils.evcalculator;
  */
 public class EvFullTable implements EvTable{
 
-    private final String ISO_LIST[] = {"25", "50", "100", "200", "400", "800",
+    private static final String ISO_LIST[] = {"25", "50", "100", "200", "400", "800",
             "1600", "3200", "6400", "12800", "25600", "51200", "102400", "204800"};
     
-    private final String SHUTTER_LIST[] = {"512 min",
+    private static final String SHUTTER_LIST[] = {"512 min",
             "256 min", "128 min", "64 min", "32 min", "16 min", "8 min", "4 min", "2 min",
             "1 min", "30 sec", "15 sec", "8 sec", "4 sec", "2 sec", "1 sec",
             "1/2 sec", "1/4 sec", "1/8 sec", "1/15 sec", "1/30 sec",
             "1/60 sec", "1/125 sec", "1/250 sec", "1/500 sec", "1/1000 sec",
             "1/2000 sec", "1/4000 sec", "1/8000 sec" };
     
-    private final String APERTURE_LIST[] = {"1", "1.4", "2.0", "2.8",
+    private static final String APERTURE_LIST[] = {"1", "1.4", "2.0", "2.8",
             "4", "5.6", "8", "11", "16", "22", "32", "45", "64", "90", "128", "180", "256", "360" };
     
-    private final int EV_TABLE[][] = {
+    private static final int EV_TABLE[][] = {
             { 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13},
             { 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12},
             { 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11},
@@ -49,7 +49,7 @@ public class EvFullTable implements EvTable{
             { 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14},
             { 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15} };
     
-    private final String SHUTTERS_TABLE[][] = {
+    private static final String SHUTTERS_TABLE[][] = {
             {"512 min","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"},
             {"256 min","512 min","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"},
             {"128 min","256 min","512 min","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"},

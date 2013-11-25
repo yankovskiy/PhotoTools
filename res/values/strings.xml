@@ -174,5 +174,8 @@
     <string name="evpairs_label_stepFull">1 стоп</string>
     <string name="evpairs_label_stepHalf">&#189; стопа</string>
     <string name="evpairs_label_stepThird">&#8531; стопа</string>
+    
+    <string name="zonePicker_title">Выбор временной зоны</string>
+    <string name="zonePicker_message">Не удалось определелить временную зону. Выберите из списка:</string>
     <!-- end -->
 </resources>
