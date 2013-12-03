@@ -22,6 +22,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.utils.Log;
+import ru.neverdark.phototools.utils.WheelAdapter;
 import ru.neverdark.phototools.utils.evcalculator.EvCalculator;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -244,12 +245,14 @@ public class EvpairsFragment extends SherlockFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         mView = inflater.inflate(R.layout.activity_evpairs, container, false);
         bindObjectsToResources();
-        
+
         mEvCalculator = new EvCalculator();
 
         /* Load data from arrays */
         loadStep();
-        updateStep(mSeekBar_step.getProgress());
+        final int step = mSeekBar_step.getProgress();
+        updateStep(step);
+        updateStepLabel(step);
 
         mSeekBar_step.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
@@ -259,6 +262,7 @@ public class EvpairsFragment extends SherlockFragment {
             public void onProgressChanged(SeekBar seekBar, int progress,
                     boolean fromUser) {
                 mProgress = progress;
+                updateStepLabel(mProgress);
             }
 
             @Override
@@ -269,11 +273,14 @@ public class EvpairsFragment extends SherlockFragment {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 updateStep(mProgress);
+                updateStepLabel(mProgress);
+                setAllWheelsToFirstPos();
             }
         });
 
         setClickListener();
-        setLongClickListeners();
+        // TODO нужно подумать над целесообразностью применения
+        //setLongClickListeners();
 
         return mView;
     }
@@ -296,6 +303,19 @@ public class EvpairsFragment extends SherlockFragment {
         editor.putInt(STEP_INDEX, stepIndex);
 
         editor.commit();
+    }
+
+    /**
+     * Sets position to first for all wheels
+     */
+    private void setAllWheelsToFirstPos() {
+        setWheelToFirstPos(mWheel_currentAperture);
+        setWheelToFirstPos(mWheel_currentIso);
+        setWheelToFirstPos(mWheel_currentShutter);
+
+        setWheelToFirstPos(mWheel_newAperture);
+        setWheelToFirstPos(mWheel_newIso);
+        setWheelToFirstPos(mWheel_newShutter);
     }
 
     /**
@@ -334,8 +354,6 @@ public class EvpairsFragment extends SherlockFragment {
 
             @Override
             public boolean onLongClick(View v) {
-                // TODO не работает
-                Log.message("Long click");
                 wheel.setCurrentItem(0, true);
                 return true;
             }
@@ -363,17 +381,27 @@ public class EvpairsFragment extends SherlockFragment {
      *            values for adapter
      */
     private void setWheelAdapter(WheelView wheel, String values[]) {
-        ArrayWheelAdapter<String> adapter = new ArrayWheelAdapter<String>(
+        WheelAdapter<String> adapter = new WheelAdapter<String>(
                 getSherlockActivity(), values);
         adapter.setTextSize(15);
         wheel.setViewAdapter(adapter);
     }
 
     /**
+     * Sets position to first
+     * 
+     * @param wheel
+     *            wheel for setting first position
+     */
+    private void setWheelToFirstPos(WheelView wheel) {
+        wheel.setCurrentItem(0);
+    }
+
+    /**
      * Update steps
      * 
      * @param step
-     *            step for expsoure (FULL_STOP, HALF_STOP, THIRD_STOP)
+     *            step for exposure (FULL_STOP, HALF_STOP, THIRD_STOP)
      */
     private void updateStep(final int step) {
         Log.enter();
@@ -387,7 +415,15 @@ public class EvpairsFragment extends SherlockFragment {
         setWheelAdapter(mWheel_newAperture, mEvCalculator.getApertureList());
         setWheelAdapter(mWheel_newIso, mEvCalculator.getIsoList());
         setWheelAdapter(mWheel_newShutter, mEvCalculator.getShutterList());
+    }
 
+    /**
+     * Updates step label
+     * 
+     * @param step
+     *            for exposure (FULL_STOP, HALF_STOP, THIRD_STOP)
+     */
+    private void updateStepLabel(final int step) {
         String text = getString(R.string.evpairs_label_step).concat(" ")
                 .concat(mSteps[step]);
         mLabelStep.setText(text);

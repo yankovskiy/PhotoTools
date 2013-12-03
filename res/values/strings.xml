@@ -63,14 +63,14 @@
     <string name="evpairs_error_emptyCurrentIso">Текущее значение ISO должно быть заполнено</string>
     <string name="evpairs_error_emptyCurrentShutterSpeed">Текущее значение выдержки должно быть заполнено</string>
     <string name="evpairs_error_onlyOneFieldMustBeEpmty">Должно быть только одно пустое поле</string>
-    <string name="evpairs_label_apperture">[Диафрагма..]</string>
+    <string name="evpairs_label_apperture">Диафрагма</string>
     <string name="evpairs_label_currentValues">Текущие значения</string>
-    <string name="evpairs_label_iso">[ISO..]</string>
+    <string name="evpairs_label_iso">ISO</string>
     <string name="evpairs_label_newValues">Новые значения</string>
     <string name="evpairs_label_selectAperture">Выберите диафрагму</string>
     <string name="evpairs_label_selectIso">Выберите ISO</string>
     <string name="evpairs_label_selectShutterSpeed">Выберите выдержку</string>
-    <string name="evpairs_label_shutterSpeed">[Выдержка..]</string>
+    <string name="evpairs_label_shutterSpeed">Выдержка</string>
     
     <string name="locationSelection_label_currentLocation">Мое местоположение</string>
     <string name="locationSelection_label_pointOnMap">Точка на карте</string>

@@ -1,6 +1,6 @@
 <?php
 
-$shutters = array( "512 min", "406 min", "323 min",
+$shutters = array("512 min", "406 min", "323 min",
             "256 min", "203 min", "161 min",
             "128 min", "102 min", "80.6 min",
             "64 min", "50.8 min", "40.3 min",
@@ -28,7 +28,7 @@ $shutters = array( "512 min", "406 min", "323 min",
             "1/1000 sec", "1/1250 sec", "1/1600 sec",
             "1/2000 sec", "1/2500 sec", "1/3200 sec",
             "1/4000 sec", "1/5000 sec", "1/6400 sec",
-            "1/8000 sec"   );
+            "1/8000 sec"  );
 
 $aperture = array("1", "1.12", "1.25",
             "1.4", "1.6", "1.8",
@@ -50,14 +50,16 @@ $aperture = array("1", "1.12", "1.25",
             "360" );
 
 $count = count($aperture);
+$shutterCount = count($shutters);
 
-for ($i = 0; $i < count($shutters); $i++) {
+for ($i = 0; $i < $shutterCount + $count - 1; $i++) {
 
     echo "{";
 
     $z = $i;
+    
     for ($x = 0; $x < $count; $x++) {
-	if ($z > -1) echo '"' . $shutters[$z] . '"';
+	if ($z > -1 && $z < $shutterCount) echo '"' . $shutters[$z] . '"';
 	else echo '"0"';
 	$z--;
 	if ($x < ($count - 1)) echo ",";
