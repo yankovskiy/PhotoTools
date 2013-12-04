@@ -16,7 +16,6 @@
 package ru.neverdark.phototools.fragments;
 
 import kankan.wheel.widget.WheelView;
-import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 
 import com.actionbarsherlock.app.SherlockFragment;
 

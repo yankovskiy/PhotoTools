@@ -48,10 +48,10 @@ public class CheckableRelativeLayout extends RelativeLayout implements Checkable
         mChecked = checked;
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
             Log.message("Old api");
-            setBackgroundDrawable(checked ? new ColorDrawable(0xff84d3ef) : null);
+            setBackgroundDrawable(checked ? new ColorDrawable(0xff33b5e5) : null);
         } else {
             Log.message("New api");
-            setBackground(checked ? new ColorDrawable(0xff84d3ef) : null);
+            setBackground(checked ? new ColorDrawable(0xff33b5e5) : null);
         }
     }
 
