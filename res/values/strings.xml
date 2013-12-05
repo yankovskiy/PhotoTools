@@ -40,7 +40,7 @@
     <string name="dof_error_apertureNotSelected">Диафрагма должна быть выбрана</string>
     <string name="dof_error_emptyFocalLength">Фокусное расстояние должно быть между 1 и 500 мм</string>
     <string name="dof_error_incorrectSubjectDistance">Неверное значение дистанции фокусировки</string>
-    <string name="dof_label_aperture">[Диафрагма..]</string>
+    <string name="dof_label_aperture">Диафрагма</string>
     <string name="dof_label_calculationResult">Результаты расчетов</string>
     <string name="dof_label_camera">Модель камеры</string>
     <string name="dof_label_farLimit">Дальняя граница:</string>
@@ -170,6 +170,12 @@
         Будет использована временная зона вашего устройства</string>
 
     <!-- new -->
+    <string name="dof_label_measureUnit">Единицы измерения:</string>
+    <string name="dof_label_m">м</string>
+    <string name="dof_label_cm">см</string>
+    <string name="dof_label_ft">футы</string>
+    <string name="dof_label_in">дюймы</string>
+    
     <string name="evpairs_label_step">Шаг изменения</string>
     <string name="evpairs_label_stepFull">1 стоп</string>
     <string name="evpairs_label_stepHalf">&#189; стопа</string>

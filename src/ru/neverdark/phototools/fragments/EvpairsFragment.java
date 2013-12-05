@@ -23,18 +23,18 @@ import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.WheelAdapter;
 import ru.neverdark.phototools.utils.evcalculator.EvCalculator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.view.View.OnLongClickListener;
 
 /**
  * Fragment contains EV Pairs calculator UI
@@ -49,8 +49,6 @@ public class EvpairsFragment extends SherlockFragment {
     private WheelView mWheel_newIso;
     private WheelView mWheel_newShutter;
 
-    private SeekBar mSeekBar_step;
-
     private int mCurrentAperturePosition;
     private int mCurrentIsoPosition;
     private int mCurrentShutterSpeedPosition;
@@ -58,7 +56,9 @@ public class EvpairsFragment extends SherlockFragment {
     private int mNewIsoPostion;
     private int mNewShutterSpeedPosition;
 
-    private String mSteps[];
+    private TextView mLabelStepFull;
+    private TextView mLabelStepHalf;
+    private TextView mLabelStepThird;
 
     private EvCalculator mEvCalculator;
 
@@ -67,7 +67,7 @@ public class EvpairsFragment extends SherlockFragment {
     /** how much allow filled fields (new fields) */
     private static final byte MAXIMUM_ALLOWED_FILLED_FIELDS = 2;
 
-    private TextView mLabelStep;
+    private int mStepIndex;
 
     /**
      * Binds classes objects to resources
@@ -85,10 +85,10 @@ public class EvpairsFragment extends SherlockFragment {
         mWheel_newShutter = (WheelView) mView
                 .findViewById(R.id.ev_wheel_newShutter);
 
-        mSeekBar_step = (SeekBar) mView.findViewById(R.id.ev_seekBar_step);
-        mLabelStep = (TextView) mView.findViewById(R.id.ev_label_step);
-
-        mSteps = getResources().getStringArray(R.array.evpairs_label_steps);
+        mLabelStepFull = (TextView) mView.findViewById(R.id.ev_label_stepFull);
+        mLabelStepHalf = (TextView) mView.findViewById(R.id.ev_label_stepHalf);
+        mLabelStepThird = (TextView) mView
+                .findViewById(R.id.ev_label_stepThird);
     }
 
     /**
@@ -227,8 +227,7 @@ public class EvpairsFragment extends SherlockFragment {
         SharedPreferences preferenced = getActivity().getPreferences(
                 Context.MODE_PRIVATE);
 
-        int stepIndex = preferenced.getInt(STEP_INDEX, EvCalculator.FULL_STOP);
-        mSeekBar_step.setProgress(stepIndex);
+        mStepIndex = preferenced.getInt(STEP_INDEX, EvCalculator.FULL_STOP);
     }
 
     /*
@@ -249,37 +248,9 @@ public class EvpairsFragment extends SherlockFragment {
 
         /* Load data from arrays */
         loadStep();
-        final int step = mSeekBar_step.getProgress();
-        updateStep(step);
-        updateStepLabel(step);
-
-        mSeekBar_step.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-
-            private int mProgress;
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress,
-                    boolean fromUser) {
-                mProgress = progress;
-                updateStepLabel(mProgress);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                updateStep(mProgress);
-                updateStepLabel(mProgress);
-                setAllWheelsToFirstPos();
-            }
-        });
+        updateStepButtons();
 
         setClickListener();
-        // TODO нужно подумать над целесообразностью применения
-        //setLongClickListeners();
 
         return mView;
     }
@@ -296,10 +267,9 @@ public class EvpairsFragment extends SherlockFragment {
     private void saveStep() {
         SharedPreferences preferenced = getActivity().getPreferences(
                 Context.MODE_PRIVATE);
-        int stepIndex = mSeekBar_step.getProgress();
 
         SharedPreferences.Editor editor = preferenced.edit();
-        editor.putInt(STEP_INDEX, stepIndex);
+        editor.putInt(STEP_INDEX, mStepIndex);
 
         editor.commit();
     }
@@ -318,6 +288,26 @@ public class EvpairsFragment extends SherlockFragment {
     }
 
     /**
+     * Sets background from drawable resource
+     * 
+     * @param view
+     *            view object for set drawable resource
+     * @param resourceId
+     *            drawable resource
+     */
+    @SuppressWarnings("deprecation")
+    @SuppressLint("NewApi")
+    private void setBg(View view, final int resourceId) {
+        Drawable res = getResources().getDrawable(resourceId);
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+            view.setBackgroundDrawable(res);
+        } else {
+            view.setBackground(res);
+        }
+    }
+
+    /**
      * Sets OnClickListener to buttons on the fragment
      */
     private void setClickListener() {
@@ -332,6 +322,16 @@ public class EvpairsFragment extends SherlockFragment {
                 case R.id.ev_button_clear:
                     clearNewValues();
                     break;
+                case R.id.ev_label_stepFull:
+                    mStepIndex = EvCalculator.FULL_STOP;
+                    updateStepButtons();
+                    break;
+                case R.id.ev_label_stepHalf:
+                    mStepIndex = EvCalculator.HALF_STOP;
+                    updateStepButtons();
+                case R.id.ev_label_stepThird:
+                    mStepIndex = EvCalculator.THIRD_STOP;
+                    updateStepButtons();
                 }
             }
         };
@@ -340,35 +340,9 @@ public class EvpairsFragment extends SherlockFragment {
                 clickListener);
         mView.findViewById(R.id.ev_button_clear).setOnClickListener(
                 clickListener);
-    }
-
-    /**
-     * Sets long click listener for one wheel
-     * 
-     * @param wheel
-     *            WheelView for sets long click listener
-     */
-    private void setLongClick(final WheelView wheel) {
-        wheel.setOnLongClickListener(new OnLongClickListener() {
-
-            @Override
-            public boolean onLongClick(View v) {
-                wheel.setCurrentItem(0, true);
-                return true;
-            }
-        });
-    }
-
-    /**
-     * Sets long click listeners for all wheels
-     */
-    private void setLongClickListeners() {
-        setLongClick(mWheel_currentAperture);
-        setLongClick(mWheel_currentIso);
-        setLongClick(mWheel_currentShutter);
-        setLongClick(mWheel_newAperture);
-        setLongClick(mWheel_newIso);
-        setLongClick(mWheel_newShutter);
+        mLabelStepFull.setOnClickListener(clickListener);
+        mLabelStepHalf.setOnClickListener(clickListener);
+        mLabelStepThird.setOnClickListener(clickListener);
     }
 
     /**
@@ -399,13 +373,11 @@ public class EvpairsFragment extends SherlockFragment {
     /**
      * Update steps
      * 
-     * @param step
-     *            step for exposure (FULL_STOP, HALF_STOP, THIRD_STOP)
      */
-    private void updateStep(final int step) {
+    private void updateStep() {
         Log.enter();
 
-        mEvCalculator.initArrays(step);
+        mEvCalculator.initArrays(mStepIndex);
 
         setWheelAdapter(mWheel_currentAperture, mEvCalculator.getApertureList());
         setWheelAdapter(mWheel_currentIso, mEvCalculator.getIsoList());
@@ -416,15 +388,24 @@ public class EvpairsFragment extends SherlockFragment {
         setWheelAdapter(mWheel_newShutter, mEvCalculator.getShutterList());
     }
 
-    /**
-     * Updates step label
-     * 
-     * @param step
-     *            for exposure (FULL_STOP, HALF_STOP, THIRD_STOP)
-     */
-    private void updateStepLabel(final int step) {
-        String text = getString(R.string.evpairs_label_step).concat(" ")
-                .concat(mSteps[step]);
-        mLabelStep.setText(text);
+    private void updateStepButtons() {
+        setBg(mLabelStepFull, R.drawable.right_stroke);
+        setBg(mLabelStepHalf, R.drawable.right_stroke);
+        setBg(mLabelStepThird, R.drawable.right_stroke);
+
+        switch (mStepIndex) {
+        case EvCalculator.FULL_STOP:
+            setBg(mLabelStepFull, R.drawable.left_blue_button);
+            break;
+        case EvCalculator.HALF_STOP:
+            setBg(mLabelStepHalf, R.drawable.middle_blue_button);
+            break;
+        case EvCalculator.THIRD_STOP:
+            setBg(mLabelStepThird, R.drawable.right_blue_button);
+            break;
+        }
+
+        updateStep();
+        setAllWheelsToFirstPos();
     }
 }

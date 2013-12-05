@@ -21,7 +21,6 @@ import java.util.List;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.ui.NothingSelectedSpinnerAdapter;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.dofcalculator.CameraData;
 import ru.neverdark.phototools.utils.dofcalculator.DofCalculator;
