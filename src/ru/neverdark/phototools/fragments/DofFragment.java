@@ -18,9 +18,12 @@ package ru.neverdark.phototools.fragments;
 import java.math.BigDecimal;
 import java.util.List;
 
+import kankan.wheel.widget.WheelView;
+
 import com.actionbarsherlock.app.SherlockFragment;
 
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.dofcalculator.CameraData;
 import ru.neverdark.phototools.utils.dofcalculator.DofCalculator;
@@ -47,508 +50,263 @@ import android.widget.Toast;
  */
 public class DofFragment extends SherlockFragment {
 
-    /**
-     * Store oldest vendors spinner position
-     */
-    private int mOldVendorPosition = -1;
-    
-    /**
-     * Names for save preferences
-     */
-    //private final String APERTURE_INDEX = "APERTURE_INDEX";
-    private final String CAMERA_INDEX = "CAMERA_INDEX";
-    private final String VENDOR_INDEX = "VENDOR_INDEX";
-    
-    /**
-     * Names for save state for reload TextView text when activity recreated (rotate screen)
-     */
-    private final String STATE_HYPER_FOCAL = "hyperFocal";
-    private final String STATE_FAR_LIMIT = "farLimit";
-    private final String STATE_NEAR_LIMIT = "nearLimit";
-    private final String STATE_TOTAL = "total"; 
-    
-    /**
-     * Calculate hyperfocal distance
-     * @return CalculationResult object
-     */
-    private DofCalculator.CalculationResult calculate() {
-        BigDecimal aperture = getSelectedAperture();
-        BigDecimal focusLength = getFocalLengthValue();
-        BigDecimal coc = CameraData.getCocForCamera(getSelectedVendor(), getSelectedCamera());
-        BigDecimal subjectDistance = getSubjectDistanceValue();
-        DofCalculator dofCalculator = new DofCalculator(aperture, focusLength, coc, subjectDistance);
-        return dofCalculator.calculate();
-    }
-    
-    /**
-     * Function display calculation result in the dof_label_hyperFocal TextView
-     * @param calculationResult CalculationResult object when stores the result of the calculations
-     */
-    private void displayCalculationResult(DofCalculator.CalculationResult calculatioResult) {
-        String meters = " " + getString(R.string.dof_label_meters); 
-        String tmp;
-        
-        tmp = getString(R.string.dof_label_hyperFocal) + " "
-                + calculatioResult.getHyperFocal().toString()
-                + meters;
-        getHyperFocalResultLabel().setText(tmp);
+    private View mView;
 
-        tmp = getString(R.string.dof_label_nearLimit) + " "
-                + calculatioResult.getNearLimit().toString()
-                + meters;
-        getNearLimitResultLabel().setText(tmp);
+    private WheelView mWheelVendor;
+    private WheelView mWheelCamera;
+    private WheelView mWheelAperture;
+    private WheelView mWheelFocalLength;
+    private WheelView mWheelSubjectDistance;
+    private WheelView mWheelMeasureUnit;
 
-        tmp = getString(R.string.dof_label_farLimit) + " "
-                + calculatioResult.format(calculatioResult.getFarLimit())
-                + meters;
-        getFarLimitResultLabel().setText(tmp);
+    private TextView mLabelM;
+    private TextView mLabelCm;
+    private TextView mLabelFt;
+    private TextView mLabelIn;
 
-        tmp = getString(R.string.dof_label_total) + " "
-                + calculatioResult.format(calculatioResult.getTotal())
-                + meters;
-        getTotalResultLabel().setText(tmp);
-    }
-    
+    private TextView mLabelNearLimitResult;
+    private TextView mLabelFarLimitResult;
+    private TextView mLabelHyperFocalResult;
+    private TextView mLabelTotalResutl;
+
+    private final static String VENDOR = "dof_vendor";
+    private final static String CAMERA = "dof_camera";
+    private final static String APERTURE = "dof_aperture";
+    private final static String FOCAL_LENGTH = "dof_focalLength";
+    private final static String SUBJECT_DISTANCE = "dof_subjectDistance";
+    private final static String MEASURE_UNIT = "dof_measureUnit";
+    private final static String MEASURE_RESULT_UNIT = "dof_measureResultUnit";
+    private final static String NEAR_LIMIT = "dof_nearLimit";
+    private final static String FAR_LIMIT = "dof_farLimit";
+    private final static String HYPERFOCAL = "dof_hyperfocal";
+    private final static String TOTAL = "dof_total";
+
+    private final static int METER = 0;
+    private final static int CM = 1;
+    private final static int FOOT = 2;
+    private final static int INCH = 3;
+
+    private int mVendorId;
+    private int mCameraId;
+
+    private int mMeasureResultUnit;
+
     /**
-     * Function get spinner contains aperture
-     * @return Spinner if found or null in other case
+     * Binds classes objects to resources
      */
-    private Spinner getAperturesSpinner() {
-        return (Spinner) getActivity().findViewById(R.id.dof_spinner_apertures);
-    }
-    
-    /**
-     * Function get spinner contains cameras models
-     * @return Spinner if found or null in other case
-     */
-    private Spinner getCamerasSpinner() {
-        return (Spinner) getActivity().findViewById(R.id.dof_spinner_cameras);
-    }
-    /**
-     * Gets TextView for far limit results
-     * @return The TextView if found or null in other case
-     */
-    private TextView getFarLimitResultLabel() {
-        return (TextView) getActivity().findViewById(R.id.dof_label_farLimit);
-    }
-    
-    /**
-     * Function get EditText for Focal length
-     * @return EditText if found or null in other case
-     */
-    private EditText getFocalLengthEditText() {
-         return (EditText) getActivity().findViewById(R.id.dof_editText_focalLength);
-    }
-    
-    /**
-     * Function get value of focal length from EditText
-     * @return focal length
-     */
-    private BigDecimal getFocalLengthValue() { 
-        String tmp = getFocalLengthEditText().getText().toString();
-        return (new BigDecimal(tmp));
+    private void bindObjectsToResources() {
+        mWheelVendor = (WheelView) mView.findViewById(R.id.dof_wheel_vendor);
+        mWheelCamera = (WheelView) mView.findViewById(R.id.dof_wheel_camera);
+        mWheelAperture = (WheelView) mView
+                .findViewById(R.id.dof_wheel_aperture);
+        mWheelFocalLength = (WheelView) mView
+                .findViewById(R.id.dof_wheel_focalLength);
+        mWheelSubjectDistance = (WheelView) mView
+                .findViewById(R.id.dof_wheel_subjectDistance);
+        mWheelMeasureUnit = (WheelView) mView
+                .findViewById(R.id.dof_wheel_measureUnit);
+
+        mLabelM = (TextView) mView.findViewById(R.id.dof_label_m);
+        mLabelCm = (TextView) mView.findViewById(R.id.dof_label_cm);
+        mLabelFt = (TextView) mView.findViewById(R.id.dof_label_ft);
+        mLabelIn = (TextView) mView.findViewById(R.id.dof_label_in);
+
+        mLabelNearLimitResult = (TextView) mView
+                .findViewById(R.id.dof_label_nearLimitResult);
+        mLabelFarLimitResult = (TextView) mView
+                .findViewById(R.id.dof_label_farLimitResult);
+        mLabelHyperFocalResult = (TextView) mView
+                .findViewById(R.id.dof_label_hyperFocalResult);
+        mLabelTotalResutl = (TextView) mView
+                .findViewById(R.id.dof_label_totalResult);
     }
 
     /**
-     * Function get TextView for calculation results
-     * @return The TextView if found or null in other case
+     * Loads cameras data to wheels
      */
-    private TextView getHyperFocalResultLabel() {
-        return (TextView) getActivity().findViewById(R.id.dof_label_hyperFocalResult);
-    }
-    
-    /**
-     * Gets TextView for near limit results
-     * @return The TextView if found or null in other case
-     */
-    private TextView getNearLimitResultLabel() {
-        return (TextView) getActivity().findViewById(R.id.dof_label_nearLimit);
+    private void loadCamerasDataToWheel() {
+        Log.enter();
+
+        // TODO: загрузить список производителей
+        // Выставить сохраненного ранее производителя
+        // Загрузить модели камер производителя
+        // Выставить сохраненную ранее модель камеры
     }
 
     /**
-     * Function get selected aperture value from spinner
-     * @return aperture value
+     * Loads data from shared preferences
      */
-    private BigDecimal getSelectedAperture() {
-        return ((FStop) getAperturesSpinner().getSelectedItem()).getValue();
-    }
-    
-    /**
-     * Function get selected camera model from spinner
-     * @return camera model
-     */
-    private String getSelectedCamera() {
-        return (String) getCamerasSpinner().getSelectedItem();
-    }
-    
-    /**
-     * Function get selected camera vendor
-     * @return camera vendor
-     */
-    private CameraData.Vendor getSelectedVendor() {
-        return (CameraData.Vendor) getVendorsSpinner().getSelectedItem();
-    }
-    
-    /**
-     * Gets EditText for subject distance
-     * @return EditText if found or null in other case
-     */
-    private EditText getSubjectDistanceEditText() {
-        return (EditText) getActivity().findViewById(R.id.dof_editText_subjectDistance);
-    }
-    
-    /**
-     * Gets value from subject distance EditText
-     * @return value from subject distance EditText
-     */
-    private BigDecimal getSubjectDistanceValue() {
-        String tmp = getSubjectDistanceEditText().getText().toString();
-        return (new BigDecimal(tmp));
-    }
-    
+    private void loadSavedData() {
+        Log.enter();
+        SharedPreferences prefs = getActivity().getPreferences(
+                Context.MODE_PRIVATE);
+        mVendorId = prefs.getInt(VENDOR, 0);
+        mCameraId = prefs.getInt(CAMERA, 0);
 
-    /**
-     * Gets TextView for total results
-     * @return The TextView if found or null in other case
-     */
-    private TextView getTotalResultLabel() {
-        return (TextView) getActivity().findViewById(R.id.dof_label_total);
+        mLabelFarLimitResult.setText(prefs.getString(FAR_LIMIT, ""));
+        mLabelHyperFocalResult.setText(prefs.getString(HYPERFOCAL, ""));
+        mLabelNearLimitResult.setText(prefs.getString(NEAR_LIMIT, ""));
+        mLabelTotalResutl.setText(prefs.getString(TOTAL, ""));
+
+        mWheelAperture.setCurrentItem(prefs.getInt(APERTURE, 0));
+        mWheelFocalLength.setCurrentItem(prefs.getInt(FOCAL_LENGTH, 0));
+        mWheelMeasureUnit.setCurrentItem(prefs.getInt(MEASURE_UNIT, 0));
+        mWheelSubjectDistance.setCurrentItem(prefs.getInt(SUBJECT_DISTANCE, 0));
+
+        mMeasureResultUnit = prefs.getInt(MEASURE_RESULT_UNIT, METER);
     }
 
     /**
-     * Function get spinner contains cameras vendor
-     * @return spinner if found or null in other case
+     * Handler for clicking event on the measure unit buttons
      */
-    private Spinner getVendorsSpinner() {
-        return (Spinner) getActivity().findViewById(R.id.dof_spinner_vendors);
-    }
-    
-    /**
-     * Function for fill apertures spinner
-     */
-    private void initAperturesSpinner() {
-        Spinner spinner = getAperturesSpinner();
-        ArrayAdapter<FStop> apertureAdapter = new ArrayAdapter<FStop>(getActivity(), android.R.layout.simple_spinner_item);
-        apertureAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(apertureAdapter);
+    private void measureButtonsHandler() {
+        Log.enter();
 
-        for (FStop fstop : FStop.getAllFStops()) {
-            apertureAdapter.add(fstop);
-        }
-        
-        setSpinnerLongClick(spinner);
-        setSpinnerAdapter(apertureAdapter, spinner, R.layout.aperture_spinner);
-        
+        OnClickListener clickListener = new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                case R.id.dof_label_m:
+                    mMeasureResultUnit = METER;
+                    break;
+
+                case R.id.dof_label_cm:
+                    mMeasureResultUnit = CM;
+                    break;
+
+                case R.id.dof_label_ft:
+                    mMeasureResultUnit = FOOT;
+                    break;
+
+                case R.id.dof_label_in:
+                    mMeasureResultUnit = INCH;
+                    break;
+                }
+
+                updateMeasureButtons();
+                recalculate();
+            }
+        };
+
+        mLabelM.setOnClickListener(clickListener);
+        mLabelCm.setOnClickListener(clickListener);
+        mLabelFt.setOnClickListener(clickListener);
+        mLabelIn.setOnClickListener(clickListener);
     }
-    
-    /**
-     * Function for fill camera spinner
-     */
-    private void initCamerasSpinner() {
-        ArrayAdapter<String> cameraArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);
-        cameraArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        getCamerasSpinner().setAdapter(cameraArrayAdapter);
-    }    
-    
-    /**
-     * Function for init vendor spinner.
+
+    /*
+     * (non-Javadoc)
      * 
-     * Function implements handler for OnItemSelected event for vendor spinner.
-     * If user select any items in vendor spinner - cameras spinner reload data for new vendor.
-     */
-    private void initVendorSpinner() {
-        Spinner vendorSpinner = getVendorsSpinner();
-
-        ArrayAdapter<CameraData.Vendor> vendorAdapter = new ArrayAdapter<CameraData.Vendor>(getActivity(), android.R.layout.simple_spinner_item);
-        vendorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        vendorSpinner.setAdapter(vendorAdapter);
-        
-        for(CameraData.Vendor vendor : CameraData.getVendors()) {
-            vendorAdapter.add(vendor);
-        }
-        vendorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-                if (pos != mOldVendorPosition) {
-                    if (mOldVendorPosition != -1) {
-                        CameraData.Vendor vendor = (CameraData.Vendor) adapterView.getAdapter().getItem(pos);
-                        populateCameraByVendor(vendor);
-                        getCamerasSpinner().setSelection(0);
-                    }
-                    mOldVendorPosition = pos;
-                }
-            }
-            public void onNothingSelected(AdapterView<?> adapterView) { }
-        });        
-    }
-    
-    /**
-     * Function checks focal length for valid values
-     * @return true if valid or false in other case
-     */
-    private boolean isFocalLengthValid() {
-        boolean isValid = false;
-        String focalLength = getFocalLengthEditText().getText().toString();
-        
-        if (focalLength.length() > 0) {
-            BigDecimal tmp = new BigDecimal(focalLength);
-            if (tmp.intValue() > 0 && tmp.intValue() <= 500) {
-                isValid = true;
-            }
-        }
-        
-        return isValid;
-    }
-    
-    /**
-     * Checks subject distance for valid values
-     * @return true if valid or false in other case
-     */
-    private boolean isSubjectDistanceValid() {
-        boolean isValid = false;
-        String subjectDistance = getSubjectDistanceEditText().getText().toString();
-        
-        if (subjectDistance.length() > 0) {
-            try {
-                BigDecimal tmp = new BigDecimal(subjectDistance);
-                if (tmp.floatValue() > 0 && tmp.floatValue() <= 500) {
-                    isValid = true;
-                }
-            } catch (NumberFormatException e) {
-                Log.message("Exception in isSubjectDistanceValid");
-            }
-        }
-        
-        return isValid;
-    }
-    
-    /**
-     * Load positions for spinners from SharedPreferences
-     */
-    private void loadSpinnersPositions() {
-        SharedPreferences preferenced = getActivity().getPreferences(Context.MODE_PRIVATE);
-        int vendorIndex = preferenced.getInt(VENDOR_INDEX, 0);
-        int cameraIndex = preferenced.getInt(CAMERA_INDEX, 0);
-        //int apertureIndex = preferenced.getInt(APERTURE_INDEX, 0);
-        
-        /* checks for no more than the number of elements in the arrays */
-        /* if more than number of elements in the array - set index to zero */
-        if (vendorIndex > getVendorsSpinner().getCount() - 1) {
-            vendorIndex = 0;
-        }
-        
-        getVendorsSpinner().setSelection(vendorIndex);
-
-        populateCameraByVendor(CameraData.Vendor.values()[vendorIndex]);
-
-        if (cameraIndex > getCamerasSpinner().getCount() -1) {
-            cameraIndex = 0;
-        }
-        
-        getCamerasSpinner().setSelection(cameraIndex);
-        
-        /*
-        if (apertureIndex > getAperturesSpinner().getCount() - 1) {
-            apertureIndex = 0;
-        }
-        
-        getAperturesSpinner().setSelection(apertureIndex);
-        */
-    }
-    
-
-    /* (non-Javadoc)
-     * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
+     * @see
+     * android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater,
+     * android.view.ViewGroup, android.os.Bundle)
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.message("Enter");
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        Log.enter();
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.activity_dof, container, false);
-        Button calculateButton = (Button) view.findViewById(R.id.dof_button_calculate);
-        if (calculateButton != null) {
-            calculateButton.setOnClickListener(new OnClickListener() {
-                
-                @Override
-                public void onClick(View v) {
-                    if (isApertureSelected()) {
-                        if (isFocalLengthValid()) {
-                            if (isSubjectDistanceValid()) {
-                                DofCalculator.CalculationResult calculationResult = calculate();
-                                displayCalculationResult(calculationResult);
-                            } else {
-                                showError(R.string.dof_error_incorrectSubjectDistance);
-                            }
-                        } else {
-                            showError(R.string.dof_error_emptyFocalLength);
-                        }
-                    } else {
-                        showError(R.string.dof_error_apertureNotSelected);
-                    }
-                }
-            });
-        }
-        
-        
-        return view;
+        mView = inflater.inflate(R.layout.activity_dof, container, false);
+
+        bindObjectsToResources();
+        loadSavedData();
+        loadCamerasDataToWheel();
+        vendorSelectionHandler();
+        measureButtonsHandler();
+        wheelsHandler();
+        updateMeasureButtons();
+
+        return mView;
     }
-    
-    /**
-     * Checks aperture spinner for selected values
-     * @return true if aperture selected or false in other case
-     */
-    private boolean isApertureSelected() {
-        Log.message("Enter");
-        return getAperturesSpinner().getSelectedItemPosition() > 0;
-    }
-    /* (non-Javadoc)
-     * @see android.support.v4.app.Fragment#onPause()
-     */
+
     @Override
     public void onPause() {
         super.onPause();
-        /* saving spinner position */
-        saveSpinnerPositions();
-    }
-    
-    /* (non-Javadoc)
-     * @see android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)
-     */
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        Log.message("Enter");
-        super.onActivityCreated(savedInstanceState);
-        
-        initAperturesSpinner();
-        initCamerasSpinner();
-        initVendorSpinner();
-        initEditText();
-        
-        if (savedInstanceState != null) {
-            getHyperFocalResultLabel().setText(savedInstanceState.getString(STATE_HYPER_FOCAL));
-            getNearLimitResultLabel().setText(savedInstanceState.getString(STATE_NEAR_LIMIT));
-            getFarLimitResultLabel().setText(savedInstanceState.getString(STATE_FAR_LIMIT));
-            getTotalResultLabel().setText(savedInstanceState.getString(STATE_TOTAL));
-        }
-    }
-    
-    /**
-     * Inits EditText objects for handling LongClick event
-     */
-    private void initEditText() {
-        setEditTextLongClick(getFocalLengthEditText());
-        setEditTextLongClick(getSubjectDistanceEditText());
-    }
-    
-    /* (non-Javadoc)
-     * @see android.app.Activity#onStart()
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-        /* load spinner positions */
-        loadSpinnersPositions();
-    }
-    
-    /* (non-Javadoc)
-     * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
-     */
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        Log.message("Enter");
-        savedInstanceState.putString(STATE_HYPER_FOCAL, getHyperFocalResultLabel().getText().toString());
-        savedInstanceState.putString(STATE_FAR_LIMIT, getFarLimitResultLabel().getText().toString());
-        savedInstanceState.putString(STATE_NEAR_LIMIT, getNearLimitResultLabel().getText().toString());
-        savedInstanceState.putString(STATE_TOTAL, getTotalResultLabel().getText().toString());
-        
-        super.onSaveInstanceState(savedInstanceState);
-    }
-    
-    /**
-     * Function reload data in cameras spinner for special vendor
-     * @param vendor - vendor of cameras
-     */
-    @SuppressWarnings("unchecked")
-    private void populateCameraByVendor(CameraData.Vendor vendor) {
-        List<CameraData> cameraList = CameraData.getCameraByVendor(vendor);
-        
-        // Clear the current camera values
-        ArrayAdapter<String> cameraSpinnerAdapter = (ArrayAdapter<String>) getCamerasSpinner().getAdapter();
-        cameraSpinnerAdapter.clear();
 
-        // Re-populate with cameras for manufacturer
-        for (CameraData cameraData : cameraList) {
-            cameraSpinnerAdapter.add(cameraData.getModel());
-        }
+        saveData();
     }
 
     /**
-     * Save positions spinner positions to SharedPreferenced
+     * Recalculation and show result
      */
-    private void saveSpinnerPositions() {
-        SharedPreferences preferenced = getActivity().getPreferences(Context.MODE_PRIVATE);
-        int vendorIndex = getVendorsSpinner().getSelectedItemPosition();
-        int cameraIndex = getCamerasSpinner().getSelectedItemPosition();
-        //int apertureIndex = getAperturesSpinner().getSelectedItemPosition();
-        
+    private void recalculate() {
+        // TODO: перерасчет в зависимости от выбранных параметров всех колес,
+        // кнопок
+    }
+
+    /**
+     * Saves data to shared preferences
+     */
+    private void saveData() {
+        Log.enter();
+        SharedPreferences preferenced = getActivity().getPreferences(
+                Context.MODE_PRIVATE);
+
         SharedPreferences.Editor editor = preferenced.edit();
-        editor.putInt(VENDOR_INDEX, vendorIndex);
-        editor.putInt(CAMERA_INDEX, cameraIndex);
-        //editor.putInt(APERTURE_INDEX, apertureIndex);
+
+        editor.putInt(VENDOR, mWheelVendor.getCurrentItem());
+        editor.putInt(CAMERA, mWheelCamera.getCurrentItem());
+        editor.putInt(APERTURE, mWheelAperture.getCurrentItem());
+        editor.putInt(FOCAL_LENGTH, mWheelFocalLength.getCurrentItem());
+        editor.putInt(SUBJECT_DISTANCE, mWheelSubjectDistance.getCurrentItem());
+        editor.putInt(MEASURE_UNIT, mWheelMeasureUnit.getCurrentItem());
+        editor.putInt(MEASURE_RESULT_UNIT, mMeasureResultUnit);
+        editor.putString(NEAR_LIMIT, mLabelNearLimitResult.getText().toString());
+        editor.putString(FAR_LIMIT, mLabelFarLimitResult.getText().toString());
+        editor.putString(HYPERFOCAL, mLabelHyperFocalResult.getText()
+                .toString());
+        editor.putString(TOTAL, mLabelTotalResutl.getText().toString());
+
         editor.commit();
     }
-    
+
     /**
-     * Function show error message
-     * @param resourceId - string id for error contains error message
+     * Updates measure buttons
      */
-    private void showError(int resourceId) {
-        Toast.makeText(
-                getActivity(),
-                getString(resourceId),
-                Toast.LENGTH_LONG).show();
+    private void updateMeasureButtons() {
+        Common.setBg(mLabelM, R.drawable.right_stroke);
+        Common.setBg(mLabelCm, R.drawable.right_stroke);
+        Common.setBg(mLabelFt, R.drawable.right_stroke);
+        Common.setBg(mLabelIn, R.drawable.right_stroke);
+
+        switch (mMeasureResultUnit) {
+        case METER:
+            Common.setBg(mLabelM, R.drawable.left_blue_button);
+            break;
+
+        case CM:
+            Common.setBg(mLabelCm, R.drawable.middle_blue_button);
+            break;
+
+        case FOOT:
+            Common.setBg(mLabelFt, R.drawable.middle_blue_button);
+            break;
+
+        case INCH:
+            Common.setBg(mLabelIn, R.drawable.right_blue_button);
+            break;
+        }
     }
-    
+
     /**
-     * Sets long click listener for EditText
-     * @param editText EditText for sets long click listener
+     * Handler for changing vendor.
+     * 
+     * When user change vendor in the wheel - we reload cameras wheel
      */
-    private void setEditTextLongClick(final EditText editText) {
-        editText.setOnLongClickListener(new OnLongClickListener() {
-            
-            @Override
-            public boolean onLongClick(View arg0) {
-                editText.setText("");
-                return true;
-            }
-        });
+    private void vendorSelectionHandler() {
+        Log.enter();
+        // TODO: при выборе нового вендора необходимо перезагружать список камер
+        // от этого производителя. Курсор при этом сбрасывать на первую позицию
     }
-    
+
     /**
-     * Sets long click listener for one spinner
-     * @param spinner spinner for sets long click listener
+     * Handler for swipe event handle from all wheels
      */
-    private void setSpinnerLongClick(final Spinner spinner) {
-        spinner.setOnLongClickListener(new OnLongClickListener() {
-            
-            @Override
-            public boolean onLongClick(View arg0) {
-                spinner.setSelection(0);
-                return true;
-            }
-        });
-    }
-    
-    /**
-     * Sets NothingSelectedSpinnerAdapter for spinner
-     * @param spinnerAdapter wrapped adapter 
-     * @param spinner spinner for sets adapter
-     * @param layoutId layout id for nothing selected spinner
-     */
-    private void setSpinnerAdapter(SpinnerAdapter adapter, Spinner spinner, int layoutId) {
-        spinner.setAdapter(
-                new NothingSelectedSpinnerAdapter(
-                      adapter,
-                      layoutId,
-                      getActivity()));
+    private void wheelsHandler() {
+        Log.enter();
+        // TODO: при прекращении прокрутки любого колеса необходимо запускать
+        // перерасчет результата учитывая выбранные единицы измерния для
+        // результатов
     }
 }

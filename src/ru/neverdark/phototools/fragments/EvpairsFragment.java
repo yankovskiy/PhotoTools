@@ -20,6 +20,7 @@ import kankan.wheel.widget.WheelView;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.WheelAdapter;
 import ru.neverdark.phototools.utils.evcalculator.EvCalculator;
@@ -62,7 +63,7 @@ public class EvpairsFragment extends SherlockFragment {
 
     private EvCalculator mEvCalculator;
 
-    private String STEP_INDEX = "STEP_INDEX";
+    private String STEP_INDEX = "ev_stepIndex";
 
     /** how much allow filled fields (new fields) */
     private static final byte MAXIMUM_ALLOWED_FILLED_FIELDS = 2;
@@ -288,26 +289,6 @@ public class EvpairsFragment extends SherlockFragment {
     }
 
     /**
-     * Sets background from drawable resource
-     * 
-     * @param view
-     *            view object for set drawable resource
-     * @param resourceId
-     *            drawable resource
-     */
-    @SuppressWarnings("deprecation")
-    @SuppressLint("NewApi")
-    private void setBg(View view, final int resourceId) {
-        Drawable res = getResources().getDrawable(resourceId);
-
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-            view.setBackgroundDrawable(res);
-        } else {
-            view.setBackground(res);
-        }
-    }
-
-    /**
      * Sets OnClickListener to buttons on the fragment
      */
     private void setClickListener() {
@@ -329,9 +310,11 @@ public class EvpairsFragment extends SherlockFragment {
                 case R.id.ev_label_stepHalf:
                     mStepIndex = EvCalculator.HALF_STOP;
                     updateStepButtons();
+                    break;
                 case R.id.ev_label_stepThird:
                     mStepIndex = EvCalculator.THIRD_STOP;
                     updateStepButtons();
+                    break;
                 }
             }
         };
@@ -389,19 +372,19 @@ public class EvpairsFragment extends SherlockFragment {
     }
 
     private void updateStepButtons() {
-        setBg(mLabelStepFull, R.drawable.right_stroke);
-        setBg(mLabelStepHalf, R.drawable.right_stroke);
-        setBg(mLabelStepThird, R.drawable.right_stroke);
+        Common.setBg(mLabelStepFull, R.drawable.right_stroke);
+        Common.setBg(mLabelStepHalf, R.drawable.right_stroke);
+        Common.setBg(mLabelStepThird, R.drawable.right_stroke);
 
         switch (mStepIndex) {
         case EvCalculator.FULL_STOP:
-            setBg(mLabelStepFull, R.drawable.left_blue_button);
+            Common.setBg(mLabelStepFull, R.drawable.left_blue_button);
             break;
         case EvCalculator.HALF_STOP:
-            setBg(mLabelStepHalf, R.drawable.middle_blue_button);
+            Common.setBg(mLabelStepHalf, R.drawable.middle_blue_button);
             break;
         case EvCalculator.THIRD_STOP:
-            setBg(mLabelStepThird, R.drawable.right_blue_button);
+            Common.setBg(mLabelStepThird, R.drawable.right_blue_button);
             break;
         }
 
