@@ -96,4 +96,9 @@ public class Constants {
     
     public static final String CONFIRM_CREATION_ISVISIBLE = "isVisible";
     public static final String CONFIRM_CREATION_ISEDIT = "isEdit";
+    
+    public final static int METER = 0;
+    public final static int CM = 1;
+    public final static int FOOT = 2;
+    public final static int INCH = 3;
 }

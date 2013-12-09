@@ -3,6 +3,10 @@ package ru.neverdark.phototools.utils;
 import android.content.Context;
 import kankan.wheel.widget.adapters.AbstractWheelTextAdapter;
 
+/**
+ * Wheel's adapter with empty first item
+ * @param <T> type of contained items
+ */
 public class WheelAdapter<T> extends AbstractWheelTextAdapter {
     
     // items
@@ -35,5 +39,13 @@ public class WheelAdapter<T> extends AbstractWheelTextAdapter {
     @Override
     public int getItemsCount() {
         return items.length + 1;
+    }
+    
+    @Override
+    public Object getItemByIndex(int index) {
+        if (index > 0 && index <= items.length) {
+            return items[index - 1];
+        } 
+        return null;
     }
 }

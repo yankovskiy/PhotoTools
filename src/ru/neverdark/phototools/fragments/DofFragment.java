@@ -16,34 +16,24 @@
 package ru.neverdark.phototools.fragments;
 
 import java.math.BigDecimal;
-import java.util.List;
-
 import kankan.wheel.widget.WheelView;
+import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.utils.Common;
+import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
-import ru.neverdark.phototools.utils.dofcalculator.CameraData;
 import ru.neverdark.phototools.utils.dofcalculator.DofCalculator;
-import ru.neverdark.phototools.utils.dofcalculator.FStop;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Fragment contains Depth of Field calculator UI
@@ -81,11 +71,6 @@ public class DofFragment extends SherlockFragment {
     private final static String HYPERFOCAL = "dof_hyperfocal";
     private final static String TOTAL = "dof_total";
 
-    private final static int METER = 0;
-    private final static int CM = 1;
-    private final static int FOOT = 2;
-    private final static int INCH = 3;
-
     private int mVendorId;
     private int mCameraId;
 
@@ -120,6 +105,46 @@ public class DofFragment extends SherlockFragment {
         mLabelTotalResutl = (TextView) mView
                 .findViewById(R.id.dof_label_totalResult);
     }
+    
+    /**
+     * @return aperture value from aperture wheel
+     */
+    private BigDecimal getAperture() {
+        // TODO Получить значение диафрагмы из колеса
+        return null;
+    }
+
+    /**
+     * @ return cirle of confusion for selected camera
+     */
+    private BigDecimal getCoc() {
+        // TODO получить кружок нерезкости у выбранной камеры
+        return null;
+    }
+
+    /**
+     * @return focus length from wheel
+     */
+    private BigDecimal getFocusLength() {
+        // TODO получить значение фокусного расстояния из колеса
+        return null;
+    }
+
+    /**
+     * @return measure unit from wheel
+     */
+    private int getMeasureUnit() {
+        // TODO получить единицу измерений дистанции фокусировки
+        return 0;
+    }
+
+    /**
+     * @return subject distance from wheel
+     */
+    private BigDecimal getSubjectDistance() {
+        // TODO получить значение дистанции фокусировки
+        return null;
+    }
 
     /**
      * Loads cameras data to wheels
@@ -153,7 +178,7 @@ public class DofFragment extends SherlockFragment {
         mWheelMeasureUnit.setCurrentItem(prefs.getInt(MEASURE_UNIT, 0));
         mWheelSubjectDistance.setCurrentItem(prefs.getInt(SUBJECT_DISTANCE, 0));
 
-        mMeasureResultUnit = prefs.getInt(MEASURE_RESULT_UNIT, METER);
+        mMeasureResultUnit = prefs.getInt(MEASURE_RESULT_UNIT, Constants.METER);
     }
 
     /**
@@ -168,19 +193,19 @@ public class DofFragment extends SherlockFragment {
             public void onClick(View v) {
                 switch (v.getId()) {
                 case R.id.dof_label_m:
-                    mMeasureResultUnit = METER;
+                    mMeasureResultUnit = Constants.METER;
                     break;
 
                 case R.id.dof_label_cm:
-                    mMeasureResultUnit = CM;
+                    mMeasureResultUnit = Constants.CM;
                     break;
 
                 case R.id.dof_label_ft:
-                    mMeasureResultUnit = FOOT;
+                    mMeasureResultUnit = Constants.FOOT;
                     break;
 
                 case R.id.dof_label_in:
-                    mMeasureResultUnit = INCH;
+                    mMeasureResultUnit = Constants.INCH;
                     break;
                 }
 
@@ -231,8 +256,27 @@ public class DofFragment extends SherlockFragment {
      * Recalculation and show result
      */
     private void recalculate() {
-        // TODO: перерасчет в зависимости от выбранных параметров всех колес,
-        // кнопок
+        Log.enter();
+
+        BigDecimal aperture = getAperture();
+        BigDecimal focusLength = getFocusLength();
+        BigDecimal coc = getCoc();
+        int measureUnit = getMeasureUnit();
+        BigDecimal subjectDistance = getSubjectDistance();
+
+        DofCalculator dofCalc = new DofCalculator(aperture, focusLength, coc,
+                subjectDistance, measureUnit);
+        DofCalculator.CalculationResult calculationResult = dofCalc
+                .calculate(mMeasureResultUnit);
+
+        mLabelFarLimitResult.setText(calculationResult.format(calculationResult
+                .getFarLimit()));
+        mLabelNearLimitResult.setText(calculationResult
+                .format(calculationResult.getNearLimit()));
+        mLabelHyperFocalResult.setText(calculationResult
+                .format(calculationResult.getHyperFocal()));
+        mLabelTotalResutl.setText(calculationResult.format(calculationResult
+                .getTotal()));
     }
 
     /**
@@ -262,6 +306,21 @@ public class DofFragment extends SherlockFragment {
     }
 
     /**
+     * Sets adapter for wheel
+     * 
+     * @param wheel
+     *            object for sets adapter
+     * @param values
+     *            values for adapter
+     */
+    private void setWheelAdapter(WheelView wheel, String values[]) {
+        ArrayWheelAdapter<String> adapter = new ArrayWheelAdapter<String>(
+                getSherlockActivity(), values);
+        adapter.setTextSize(15);
+        wheel.setViewAdapter(adapter);
+    }
+    
+    /**
      * Updates measure buttons
      */
     private void updateMeasureButtons() {
@@ -271,19 +330,19 @@ public class DofFragment extends SherlockFragment {
         Common.setBg(mLabelIn, R.drawable.right_stroke);
 
         switch (mMeasureResultUnit) {
-        case METER:
+        case Constants.METER:
             Common.setBg(mLabelM, R.drawable.left_blue_button);
             break;
 
-        case CM:
+        case Constants.CM:
             Common.setBg(mLabelCm, R.drawable.middle_blue_button);
             break;
 
-        case FOOT:
+        case Constants.FOOT:
             Common.setBg(mLabelFt, R.drawable.middle_blue_button);
             break;
 
-        case INCH:
+        case Constants.INCH:
             Common.setBg(mLabelIn, R.drawable.right_blue_button);
             break;
         }
