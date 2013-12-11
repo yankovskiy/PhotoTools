@@ -28,10 +28,31 @@ public class Log {
 
     /**
      * Logs enter to function
+     * 
+     * @return enter time in milliseconds
      */
-    public static void enter() {
+    public static long enter() {
         if (DEBUG == true) {
             log("Enter");
+            return System.currentTimeMillis();
+        }
+        return 0;
+    }
+
+    /**
+     * Logs exit from function with worked time
+     * 
+     * @param startTime
+     *            time in milliseconds (enter time in function). If zero - no
+     *            logging working time
+     */
+    public static void exit(long enterTime) {
+        if (DEBUG == true) {
+            log("Exit");
+            if (enterTime != 0) {
+                long result = System.currentTimeMillis() - enterTime;
+                log("Time: " + result + "ms");
+            }
         }
     }
 

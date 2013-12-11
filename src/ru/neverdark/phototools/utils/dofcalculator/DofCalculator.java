@@ -220,6 +220,7 @@ public class DofCalculator {
         mAperture = aperture;
         mFocusLength = focusLength;
         mCoc = coc;
+        // convert to mm
         mSubjectDistance = subjectDistance.multiply(new BigDecimal(value));
     }
 

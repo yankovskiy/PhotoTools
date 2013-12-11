@@ -16,6 +16,9 @@
 package ru.neverdark.phototools.fragments;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+
+import kankan.wheel.widget.OnWheelScrollListener;
 import kankan.wheel.widget.WheelView;
 import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 
@@ -34,6 +37,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Fragment contains Depth of Field calculator UI
@@ -77,6 +81,25 @@ public class DofFragment extends SherlockFragment {
     private int mMeasureResultUnit;
 
     /**
+     * Loads arrays to wheels
+     */
+    private void arrayToWheels() {
+        final String APERTURE_LIST_ARRAY[] = getResources().getStringArray(
+                R.array.dof_apertures);
+        final String FOCAL_LENGTH_ARRAY[] = getResources().getStringArray(
+                R.array.dof_focalLengths);
+        final String MEASURE_UNIT_ARRAY[] = getResources().getStringArray(
+                R.array.dof_measureUnits);
+        final String SUBJECT_DISTANCE_ARRAY[] = getResources().getStringArray(
+                R.array.dof_subjectDistance);
+
+        setWheelAdapter(mWheelAperture, APERTURE_LIST_ARRAY);
+        setWheelAdapter(mWheelFocalLength, FOCAL_LENGTH_ARRAY);
+        setWheelAdapter(mWheelMeasureUnit, MEASURE_UNIT_ARRAY);
+        setWheelAdapter(mWheelSubjectDistance, SUBJECT_DISTANCE_ARRAY);
+    }
+
+    /**
      * Binds classes objects to resources
      */
     private void bindObjectsToResources() {
@@ -105,13 +128,15 @@ public class DofFragment extends SherlockFragment {
         mLabelTotalResutl = (TextView) mView
                 .findViewById(R.id.dof_label_totalResult);
     }
-    
+
     /**
      * @return aperture value from aperture wheel
      */
     private BigDecimal getAperture() {
-        // TODO Получить значение диафрагмы из колеса
-        return null;
+        String aperture = (String) mWheelAperture.getSelectedItem();
+        aperture = aperture.replace("f/", "");
+        Log.variable("aperture", aperture);
+        return new BigDecimal(aperture);
     }
 
     /**
@@ -123,27 +148,31 @@ public class DofFragment extends SherlockFragment {
     }
 
     /**
-     * @return focus length from wheel
+     * @return focal length from wheel
      */
-    private BigDecimal getFocusLength() {
-        // TODO получить значение фокусного расстояния из колеса
-        return null;
+    private BigDecimal getFocalLength() {
+        String focal = (String) mWheelFocalLength.getSelectedItem();
+        focal = focal.replace(" mm", "");
+        Log.variable("focal", focal);
+        return new BigDecimal(focal);
     }
 
     /**
      * @return measure unit from wheel
      */
     private int getMeasureUnit() {
-        // TODO получить единицу измерений дистанции фокусировки
-        return 0;
+        int measureUnit = mWheelMeasureUnit.getCurrentItem();
+        Log.variable("measureUnit", String.valueOf(measureUnit));
+        return measureUnit;
     }
 
     /**
      * @return subject distance from wheel
      */
     private BigDecimal getSubjectDistance() {
-        // TODO получить значение дистанции фокусировки
-        return null;
+        String distance = (String) mWheelSubjectDistance.getSelectedItem();
+        Log.variable("distance", distance);
+        return new BigDecimal(distance);
     }
 
     /**
@@ -230,18 +259,20 @@ public class DofFragment extends SherlockFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        Log.enter();
+        long start = Log.enter();
         super.onCreateView(inflater, container, savedInstanceState);
         mView = inflater.inflate(R.layout.activity_dof, container, false);
 
         bindObjectsToResources();
+        arrayToWheels();
         loadSavedData();
         loadCamerasDataToWheel();
         vendorSelectionHandler();
         measureButtonsHandler();
         wheelsHandler();
         updateMeasureButtons();
-
+        
+        Log.exit(start);
         return mView;
     }
 
@@ -259,7 +290,7 @@ public class DofFragment extends SherlockFragment {
         Log.enter();
 
         BigDecimal aperture = getAperture();
-        BigDecimal focusLength = getFocusLength();
+        BigDecimal focusLength = getFocalLength();
         BigDecimal coc = getCoc();
         int measureUnit = getMeasureUnit();
         BigDecimal subjectDistance = getSubjectDistance();
@@ -319,7 +350,7 @@ public class DofFragment extends SherlockFragment {
         adapter.setTextSize(15);
         wheel.setViewAdapter(adapter);
     }
-    
+
     /**
      * Updates measure buttons
      */
@@ -360,12 +391,27 @@ public class DofFragment extends SherlockFragment {
     }
 
     /**
-     * Handler for swipe event handle from all wheels
+     * Handler for swipe event handle from all wheels except vendor
      */
     private void wheelsHandler() {
         Log.enter();
-        // TODO: при прекращении прокрутки любого колеса необходимо запускать
-        // перерасчет результата учитывая выбранные единицы измерния для
-        // результатов
+        OnWheelScrollListener listener = new OnWheelScrollListener() {
+            
+            @Override
+            public void onScrollingStarted(WheelView wheel) {
+                // nothing
+            }
+            
+            @Override
+            public void onScrollingFinished(WheelView wheel) {
+                recalculate();
+            }
+        };
+        
+        mWheelAperture.addScrollingListener(listener);
+        mWheelFocalLength.addScrollingListener(listener);
+        mWheelMeasureUnit.addScrollingListener(listener);
+        mWheelSubjectDistance.addScrollingListener(listener);
+        mWheelCamera.addScrollingListener(listener);
     }
 }
