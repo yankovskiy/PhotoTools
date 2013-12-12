@@ -29,6 +29,7 @@ import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
+import ru.neverdark.phototools.utils.dofcalculator.Array;
 import ru.neverdark.phototools.utils.dofcalculator.CameraData;
 import ru.neverdark.phototools.utils.dofcalculator.DofCalculator;
 import android.content.Context;
@@ -77,6 +78,8 @@ public class DofFragment extends SherlockFragment {
     private final static String HYPERFOCAL = "dof_hyperfocal";
     private final static String TOTAL = "dof_total";
 
+
+
     private int mVendorId;
     private int mCameraId;
 
@@ -86,19 +89,13 @@ public class DofFragment extends SherlockFragment {
      * Loads arrays to wheels
      */
     private void arrayToWheels() {
-        final String apertures[] = getResources().getStringArray(
-                R.array.dof_apertures);
-        final String focalLengths[] = getResources().getStringArray(
-                R.array.dof_focalLengths);
         final String measureUnits[] = getResources().getStringArray(
                 R.array.dof_measureUnits);
-        final String subjectDistances[] = getResources().getStringArray(
-                R.array.dof_subjectDistance);
 
-        setWheelAdapter(mWheelAperture, apertures);
-        setWheelAdapter(mWheelFocalLength, focalLengths);
+        setWheelAdapter(mWheelAperture, Array.APERTURE_LIST);
+        setWheelAdapter(mWheelFocalLength, Array.FOCAL_LENGTH);
         setWheelAdapter(mWheelMeasureUnit, measureUnits);
-        setWheelAdapter(mWheelSubjectDistance, subjectDistances);
+        setWheelAdapter(mWheelSubjectDistance, Array.SUBJECT_DISTANCE);
     }
 
     /**
@@ -135,19 +132,22 @@ public class DofFragment extends SherlockFragment {
      * @return aperture value from aperture wheel
      */
     private BigDecimal getAperture() {
-        String aperture = (String) mWheelAperture.getSelectedItem();
-        aperture = aperture.replace("f/", "");
-        Log.variable("aperture", aperture);
-        return new BigDecimal(aperture);
+        BigDecimal aperture = new BigDecimal(
+                Array.SCIENTIFIC_ARERTURES[mWheelAperture.getCurrentItem()]);
+        Log.variable("aperture", aperture.toString());
+        return aperture;
     }
 
     /**
      * @ return cirle of confusion for selected camera
      */
     private BigDecimal getCoc() {
-        CameraData.Vendor vendor = (CameraData.Vendor) mWheelVendor.getSelectedItem();
+        CameraData.Vendor vendor = (CameraData.Vendor) mWheelVendor
+                .getSelectedItem();
         String camera = (String) mWheelCamera.getSelectedItem();
         BigDecimal coc = CameraData.getCocForCamera(vendor, camera);
+        Log.variable("camera", camera);
+        Log.variable("vendor", vendor.toString());
         Log.variable("coc", coc.toString());
         return coc;
     }
@@ -411,13 +411,13 @@ public class DofFragment extends SherlockFragment {
     private void vendorSelectionHandler() {
         Log.enter();
         OnWheelScrollListener listener = new OnWheelScrollListener() {
-            
+
             @Override
             public void onScrollingStarted(WheelView wheel) {
                 // nothing
-                
+
             }
-            
+
             @Override
             public void onScrollingFinished(WheelView wheel) {
                 mCameraId = 0;
@@ -425,7 +425,7 @@ public class DofFragment extends SherlockFragment {
                 recalculate();
             }
         };
-        
+
         mWheelVendor.addScrollingListener(listener);
     }
 
