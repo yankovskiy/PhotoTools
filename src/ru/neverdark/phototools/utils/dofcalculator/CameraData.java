@@ -276,12 +276,18 @@ public class CameraData {
     }
     
     /**
-     * Function get cameras list by vendor
+     * Function get cameras array by vendor
      * @param vendor - camera vendor
-     * @return list contain cameras model for specified vendor
+     * @return array contain cameras model for specified vendor
      */
-    public static List<CameraData> getCameraByVendor(Vendor vendor) {
-        return Collections.unmodifiableList(DATABASE.get(vendor));
+    public static String[] getCameraByVendor(Vendor vendor) {
+        ArrayList<String> list = new ArrayList<String>();
+        
+        for (CameraData cameraData : DATABASE.get(vendor)) {
+            list.add(cameraData.getModel());
+        }
+        
+        return list.toArray(new String[list.size()]);
     }
 
     /**

@@ -26,13 +26,13 @@
         <kankan.wheel.widget.WheelView
             android:id="@+id/dof_wheel_vendor"
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="80dp"
             android:layout_weight="1" />
 
         <kankan.wheel.widget.WheelView
             android:id="@+id/dof_wheel_camera"
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="80dp"
             android:layout_weight="2" />
     </LinearLayout>
 
@@ -131,7 +131,7 @@
         android:layout_marginRight="0dp"
         android:layout_marginTop="5dp"
         android:layout_weight="1"
-        android:paddingBottom="10dp"
+        android:paddingBottom="0dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="0dp" >
