@@ -15,8 +15,9 @@ public class EvFullTable implements EvTable{
             "1/60 sec", "1/125 sec", "1/250 sec", "1/500 sec", "1/1000 sec",
             "1/2000 sec", "1/4000 sec", "1/8000 sec" };
     
-    private static final String APERTURE_LIST[] = {"1", "1.4", "2.0", "2.8",
-            "4", "5.6", "8", "11", "16", "22", "32", "45", "64", "90", "128", "180", "256", "360" };
+    private static final String APERTURE_LIST[] = { "f/1", "f/1.4", "f/2.0",
+            "f/2.8", "f/4", "f/5.6", "f/8", "f/11", "f/16", "f/22", "f/32",
+            "f/45", "f/64", "f/90", "f/128", "f/180", "f/256", "f/360" };
     
     private static final int EV_TABLE[][] = {
         { 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13},

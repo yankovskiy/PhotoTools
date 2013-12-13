@@ -14,10 +14,9 @@
       along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-
-    <!--
-         Customize dimensions originally defined in res/values/dimens.xml (such as
-         screen margins) for sw600dp devices (e.g. 7" tablets) here.
-    -->
-
+    
+    <dimen name="wheelTextSize">20sp</dimen>
+    <dimen name="wheelMeasureUnitTextSize">16sp</dimen>
+    <dimen name="wheelCameraTextSize">16sp</dimen>
+    
 </resources>

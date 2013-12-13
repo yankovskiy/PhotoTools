@@ -16,14 +16,12 @@
 package ru.neverdark.phototools.fragments;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 import kankan.wheel.widget.OnWheelScrollListener;
 import kankan.wheel.widget.WheelView;
 import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.utils.Common;
@@ -40,7 +38,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Fragment contains Depth of Field calculator UI
@@ -78,12 +75,12 @@ public class DofFragment extends SherlockFragment {
     private final static String HYPERFOCAL = "dof_hyperfocal";
     private final static String TOTAL = "dof_total";
 
-
-
     private int mVendorId;
     private int mCameraId;
 
     private int mMeasureResultUnit;
+
+    private SherlockFragmentActivity mActivity;
 
     /**
      * Loads arrays to wheels
@@ -91,11 +88,17 @@ public class DofFragment extends SherlockFragment {
     private void arrayToWheels() {
         final String measureUnits[] = getResources().getStringArray(
                 R.array.dof_measureUnits);
+        final int commonWheelSize = R.dimen.wheelTextSize;
+        final int measureWheelTextSize = R.dimen.wheelMeasureUnitTextSize;
 
-        setWheelAdapter(mWheelAperture, Array.APERTURE_LIST);
-        setWheelAdapter(mWheelFocalLength, Array.FOCAL_LENGTH);
-        setWheelAdapter(mWheelMeasureUnit, measureUnits);
-        setWheelAdapter(mWheelSubjectDistance, Array.SUBJECT_DISTANCE);
+        Common.setWheelAdapter(mActivity, mWheelAperture, Array.APERTURE_LIST,
+                commonWheelSize, false);
+        Common.setWheelAdapter(mActivity, mWheelFocalLength,
+                Array.FOCAL_LENGTH, commonWheelSize, false);
+        Common.setWheelAdapter(mActivity, mWheelMeasureUnit, measureUnits,
+                measureWheelTextSize, false);
+        Common.setWheelAdapter(mActivity, mWheelSubjectDistance,
+                Array.SUBJECT_DISTANCE, commonWheelSize, false);
     }
 
     /**
@@ -126,6 +129,8 @@ public class DofFragment extends SherlockFragment {
                 .findViewById(R.id.dof_label_hyperFocalResult);
         mLabelTotalResutl = (TextView) mView
                 .findViewById(R.id.dof_label_totalResult);
+
+        mActivity = getSherlockActivity();
     }
 
     /**
@@ -187,10 +192,14 @@ public class DofFragment extends SherlockFragment {
         Log.enter();
 
         final CameraData.Vendor vendors[] = CameraData.getVendors();
+        final int textSize = (int) getResources().getDimension(
+                R.dimen.wheelTextSize);
+
         ArrayWheelAdapter<CameraData.Vendor> adapter = new ArrayWheelAdapter<CameraData.Vendor>(
                 getSherlockActivity(), vendors);
         mWheelVendor.setViewAdapter(adapter);
-        adapter.setTextSize(15);
+        adapter.setTextSize(textSize);
+
         mWheelVendor.setCurrentItem(mVendorId);
 
         populateCameraByVendor();
@@ -280,7 +289,7 @@ public class DofFragment extends SherlockFragment {
         measureButtonsHandler();
         wheelsHandler();
         updateMeasureButtons();
-
+        // getSherlockActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Log.exit(start);
         return mView;
     }
@@ -299,11 +308,10 @@ public class DofFragment extends SherlockFragment {
         CameraData.Vendor vendor = (CameraData.Vendor) mWheelVendor
                 .getSelectedItem();
         String cameras[] = CameraData.getCameraByVendor(vendor);
+        final int textSize = R.dimen.wheelCameraTextSize;
 
-        ArrayWheelAdapter<String> adapter = new ArrayWheelAdapter<String>(
-                getSherlockActivity(), cameras);
-        mWheelCamera.setViewAdapter(adapter);
-        adapter.setTextSize(12);
+        Common.setWheelAdapter(mActivity, mWheelCamera, cameras, textSize,
+                false);
         mWheelCamera.setCurrentItem(mCameraId);
     }
 
@@ -361,21 +369,6 @@ public class DofFragment extends SherlockFragment {
     }
 
     /**
-     * Sets adapter for wheel
-     * 
-     * @param wheel
-     *            object for sets adapter
-     * @param values
-     *            values for adapter
-     */
-    private void setWheelAdapter(WheelView wheel, String values[]) {
-        ArrayWheelAdapter<String> adapter = new ArrayWheelAdapter<String>(
-                getSherlockActivity(), values);
-        adapter.setTextSize(15);
-        wheel.setViewAdapter(adapter);
-    }
-
-    /**
      * Updates measure buttons
      */
     private void updateMeasureButtons() {
@@ -413,16 +406,16 @@ public class DofFragment extends SherlockFragment {
         OnWheelScrollListener listener = new OnWheelScrollListener() {
 
             @Override
-            public void onScrollingStarted(WheelView wheel) {
-                // nothing
-
-            }
-
-            @Override
             public void onScrollingFinished(WheelView wheel) {
                 mCameraId = 0;
                 populateCameraByVendor();
                 recalculate();
+            }
+
+            @Override
+            public void onScrollingStarted(WheelView wheel) {
+                // nothing
+
             }
         };
 

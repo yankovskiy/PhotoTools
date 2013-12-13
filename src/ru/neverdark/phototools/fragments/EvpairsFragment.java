@@ -18,17 +18,14 @@ package ru.neverdark.phototools.fragments;
 import kankan.wheel.widget.WheelView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Log;
-import ru.neverdark.phototools.utils.WheelAdapter;
 import ru.neverdark.phototools.utils.evcalculator.EvCalculator;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +67,8 @@ public class EvpairsFragment extends SherlockFragment {
 
     private int mStepIndex;
 
+    private SherlockFragmentActivity mActivity;
+
     /**
      * Binds classes objects to resources
      */
@@ -90,6 +89,8 @@ public class EvpairsFragment extends SherlockFragment {
         mLabelStepHalf = (TextView) mView.findViewById(R.id.ev_label_stepHalf);
         mLabelStepThird = (TextView) mView
                 .findViewById(R.id.ev_label_stepThird);
+
+        mActivity = getSherlockActivity();
     }
 
     /**
@@ -329,21 +330,6 @@ public class EvpairsFragment extends SherlockFragment {
     }
 
     /**
-     * Sets adapter for wheel
-     * 
-     * @param wheel
-     *            object for sets adapter
-     * @param values
-     *            values for adapter
-     */
-    private void setWheelAdapter(WheelView wheel, String values[]) {
-        WheelAdapter<String> adapter = new WheelAdapter<String>(
-                getSherlockActivity(), values);
-        adapter.setTextSize(15);
-        wheel.setViewAdapter(adapter);
-    }
-
-    /**
      * Sets position to first
      * 
      * @param wheel
@@ -360,15 +346,22 @@ public class EvpairsFragment extends SherlockFragment {
     private void updateStep() {
         Log.enter();
 
+        final int textSize = R.dimen.wheelTextSize;
         mEvCalculator.initArrays(mStepIndex);
 
-        setWheelAdapter(mWheel_currentAperture, mEvCalculator.getApertureList());
-        setWheelAdapter(mWheel_currentIso, mEvCalculator.getIsoList());
-        setWheelAdapter(mWheel_currentShutter, mEvCalculator.getShutterList());
+        Common.setWheelAdapter(mActivity, mWheel_currentAperture,
+                mEvCalculator.getApertureList(), textSize, true);
+        Common.setWheelAdapter(mActivity, mWheel_currentIso,
+                mEvCalculator.getIsoList(), textSize, true);
+        Common.setWheelAdapter(mActivity, mWheel_currentShutter,
+                mEvCalculator.getShutterList(), textSize, true);
 
-        setWheelAdapter(mWheel_newAperture, mEvCalculator.getApertureList());
-        setWheelAdapter(mWheel_newIso, mEvCalculator.getIsoList());
-        setWheelAdapter(mWheel_newShutter, mEvCalculator.getShutterList());
+        Common.setWheelAdapter(mActivity, mWheel_newAperture,
+                mEvCalculator.getApertureList(), textSize, true);
+        Common.setWheelAdapter(mActivity, mWheel_newIso,
+                mEvCalculator.getIsoList(), textSize, true);
+        Common.setWheelAdapter(mActivity, mWheel_newShutter,
+                mEvCalculator.getShutterList(), textSize, true);
     }
 
     private void updateStepButtons() {
