@@ -15,9 +15,8 @@
       along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <dimen name="activity_horizontal_margin2">32dp</dimen>
-    <dimen name="wheelTextSize">20sp</dimen>
-    <dimen name="wheelMeasureUnitTextSize">18sp</dimen>
-    <dimen name="wheelCameraTextSize">14sp</dimen>
-    <dimen name="activity_horizontal_margin">24dp</dimen>
+    <dimen name="activity_horizontal_margin">32dp</dimen>
+    <dimen name="wheelTextSize">30sp</dimen>
+    <dimen name="wheelMeasureUnitTextSize">26sp</dimen>
+    <dimen name="wheelCameraTextSize">26sp</dimen>
 </resources>

@@ -153,7 +153,6 @@
         </TableLayout>
 
         <TextView
-            
             android:id="@+id/ev_label_newValues"
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
@@ -162,7 +161,6 @@
             android:textColor="#ff33b5e5" />
 
         <TableLayout
-            
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
@@ -231,16 +229,16 @@
                 android:id="@+id/ev_button_calculate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                 android:layout_alignParentBottom="true"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
                 android:text="@string/evpairs_button_calculate" />
 
             <Button
                 android:id="@+id/ev_button_clear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                 android:layout_alignParentBottom="true"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
                 android:text="@string/evpairs_button_clear" />
         </RelativeLayout>
     </LinearLayout>

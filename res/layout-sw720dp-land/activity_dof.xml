@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
+<!--
+  Copyright (C) 2013 Artem Yankovskiy (artemyankovskiy@gmail.com).
+      This program is free software: you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as published by
+      the Free Software Foundation, either version 3 of the License, or
+      (at your option) any later version.
+  
+      This program is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU General Public License for more details.
+  
+      You should have received a copy of the GNU General Public License
+      along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingBottom="10dp"
-        android:paddingLeft="@dimen/activity_horizontal_margin2"
-        android:paddingRight="@dimen/activity_horizontal_margin2"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="10dp" >
 
         <TextView
@@ -28,13 +41,13 @@
             <kankan.wheel.widget.WheelView
                 android:id="@+id/dof_wheel_vendor"
                 android:layout_width="0dp"
-                android:layout_height="65dp"
+                android:layout_height="150dp"
                 android:layout_weight="1" />
 
             <kankan.wheel.widget.WheelView
                 android:id="@+id/dof_wheel_camera"
                 android:layout_width="0dp"
-                android:layout_height="65dp"
+                android:layout_height="150dp"
                 android:layout_weight="2" />
         </LinearLayout>
 
@@ -54,7 +67,7 @@
             android:layout_marginTop="5dp"
             android:gravity="left"
             android:text="@string/dof_label_measureUnit"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:textStyle="normal" />
 
         <LinearLayout
@@ -74,7 +87,7 @@
                 android:gravity="center"
                 android:text="@string/dof_label_m"
                 android:textColor="#ffffffff"
-                android:textSize="20sp"
+                android:textSize="28sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -87,7 +100,7 @@
                 android:gravity="center"
                 android:text="@string/dof_label_cm"
                 android:textColor="#ffffffff"
-                android:textSize="20sp"
+                android:textSize="28sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -100,7 +113,7 @@
                 android:gravity="center"
                 android:text="@string/dof_label_ft"
                 android:textColor="#ffffffff"
-                android:textSize="20sp"
+                android:textSize="28sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -112,7 +125,7 @@
                 android:gravity="center"
                 android:text="@string/dof_label_in"
                 android:textColor="#ffffffff"
-                android:textSize="20sp"
+                android:textSize="28sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -133,7 +146,7 @@
                     android:layout_weight="2"
                     android:gravity="left"
                     android:text="@string/dof_label_nearLimit"
-                    android:textSize="16sp"
+                    android:textSize="20sp"
                     android:textStyle="normal" />
 
                 <TextView
@@ -142,23 +155,18 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="#fff0f0f0"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/dof_label_farLimit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="left"
-                    android:text="@string/dof_label_farLimit"
-                    android:textSize="16sp"
-                    android:textStyle="normal" />
+                
+                                <TextView
+                                    android:id="@+id/dof_label_farLimit"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:gravity="left"
+                                    android:text="@string/dof_label_farLimit"
+                                    android:textSize="20sp"
+                                    android:textStyle="normal" />
 
                 <TextView
                     android:id="@+id/dof_label_farLimitResult"
@@ -166,9 +174,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="#fff0f0f0"
-                    android:textSize="16sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
             </TableRow>
+
 
             <TableRow
                 android:layout_width="wrap_content"
@@ -181,7 +190,7 @@
                     android:layout_weight="2"
                     android:gravity="left"
                     android:text="@string/dof_label_hyperFocal"
-                    android:textSize="16sp"
+                    android:textSize="20sp"
                     android:textStyle="normal" />
 
                 <TextView
@@ -190,23 +199,18 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="#fff0f0f0"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/dof_label_total"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="left"
-                    android:text="@string/dof_label_total"
-                    android:textSize="16sp"
-                    android:textStyle="normal" />
+                
+                                <TextView
+                                    android:id="@+id/dof_label_total"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:gravity="left"
+                                    android:text="@string/dof_label_total"
+                                    android:textSize="20sp"
+                                    android:textStyle="normal" />
 
                 <TextView
                     android:id="@+id/dof_label_totalResult"
@@ -214,9 +218,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="#fff0f0f0"
-                    android:textSize="16sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
             </TableRow>
+
         </TableLayout>
 
         <TextView
@@ -236,30 +241,30 @@
 
             <TextView
                 android:id="@+id/dof_label_aperture"
-                android:layout_width="140dp"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:gravity="center"
                 android:text="@string/dof_label_aperture"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/dof_label_focalLength"
-                android:layout_width="200dp"
+                android:layout_width="260dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/dof_label_focalLength"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/dof_label_subjectDistance"
-                android:layout_width="230dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/dof_label_subjectDistance"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -271,23 +276,23 @@
 
             <kankan.wheel.widget.WheelView
                 android:id="@+id/dof_wheel_aperture"
-                android:layout_width="154dp"
-                android:layout_height="100dp" />
+                android:layout_width="180dp"
+                android:layout_height="220dp" />
 
             <kankan.wheel.widget.WheelView
                 android:id="@+id/dof_wheel_focalLength"
-                android:layout_width="220dp"
-                android:layout_height="100dp" />
+                android:layout_width="260dp"
+                android:layout_height="220dp" />
 
             <kankan.wheel.widget.WheelView
                 android:id="@+id/dof_wheel_subjectDistance"
-                android:layout_width="143dp"
-                android:layout_height="100dp" />
+                android:layout_width="170dp"
+                android:layout_height="220dp" />
 
             <kankan.wheel.widget.WheelView
                 android:id="@+id/dof_wheel_measureUnit"
-                android:layout_width="110dp"
-                android:layout_height="100dp" />
+                android:layout_width="130dp"
+                android:layout_height="220dp" />
         </LinearLayout>
     </LinearLayout>
 
