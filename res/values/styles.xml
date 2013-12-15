@@ -33,8 +33,4 @@
     </style>
     <color name="headear">#ff33b5e5</color>
     
-    <dimen name="wheelTextSize">10sp</dimen>
-    <dimen name="wheelMeasureUnitTextSize">8sp</dimen>
-    <dimen name="wheelCameraTextSize">8sp</dimen>
-    
 </resources>

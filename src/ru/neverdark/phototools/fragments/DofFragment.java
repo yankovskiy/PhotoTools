@@ -192,8 +192,8 @@ public class DofFragment extends SherlockFragment {
         Log.enter();
 
         final CameraData.Vendor vendors[] = CameraData.getVendors();
-        final int textSize = (int) getResources().getDimension(
-                R.dimen.wheelTextSize);
+        final int textSize = (int) (getResources().getDimension(
+                R.dimen.wheelTextSize) / getResources().getDisplayMetrics().density);
 
         ArrayWheelAdapter<CameraData.Vendor> adapter = new ArrayWheelAdapter<CameraData.Vendor>(
                 getSherlockActivity(), vendors);

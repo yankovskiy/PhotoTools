@@ -65,8 +65,9 @@ public class Common {
             WheelView wheel, String values[], int textSizeResourceId,
             boolean isFirstEmpty) {
         AbstractWheelTextAdapter adapter;
-        int textSize = (int) activity.getResources().getDimension(
-                textSizeResourceId);
+        int textSize = (int) (activity.getResources().getDimension(
+                textSizeResourceId) / activity.getResources().getDisplayMetrics().density);
+        Log.variable("textSize", String.valueOf(textSize));
         
         if (isFirstEmpty == false) {
             adapter = new ArrayWheelAdapter<String>(activity, values);
