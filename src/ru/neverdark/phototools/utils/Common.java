@@ -24,9 +24,27 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 public class Common {
+    /**
+     * Gets screen diagonal in inches
+     * 
+     * @param activity
+     *            application activity
+     * @return screen diagonal in inches
+     */
+    public static double getScreenInch(SherlockFragmentActivity activity) {
+        DisplayMetrics dm = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        double x = Math.pow(dm.widthPixels / dm.xdpi, 2);
+        double y = Math.pow(dm.heightPixels / dm.ydpi, 2);
+        double screenInches = Math.sqrt(x + y);
+
+        return screenInches;
+    }
+
     /**
      * Sets background from drawable resource
      * 
@@ -66,15 +84,16 @@ public class Common {
             boolean isFirstEmpty) {
         AbstractWheelTextAdapter adapter;
         int textSize = (int) (activity.getResources().getDimension(
-                textSizeResourceId) / activity.getResources().getDisplayMetrics().density);
+                textSizeResourceId) / activity.getResources()
+                .getDisplayMetrics().density);
         Log.variable("textSize", String.valueOf(textSize));
-        
+
         if (isFirstEmpty == false) {
             adapter = new ArrayWheelAdapter<String>(activity, values);
         } else {
             adapter = new WheelAdapter<String>(activity, values);
         }
-        
+
         adapter.setTextSize(textSize);
         wheel.setViewAdapter(adapter);
     }

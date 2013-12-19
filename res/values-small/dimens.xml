@@ -16,7 +16,8 @@
 <resources>
     
     <dimen name="wheelTextSize">20sp</dimen>
-    <dimen name="wheelMeasureUnitTextSize">16sp</dimen>
-    <dimen name="wheelCameraTextSize">16sp</dimen>
+    <dimen name="wheelMeasureUnitTextSize">20sp</dimen>
+    <dimen name="wheelCameraTextSize">20sp</dimen>
+    <dimen name="wheelSutterTextSize">18sp</dimen>
     
 </resources>

@@ -176,6 +176,10 @@
     <string name="dof_label_ft">футы</string>
     <string name="dof_label_in">дюймы</string>
     
+    <string name="dof_tab_parameters">Параметры</string>
+    <string name="dof_tab_result">Результаты</string>
+    <string name="dof_tab_camera">Камера</string>
+    
     <string name="evpairs_label_step">Шаг изменения</string>
     <string name="evpairs_label_stepFull">1 стоп</string>
     <string name="evpairs_label_stepHalf">&#189; стопа</string>

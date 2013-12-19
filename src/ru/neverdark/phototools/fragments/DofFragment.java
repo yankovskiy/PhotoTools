@@ -37,6 +37,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 /**
@@ -62,6 +63,8 @@ public class DofFragment extends SherlockFragment {
     private TextView mLabelFarLimitResult;
     private TextView mLabelHyperFocalResult;
     private TextView mLabelTotalResutl;
+
+    private TabHost mTabHost;
 
     private final static String VENDOR = "dof_vendor";
     private final static String CAMERA = "dof_camera";
@@ -130,7 +133,34 @@ public class DofFragment extends SherlockFragment {
         mLabelTotalResutl = (TextView) mView
                 .findViewById(R.id.dof_label_totalResult);
 
+        mTabHost = (TabHost) mView.findViewById(android.R.id.tabhost);
+
         mActivity = getSherlockActivity();
+    }
+
+    /**
+     * Builds tabs for small devices
+     */
+    private void buildTabs() {
+        mTabHost.setup();
+
+        TabHost.TabSpec spec = mTabHost.newTabSpec("tag1");
+
+        spec.setContent(R.id.tab1);
+        spec.setIndicator(getString(R.string.dof_tab_parameters));
+        mTabHost.addTab(spec);
+
+        spec = mTabHost.newTabSpec("tag2");
+        spec.setContent(R.id.tab2);
+        spec.setIndicator(getString(R.string.dof_tab_result));
+        mTabHost.addTab(spec);
+
+        spec = mTabHost.newTabSpec("tag3");
+        spec.setContent(R.id.tab3);
+        spec.setIndicator(getString(R.string.dof_tab_camera));
+        mTabHost.addTab(spec);
+
+        // mTabHost.setCurrentTab(0);
     }
 
     /**
@@ -183,6 +213,13 @@ public class DofFragment extends SherlockFragment {
         String distance = (String) mWheelSubjectDistance.getSelectedItem();
         Log.variable("distance", distance);
         return new BigDecimal(distance);
+    }
+
+    /**
+     * @return true if layout contains tabs
+     */
+    private boolean isTabPresent() {
+        return (mTabHost != null);
     }
 
     /**
@@ -282,6 +319,11 @@ public class DofFragment extends SherlockFragment {
         mView = inflater.inflate(R.layout.activity_dof, container, false);
 
         bindObjectsToResources();
+
+        if (isTabPresent() == true) {
+            buildTabs();
+        }
+
         arrayToWheels();
         loadSavedData();
         loadCamerasDataToWheel();
