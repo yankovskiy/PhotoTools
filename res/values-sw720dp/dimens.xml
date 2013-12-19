@@ -19,4 +19,5 @@
     <dimen name="wheelTextSize">30sp</dimen>
     <dimen name="wheelMeasureUnitTextSize">26sp</dimen>
     <dimen name="wheelCameraTextSize">26sp</dimen>
+    <dimen name="wheelSutterTextSize">30sp</dimen>
 </resources>
