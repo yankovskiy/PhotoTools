@@ -55,9 +55,9 @@ public class EvCalculator {
             int newAperturePosition, int newIsoPostion,
             int newShutterSpeedPosition) {
 
-        mCurrentAperturePosition = currentAperturePosition - 1;
-        mCurrentIsoPosition = currentIsoPosition - 1;
-        mCurrentShutterSpeedPosition = currentShutterSpeedPosition - 1;
+        mCurrentAperturePosition = currentAperturePosition;
+        mCurrentIsoPosition = currentIsoPosition;
+        mCurrentShutterSpeedPosition = currentShutterSpeedPosition;
 
         mNewAperturePosition = newAperturePosition - 1;
         mNewIsoPostion = newIsoPostion -1;
