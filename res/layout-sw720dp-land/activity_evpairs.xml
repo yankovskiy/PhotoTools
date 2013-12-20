@@ -48,7 +48,7 @@
             android:gravity="center"
             android:text="@string/evpairs_label_stepFull"
             android:textColor="#ffffffff"
-            android:textSize="28sp"
+            android:textSize="34sp"
             android:textStyle="bold" />
 
         <TextView
@@ -61,7 +61,7 @@
             android:gravity="center"
             android:text="@string/evpairs_label_stepHalf"
             android:textColor="#ffffffff"
-            android:textSize="28sp"
+            android:textSize="34sp"
             android:textStyle="bold" />
 
         <TextView
@@ -74,7 +74,7 @@
             android:gravity="center"
             android:text="@string/evpairs_label_stepThird"
             android:textColor="#ffffffff"
-            android:textSize="28sp"
+            android:textSize="34sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -102,7 +102,7 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:text="@string/evpairs_label_apperture"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -112,7 +112,7 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:text="@string/evpairs_label_iso"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -122,7 +122,7 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:text="@string/evpairs_label_shutterSpeed"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
         </TableRow>
 
@@ -174,7 +174,7 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:text="@string/evpairs_label_apperture"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -184,7 +184,7 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:text="@string/evpairs_label_iso"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -194,7 +194,7 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:text="@string/evpairs_label_shutterSpeed"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
         </TableRow>
 

@@ -101,4 +101,6 @@ public class Constants {
     public final static int CM = 1;
     public final static int FOOT = 2;
     public final static int INCH = 3;
+    
+    public final static int TABLET_SW = 600;
 }

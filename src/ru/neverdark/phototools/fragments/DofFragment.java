@@ -319,7 +319,8 @@ public class DofFragment extends SherlockFragment {
         mView = inflater.inflate(R.layout.activity_dof, container, false);
 
         bindObjectsToResources();
-
+        
+        
         if (isTabPresent() == true) {
             buildTabs();
         }

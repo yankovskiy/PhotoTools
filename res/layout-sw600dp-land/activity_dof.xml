@@ -14,285 +14,282 @@
       You should have received a copy of the GNU General Public License
       along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="10dp" >
+
+    <TextView
+        android:id="@+id/dof_label_camera"
+        style="?android:attr/listSeparatorTextViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingBottom="10dp"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="10dp" >
+        android:layout_height="wrap_content"
+        android:text="@string/dof_label_camera"
+        android:textColor="@color/headear" />
 
-        <TextView
-            android:id="@+id/dof_label_camera"
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/dof_label_camera"
-            android:textColor="@color/headear" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
+        <kankan.wheel.widget.WheelView
+            android:id="@+id/dof_wheel_vendor"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_weight="1" />
 
-            <kankan.wheel.widget.WheelView
-                android:id="@+id/dof_wheel_vendor"
-                android:layout_width="0dp"
-                android:layout_height="90dp"
-                android:layout_weight="1" />
-
-            <kankan.wheel.widget.WheelView
-                android:id="@+id/dof_wheel_camera"
-                android:layout_width="0dp"
-                android:layout_height="90dp"
-                android:layout_weight="2" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/dof_label_calculationResult"
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/dof_label_calculationResult"
-            android:textColor="@color/headear" />
-
-        <TextView
-            android:id="@+id/dof_label_measureUnit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="5dp"
-            android:gravity="left"
-            android:text="@string/dof_label_measureUnit"
-            android:textSize="16sp"
-            android:textStyle="normal" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/grey_round_corner"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/dof_label_m"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="@drawable/left_blue_button"
-                android:gravity="center"
-                android:text="@string/dof_label_m"
-                android:textColor="#ffffffff"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/dof_label_cm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="@drawable/right_stroke"
-                android:gravity="center"
-                android:text="@string/dof_label_cm"
-                android:textColor="#ffffffff"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/dof_label_ft"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="@drawable/right_stroke"
-                android:gravity="center"
-                android:text="@string/dof_label_ft"
-                android:textColor="#ffffffff"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/dof_label_in"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/dof_label_in"
-                android:textColor="#ffffffff"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginBottom="5dp" >
-
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/dof_label_nearLimit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="left"
-                    android:text="@string/dof_label_nearLimit"
-                    android:textSize="16sp"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/dof_label_nearLimitResult"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="#fff0f0f0"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-                
-                                <TextView
-                    android:id="@+id/dof_label_farLimit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="left"
-                    android:text="@string/dof_label_farLimit"
-                    android:textSize="16sp"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/dof_label_farLimitResult"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="#fff0f0f0"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-            </TableRow>
-
-
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/dof_label_hyperFocal"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="left"
-                    android:text="@string/dof_label_hyperFocal"
-                    android:textSize="16sp"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/dof_label_hyperFocalResult"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="#fff0f0f0"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-                
-                                <TextView
-                    android:id="@+id/dof_label_total"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="left"
-                    android:text="@string/dof_label_total"
-                    android:textSize="16sp"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/dof_label_totalResult"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="#fff0f0f0"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-            </TableRow>
-
-        </TableLayout>
-
-        <TextView
-            android:id="@+id/dof_label_shootingOptions"
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/dof_label_shootingOptions"
-            android:textColor="@color/headear" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/dof_label_aperture"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:gravity="center"
-                android:text="@string/dof_label_aperture"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/dof_label_focalLength"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/dof_label_focalLength"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/dof_label_subjectDistance"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/dof_label_subjectDistance"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:paddingBottom="10dp" >
-
-            <kankan.wheel.widget.WheelView
-                android:id="@+id/dof_wheel_aperture"
-                android:layout_width="154dp"
-                android:layout_height="120dp" />
-
-            <kankan.wheel.widget.WheelView
-                android:id="@+id/dof_wheel_focalLength"
-                android:layout_width="220dp"
-                android:layout_height="120dp" />
-
-            <kankan.wheel.widget.WheelView
-                android:id="@+id/dof_wheel_subjectDistance"
-                android:layout_width="143dp"
-                android:layout_height="120dp" />
-
-            <kankan.wheel.widget.WheelView
-                android:id="@+id/dof_wheel_measureUnit"
-                android:layout_width="110dp"
-                android:layout_height="120dp" />
-        </LinearLayout>
+        <kankan.wheel.widget.WheelView
+            android:id="@+id/dof_wheel_camera"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_weight="2" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/dof_label_calculationResult"
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dof_label_calculationResult"
+        android:textColor="@color/headear" />
+
+    <TextView
+        android:id="@+id/dof_label_measureUnit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="5dp"
+        android:gravity="left"
+        android:text="@string/dof_label_measureUnit"
+        android:textSize="20sp"
+        android:textStyle="normal" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/grey_round_corner"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/dof_label_m"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/left_blue_button"
+            android:gravity="center"
+            android:text="@string/dof_label_m"
+            android:textColor="#ffffffff"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dof_label_cm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/right_stroke"
+            android:gravity="center"
+            android:text="@string/dof_label_cm"
+            android:textColor="#ffffffff"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dof_label_ft"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/right_stroke"
+            android:gravity="center"
+            android:text="@string/dof_label_ft"
+            android:textColor="#ffffffff"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dof_label_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/dof_label_in"
+            android:textColor="#ffffffff"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="1" >
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/dof_label_nearLimit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="left"
+                android:text="@string/dof_label_nearLimit"
+                android:textSize="20sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/dof_label_nearLimitResult"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#fff0f0f0"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/dof_label_farLimit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="left"
+                android:text="@string/dof_label_farLimit"
+                android:textSize="20sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/dof_label_farLimitResult"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#fff0f0f0"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/dof_label_hyperFocal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="left"
+                android:text="@string/dof_label_hyperFocal"
+                android:textSize="20sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/dof_label_hyperFocalResult"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#fff0f0f0"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/dof_label_total"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="left"
+                android:text="@string/dof_label_total"
+                android:textSize="20sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/dof_label_totalResult"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#fff0f0f0"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/dof_label_shootingOptions"
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dof_label_shootingOptions"
+        android:textColor="@color/headear" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/dof_label_aperture"
+            android:layout_width="154dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:text="@string/dof_label_aperture"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dof_label_focalLength"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/dof_label_focalLength"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dof_label_subjectDistance"
+            android:layout_width="253dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/dof_label_subjectDistance"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="10dp" >
+
+        <kankan.wheel.widget.WheelView
+            android:id="@+id/dof_wheel_aperture"
+            android:layout_width="154dp"
+            android:layout_height="120dp" />
+
+        <kankan.wheel.widget.WheelView
+            android:id="@+id/dof_wheel_focalLength"
+            android:layout_width="220dp"
+            android:layout_height="120dp" />
+
+        <kankan.wheel.widget.WheelView
+            android:id="@+id/dof_wheel_subjectDistance"
+            android:layout_width="143dp"
+            android:layout_height="120dp" />
+
+        <kankan.wheel.widget.WheelView
+            android:id="@+id/dof_wheel_measureUnit"
+            android:layout_width="110dp"
+            android:layout_height="120dp" />
+    </LinearLayout>
+
+</LinearLayout>

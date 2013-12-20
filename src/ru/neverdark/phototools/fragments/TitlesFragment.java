@@ -21,6 +21,7 @@ import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -28,6 +29,8 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
 
 /**
@@ -36,6 +39,7 @@ import com.actionbarsherlock.app.SherlockListFragment;
 public class TitlesFragment extends SherlockListFragment {
     private boolean mDualPane;
     private int mCurrentCheckPosition = 0;
+    private SherlockFragmentActivity mActivity;
 
     /**
      * Opens market detail application page for donate app
@@ -68,6 +72,8 @@ public class TitlesFragment extends SherlockListFragment {
         super.onActivityCreated(savedInstanceState);
         final String[] TITLES = getResources().getStringArray(
                 R.array.main_menuTitles);
+
+        mActivity = getSherlockActivity();
 
         setListAdapter(new ArrayAdapter<String>(getActivity(),
                 R.layout.menu_item, R.id.menuItem_label_title, TITLES));
@@ -133,24 +139,32 @@ public class TitlesFragment extends SherlockListFragment {
             if ((details instanceof DofFragment) == false) {
                 details = new DofFragment();
                 isOperationNeed = true;
+                mActivity
+                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }
             break;
         case Constants.EV_CHOICE:
             if ((details instanceof EvpairsFragment) == false) {
                 details = new EvpairsFragment();
                 isOperationNeed = true;
+                mActivity
+                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }
             break;
         case Constants.SUNSET_CHOICE:
             if ((details instanceof SunsetFragment) == false) {
                 details = new SunsetFragment();
                 isOperationNeed = true;
+                mActivity
+                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
             }
             break;
         case Constants.ABOUT_CHOICE:
             if ((details instanceof AboutFragment) == false) {
                 details = new AboutFragment();
                 isOperationNeed = true;
+                mActivity
+                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
             }
             break;
         }

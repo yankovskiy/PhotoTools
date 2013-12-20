@@ -16,10 +16,9 @@
 <resources>
 
     <dimen name="wheelTextSize">24sp</dimen>
-    <dimen name="wheelMeasureUnitTextSize">18sp</dimen>
-    <dimen name="wheelCameraTextSize">18sp</dimen>
+    <dimen name="wheelMeasureUnitTextSize">24sp</dimen>
+    <dimen name="wheelCameraTextSize">24sp</dimen>
     <dimen name="wheelSutterTextSize">24sp</dimen>
-    
     <dimen name="activity_horizontal_margin">24dp</dimen>
 
 </resources>

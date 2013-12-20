@@ -21,6 +21,7 @@ import ru.neverdark.phototools.fragments.EvpairsFragment;
 import ru.neverdark.phototools.fragments.SunsetFragment;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -29,19 +30,21 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
  * Activity for showing fragments: DoF, EV Pairs, About
  */
 public class DetailsActivity extends SherlockFragmentActivity {
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.message("Enter");
         super.onCreate(savedInstanceState);
-        
+
         if (savedInstanceState == null) {
             showFragment();
         }
     }
-    
+
     /**
      * Shows fragment by index delivered from MainActivity
      */
@@ -52,19 +55,27 @@ public class DetailsActivity extends SherlockFragmentActivity {
         switch (index) {
         case Constants.DOF_CHOICE:
             DofFragment dofFragment = new DofFragment();
-            getSupportFragmentManager().beginTransaction().add(android.R.id.content, dofFragment).commit();
+            getSupportFragmentManager().beginTransaction()
+                    .add(android.R.id.content, dofFragment).commit();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             break;
         case Constants.EV_CHOICE:
             EvpairsFragment evFragment = new EvpairsFragment();
-            getSupportFragmentManager().beginTransaction().add(android.R.id.content, evFragment).commit();
+            getSupportFragmentManager().beginTransaction()
+                    .add(android.R.id.content, evFragment).commit();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             break;
         case Constants.SUNSET_CHOICE:
             SunsetFragment sunsetFragment = new SunsetFragment();
-            getSupportFragmentManager().beginTransaction().add(android.R.id.content, sunsetFragment).commit();
+            getSupportFragmentManager().beginTransaction()
+                    .add(android.R.id.content, sunsetFragment).commit();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
             break;
         case Constants.ABOUT_CHOICE:
             AboutFragment aboutFragment = new AboutFragment();
-            getSupportFragmentManager().beginTransaction().add(android.R.id.content, aboutFragment).commit();
+            getSupportFragmentManager().beginTransaction()
+                    .add(android.R.id.content, aboutFragment).commit();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
             break;
         }
 

@@ -17,7 +17,7 @@
 <resources>
     <dimen name="activity_horizontal_margin">32dp</dimen>
     <dimen name="wheelTextSize">30sp</dimen>
-    <dimen name="wheelMeasureUnitTextSize">26sp</dimen>
-    <dimen name="wheelCameraTextSize">26sp</dimen>
+    <dimen name="wheelMeasureUnitTextSize">30sp</dimen>
+    <dimen name="wheelCameraTextSize">30sp</dimen>
     <dimen name="wheelSutterTextSize">30sp</dimen>
 </resources>

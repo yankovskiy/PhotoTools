@@ -67,7 +67,7 @@
             android:layout_marginTop="5dp"
             android:gravity="left"
             android:text="@string/dof_label_measureUnit"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textStyle="normal" />
 
         <LinearLayout
@@ -87,7 +87,7 @@
                 android:gravity="center"
                 android:text="@string/dof_label_m"
                 android:textColor="#ffffffff"
-                android:textSize="28sp"
+                android:textSize="34sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -100,7 +100,7 @@
                 android:gravity="center"
                 android:text="@string/dof_label_cm"
                 android:textColor="#ffffffff"
-                android:textSize="28sp"
+                android:textSize="34sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -113,7 +113,7 @@
                 android:gravity="center"
                 android:text="@string/dof_label_ft"
                 android:textColor="#ffffffff"
-                android:textSize="28sp"
+                android:textSize="34sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -125,7 +125,7 @@
                 android:gravity="center"
                 android:text="@string/dof_label_in"
                 android:textColor="#ffffffff"
-                android:textSize="28sp"
+                android:textSize="34sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -146,7 +146,7 @@
                     android:layout_weight="2"
                     android:gravity="left"
                     android:text="@string/dof_label_nearLimit"
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     android:textStyle="normal" />
 
                 <TextView
@@ -155,7 +155,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="#fff0f0f0"
-                    android:textSize="18sp"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
                 
                                 <TextView
@@ -165,7 +165,7 @@
                                     android:layout_weight="2"
                                     android:gravity="left"
                                     android:text="@string/dof_label_farLimit"
-                                    android:textSize="20sp"
+                                    android:textSize="24sp"
                                     android:textStyle="normal" />
 
                 <TextView
@@ -174,7 +174,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="#fff0f0f0"
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
             </TableRow>
 
@@ -190,7 +190,7 @@
                     android:layout_weight="2"
                     android:gravity="left"
                     android:text="@string/dof_label_hyperFocal"
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     android:textStyle="normal" />
 
                 <TextView
@@ -199,7 +199,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="#fff0f0f0"
-                    android:textSize="18sp"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
                 
                                 <TextView
@@ -209,7 +209,7 @@
                                     android:layout_weight="2"
                                     android:gravity="left"
                                     android:text="@string/dof_label_total"
-                                    android:textSize="20sp"
+                                    android:textSize="24sp"
                                     android:textStyle="normal" />
 
                 <TextView
@@ -218,7 +218,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="#fff0f0f0"
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
             </TableRow>
 
@@ -246,7 +246,7 @@
                 android:layout_gravity="bottom"
                 android:gravity="center"
                 android:text="@string/dof_label_aperture"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -255,7 +255,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/dof_label_focalLength"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -264,7 +264,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/dof_label_subjectDistance"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
