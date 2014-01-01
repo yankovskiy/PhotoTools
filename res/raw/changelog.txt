@@ -20,29 +20,29 @@
   </head>
   <body>
 $ 0.7
-  % Версия 0.7
-  _ 01.12.2013
-    * Изменен интерфейс
-    * В калькуляторе экспозиционных пар добавлена возможность выбирать шаг изменения EV
-    * В калькуляторе экспозиционных пар расширены диапазоны значений ISO и диафрагмы
-    * В калькуляторе закатов и рассветов добавлена возможность выбора временной зоны из списка в случае трудности ее определения
-    * В ГРИП-калькуляторе добавлена возможность выбора единиц измерения дистанции фокусировки и результатов расчетов
-    * Добавлена локализация на английском языке
+  % Version 0.7
+  _ 01.01.2014
+    * The interface is changed
+    * The possibility to choose a step of change EV is added in the calculator of the exposure pairs
+    * The ranges of ISO values and aperture’s values are expanded in the calculator of the exposure pairs
+    * The possibility of the choice of a time zone from the list in case of difficulty of its definition is added in the calculator of sunsets and sunrises.
+    * The possibility of the choice of the measure units for the distance of focusing and the results of calculations, is added in the DoF-calculator
+    * English localization is added
 $ 0.6
-  % Версия 0.6
+  % Version 0.6
   _ 01.11.2013
-    * Добавлена возможность сохранения выбранных местоположений в калькуляторе времени закатов и рассветов
-    * Исправлены ошибки
+    * The possibility of saving of the chosen locations is added in the calculator of the time of sunsets and sunrises.
+    * Errors are fixed
 $ 0.5.1
-  % Версия 0.5.1 
+  % Version 0.5.1 
   _ 01.10.2013
-    * Добавлены SLT-камеры фирмы Sony
-    * Добавлена возможность получить определения понятий "Навигационные сумерки", "Гражданский рассвет", ...
-    * Исправлены ошибки
+    * Sony SLT-cameras are added
+    * The possibility to receive definition of such notions as "Navigating twilight", "the Civil sunrise" is added
+    * Errors are fixed
 $ 0.5
-  % Версия 0.5
+  % Version 0.5
   _ 25.09.2013
-    * Добавлен калькулятор времени закатов и рассветов
+    * The calculator of the sunsets and sunrises time is added
 $ END_OF_CHANGE_LOG
   </body>
 </html>
