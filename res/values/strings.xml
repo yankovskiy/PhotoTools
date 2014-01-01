@@ -158,7 +158,6 @@
     <string name="sunset_information_timeZoneStart">Determining of the time zone. Please, wait</string>
     <string name="sunset_information_timeZoneSuccess">The time zone is successfully picked</string>
 
-    <!-- new -->
     <string name="dof_label_measureUnit">Measure units:</string>
     <string name="dof_label_m">m</string>
     <string name="dof_label_cm">cm</string>
@@ -176,5 +175,5 @@
     
     <string name="zonePicker_title">Choose a time zone</string>
     <string name="zonePicker_message">It was not possible to pick the time zone. Please, choose from the list:</string>
-    <!-- end -->
+
 </resources>

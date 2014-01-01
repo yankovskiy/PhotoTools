@@ -162,7 +162,6 @@
     <string name="sunset_information_timeZoneStart">Определение временной зоны. Подождите</string>
     <string name="sunset_information_timeZoneSuccess">Временная зона успешно определена</string>
 
-    <!-- new -->
     <string name="dof_label_measureUnit">Единицы измерения:</string>
     <string name="dof_label_m">м</string>
     <string name="dof_label_cm">см</string>
@@ -180,5 +179,5 @@
     
     <string name="zonePicker_title">Выбор временной зоны</string>
     <string name="zonePicker_message">Не удалось определить временную зону. Выберите из списка:</string>
-    <!-- end -->
+
 </resources>

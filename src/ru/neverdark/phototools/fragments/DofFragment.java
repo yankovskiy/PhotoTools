@@ -332,7 +332,7 @@ public class DofFragment extends SherlockFragment {
         measureButtonsHandler();
         wheelsHandler();
         updateMeasureButtons();
-        // getSherlockActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         Log.exit(start);
         return mView;
     }

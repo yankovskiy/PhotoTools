@@ -69,13 +69,13 @@ public class DetailsActivity extends SherlockFragmentActivity {
             SunsetFragment sunsetFragment = new SunsetFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, sunsetFragment).commit();
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             break;
         case Constants.ABOUT_CHOICE:
             AboutFragment aboutFragment = new AboutFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, aboutFragment).commit();
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             break;
         }
 

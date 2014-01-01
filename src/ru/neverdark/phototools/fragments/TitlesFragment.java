@@ -156,7 +156,7 @@ public class TitlesFragment extends SherlockListFragment {
                 details = new SunsetFragment();
                 isOperationNeed = true;
                 mActivity
-                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             }
             break;
         case Constants.ABOUT_CHOICE:
@@ -164,7 +164,7 @@ public class TitlesFragment extends SherlockListFragment {
                 details = new AboutFragment();
                 isOperationNeed = true;
                 mActivity
-                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             }
             break;
         }

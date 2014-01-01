@@ -19,6 +19,10 @@
     </style>
   </head>
   <body>
+$ 0.7.1
+  % Version 0.7.1
+  _ 01.01.2014
+    * Fixed problem with ignoring the system settings
 $ 0.7
   % Version 0.7
   _ 01.01.2014
