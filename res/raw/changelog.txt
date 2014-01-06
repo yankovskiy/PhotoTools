@@ -24,6 +24,7 @@ $ 0.7.2
   _ 12.01.2014
     * Wheels scroll now is cyclic
     * Map: moved "Confirm a choice" button to the Action Bar
+    * Added Italian language
 $ 0.7.1
   % Version 0.7.1
   _ 01.01.2014
