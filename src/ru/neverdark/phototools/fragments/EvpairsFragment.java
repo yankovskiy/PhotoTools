@@ -262,7 +262,8 @@ public class EvpairsFragment extends SherlockFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         mView = inflater.inflate(R.layout.activity_evpairs, container, false);
         bindObjectsToResources();
-
+        setCyclicToWheels();
+        
         if (isTabPresent() == true) {
             buildTabs();
         }
@@ -363,6 +364,19 @@ public class EvpairsFragment extends SherlockFragment {
         mLabelStepThird.setOnClickListener(clickListener);
     }
 
+    
+    /**
+     * Sets wheels to cyclic
+     */
+    private void setCyclicToWheels() {
+        mWheel_currentAperture.setCyclic(true);
+        mWheel_currentIso.setCyclic(true);
+        mWheel_currentShutter.setCyclic(true);
+        
+        mWheel_newAperture.setCyclic(true);
+        mWheel_newIso.setCyclic(true);
+        mWheel_newShutter.setCyclic(true);
+    }
     /**
      * Sets old wheel positions
      */

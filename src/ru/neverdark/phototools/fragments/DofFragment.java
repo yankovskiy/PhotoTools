@@ -319,12 +319,12 @@ public class DofFragment extends SherlockFragment {
         mView = inflater.inflate(R.layout.activity_dof, container, false);
 
         bindObjectsToResources();
-        
-        
+
         if (isTabPresent() == true) {
             buildTabs();
         }
 
+        setCyclicToWheels();
         arrayToWheels();
         loadSavedData();
         loadCamerasDataToWheel();
@@ -409,6 +409,18 @@ public class DofFragment extends SherlockFragment {
         editor.putString(TOTAL, mLabelTotalResutl.getText().toString());
 
         editor.commit();
+    }
+
+    /**
+     * Sets wheels to cyclic
+     */
+    private void setCyclicToWheels() {
+        mWheelAperture.setCyclic(true);
+        mWheelCamera.setCyclic(true);
+        mWheelFocalLength.setCyclic(true);
+        mWheelMeasureUnit.setCyclic(true);
+        mWheelSubjectDistance.setCyclic(true);
+        mWheelVendor.setCyclic(true);
     }
 
     /**

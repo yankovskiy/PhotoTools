@@ -16,8 +16,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.neverdark.phototools"
-    android:versionCode="50"
-    android:versionName="0.7.1" >
+    android:versionCode="51"
+    android:versionName="0.7.2" >
 
     <!-- Used by the API to download map tiles from Google Maps servers. -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -64,6 +64,7 @@
         <activity android:name="ru.neverdark.phototools.DetailsActivity" />
         <activity
             android:name="ru.neverdark.phototools.MapActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_map" >
         </activity>
         <service android:name="ru.neverdark.phototools.utils.GeoLocationService"/>

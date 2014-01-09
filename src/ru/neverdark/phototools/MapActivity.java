@@ -19,8 +19,13 @@ import ru.neverdark.phototools.db.LocationsDbAdapter;
 import ru.neverdark.phototools.fragments.ConfirmCreateFragment;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
+import android.content.Intent;
+import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
@@ -30,28 +35,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-
 public class MapActivity extends SherlockFragmentActivity implements
         OnMapLongClickListener {
 
     private GoogleMap mMap;
-    private Button mButtonDone;
+    private MenuItem mMenuItemDone;
     private Marker mMarker;
     private LatLng mMarkerPosition;
     private int mAction;
     private long mRecordId;
     private String mLocationName;
-    /**
-     * Binds classes objects to resources
-     */
-    private void bindObjectsToResources() {
-        Log.message("Enter");
-        mButtonDone = (Button) findViewById(R.id.map_button_done);
-    }
+    private boolean isButtonVisible = false;
 
     /**
      * Handles getting information from Confirmation dialog
@@ -82,7 +76,7 @@ public class MapActivity extends SherlockFragmentActivity implements
     /**
      * Inits Google Map
      */
-    private void initMap(Bundle savedInstanceState) {
+    private void initMap(/*Bundle savedInstanceState*/) {
         Log.message("Enter");
         if (mMap == null) {
             mMap = ((SupportMapFragment) getSupportFragmentManager()
@@ -92,7 +86,7 @@ public class MapActivity extends SherlockFragmentActivity implements
             mMap.setOnMapLongClickListener(this);
         }
 
-        if (savedInstanceState == null) {
+        // if (savedInstanceState == null) {
             /* gets current coord if have */
             Intent intent = getIntent();
             Double latitude = intent.getDoubleExtra(
@@ -120,38 +114,36 @@ public class MapActivity extends SherlockFragmentActivity implements
                 mMap.moveCamera(CameraUpdateFactory
                         .newCameraPosition(currentPosition));
             }
-        } else {
+        /* } else {
             mMarkerPosition = savedInstanceState
                     .getParcelable(Constants.MAP_MARKER_POSITION);
             mAction = savedInstanceState.getInt(Constants.MAP_ACTION_DATA);
             mRecordId = savedInstanceState.getLong(Constants.MAP_RECORD_ID);
-            mLocationName = savedInstanceState.getString(Constants.MAP_LOCATION_NAME);
+            mLocationName = savedInstanceState
+                    .getString(Constants.MAP_LOCATION_NAME);
+            
             if (mMarkerPosition != null) {
                 setMarker();
             }
-        }
-    }
-
-    /**
-     * OnClick handler for views
-     * 
-     * @param view
-     *            for handle onClick event
-     */
-    public void onClick(View view) {
-        Log.message("Enter");
-
-        showConfirmDialog();
+        } */
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.message("Enter");
         super.onCreate(savedInstanceState);
+        setTheme(R.style.Theme_Sherlock);
         setContentView(R.layout.activity_map);
 
-        bindObjectsToResources();
-        initMap(savedInstanceState);
+        initMap(/*savedInstanceState*/);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.enter();
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.map_actions, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -162,6 +154,25 @@ public class MapActivity extends SherlockFragmentActivity implements
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case R.id.map_button_done:
+            showConfirmDialog();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        Log.enter();
+        mMenuItemDone = menu.findItem(R.id.map_button_done);
+        setButtonVisible(isButtonVisible);
+        return true;
+    }
+
+    /*
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         Log.message("Enter");
         super.onSaveInstanceState(outState);
@@ -170,7 +181,7 @@ public class MapActivity extends SherlockFragmentActivity implements
         outState.putLong(Constants.MAP_RECORD_ID, mRecordId);
         outState.putString(Constants.MAP_LOCATION_NAME, mLocationName);
     }
-
+*/
     /**
      * Saves data to the database
      * 
@@ -203,15 +214,12 @@ public class MapActivity extends SherlockFragmentActivity implements
      */
     private void setButtonVisible(final boolean isVisible) {
         Log.message("Enter");
-        int visible;
-
-        if (isVisible) {
-            visible = View.VISIBLE;
+        if (isVisible == true) {
+            mMenuItemDone.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                    | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         } else {
-            visible = View.INVISIBLE;
+            mMenuItemDone.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         }
-
-        mButtonDone.setVisibility(visible);
     }
 
     /**
@@ -226,8 +234,8 @@ public class MapActivity extends SherlockFragmentActivity implements
             mMap.clear();
         }
         mMarker = mMap.addMarker(new MarkerOptions().position(mMarkerPosition));
-        setButtonVisible(true);
-
+        isButtonVisible = true;
+        invalidateOptionsMenu();
     }
 
     /**
@@ -235,7 +243,8 @@ public class MapActivity extends SherlockFragmentActivity implements
      */
     private void showConfirmDialog() {
         Log.message("Enter");
-        ConfirmCreateFragment confirmDialog = ConfirmCreateFragment.NewInstance(mAction, mLocationName);
+        ConfirmCreateFragment confirmDialog = ConfirmCreateFragment
+                .NewInstance(mAction, mLocationName);
         confirmDialog.show(getSupportFragmentManager(),
                 Constants.CONFIRM_DIALOG);
     }
