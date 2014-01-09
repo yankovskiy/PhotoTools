@@ -76,7 +76,7 @@ public class MapActivity extends SherlockFragmentActivity implements
     /**
      * Inits Google Map
      */
-    private void initMap(/*Bundle savedInstanceState*/) {
+    private void initMap() {
         Log.message("Enter");
         if (mMap == null) {
             mMap = ((SupportMapFragment) getSupportFragmentManager()
@@ -86,46 +86,33 @@ public class MapActivity extends SherlockFragmentActivity implements
             mMap.setOnMapLongClickListener(this);
         }
 
-        // if (savedInstanceState == null) {
-            /* gets current coord if have */
-            Intent intent = getIntent();
-            Double latitude = intent.getDoubleExtra(
-                    Constants.LOCATION_LATITUDE, 0);
-            Double longitude = intent.getDoubleExtra(
-                    Constants.LOCATION_LONGITUDE, 0);
+        /* gets current coord if have */
+        Intent intent = getIntent();
+        Double latitude = intent.getDoubleExtra(Constants.LOCATION_LATITUDE, 0);
+        Double longitude = intent.getDoubleExtra(Constants.LOCATION_LONGITUDE,
+                0);
 
-            /* gets action */
-            mAction = intent.getByteExtra(Constants.LOCATION_ACTION,
-                    Constants.LOCATION_ACTION_ADD);
+        /* gets action */
+        mAction = intent.getByteExtra(Constants.LOCATION_ACTION,
+                Constants.LOCATION_ACTION_ADD);
 
-            if (mAction == Constants.LOCATION_ACTION_EDIT) {
-                mRecordId = intent.getLongExtra(Constants.LOCATION_RECORD_ID,
-                        Constants.LOCATION_POINT_ON_MAP_CHOICE);
-                mLocationName = intent.getStringExtra(Constants.LOCATION_NAME);
-                mMarkerPosition = new LatLng(latitude, longitude);
-                setMarker();
-            }
+        if (mAction == Constants.LOCATION_ACTION_EDIT) {
+            mRecordId = intent.getLongExtra(Constants.LOCATION_RECORD_ID,
+                    Constants.LOCATION_POINT_ON_MAP_CHOICE);
+            mLocationName = intent.getStringExtra(Constants.LOCATION_NAME);
+            mMarkerPosition = new LatLng(latitude, longitude);
+            setMarker();
+        }
 
-            /* checks for coordinates was received */
-            if ((latitude != 0) || (longitude != 0)) {
-                CameraPosition currentPosition = new CameraPosition.Builder()
-                        .target(new LatLng(latitude, longitude))
-                        .zoom(Constants.MAP_CAMERA_ZOOM).build();
-                mMap.moveCamera(CameraUpdateFactory
-                        .newCameraPosition(currentPosition));
-            }
-        /* } else {
-            mMarkerPosition = savedInstanceState
-                    .getParcelable(Constants.MAP_MARKER_POSITION);
-            mAction = savedInstanceState.getInt(Constants.MAP_ACTION_DATA);
-            mRecordId = savedInstanceState.getLong(Constants.MAP_RECORD_ID);
-            mLocationName = savedInstanceState
-                    .getString(Constants.MAP_LOCATION_NAME);
-            
-            if (mMarkerPosition != null) {
-                setMarker();
-            }
-        } */
+        /* checks for coordinates was received */
+        if ((latitude != 0) || (longitude != 0)) {
+            CameraPosition currentPosition = new CameraPosition.Builder()
+                    .target(new LatLng(latitude, longitude))
+                    .zoom(Constants.MAP_CAMERA_ZOOM).build();
+            mMap.moveCamera(CameraUpdateFactory
+                    .newCameraPosition(currentPosition));
+        }
+
     }
 
     @Override
@@ -135,7 +122,7 @@ public class MapActivity extends SherlockFragmentActivity implements
         setTheme(R.style.Theme_Sherlock);
         setContentView(R.layout.activity_map);
 
-        initMap(/*savedInstanceState*/);
+        initMap();
     }
 
     @Override
@@ -171,17 +158,6 @@ public class MapActivity extends SherlockFragmentActivity implements
         return true;
     }
 
-    /*
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        Log.message("Enter");
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(Constants.MAP_MARKER_POSITION, mMarkerPosition);
-        outState.putInt(Constants.MAP_ACTION_DATA, mAction);
-        outState.putLong(Constants.MAP_RECORD_ID, mRecordId);
-        outState.putString(Constants.MAP_LOCATION_NAME, mLocationName);
-    }
-*/
     /**
      * Saves data to the database
      * 
@@ -220,6 +196,8 @@ public class MapActivity extends SherlockFragmentActivity implements
         } else {
             mMenuItemDone.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         }
+        
+        mMenuItemDone.setVisible(isVisible);
     }
 
     /**
