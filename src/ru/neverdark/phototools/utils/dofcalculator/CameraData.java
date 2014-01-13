@@ -220,6 +220,8 @@ public class CameraData {
         DATABASE.put(Vendor.PENTAX, pentaxCameras);
         pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-5 II", new BigDecimal("23.7"), new BigDecimal("4928")));
         DATABASE.put(Vendor.PENTAX, pentaxCameras);
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-3", new BigDecimal("23.5"), new BigDecimal("6016")));
+        DATABASE.put(Vendor.PENTAX, pentaxCameras);
         
         List<CameraData> sonyCameras = new ArrayList<CameraData>();
         sonyCameras.add(new CameraData(Vendor.SONY, "DSLR-A900", new BigDecimal("35.9"), new BigDecimal("6048")));
