@@ -16,8 +16,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.neverdark.phototools"
-    android:versionCode="52"
-    android:versionName="0.7.3" >
+    android:versionCode="53"
+    android:versionName="0.7.4" >
 
     <!-- Used by the API to download map tiles from Google Maps servers. -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -47,10 +47,14 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.Sherlock.NoActionBar" >
-        <!--  Debug API Key for Google Maps v2 -->
+
+        <!-- Debug API Key for Google Maps v2 -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBKV2HlbGALt4iaC89PEK1TF9J_18MFJck" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name="ru.neverdark.phototools.MainActivity"
@@ -67,7 +71,8 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_map" >
         </activity>
-        <service android:name="ru.neverdark.phototools.utils.GeoLocationService"/>
+
+        <service android:name="ru.neverdark.phototools.utils.GeoLocationService" />
     </application>
 
 </manifest>

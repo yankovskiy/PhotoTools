@@ -19,6 +19,10 @@
     </style>
   </head>
   <body>
+$ 0.7.4
+  % Version 0.7.4
+  _ 15.01.2014
+    * Fixed crash app on the map
 $ 0.7.3
   % Version 0.7.3
   _ 14.01.2014

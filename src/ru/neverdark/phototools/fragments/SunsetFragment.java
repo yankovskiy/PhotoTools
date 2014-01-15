@@ -43,6 +43,7 @@ import ru.neverdark.phototools.utils.LocationRecord;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.GeoLocationService.GeoLocationBinder;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -64,6 +65,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.luckycatlabs.sunrisesunset.dto.Location;
 
@@ -448,19 +451,22 @@ public class SunsetFragment extends SherlockFragment {
      */
     public void handleEditCustomLocation(final LocationRecord locationRecord) {
         Log.message("Enter");
-        Intent mapIntent = new Intent(getActivity(), MapActivity.class);
-        mapIntent.putExtra(Constants.LOCATION_ACTION,
-                Constants.LOCATION_ACTION_EDIT);
-        mapIntent
-                .putExtra(Constants.LOCATION_LATITUDE, locationRecord.latitude);
-        mapIntent.putExtra(Constants.LOCATION_LONGITUDE,
-                locationRecord.longitude);
-        mapIntent.putExtra(Constants.LOCATION_RECORD_ID, locationRecord._id);
-        mapIntent
-                .putExtra(Constants.LOCATION_NAME, locationRecord.locationName);
+        if (isGoogleServiceAvailabe() == true) {
+            Intent mapIntent = new Intent(getActivity(), MapActivity.class);
+            mapIntent.putExtra(Constants.LOCATION_ACTION,
+                    Constants.LOCATION_ACTION_EDIT);
+            mapIntent.putExtra(Constants.LOCATION_LATITUDE,
+                    locationRecord.latitude);
+            mapIntent.putExtra(Constants.LOCATION_LONGITUDE,
+                    locationRecord.longitude);
+            mapIntent
+                    .putExtra(Constants.LOCATION_RECORD_ID, locationRecord._id);
+            mapIntent.putExtra(Constants.LOCATION_NAME,
+                    locationRecord.locationName);
 
-        startActivityForResult(mapIntent,
-                Constants.LOCATION_POINT_ON_MAP_CHOICE);
+            startActivityForResult(mapIntent,
+                    Constants.LOCATION_POINT_ON_MAP_CHOICE);
+        }
     }
 
     /**
@@ -483,21 +489,38 @@ public class SunsetFragment extends SherlockFragment {
         }
     }
 
+    private boolean isGoogleServiceAvailabe() {
+        int status = GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(mContext);
+        boolean isAvailable = false;
+        if (status == ConnectionResult.SUCCESS) {
+            isAvailable = true;
+        } else {
+            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status,
+                    getSherlockActivity(), 1);
+            dialog.show();
+        }
+
+        return isAvailable;
+    }
+
     /**
      * Handles point of map selection
      */
     private void handlePointOnMap() {
         Log.message("Enter");
-        getCurrentLocation();
-        Intent mapIntent = new Intent(getActivity(), MapActivity.class);
+        if (isGoogleServiceAvailabe() == true) {
+            getCurrentLocation();
+            Intent mapIntent = new Intent(getActivity(), MapActivity.class);
 
-        mapIntent.putExtra(Constants.LOCATION_ACTION,
-                Constants.LOCATION_ACTION_ADD);
-        mapIntent.putExtra(Constants.LOCATION_LATITUDE, mLatitude);
-        mapIntent.putExtra(Constants.LOCATION_LONGITUDE, mLongitude);
+            mapIntent.putExtra(Constants.LOCATION_ACTION,
+                    Constants.LOCATION_ACTION_ADD);
+            mapIntent.putExtra(Constants.LOCATION_LATITUDE, mLatitude);
+            mapIntent.putExtra(Constants.LOCATION_LONGITUDE, mLongitude);
 
-        startActivityForResult(mapIntent,
-                Constants.LOCATION_POINT_ON_MAP_CHOICE);
+            startActivityForResult(mapIntent,
+                    Constants.LOCATION_POINT_ON_MAP_CHOICE);
+        }
     }
 
     /**
