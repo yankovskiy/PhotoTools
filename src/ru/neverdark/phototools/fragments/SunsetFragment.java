@@ -489,21 +489,6 @@ public class SunsetFragment extends SherlockFragment {
         }
     }
 
-    private boolean isGoogleServiceAvailabe() {
-        int status = GooglePlayServicesUtil
-                .isGooglePlayServicesAvailable(mContext);
-        boolean isAvailable = false;
-        if (status == ConnectionResult.SUCCESS) {
-            isAvailable = true;
-        } else {
-            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status,
-                    getSherlockActivity(), 1);
-            dialog.show();
-        }
-
-        return isAvailable;
-    }
-
     /**
      * Handles point of map selection
      */
@@ -532,6 +517,27 @@ public class SunsetFragment extends SherlockFragment {
         mYear = localCalendar.get(Calendar.YEAR);
         mMonth = localCalendar.get(Calendar.MONTH);
         mDay = localCalendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    /**
+     * Checks for availabe Google Service If service is not available, or
+     * service is not up to date
+     * 
+     * @return true if Google service is available
+     */
+    private boolean isGoogleServiceAvailabe() {
+        int status = GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(mContext);
+        boolean isAvailable = false;
+        if (status == ConnectionResult.SUCCESS) {
+            isAvailable = true;
+        } else {
+            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status,
+                    getSherlockActivity(), 1);
+            dialog.show();
+        }
+
+        return isAvailable;
     }
 
     /**
