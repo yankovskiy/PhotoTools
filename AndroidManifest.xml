@@ -16,8 +16,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.neverdark.phototools"
-    android:versionCode="53"
-    android:versionName="0.7.4" >
+    android:versionCode="54"
+    android:versionName="0.7.5" >
 
     <!-- Used by the API to download map tiles from Google Maps servers. -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -39,7 +39,7 @@
     <!-- Supported version from 2.2 to 4.3 -->
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
