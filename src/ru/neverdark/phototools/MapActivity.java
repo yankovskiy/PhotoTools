@@ -146,6 +146,19 @@ public class MapActivity extends SherlockFragmentActivity implements
         case R.id.map_button_done:
             showConfirmDialog();
             return true;
+        case R.id.map_type_map:
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            return true;
+
+        case R.id.map_type_terrain:
+            mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+            return true;
+        case R.id.map_type_satellite:
+            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            return true;
+        case R.id.map_type_hybrid:
+            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

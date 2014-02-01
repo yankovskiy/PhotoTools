@@ -16,8 +16,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.neverdark.phototools"
-    android:versionCode="53"
-    android:versionName="0.7.4" >
+    android:versionCode="54"
+    android:versionName="0.7.5" >
 
     <!-- Used by the API to download map tiles from Google Maps servers. -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -36,10 +36,10 @@
         android:glEsVersion="0x00020000"
         android:required="true" />
 
-    <!-- Supported version from 2.2 to 4.3 -->
+    <!-- Supported version from 2.2 to 4.4 -->
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
@@ -51,7 +51,7 @@
         <!-- Debug API Key for Google Maps v2 -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBKV2HlbGALt4iaC89PEK1TF9J_18MFJck" />
+            android:value="AIzaSyAlDaCEEoH8BaIY7BL1nszqDQi80mZgSjE" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

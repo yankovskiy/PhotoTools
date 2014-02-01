@@ -19,6 +19,10 @@
     </style>
   </head>
   <body>
+$ 0.7.5
+  % Version 0.7.5
+  _ 01.02.2014
+    * The possibility to choose a type of the map is added
 $ 0.7.4
   % Version 0.7.4
   _ 15.01.2014

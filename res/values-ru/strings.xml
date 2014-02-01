@@ -39,7 +39,8 @@
     <string name="about_label_sunsetMap">Карта</string>
     <string name="about_label_sunsetMapManual">Для выбора конкретного местоположения на карте нажмите и 
         удерживайте искомую точку. После появления на карте маркера нажмите \"Подтвердить выбор\". 
-        Примечание: может быть установлен только один маркер.</string>    
+        Для выбора типа карты откройте меню. 
+        Примечание: может быть установлен только один маркер.</string>
         
     <string name="about_label_licenseInformation"><![CDATA[<b>Photo Tools</b> распространяется по лицензии GPL v3. Вы можете получить исходный код на <a href="https://github.com/yankovskiy/PhotoTools">github.com</a>]]></string>
     <string name="about_label_version">Версия:</string>
@@ -80,6 +81,10 @@
     <string name="main_button_sunset">Закаты и рассветы</string>
     
     <string name="map_button_confirmSelection">Подтвердить выбор</string>
+    <string name="map_menu_mapType_map">Карта</string>
+    <string name="map_menu_mapType_terrain">Местность</string>
+    <string name="map_menu_mapType_satellite">Спутник</string>
+    <string name="map_menu_mapType_hybrid">Гибрид</string>
     
     <string name="sunset_alert_message">Не удается определить местоположение. Перейти в настройки?</string>
     <string name="sunset_alert_title">Определение местоположения</string>

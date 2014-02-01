@@ -35,7 +35,9 @@
         sunrise\", \"Civil twilight\", etc, press on corresponding field in \"Result of calculations\". </string>
     <string name="about_label_sunsetMap">Map</string>
     <string name="about_label_sunsetMapManual">For the choosing of a concrete location on the map, press and keep a required point. 
-        Press to \"Confirm a choice\" after occurrence of the marker on the map. The note: the one marker can be established only.</string>    
+        Press to \"Confirm a choice\" after occurrence of the marker on the map. 
+        For the choosing a type of the map, open the menu.
+        The note: the one marker can be established only.</string>    
         
     <string name="about_label_licenseInformation"><![CDATA[<b>Photo Tools</b> is distributing under the license GPL v3. You can receive the source code of the program under the link: <a href="https://github.com/yankovskiy/PhotoTools">github.com</a>]]></string>
     <string name="about_label_version">Version:</string>
@@ -76,6 +78,10 @@
     <string name="main_button_sunset">Sunsets and sunrises</string>
     
     <string name="map_button_confirmSelection">Confirm a choice</string>
+    <string name="map_menu_mapType_map">Map</string>
+    <string name="map_menu_mapType_terrain">Terrain</string>
+    <string name="map_menu_mapType_satellite">Satellite</string>
+    <string name="map_menu_mapType_hybrid">Hybrid</string>
     
     <string name="sunset_alert_message">It isn’t possible to pick the location. Go to the settings?</string>
     <string name="sunset_alert_title">Finding of location</string>
