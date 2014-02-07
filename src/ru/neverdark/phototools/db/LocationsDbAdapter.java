@@ -66,7 +66,7 @@ public class LocationsDbAdapter {
      *            location longitude
      * @return ContentValues object
      */
-    private ContentValues CreateContentValues(String locationName,
+    private ContentValues createContentValues(String locationName,
             double latitude, double longitude) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(KEY_LOCATION_NAME, locationName);
@@ -91,7 +91,7 @@ public class LocationsDbAdapter {
     public long createLocation(String locationName, double latitude,
             double longitude) {
         Log.message("Enter");
-        ContentValues insertValues = CreateContentValues(locationName,
+        ContentValues insertValues = createContentValues(locationName,
                 latitude, longitude);
 
         return mDatabase.insert(TABLE_NAME, null, insertValues);
@@ -102,7 +102,7 @@ public class LocationsDbAdapter {
      * 
      * @param recordId
      *            recordId in Location table
-     * @return true if delete success or false in othe case
+     * @return true if delete success or false in other case
      */
     public boolean deleteLocation(long recordId) {
         Log.message("Enter");
@@ -237,7 +237,7 @@ public class LocationsDbAdapter {
         String where = KEY_ROWID + " = ?";
         String[] whereArgs = { String.valueOf(recordId) };
 
-        ContentValues updateValues = CreateContentValues(locationName,
+        ContentValues updateValues = createContentValues(locationName,
                 latitude, longitude);
         mDatabase.update(TABLE_NAME, updateValues, where, whereArgs);
     }
