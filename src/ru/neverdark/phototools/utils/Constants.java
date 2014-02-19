@@ -29,6 +29,7 @@ public class Constants {
     public static final byte FEEDBACK_CHOICE = 4;
     public static final byte DONATE_CHOICE = 5;
     public static final byte ABOUT_CHOICE = 6;
+    public static final byte PLUGIN_CHOICE = 7;
     
     public static final String DATE_YEAR = "year";
     public static final String DATE_MONTH = "month";

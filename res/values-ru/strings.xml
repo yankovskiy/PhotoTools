@@ -79,6 +79,7 @@
     <string name="main_button_feedback">Обратная связь</string>
     <string name="main_button_rateMe">Оценить</string>
     <string name="main_button_sunset">Закаты и рассветы</string>
+    <string name="main_button_plugins">Плагины</string>
     
     <string name="map_button_confirmSelection">Подтвердить выбор</string>
     <string name="map_menu_mapType_map">Карта</string>

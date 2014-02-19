@@ -76,6 +76,7 @@
     <string name="main_button_feedback">Feedback</string>
     <string name="main_button_rateMe">Rate</string>
     <string name="main_button_sunset">Sunsets and sunrises</string>
+    <string name="main_button_plugins">Plugins</string>
     
     <string name="map_button_confirmSelection">Confirm a choice</string>
     <string name="map_menu_mapType_map">Map</string>

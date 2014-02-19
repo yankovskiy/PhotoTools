@@ -15,10 +15,15 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ru.neverdark.phototools.DetailsActivity;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
+import ru.neverdark.phototools.utils.MainMenuAdapter;
+import ru.neverdark.phototools.utils.MainMenuItem;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -40,6 +45,7 @@ public class TitlesFragment extends SherlockListFragment {
     private boolean mDualPane;
     private int mCurrentCheckPosition = 0;
     private SherlockFragmentActivity mActivity;
+    private MainMenuAdapter mAdapter;
 
     /**
      * Opens market detail application page for donate app
@@ -49,6 +55,78 @@ public class TitlesFragment extends SherlockListFragment {
         marketIntent.setData(Uri
                 .parse("market://details?id=ru.neverdark.phototoolsdonate"));
         startActivity(marketIntent);
+    }
+
+    /**
+     * Creates main menu item
+     * 
+     * @param title
+     *            item title
+     * @param isPlugin
+     *            true if item is plugin
+     * @param recordId
+     *            record id for local list, or 0 (zero) for plugin
+     * @param pluginPackage
+     *            plugin package name for plugin or null for local list
+     * @return menu item
+     */
+    private MainMenuItem createMainMenuItem(String title, boolean isPlugin,
+            byte recordId, String pluginPackage) {
+        MainMenuItem item = new MainMenuItem();
+        item.setTitle(title);
+        item.setIsPlugin(isPlugin);
+        item.setRecordId(recordId);
+        item.setPluginPackage(pluginPackage);
+        return item;
+    }
+
+    /**
+     * Builds list for main menu
+     * 
+     * @return list
+     */
+    private List<MainMenuItem> buildMainMenuList() {
+        List<MainMenuItem> list = new ArrayList<MainMenuItem>();
+
+        // first part of the menu
+        list.add(createMainMenuItem(getString(R.string.main_button_dofcalc),
+                false, Constants.DOF_CHOICE, null));
+        list.add(createMainMenuItem(getString(R.string.main_button_evpairs),
+                false, Constants.EV_CHOICE, null));
+        list.add(createMainMenuItem(getString(R.string.main_button_sunset),
+                false, Constants.SUNSET_CHOICE, null));
+
+        // second part of the menu
+        // loads installed plugin list
+        List<MainMenuItem> pluginList = getPluginsList();
+        if (pluginList != null) {
+            for (MainMenuItem item : pluginList) {
+                list.add(item);
+            }
+        }
+        // third part of the menu
+        list.add(createMainMenuItem(getString(R.string.main_button_plugins),
+                false, Constants.PLUGIN_CHOICE, null));
+        list.add(createMainMenuItem(getString(R.string.main_button_rateMe),
+                false, Constants.RATE_CHOICE, null));
+        list.add(createMainMenuItem(getString(R.string.main_button_feedback),
+                false, Constants.FEEDBACK_CHOICE, null));
+        list.add(createMainMenuItem(getString(R.string.main_button_donate),
+                false, Constants.DONATE_CHOICE, null));
+        list.add(createMainMenuItem(getString(R.string.main_button_about),
+                false, Constants.ABOUT_CHOICE, null));
+
+        return list;
+    }
+
+    /**
+     * Gets list of installed plugins
+     * 
+     * @return list of installed plugins
+     */
+    private List<MainMenuItem> getPluginsList() {
+        // TODO получение списка установленных плагинов
+        return null;
     }
 
     /**
@@ -70,16 +148,14 @@ public class TitlesFragment extends SherlockListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         Log.message("Enter");
         super.onActivityCreated(savedInstanceState);
-        final String[] TITLES = getResources().getStringArray(
-                R.array.main_menuTitles);
 
         mActivity = getSherlockActivity();
+        mAdapter = new MainMenuAdapter(mActivity, R.layout.menu_item,
+                R.id.menuItem_label_title, buildMainMenuList());
 
-        setListAdapter(new ArrayAdapter<String>(getActivity(),
-                R.layout.menu_item, R.id.menuItem_label_title, TITLES));
+        setListAdapter(mAdapter);
 
-        View detailsFrame = getActivity()
-                .findViewById(R.id.main_detailFragment);
+        View detailsFrame = mActivity.findViewById(R.id.main_detailFragment);
         mDualPane = detailsFrame != null
                 && detailsFrame.getVisibility() == View.VISIBLE;
 
@@ -105,7 +181,12 @@ public class TitlesFragment extends SherlockListFragment {
     public void onListItemClick(ListView listView, View view, int position,
             long id) {
         Log.message("Enter");
-        showDetails(position);
+        MainMenuItem menuItem = mAdapter.getItem(position);
+        if (menuItem.isPlugin()) {
+            // TODO: запустить плагин
+        } else {
+            showDetails(menuItem.getRecordId());
+        }
     }
 
     /*
