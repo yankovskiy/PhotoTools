@@ -98,6 +98,8 @@ public class CameraData {
         DATABASE.put(Vendor.CANON, canonCameras);
         canonCameras.add(new CameraData(Vendor.CANON, "60D", new BigDecimal("22.3"), new BigDecimal("5184")));
         DATABASE.put(Vendor.CANON, canonCameras);
+        canonCameras.add(new CameraData(Vendor.CANON, "70D", new BigDecimal("22.5"), new BigDecimal("5472")));
+        DATABASE.put(Vendor.CANON, canonCameras);
         canonCameras.add(new CameraData(Vendor.CANON, "300D / Rebel / Kiss", new BigDecimal("22.7"), new BigDecimal("3072")));
         DATABASE.put(Vendor.CANON, canonCameras);
         canonCameras.add(new CameraData(Vendor.CANON, "350D / Rebel XT / Kiss N", new BigDecimal("22.2"), new BigDecimal("3456")));
