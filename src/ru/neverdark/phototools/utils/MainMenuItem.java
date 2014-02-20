@@ -17,8 +17,8 @@ public class MainMenuItem {
     }
 
     /**
-     * Gets the name of plugin package
-     * @return name of plugin package
+     * Gets the name of plug-in package
+     * @return name of plug-in package
      */
     public String getPluginPackage() {
         return mPluginPackage;
@@ -41,24 +41,24 @@ public class MainMenuItem {
     }
 
     /**
-     * Checks record as plugin
-     * @return true for record as plugin
+     * Checks record as plug-in
+     * @return true for record as plug-in
      */
     public boolean isPlugin() {
         return mIsPlugin;
     }
 
     /**
-     * Mark current record as plugin
-     * @param isPlugin true for plugin-record
+     * Mark current record as plug-in
+     * @param isPlugin true for plug-in record
      */
     public void setIsPlugin(boolean isPlugin) {
         this.mIsPlugin = isPlugin;
     }
 
     /**
-     * Sets the name of plugin package
-     * @param pluginPackage name of plugin package
+     * Sets the name of plug-in package
+     * @param pluginPackage name of plug-in package
      */
     public void setPluginPackage(String pluginPackage) {
         this.mPluginPackage = pluginPackage;
