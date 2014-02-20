@@ -146,40 +146,35 @@ public class TitlesFragment extends SherlockListFragment {
         View detailsFrame = mActivity.findViewById(R.id.main_detailFragment);
         mDualPane = detailsFrame != null
                 && detailsFrame.getVisibility() == View.VISIBLE;
-        
-        if (savedInstanceState != null) {
-            mCurrentCheckPosition = savedInstanceState.getInt(
-                    Constants.CURRENT_CHOICE, 0);
-        }
-        
-        if (mDualPane) {
-            getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-            showDetails(mCurrentCheckPosition);
-        }
-/*
-        mActivity = getSherlockActivity();
-        mAdapter = new MainMenuAdapter(mActivity, R.layout.menu_item,
-                R.id.menuItem_label_title, buildMainMenuList());
-
-        setListAdapter(mAdapter);
-
-        View detailsFrame = mActivity.findViewById(R.id.main_detailFragment);
-        mDualPane = detailsFrame != null
-                && detailsFrame.getVisibility() == View.VISIBLE;
 
         if (savedInstanceState != null) {
             mCurrentCheckPosition = savedInstanceState.getInt(
                     Constants.CURRENT_CHOICE, 0);
         }
 
-        if (mDualPane) {
-            getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-            showDetails(mCurrentCheckPosition);
-        }
-        */
+        /*
+         * mActivity = getSherlockActivity(); mAdapter = new
+         * MainMenuAdapter(mActivity, R.layout.menu_item,
+         * R.id.menuItem_label_title, buildMainMenuList());
+         * 
+         * setListAdapter(mAdapter);
+         * 
+         * View detailsFrame = mActivity.findViewById(R.id.main_detailFragment);
+         * mDualPane = detailsFrame != null && detailsFrame.getVisibility() ==
+         * View.VISIBLE;
+         * 
+         * if (savedInstanceState != null) { mCurrentCheckPosition =
+         * savedInstanceState.getInt( Constants.CURRENT_CHOICE, 0); }
+         * 
+         * if (mDualPane) {
+         * getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+         * showDetails(mCurrentCheckPosition); }
+         */
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see android.support.v4.app.Fragment#onResume()
      */
     @Override
@@ -191,20 +186,27 @@ public class TitlesFragment extends SherlockListFragment {
                 R.id.menuItem_label_title, buildMainMenuList());
 
         setListAdapter(mAdapter);
+        if (mDualPane) {
+            getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+            showDetails(mCurrentCheckPosition,
+                    mAdapter.getItem(mCurrentCheckPosition).getRecordId());
+        }
     }
-    
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see android.support.v4.app.Fragment#onPause()
      */
     @Override
     public void onPause() {
         Log.enter();
         super.onPause();
-        
+
         mAdapter.clear();
         mAdapter = null;
     }
+
     /*
      * (non-Javadoc)
      * 
@@ -218,9 +220,10 @@ public class TitlesFragment extends SherlockListFragment {
         Log.message("Enter");
         MainMenuItem menuItem = mAdapter.getItem(position);
         if (menuItem.isPlugin()) {
-            PluginManager.getInstance(mActivity).runPlugin(menuItem.getPluginPackage());
+            PluginManager.getInstance(mActivity).runPlugin(
+                    menuItem.getPluginPackage());
         } else {
-            showDetails(menuItem.getRecordId());
+            showDetails(position, menuItem.getRecordId());
         }
     }
 
@@ -332,22 +335,27 @@ public class TitlesFragment extends SherlockListFragment {
     /**
      * Shows fragment if application runned on the Tablet or activity for other
      * case
+     * 
+     * @param index
+     *            index selected menu item
+     * @param recordId
+     *            record id for selected item
      */
-    private void showDetails(int index) {
+    private void showDetails(int index, int recordId) {
         Log.message("Enter");
 
-        if (index == Constants.RATE_CHOICE) {
+        if (recordId == Constants.RATE_CHOICE) {
             gotoMarket();
-        } else if (index == Constants.DONATE_CHOICE) {
+        } else if (recordId == Constants.DONATE_CHOICE) {
             gotoDonate();
-        } else if (index == Constants.FEEDBACK_CHOICE) {
+        } else if (recordId == Constants.FEEDBACK_CHOICE) {
             sendEmail();
         } else {
             if (mDualPane == true) {
                 getListView().setItemChecked(index, true);
-                replaceFragment(index);
+                replaceFragment(recordId);
             } else {
-                showActivity(index);
+                showActivity(recordId);
             }
 
             setCurentCheckPosition(index);
