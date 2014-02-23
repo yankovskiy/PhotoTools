@@ -186,4 +186,7 @@
     <string name="zonePicker_title">Выбор временной зоны</string>
     <string name="zonePicker_message">Не удалось определить временную зону. Выберите из списка:</string>
 
+    <string name="plugins_available">Доступные</string>
+    <string name="plugins_installed">Установленные</string>
+    
 </resources>

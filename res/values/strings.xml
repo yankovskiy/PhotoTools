@@ -182,5 +182,8 @@
     
     <string name="zonePicker_title">Choose a time zone</string>
     <string name="zonePicker_message">It was not possible to pick the time zone. Please, choose from the list:</string>
+    
+    <string name="plugins_available">Available</string>
+    <string name="plugins_installed">Installed</string>
 
 </resources>

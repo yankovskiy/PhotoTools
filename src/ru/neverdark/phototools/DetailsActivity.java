@@ -18,6 +18,7 @@ package ru.neverdark.phototools;
 import ru.neverdark.phototools.fragments.AboutFragment;
 import ru.neverdark.phototools.fragments.DofFragment;
 import ru.neverdark.phototools.fragments.EvpairsFragment;
+import ru.neverdark.phototools.fragments.PluginsFragment;
 import ru.neverdark.phototools.fragments.SunsetFragment;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
@@ -75,6 +76,11 @@ public class DetailsActivity extends SherlockFragmentActivity {
             AboutFragment aboutFragment = new AboutFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, aboutFragment).commit();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            break;
+        case Constants.PLUGIN_CHOICE:
+            PluginsFragment pluginFragment = new PluginsFragment();
+            getSupportFragmentManager().beginTransaction().add(android.R.id.content, pluginFragment).commit();
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             break;
         }

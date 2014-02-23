@@ -43,7 +43,7 @@ import com.actionbarsherlock.app.SherlockListFragment;
  */
 public class TitlesFragment extends SherlockListFragment {
     private boolean mDualPane;
-    private int mCurrentCheckPosition = 0;
+    private int mCurrentRecordId = 0;
     private SherlockFragmentActivity mActivity;
     private MainMenuAdapter mAdapter;
 
@@ -148,28 +148,9 @@ public class TitlesFragment extends SherlockListFragment {
                 && detailsFrame.getVisibility() == View.VISIBLE;
 
         if (savedInstanceState != null) {
-            mCurrentCheckPosition = savedInstanceState.getInt(
+            mCurrentRecordId = savedInstanceState.getInt(
                     Constants.CURRENT_CHOICE, 0);
         }
-
-        /*
-         * mActivity = getSherlockActivity(); mAdapter = new
-         * MainMenuAdapter(mActivity, R.layout.menu_item,
-         * R.id.menuItem_label_title, buildMainMenuList());
-         * 
-         * setListAdapter(mAdapter);
-         * 
-         * View detailsFrame = mActivity.findViewById(R.id.main_detailFragment);
-         * mDualPane = detailsFrame != null && detailsFrame.getVisibility() ==
-         * View.VISIBLE;
-         * 
-         * if (savedInstanceState != null) { mCurrentCheckPosition =
-         * savedInstanceState.getInt( Constants.CURRENT_CHOICE, 0); }
-         * 
-         * if (mDualPane) {
-         * getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-         * showDetails(mCurrentCheckPosition); }
-         */
     }
 
     /*
@@ -182,15 +163,26 @@ public class TitlesFragment extends SherlockListFragment {
         Log.enter();
         super.onResume();
 
+        rebuildList();
+        if (mDualPane) {
+            getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+            int position = findPositionById(mCurrentRecordId);
+            showDetails(position, mCurrentRecordId);
+        }
+    }
+
+    /**
+     * Rebuild menu list
+     */
+    private void rebuildList() {
+        if (mAdapter != null) {
+            mAdapter.clear();
+        }
+
         mAdapter = new MainMenuAdapter(mActivity, R.layout.menu_item,
                 R.id.menuItem_label_title, buildMainMenuList());
 
         setListAdapter(mAdapter);
-        if (mDualPane) {
-            getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-            showDetails(mCurrentCheckPosition,
-                    mAdapter.getItem(mCurrentCheckPosition).getRecordId());
-        }
     }
 
     /*
@@ -203,8 +195,10 @@ public class TitlesFragment extends SherlockListFragment {
         Log.enter();
         super.onPause();
 
-        mAdapter.clear();
-        mAdapter = null;
+        if (mAdapter != null) {
+            mAdapter.clear();
+            mAdapter = null;
+        }
     }
 
     /*
@@ -238,7 +232,7 @@ public class TitlesFragment extends SherlockListFragment {
         Log.message("Enter");
         super.onSaveInstanceState(outState);
 
-        outState.putInt(Constants.CURRENT_CHOICE, mCurrentCheckPosition);
+        outState.putInt(Constants.CURRENT_CHOICE, mCurrentRecordId);
     }
 
     /**
@@ -286,6 +280,14 @@ public class TitlesFragment extends SherlockListFragment {
                         .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             }
             break;
+        case Constants.PLUGIN_CHOICE:
+            if ((details instanceof PluginsFragment) == false) {
+                details = new PluginsFragment();
+                isOperationNeed = true;
+                mActivity
+                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            }
+            break;
         }
 
         if (isOperationNeed == true) {
@@ -310,12 +312,12 @@ public class TitlesFragment extends SherlockListFragment {
     }
 
     /**
-     * Sets current position for navigation list
+     * Sets current record id for menu list
      * 
-     * @param index
+     * @param recordId
      */
-    private void setCurentCheckPosition(int index) {
-        mCurrentCheckPosition = index;
+    private void setCurentRecordId(int recordId) {
+        mCurrentRecordId = recordId;
     }
 
     /**
@@ -358,8 +360,25 @@ public class TitlesFragment extends SherlockListFragment {
                 showActivity(recordId);
             }
 
-            setCurentCheckPosition(index);
+            setCurentRecordId(recordId);
         }
+    }
+
+    /**
+     * Finds item position in the menu list by id
+     * 
+     * @param recordId
+     *            record id
+     * @return item position
+     */
+    private int findPositionById(int recordId) {
+        for (int position = 0; position < mAdapter.getCount(); position++) {
+            if (mAdapter.getItem(position).getRecordId() == recordId) {
+                return position;
+            }
+        }
+
+        return 0;
     }
 
 }

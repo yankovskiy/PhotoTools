@@ -3,11 +3,14 @@ package ru.neverdark.phototools.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.neverdark.phototools.R;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 
 /**
  * Singleton class for plug-in management
@@ -48,13 +51,16 @@ public class PluginManager {
      *            menu item title
      * @param pluginPackage
      *            name of plug-in package
+     *            @param appName application name
      * @return menu item
      */
-    private MainMenuItem createMenuItem(String title, String pluginPackage) {
+    private MainMenuItem createMenuItem(String title, String pluginPackage, Drawable icon, String appName) {
         MainMenuItem item = new MainMenuItem();
         item.setIsPlugin(true);
         item.setTitle(title);
         item.setPluginPackage(pluginPackage);
+        item.setIcon(icon);
+        item.setAppName(appName);
         return item;
     }
 
@@ -83,7 +89,7 @@ public class PluginManager {
     /**
      * Scans device for installed plugins
      */
-    public void scan() {
+    public PluginManager scan() {
         mList.clear();
 
         Intent intent = new Intent(PLUGINS_LIST);
@@ -91,17 +97,25 @@ public class PluginManager {
                 .queryIntentActivities(intent, 0);
         String title;
         String pluginPackage;
-
+        Drawable icon;
+        String appName;
+        
         for (ResolveInfo item : list) {
             pluginPackage = item.activityInfo.packageName;
+            
             try {
                 Resources res = mContext.getPackageManager().getResourcesForApplication(pluginPackage);
                 int id = res.getIdentifier("app_title", "string", pluginPackage);
+                
+                appName = item.loadLabel(mContext.getPackageManager()).toString();
+                icon = item.loadIcon(mContext.getPackageManager());
                 title = res.getString(id);
-                mList.add(createMenuItem(title, pluginPackage));
+                mList.add(createMenuItem(title, pluginPackage, icon, appName));
             } catch (NameNotFoundException e) {
                 e.printStackTrace();
             }
         }
+        
+        return this;
     }
 }
