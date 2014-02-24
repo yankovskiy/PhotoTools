@@ -56,7 +56,8 @@ public class PluginsFragment extends SherlockFragment {
     private ListView mInstalledListView;
     private Context mContext;
     private PluginAdapter mAvailablePlugins;
-
+    private static final String ACTIVE_TAB = "activeTabs";
+    private TabHost mTabHost;
     /*
      * (non-Javadoc)
      * 
@@ -73,7 +74,14 @@ public class PluginsFragment extends SherlockFragment {
 
         bindObjectsToResources();
 
-        buildTabs();
+        int activeTab;
+        if (savedInstanceState != null) {
+            activeTab = savedInstanceState.getInt(ACTIVE_TAB);
+        } else {
+            activeTab = 0;
+        }
+        
+        buildTabs(activeTab);
 
         mAvailableListView
                 .setOnItemClickListener(new AvailableItemClickListener());
@@ -86,11 +94,16 @@ public class PluginsFragment extends SherlockFragment {
         loadDataToLists();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putInt(ACTIVE_TAB, mTabHost.getCurrentTab());
+    }
+    
     /**
      * Builds tabs
      */
-    private void buildTabs() {
-        TabHost mTabHost = (TabHost) mView.findViewById(android.R.id.tabhost);
+    private void buildTabs(int activeTab) {
+        mTabHost = (TabHost) mView.findViewById(android.R.id.tabhost);
 
         mTabHost.setup();
 
@@ -104,6 +117,8 @@ public class PluginsFragment extends SherlockFragment {
         spec.setContent(R.id.plugins_tab_installed);
         spec.setIndicator(getString(R.string.plugins_installed));
         mTabHost.addTab(spec);
+        
+        mTabHost.setCurrentTab(activeTab);
     }
 
     /**

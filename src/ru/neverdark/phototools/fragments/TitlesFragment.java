@@ -191,14 +191,15 @@ public class TitlesFragment extends SherlockListFragment {
      * @see android.support.v4.app.Fragment#onPause()
      */
     @Override
-    public void onPause() {
+    public void onStop() {
         Log.enter();
-        super.onPause();
+        super.onStop();
 
         if (mAdapter != null) {
             mAdapter.clear();
             mAdapter = null;
         }
+        
     }
 
     /*
