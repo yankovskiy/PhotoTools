@@ -1,7 +1,6 @@
 package ru.neverdark.phototools.utils.evcalculator;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class EvMathTable implements EvTable {
@@ -12,7 +11,7 @@ public class EvMathTable implements EvTable {
 	 * Values for 1/2 stop -> index modulo 2 = 0
 	 * Values for 1/3 stop -> index modulo 4 != 2
 	 */
-	private static final int ISO_VALUE_LIST[] = {
+	private static final double ISO_VALUE_LIST[] = {
 		25, 32, 35, 40,
         50, 64, 70, 80,
         100, 125, 140, 160,
@@ -29,17 +28,29 @@ public class EvMathTable implements EvTable {
         204800
         };
 	
-	public Integer[] getISOValues(int stopDistribution) {
-		ArrayList<Integer> fullValues = new ArrayList<Integer>();
+	public Double[] getISOValues(int stopDistribution) {
+		return getValues(ISO_VALUE_LIST, stopDistribution);
+	};
+	
+	public Double[] getShutterValues(int stopDistribution) {
+		return getValues(SHUTTER_VALUE_LIST, stopDistribution);
+	};
+	
+	public Double[] getApertureValues(int stopDistribution) {
+		return getValues(APERTURE_VALUE_LIST, stopDistribution);
+	};
+	
+	private Double[] getValues(double [] listOfValues, int stopDistribution){
+		ArrayList<Double> fullValues = new ArrayList<Double>();
 		int index;
-		int limit = ISO_VALUE_LIST.length;
+		int limit = listOfValues.length;
 		for(index = 0; index < limit; index++) {
 			if(selectIso(index, stopDistribution)){
-				fullValues.add(ISO_VALUE_LIST[index]);
+				fullValues.add(listOfValues[index]);
 			}
 		}
-		return fullValues.toArray(new Integer[fullValues.size()]);
-	};
+		return fullValues.toArray(new Double[fullValues.size()]);
+	}
 	
     private boolean selectIso(int index, int stopDistribution) {
     	boolean selection = false;
@@ -54,16 +65,101 @@ public class EvMathTable implements EvTable {
 	private static final String ISO_LIST[] = {"25", "50", "100", "200", "400", "800",
         "1600", "3200", "6400", "12800", "25600", "51200", "102400", "204800"};
 
-	private static final String SHUTTER_LIST[] = {"512 min",
-	        "256 min", "128 min", "64 min", "32 min", "16 min", "8 min", "4 min", "2 min",
-	        "1 min", "30 sec", "15 sec", "8 sec", "4 sec", "2 sec", "1 sec",
-	        "1/2 sec", "1/4 sec", "1/8 sec", "1/15 sec", "1/30 sec",
-	        "1/60 sec", "1/125 sec", "1/250 sec", "1/500 sec", "1/1000 sec",
-	        "1/2000 sec", "1/4000 sec", "1/8000 sec" };
+	private static final double SHUTTER_VALUE_LIST[] = {
+		8000, 6400, 6000, 5000,
+		4000, 3200, 3000, 2500,
+		2000, 1600, 1500, 1250,
+		1000, 800, 750, 640,
+		500, 400, 350, 320,
+		250, 200, 180, 160,
+		125, 100, 90, 80,
+		60, 50, 45, 40,
+		30, 25, 23, 20,
+		15, 13, 11, 10,
+		8, 6, 6, 5,
+		4, 3, 3, 2.5,
+		2, 1.6, 1.5, 1.3,
+		1, 1.3, 1.5, 1.6,
+		2, 2.5, 3, 3,
+		4, 5, 6, 6,
+		8, 10, 11, 13,
+		15, 20, 23, 25,
+		30, 40, 45, 50,
+		60, 78, 84, 96,
+		120, 150, 168, 192,
+		240, 300, 342, 378,
+		480, 606, 678, 762,
+		960, 1212, 1356, 1524,
+		1920, 2418, 2700, 3048,
+		3840, 4836, 5460, 6120,
+		7680, 9660, 10860, 12180,
+		15360, 19380, 21720, 24360,
+		30720
+        };
 	
-	private static final String APERTURE_LIST[] = { "f/1", "f/1.4", "f/2.0",
-	        "f/2.8", "f/4", "f/5.6", "f/8", "f/11", "f/16", "f/22", "f/32",
-	        "f/45", "f/64", "f/90", "f/128", "f/180", "f/256", "f/360" };
+	private static final String SHUTTER_LIST[] = {
+		"512 min", "406 min", "323 min",
+        "256 min", "203 min", "161 min",
+        "128 min", "102 min", "80.6 min",
+        "64 min", "50.8 min", "40.3 min",
+        "32 min", "25.4 min", "20.2 min",
+        "16 min", "12.7 min", "10.1 min",
+        "8 min", "6.3 min", "5 min",
+        "4 min", "3.2 min", "2.5 min",
+        "2 min","1.6 min", "1.3 min",
+        "1 min", "50 sec", "40 sec",
+        "30 sec", "25 sec", "20 sec",
+        "15 sec", "13 sec", "10 sec",
+        "8 sec", "6 sec", "5 sec",
+        "4 sec", "3 sec", "2.5 sec",
+        "2 sec", "1.6 sec", "1.3 sec",
+        "1 sec", "1/1.3 sec", "1/1.6 sec",
+        "1/2 sec", "1/2.5 sec", "1/3 sec",
+        "1/4 sec", "1/5 sec", "1/6 sec",
+        "1/8 sec", "1/10 sec", "1/13 sec",
+        "1/15 sec", "1/20 sec", "1/25 sec",
+        "1/30 sec", "1/40 sec", "1/50 sec",
+        "1/60 sec", "1/80 sec", "1/100 sec",
+        "1/125 sec", "1/160 sec", "1/200 sec",
+        "1/250 sec", "1/320 sec", "1/400 sec",
+        "1/500 sec", "1/640 sec", "1/800 sec",
+        "1/1000 sec", "1/1250 sec", "1/1600 sec",
+        "1/2000 sec", "1/2500 sec", "1/3200 sec",
+        "1/4000 sec", "1/5000 sec", "1/6400 sec",
+        "1/8000 sec"
+        };
+	
+	private static final String APERTURE_LIST[] = { 
+		"f/1", "f/1.12", "f/1.25",
+	    "f/1.4", "f/1.6", "f/1.8", "f/2.0", "f/2.3", "f/2.5", "f/2.8",
+	    "f/3.2", "f/3.6", "f/4", "f/4.5", "f/5", "f/5.6", "f/6.3", "f/7",
+	    "f/8", "f/9", "f/10", "f/11", "f/12.5", "f/14", "f/16", "f/18",
+	    "f/20", "f/22", "f/25", "f/28", "f/32", "f/36", "f/40", "f/45",
+	    "f/50", "f/57", "f/64", "f/72", "f/80", "f/90", "f/100", "f/115",
+	    "f/128", "f/145", "f/160", "f/180", "f/200", "f/230", "f/256",
+	    "f/290", "f/320", "f/360"
+	    };
+	
+	private static final double APERTURE_VALUE_LIST[] = { 
+		360, 320, 300, 290,
+		256, 230, 215, 200,
+		180, 160, 150, 145,
+	    128, 115, 110, 100,
+	    90, 80, 76, 72,
+	    64, 57, 54, 50,
+	    45, 40, 38, 36,
+	    32, 28, 27, 25,
+	    22, 20, 19, 18,
+	    16, 14, 13.5, 12.5,
+	    11, 10, 9.5, 9,
+	    8, 7, 6.8, 6.3,
+	    5.6, 5, 4.8, 4.5,
+	    4, 3.6, 3.4, 3.2,
+	    2.8, 2.5, 2.4, 2.3,
+	    2, 1.8, 1.7, 1.6,
+	    1.4, 1.25, 1.2, 1.12,
+	    1
+	    };
 	
 	private static final int EV_TABLE[][] = {
 	    { 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13},

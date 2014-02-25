@@ -15,6 +15,7 @@
  ******************************************************************************/
 package ru.neverdark.phototools.utils.evcalculator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import ru.neverdark.phototools.utils.Log;
@@ -40,7 +41,9 @@ public class EvCalculator {
     public static final int INVALID_INDEX = -100;
     
     private String ISO_LIST[];
-    private Integer ISO_VALUE_LIST[];
+    private Double ISO_VALUE_LIST[];
+    private Double APERTURE_VALUE_LIST[];
+    private Double SHUTTER_VALUE_LIST[];
     
     private String SHUTTER_SPEED_LIST[];
         
@@ -98,6 +101,8 @@ public class EvCalculator {
         mEvTable = new  EvMathTable();
         ISO_LIST = mEvTable.getIsoList();
         ISO_VALUE_LIST = mEvTable.getISOValues(evStep);
+        APERTURE_VALUE_LIST = mEvTable.getApertureValues(evStep);
+        SHUTTER_VALUE_LIST = mEvTable.getShutterValues(evStep);
         SHUTTER_SPEED_LIST = mEvTable.getShutterList();
         APERTURE_LIST = mEvTable.getApertureList();
         EV_TABLE = mEvTable.getEvTable();
@@ -109,8 +114,12 @@ public class EvCalculator {
      * @return array contains possible ISO
      */
     public String[] getIsoList() {
-    	String[] a = Arrays.toString(ISO_VALUE_LIST).split("[\\[\\]]")[1].split(", ");
-        return a;
+    	ArrayList<String> isos = new ArrayList<String>();
+    	int index = 0;
+    	for (index = 0; index < ISO_VALUE_LIST.length ; index++ ) {
+    		isos.add(cleanNumberToString(ISO_VALUE_LIST[index]));
+    	}
+        return isos.toArray(new String[isos.size()]);
     }
     
     /**
@@ -118,7 +127,12 @@ public class EvCalculator {
      * @return array contains possible apertures
      */
     public String[] getApertureList() {
-        return APERTURE_LIST;
+    	ArrayList<String> apertures = new ArrayList<String>();
+    	int index = 0;
+    	for (index = 0; index < APERTURE_VALUE_LIST.length ; index++ ) {
+    		apertures.add("f/"+cleanNumberToString(APERTURE_VALUE_LIST[index]));
+    	}
+        return apertures.toArray(new String[apertures.size()]);
     }
     
     /**
@@ -126,10 +140,41 @@ public class EvCalculator {
      * @return array contains possible shutter speed
      */
     public String[] getShutterList() {
-        return SHUTTER_SPEED_LIST;
+    	ArrayList<String> shutters = new ArrayList<String>();
+    	int index = 0;
+    	int flag = 0;
+    	for (index = 0; index < SHUTTER_VALUE_LIST.length ; index++ ) {
+    		switch(flag){
+    		case 0: {
+	    			if(SHUTTER_VALUE_LIST[index]==1)
+	    				flag=1;
+	    			else {
+	    				shutters.add("1/"+cleanNumberToString(SHUTTER_VALUE_LIST[index])+" sec");
+	    				break;
+	    			}
+	    		}
+    		case 1: {
+	    			if(SHUTTER_VALUE_LIST[index]>=60)
+	    				flag=2;
+	    			else {
+	    				shutters.add(cleanNumberToString(SHUTTER_VALUE_LIST[index])+" sec");
+	    				break;
+	    			}
+	    		}
+    		default: shutters.add(cleanNumberToString((Double)(SHUTTER_VALUE_LIST[index]/60))+" min"); break;
+    		}
+    	}
+        return shutters.toArray(new String[shutters.size()]);
     }
     
-    
+    private String cleanNumberToString(Double number){
+    	String numberToReturn = "";
+    	if( number%1 == 0)
+    		numberToReturn = String.format("%d",number.intValue());
+		else
+			numberToReturn = number.toString();
+    	return numberToReturn;
+    }
     
     /**
      * Function calculates the required value based on indices obtained in the class constructor.
