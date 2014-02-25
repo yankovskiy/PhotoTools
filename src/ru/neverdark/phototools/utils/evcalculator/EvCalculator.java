@@ -139,9 +139,13 @@ public class EvCalculator {
         } else {
             calculateShutterSpeed();
         }
-                
-        mIndex++;
-        Log.variable("mIndex", String.valueOf("mIndex"));
+        
+        if (mIndex < 0) {
+            mIndex = INVALID_INDEX;
+        } else {
+            mIndex++;
+        }
+        Log.variable("mIndex", String.valueOf(mIndex));
         
         return mIndex;
     }
