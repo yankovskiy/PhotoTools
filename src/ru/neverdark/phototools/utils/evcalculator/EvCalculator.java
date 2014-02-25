@@ -29,7 +29,7 @@ public class EvCalculator {
     private int mNewIsoPostion;
     private int mNewShutterSpeedPosition;
     private int mIndex;
-    private EvTable mEvTable;
+    private EvMathTable mEvTable;
     
     
     public static final int FULL_STOP = 0;
@@ -40,6 +40,7 @@ public class EvCalculator {
     public static final int INVALID_INDEX = -100;
     
     private String ISO_LIST[];
+    private Integer ISO_VALUE_LIST[];
     
     private String SHUTTER_SPEED_LIST[];
         
@@ -81,20 +82,22 @@ public class EvCalculator {
     public void initArrays(final int evStep) {
         switch (evStep) {
         case FULL_STOP:
-            mEvTable = new EvFullTable();
+            //mEvTable = new EvMathTable();
             Log.message("EV FULL");
             break;
         case HALF_STOP:
-            mEvTable = new EvHalfTable();
+            //mEvTable = new EvMathTable();
             Log.message("Ev HALF");
             break;
         case THIRD_STOP:
-            mEvTable = new  EvThirdTable();
+            //mEvTable = new  EvMathTable();
             Log.message("Ev THIRD");
             break;
         }
         
+        mEvTable = new  EvMathTable();
         ISO_LIST = mEvTable.getIsoList();
+        ISO_VALUE_LIST = mEvTable.getISOValues(evStep);
         SHUTTER_SPEED_LIST = mEvTable.getShutterList();
         APERTURE_LIST = mEvTable.getApertureList();
         EV_TABLE = mEvTable.getEvTable();
@@ -106,7 +109,8 @@ public class EvCalculator {
      * @return array contains possible ISO
      */
     public String[] getIsoList() {
-        return ISO_LIST;
+    	String[] a = Arrays.toString(ISO_VALUE_LIST).split("[\\[\\]]")[1].split(", ");
+        return a;
     }
     
     /**
