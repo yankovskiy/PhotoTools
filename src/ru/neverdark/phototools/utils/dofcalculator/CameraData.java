@@ -18,7 +18,6 @@ package ru.neverdark.phototools.utils.dofcalculator;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,9 @@ public class CameraData {
      */
     public static enum Vendor {
         CANON, 
+        FUJIFILM,
         NIKON, 
+        OLYMPUS,
         PENTAX, 
         SONY
     }
@@ -125,6 +126,24 @@ public class CameraData {
         canonCameras.add(new CameraData(Vendor.CANON, "1100D / Rebel T3 / Kiss X50", new BigDecimal("22.2"), new BigDecimal("4272")));
         DATABASE.put(Vendor.CANON, canonCameras);
         
+        List<CameraData> fujiCameras = new ArrayList<CameraData>();
+        fujiCameras.add(new CameraData(Vendor.FUJIFILM, "Fujix DS-560", new BigDecimal("11"), new BigDecimal("1280")));
+        DATABASE.put(Vendor.FUJIFILM, fujiCameras);
+        fujiCameras.add(new CameraData(Vendor.FUJIFILM, "Fujix DS-565", new BigDecimal("11"), new BigDecimal("1280")));
+        DATABASE.put(Vendor.FUJIFILM, fujiCameras);
+        fujiCameras.add(new CameraData(Vendor.FUJIFILM, "FinePix IS Pro", new BigDecimal("23"), new BigDecimal("4256")));
+        DATABASE.put(Vendor.FUJIFILM, fujiCameras);
+        fujiCameras.add(new CameraData(Vendor.FUJIFILM, "FinePix S1 Pro", new BigDecimal("23"), new BigDecimal("3040")));
+        DATABASE.put(Vendor.FUJIFILM, fujiCameras);
+        fujiCameras.add(new CameraData(Vendor.FUJIFILM, "FinePix S2 Pro", new BigDecimal("23"), new BigDecimal("4256")));
+        DATABASE.put(Vendor.FUJIFILM, fujiCameras);
+        fujiCameras.add(new CameraData(Vendor.FUJIFILM, "FinePix S3 Pro", new BigDecimal("23"), new BigDecimal("4256")));
+        DATABASE.put(Vendor.FUJIFILM, fujiCameras);
+        fujiCameras.add(new CameraData(Vendor.FUJIFILM, "FinePix S3 Pro UVIR", new BigDecimal("23"), new BigDecimal("4256")));
+        DATABASE.put(Vendor.FUJIFILM, fujiCameras);
+        fujiCameras.add(new CameraData(Vendor.FUJIFILM, "FinePix S5 Pro", new BigDecimal("23"), new BigDecimal("4256")));
+        DATABASE.put(Vendor.FUJIFILM, fujiCameras);
+        
         List<CameraData> nikonCameras = new ArrayList<CameraData>();
         nikonCameras.add(new CameraData(Vendor.NIKON, "D1", new BigDecimal("23.7"), new BigDecimal("2000")));
         DATABASE.put(Vendor.NIKON, nikonCameras);
@@ -194,6 +213,40 @@ public class CameraData {
         DATABASE.put(Vendor.NIKON, nikonCameras);
         nikonCameras.add(new CameraData(Vendor.NIKON, "D3200", new BigDecimal("23.2"), new BigDecimal("6016")));
         DATABASE.put(Vendor.NIKON, nikonCameras);
+
+        List<CameraData> olympusCameras = new ArrayList<CameraData>();
+        olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-1", new BigDecimal("17.3"), new BigDecimal("2560")));
+        DATABASE.put(Vendor.OLYMPUS, olympusCameras);
+        olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-10", new BigDecimal("11"), new BigDecimal("2240")));
+        DATABASE.put(Vendor.OLYMPUS, olympusCameras);
+        olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-20", new BigDecimal("11"), new BigDecimal("2560")));
+        DATABASE.put(Vendor.OLYMPUS, olympusCameras);
+        olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-3", new BigDecimal("17.3"), new BigDecimal("3648")));
+        DATABASE.put(Vendor.OLYMPUS, olympusCameras);
+        olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-30", new BigDecimal("17.3"), new BigDecimal("4032")));
+        DATABASE.put(Vendor.OLYMPUS, olympusCameras);
+        olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-300", new BigDecimal("17.3"), new BigDecimal("3264")));
+        DATABASE.put(Vendor.OLYMPUS, olympusCameras);
+        olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-330", new BigDecimal("17.3"), new BigDecimal("3136")));
+        DATABASE.put(Vendor.OLYMPUS, olympusCameras);
+        olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-400", new BigDecimal("17.3"), new BigDecimal("3648")));
+        DATABASE.put(Vendor.OLYMPUS, olympusCameras);
+        olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-410", new BigDecimal("17.3"), new BigDecimal("3648")));
+        DATABASE.put(Vendor.OLYMPUS, olympusCameras);
+        olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-420", new BigDecimal("17.3"), new BigDecimal("3648")));
+        DATABASE.put(Vendor.OLYMPUS, olympusCameras);
+        olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-450", new BigDecimal("17.3"), new BigDecimal("3648")));
+        DATABASE.put(Vendor.OLYMPUS, olympusCameras);
+        olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-5", new BigDecimal("17.3"), new BigDecimal("4032")));
+        DATABASE.put(Vendor.OLYMPUS, olympusCameras);
+        olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-500", new BigDecimal("17.3"), new BigDecimal("3264")));
+        DATABASE.put(Vendor.OLYMPUS, olympusCameras);
+        olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-510", new BigDecimal("17.3"), new BigDecimal("3648")));
+        DATABASE.put(Vendor.OLYMPUS, olympusCameras);
+        olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-520", new BigDecimal("17.3"), new BigDecimal("3648")));
+        DATABASE.put(Vendor.OLYMPUS, olympusCameras);
+        olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-620", new BigDecimal("17.3"), new BigDecimal("4032")));
+        DATABASE.put(Vendor.OLYMPUS, olympusCameras);
         
         List<CameraData> pentaxCameras = new ArrayList<CameraData>();
         pentaxCameras.add(new CameraData(Vendor.PENTAX, "K100D", new BigDecimal("23.5"), new BigDecimal("3008")));
