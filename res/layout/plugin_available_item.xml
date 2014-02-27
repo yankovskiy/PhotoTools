@@ -22,17 +22,25 @@
 
     <ImageView
         android:id="@+id/plugin_available_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerInParent="true"
-        android:layout_marginLeft="5dp" 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_marginLeft="5dp" />
 
     <TextView
         android:id="@+id/plugin_available_label"
-        android:layout_centerInParent="true"
-        android:layout_toRightOf="@+id/plugin_available_icon" 
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/plugin_available_icon" />
+    
+    <ImageView android:id="@+id/plugin_available_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true" 
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_menu_ic_menu_next"/>
 
 </RelativeLayout>
