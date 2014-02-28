@@ -45,7 +45,7 @@ public class PluginsFragment extends SherlockFragment {
                 long id) {
             MainMenuItem item = mAvailablePlugins.getItem(position);
             Intent marketIntent = new Intent(Intent.ACTION_VIEW);
-            marketIntent.setData(Uri.parse("market://details?id".concat(item
+            marketIntent.setData(Uri.parse("market://details?id=".concat(item
                     .getPluginPackage())));
             startActivity(marketIntent);
         }
