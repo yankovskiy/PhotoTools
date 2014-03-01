@@ -119,7 +119,7 @@ public class EvCalculator {
     	ArrayList<String> isos = new ArrayList<String>();
     	int index = 0;
     	for (index = 0; index < ISO_VALUE_LIST.length ; index++ ) {
-    		isos.add(0,cleanNumberToString(ISO_VALUE_LIST[index]));
+    		isos.add(cleanNumberToString(ISO_VALUE_LIST[index]));
     	}
         return isos.toArray(new String[isos.size()]);
     }
@@ -132,7 +132,7 @@ public class EvCalculator {
     	ArrayList<String> apertures = new ArrayList<String>();
     	int index = 0;
     	for (index = 0; index < APERTURE_VALUE_LIST.length ; index++ ) {
-    		apertures.add(0,"f/"+cleanNumberToString(APERTURE_VALUE_LIST[index]));
+    		apertures.add("f/"+cleanNumberToString(APERTURE_VALUE_LIST[index]));
     	}
         return apertures.toArray(new String[apertures.size()]);
     }
@@ -147,26 +147,16 @@ public class EvCalculator {
     	int flag = 0;
     	String element = "";
     	for (index = 0; index < SHUTTER_VALUE_LIST.length ; index++ ) {
-    		switch(flag){
-    		case 0: {
-	    			if(SHUTTER_VALUE_LIST[index]==1)
-	    				flag=1;
-	    			else {
-	    				element = "1/"+cleanNumberToString(1/SHUTTER_VALUE_LIST[index])+" sec";
-	    				break;
-	    			}
-	    		}
-    		case 1: {
-	    			if(SHUTTER_VALUE_LIST[index]>=60)
-	    				flag=2;
-	    			else {
-	    				element = cleanNumberToString(SHUTTER_VALUE_LIST[index])+" sec";
-	    				break;
-	    			}
-	    		}
-    		default: element = cleanNumberToString((Double)(SHUTTER_VALUE_LIST[index]/60))+" min"; break;
-    		}
-    		shutters.add(0,element);
+    		if(SHUTTER_VALUE_LIST[index]<1.0)
+		    	element = "1/"+cleanNumberToString(1/SHUTTER_VALUE_LIST[index])+" sec";
+	    				
+	    	if(SHUTTER_VALUE_LIST[index]>=1 && SHUTTER_VALUE_LIST[index]<60.0)
+	    		element = cleanNumberToString(SHUTTER_VALUE_LIST[index])+" sec";
+
+	    	if(SHUTTER_VALUE_LIST[index]>=60.0)
+	    		element = cleanNumberToString((Double)(SHUTTER_VALUE_LIST[index]/60))+" min";
+
+    		shutters.add(element);
     	}
         return shutters.toArray(new String[shutters.size()]);
     }

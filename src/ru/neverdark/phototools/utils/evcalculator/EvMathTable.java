@@ -46,7 +46,7 @@ public class EvMathTable implements EvTable {
 		int limit = listOfValues.length;
 		for(index = 0; index < limit; index++) {
 			if(selectIso(index, stopDistribution)){
-				fullValues.add(listOfValues[index]);
+				fullValues.add(0,listOfValues[index]);
 			}
 		}
 		return fullValues.toArray(new Double[fullValues.size()]);
@@ -198,8 +198,26 @@ public class EvMathTable implements EvTable {
 	    "f/290", "f/320", "f/360"
 	    };
 	
-	private static final double APERTURE_VALUE_LIST[] = { 
-		360, 320, 300, 290,
+	private static final double APERTURE_VALUE_LIST[] = {
+		1, 1.12, 1.2, 1.25,
+		1.4, 1.6, 1.7, 1.8,
+		2, 2.3, 2.4, 2.5,
+		2.8, 3.2, 3.4, 3.6,
+		4, 4.5, 4.8, 5,
+		5.6, 6.3, 6.8, 7,
+		8, 9, 9.5, 10,
+		11, 12.5, 13.5, 14,
+		16, 18, 19, 20,
+		22, 25, 27, 28,
+		32, 36, 38, 40,
+		45, 50, 54, 57,
+		64, 72, 76, 80,
+		90, 100, 110, 115,
+		128, 145, 150, 160,
+		180, 200, 215, 230,
+		256, 290, 300, 320,
+		360
+		/*360, 320, 300, 290,
 		256, 230, 215, 200,
 		180, 160, 150, 145,
 	    128, 115, 110, 100,
@@ -216,7 +234,7 @@ public class EvMathTable implements EvTable {
 	    2.8, 2.5, 2.4, 2.3,
 	    2, 1.8, 1.7, 1.6,
 	    1.4, 1.25, 1.2, 1.12,
-	    1
+	    1*/
 	    };
 	
 	private static final int EV_TABLE[][] = {
