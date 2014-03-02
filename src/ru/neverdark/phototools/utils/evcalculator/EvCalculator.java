@@ -150,10 +150,10 @@ public class EvCalculator {
     		if(SHUTTER_VALUE_LIST[index]<1.0)
 		    	element = "1/"+cleanNumberToString(1/SHUTTER_VALUE_LIST[index])+" sec";
 	    				
-	    	if(SHUTTER_VALUE_LIST[index]>=1 && SHUTTER_VALUE_LIST[index]<60.0)
+    		else if(SHUTTER_VALUE_LIST[index]>=1 && SHUTTER_VALUE_LIST[index]<60.0)
 	    		element = cleanNumberToString(SHUTTER_VALUE_LIST[index])+" sec";
 
-	    	if(SHUTTER_VALUE_LIST[index]>=60.0)
+    		else if(SHUTTER_VALUE_LIST[index]>=60.0)
 	    		element = cleanNumberToString((Double)(SHUTTER_VALUE_LIST[index]/60))+" min";
 
     		shutters.add(element);
@@ -223,7 +223,31 @@ public class EvCalculator {
         	Log.variable("expectedApertureStopDifference Value", String.valueOf(expectedApertureStopDifference));
         	wIndex = (int) Math.round(((double)(expectedApertureStopDifference * (l_evStep+1))));
         	Log.variable("wIndex Value", String.valueOf(wIndex));
-        	mIndex = mCurrentAperturePosition + 1 - wIndex;
+        	mIndex = mCurrentAperturePosition + 1 + wIndex;
+        	if(mIndex<1)
+        		mIndex=1;
+        } else if(mNewIsoPostion<0) {
+        	double apertureStopDifference = calculateApertureDifference();
+        	Log.variable("apertureStopDifference Value", String.valueOf(apertureStopDifference));
+        	double shutterStopDifference = calculateShutterDifference();
+        	Log.variable("shutterStopDifference Value", String.valueOf(shutterStopDifference));
+        	double expectedIsoStopDifference =  apertureStopDifference + shutterStopDifference;
+        	Log.variable("expectedIsoStopDifference Value", String.valueOf(expectedIsoStopDifference));
+        	wIndex = (int) Math.round(((double)(expectedIsoStopDifference * (l_evStep+1))));
+        	Log.variable("wIndex Value", String.valueOf(wIndex));
+        	mIndex = mCurrentIsoPosition + 1 + wIndex;
+        	if(mIndex<1)
+        		mIndex=1;
+        } else if(mNewShutterSpeedPosition<0) {
+        	double apertureStopDifference = calculateApertureDifference();
+        	Log.variable("apertureStopDifference Value", String.valueOf(apertureStopDifference));
+        	double isoStopDifference = calculateIsoDifference();
+        	Log.variable("isoStopDifference Value", String.valueOf(isoStopDifference));
+        	double expectedShutterStopDifference =  apertureStopDifference + isoStopDifference;
+        	Log.variable("expectedShutterStopDifference Value", String.valueOf(expectedShutterStopDifference));
+        	wIndex = (int) Math.round(((double)(expectedShutterStopDifference * (l_evStep+1))));
+        	Log.variable("wIndex Value", String.valueOf(wIndex));
+        	mIndex = mCurrentShutterSpeedPosition + 1 + wIndex;
         	if(mIndex<1)
         		mIndex=1;
         }
@@ -233,24 +257,26 @@ public class EvCalculator {
         
         return mIndex;
     }
+
     
-    private double calculateIsoDifference(){
-    	double currentIsoValue = ISO_VALUE_LIST[mCurrentIsoPosition];
-    	double newIsoValue = ISO_VALUE_LIST[mNewIsoPostion];
-    	
-    	return calculateBase2Difference(currentIsoValue, newIsoValue);
+    private double calculateIsoDifference(){    	
+    	return calculateDifference(ISO_VALUE_LIST[mCurrentIsoPosition], ISO_VALUE_LIST[mNewIsoPostion], 2.0);
     }
     
     private double calculateShutterDifference(){
-    	return calculateBase2Difference(SHUTTER_VALUE_LIST[mCurrentShutterSpeedPosition], SHUTTER_VALUE_LIST[mNewShutterSpeedPosition]);
+    	return calculateDifference(SHUTTER_VALUE_LIST[mCurrentShutterSpeedPosition], SHUTTER_VALUE_LIST[mNewShutterSpeedPosition], 2.0);
     }
     
-    private double calculateBase2Difference(double currentValue, double newValue){
+    private double calculateApertureDifference() {	    
+    	return calculateDifference(APERTURE_VALUE_LIST[mNewAperturePosition], APERTURE_VALUE_LIST[mCurrentAperturePosition], Math.sqrt(2));
+    }
+    
+    private double calculateDifference(double currentValue, double newValue, double base){
     	double difference = 0;
     	if(currentValue < newValue)
-    		difference = (Math.log(newValue/currentValue)/Math.log(2));
+    		difference = (Math.log(newValue/currentValue)/Math.log(base));
     	else
-    		difference = - (Math.log(currentValue/newValue)/Math.log(2));
+    		difference = - (Math.log(currentValue/newValue)/Math.log(base));
     	
     	return difference;
     }
@@ -275,24 +301,7 @@ public class EvCalculator {
             }
         }
     }
-    
-    private void calculateApertureDifference() {
-        int isoNewIndex = getIsoNewIndex();
-        String shutter = SHUTTER_SPEED_LIST[mNewShutterSpeedPosition];
-        
-        Log.variable("shutter", String.valueOf(shutter));
-        Log.variable("isoNewIndex", String.valueOf(isoNewIndex));
 
-        if (isoNewIndex != INVALID_INDEX) {
-            for (int i = 0; i < SHUTTERS_TABLE[isoNewIndex].length; i++) {
-                if (shutter.equals(SHUTTERS_TABLE[isoNewIndex][i])) {
-                    mIndex = i;
-                    Log.variable("mIndex", String.valueOf(mIndex));
-                    break;
-                }
-            }
-        }
-    }
     
     /**
      * Function calculates the shutter speed

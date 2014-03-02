@@ -199,7 +199,7 @@ public class EvMathTable implements EvTable {
 	    };
 	
 	private static final double APERTURE_VALUE_LIST[] = {
-		1, 1.12, 1.2, 1.25,
+		/*1, 1.12, 1.2, 1.25,
 		1.4, 1.6, 1.7, 1.8,
 		2, 2.3, 2.4, 2.5,
 		2.8, 3.2, 3.4, 3.6,
@@ -216,8 +216,8 @@ public class EvMathTable implements EvTable {
 		128, 145, 150, 160,
 		180, 200, 215, 230,
 		256, 290, 300, 320,
-		360
-		/*360, 320, 300, 290,
+		360*/
+		360, 320, 300, 290,
 		256, 230, 215, 200,
 		180, 160, 150, 145,
 	    128, 115, 110, 100,
@@ -234,7 +234,7 @@ public class EvMathTable implements EvTable {
 	    2.8, 2.5, 2.4, 2.3,
 	    2, 1.8, 1.7, 1.6,
 	    1.4, 1.25, 1.2, 1.12,
-	    1*/
+	    1
 	    };
 	
 	private static final int EV_TABLE[][] = {
