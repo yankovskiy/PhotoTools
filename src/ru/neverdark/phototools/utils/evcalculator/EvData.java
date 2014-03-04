@@ -22,12 +22,13 @@ package ru.neverdark.phototools.utils.evcalculator;
 import java.util.ArrayList;
 
 
-public class EvMathTable {
+public class EvData {
 
 	public static final int FULL_STOP = 1;
 	public static final int HALF_STOP = 2;
 	public static final int THIRD_STOP = 3;
 	public static final int INVALID_INDEX = -100;
+	
 	/**
 	 * Table containing all possible ISO values.
 	 */
@@ -108,9 +109,10 @@ public class EvMathTable {
 	};
 	
 	/**
+	 * Defines whether or not the given index belongs to the chosen distribution.
 	 * @param index
 	 * @param stopDistribution
-	 * @return whether or not the given index belongs to the chosen distribution.
+	 * @return boolean
 	 */
 	private static boolean selectValues(int index, int stopDistribution) {
     	boolean selection = false;
@@ -124,6 +126,7 @@ public class EvMathTable {
 	}
 	
 	/**
+	 * Extracts from a full list of values the ones which belong to the given stop distribution.
 	 * @param listOfValues
 	 * @param stopDistribution
 	 * @return the subset of values contained in listOfValues which belong to the chosen distribution.
@@ -141,6 +144,7 @@ public class EvMathTable {
 	}
 	
 	/**
+	 * Extract ISO values belonging to the given stop distribution.
 	 * @param stopDistribution
 	 * @return Iso values matching the chosen distribution.
 	 */
@@ -149,6 +153,7 @@ public class EvMathTable {
 	};
 	
 	/**
+	 * Extract Shutter speed values belonging to the given stop distribution.
 	 * @param stopDistribution
 	 * @return Shutter speed values matching the chosen distribution.
 	 */
@@ -157,6 +162,7 @@ public class EvMathTable {
 	};
 	
 	/**
+	 * Extract Aperture values belonging to the given stop distribution.
 	 * @param stopDistribution
 	 * @return Aperture values matching the chosen distribution.
 	 */

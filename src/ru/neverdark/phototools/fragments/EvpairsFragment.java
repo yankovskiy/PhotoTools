@@ -27,7 +27,7 @@ import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.evcalculator.EvCalculator;
-import ru.neverdark.phototools.utils.evcalculator.EvMathTable;
+import ru.neverdark.phototools.utils.evcalculator.EvData;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -140,7 +140,7 @@ public class EvpairsFragment extends SherlockFragment {
 
             int index = mEvCalculator.calculate();
 
-            if (index != EvMathTable.INVALID_INDEX) {
+            if (index != EvData.INVALID_INDEX) {
                 fillEmptyWheel(index);
             } else {
                 Toast.makeText(getActivity(),
@@ -239,7 +239,7 @@ public class EvpairsFragment extends SherlockFragment {
         SharedPreferences preferenced = getActivity().getPreferences(
                 Context.MODE_PRIVATE);
 
-        mStepIndex = preferenced.getInt(STEP_INDEX, EvMathTable.FULL_STOP);
+        mStepIndex = preferenced.getInt(STEP_INDEX, EvData.FULL_STOP);
 
         mCurrentAperturePosition = preferenced
                 .getInt(CURRENT_APERTURE_INDEX, 0);
@@ -341,17 +341,17 @@ public class EvpairsFragment extends SherlockFragment {
                     clearNewValues();
                     break;
                 case R.id.ev_label_stepFull:
-                    mStepIndex = EvMathTable.FULL_STOP;
+                    mStepIndex = EvData.FULL_STOP;
                     updateStepButtons();
                     setAllWheelsToFirstPos();
                     break;
                 case R.id.ev_label_stepHalf:
-                    mStepIndex = EvMathTable.HALF_STOP;
+                    mStepIndex = EvData.HALF_STOP;
                     updateStepButtons();
                     setAllWheelsToFirstPos();
                     break;
                 case R.id.ev_label_stepThird:
-                    mStepIndex = EvMathTable.THIRD_STOP;
+                    mStepIndex = EvData.THIRD_STOP;
                     updateStepButtons();
                     setAllWheelsToFirstPos();
                     break;
@@ -437,13 +437,13 @@ public class EvpairsFragment extends SherlockFragment {
         Common.setBg(mLabelStepThird, R.drawable.right_stroke);
 
         switch (mStepIndex) {
-        case EvMathTable.FULL_STOP:
+        case EvData.FULL_STOP:
             Common.setBg(mLabelStepFull, R.drawable.left_blue_button);
             break;
-        case EvMathTable.HALF_STOP:
+        case EvData.HALF_STOP:
             Common.setBg(mLabelStepHalf, R.drawable.middle_blue_button);
             break;
-        case EvMathTable.THIRD_STOP:
+        case EvData.THIRD_STOP:
             Common.setBg(mLabelStepThird, R.drawable.right_blue_button);
             break;
         }
