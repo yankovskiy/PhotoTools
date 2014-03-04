@@ -1,15 +1,35 @@
+/*******************************************************************************
+ * Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * 
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ * 
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *     
+ * 	Modification:
+ * 		2014/03/03 Rudy Dordonne (rudy@itu.dk)
+ ******************************************************************************/
+
 package ru.neverdark.phototools.utils.evcalculator;
 
 import java.util.ArrayList;
 
 
-public class EvMathTable implements EvTable {
+public class EvMathTable {
 
+	public static final int FULL_STOP = 1;
+	public static final int HALF_STOP = 2;
+	public static final int THIRD_STOP = 3;
+	public static final int INVALID_INDEX = -100;
 	/**
-	 * Table with all possible ISO values.
-	 * Values for 1 stop -> index modulo 4 = 0
-	 * Values for 1/2 stop -> index modulo 2 = 0
-	 * Values for 1/3 stop -> index modulo 4 != 2
+	 * Table containing all possible ISO values.
 	 */
 	private static final double ISO_VALUE_LIST[] = {
 		25, 32, 35, 40,
@@ -28,43 +48,9 @@ public class EvMathTable implements EvTable {
         204800
         };
 	
-	public Double[] getISOValues(int stopDistribution) {
-		return getValues(ISO_VALUE_LIST, stopDistribution);
-	};
-	
-	public Double[] getShutterValues(int stopDistribution) {
-		return getValues(SHUTTER_VALUE_LIST, stopDistribution);
-	};
-	
-	public Double[] getApertureValues(int stopDistribution) {
-		return getValues(APERTURE_VALUE_LIST, stopDistribution);
-	};
-	
-	private Double[] getValues(double [] listOfValues, int stopDistribution){
-		ArrayList<Double> fullValues = new ArrayList<Double>();
-		int index;
-		int limit = listOfValues.length;
-		for(index = 0; index < limit; index++) {
-			if(selectIso(index, stopDistribution)){
-				fullValues.add(0,listOfValues[index]);
-			}
-		}
-		return fullValues.toArray(new Double[fullValues.size()]);
-	}
-	
-    private boolean selectIso(int index, int stopDistribution) {
-    	boolean selection = false;
-		switch(stopDistribution){
-			case 0: selection = (index%4==0); break;
-			case 1: selection = (index%2==0); break;
-			case 2: selection = (index%4!=2); break;
-		}
-		return selection;
-	}
-
-	private static final String ISO_LIST[] = {"25", "50", "100", "200", "400", "800",
-        "1600", "3200", "6400", "12800", "25600", "51200", "102400", "204800"};
-
+	/**
+	 * Table containing all possible shutter speed values.
+	 */
 	private static final double SHUTTER_VALUE_LIST[] = {
 		1/8000.0, 1/6400.0, 1/6000.0, 1/5000.0,
 		1/4000.0, 1/3200.0, 1/3000.0, 1/2500.0,
@@ -95,128 +81,12 @@ public class EvMathTable implements EvTable {
 		7680, 9660, 10860, 12180,
 		15360, 19380, 21720, 24360,
 		30720
-		/*8000, 6400, 6000, 5000,
-		4000, 3200, 3000, 2500,
-		2000, 1600, 1500, 1250,
-		1000, 800, 750, 640,
-		500, 400, 350, 320,
-		250, 200, 180, 160,
-		125, 100, 90, 80,
-		60, 50, 45, 40,
-		30, 25, 23, 20,
-		15, 13, 11, 10,
-		8, 6, 6, 5,
-		4, 3, 3, 2.5,
-		2, 1.6, 1.5, 1.3,
-		1, 1.3, 1.5, 1.6,
-		2, 2.5, 3, 3,
-		4, 5, 6, 6,
-		8, 10, 11, 13,
-		15, 20, 23, 25,
-		30, 40, 45, 50,
-		60, 78, 84, 96,
-		120, 150, 168, 192,
-		240, 300, 342, 378,
-		480, 606, 678, 762,
-		960, 1212, 1356, 1524,
-		1920, 2418, 2700, 3048,
-		3840, 4836, 5460, 6120,
-		7680, 9660, 10860, 12180,
-		15360, 19380, 21720, 24360,
-		30720*/
-		/*0.000125, 0.00015625, 0.00016666666, 0.0002,
-		0.00025, 0.0003125, 0.0003333333, 0.0004,
-		0.0005, 0.000625, 0.000666666666, 0.0008,
-		0.001, 0.00125, 0.00133333333, 0.0015625,
-		0.002, 0.0025, 0.002857143, 0.003125,
-		0.004, 0.005, 0.0055555555, 0.00625,
-		0.008, 0.01, 0.011111111, 0.0125,
-		0.0166666666, 0.02, 0.022222222, 0.025,
-		0.033333333, 0.04, 0.043478261, 0.05,
-		0.066666666, 0.076923077, 0.0909090909091, 0.1,
-		0.125, 0.166666666, 0.166666666, 0.2,
-		0.25, 0.333333333, 0.333333333, 0.4,
-		0.5, 0.625, 0.666666666, 0.769230769,
-		1, 1.3, 1.5, 1.6,
-		2, 2.5, 3, 3,
-		4, 5, 6, 6,
-		8, 10, 11, 13,
-		15, 20, 23, 25,
-		30, 40, 45, 50,
-		60, 78, 84, 96,
-		120, 150, 168, 192,
-		240, 300, 342, 378,
-		480, 606, 678, 762,
-		960, 1212, 1356, 1524,
-		1920, 2418, 2700, 3048,
-		3840, 4836, 5460, 6120,
-		7680, 9660, 10860, 12180,
-		15360, 19380, 21720, 24360,
-		30720*/
-        };
+	};
 	
-	private static final String SHUTTER_LIST[] = {
-		"512 min", "406 min", "323 min",
-        "256 min", "203 min", "161 min",
-        "128 min", "102 min", "80.6 min",
-        "64 min", "50.8 min", "40.3 min",
-        "32 min", "25.4 min", "20.2 min",
-        "16 min", "12.7 min", "10.1 min",
-        "8 min", "6.3 min", "5 min",
-        "4 min", "3.2 min", "2.5 min",
-        "2 min","1.6 min", "1.3 min",
-        "1 min", "50 sec", "40 sec",
-        "30 sec", "25 sec", "20 sec",
-        "15 sec", "13 sec", "10 sec",
-        "8 sec", "6 sec", "5 sec",
-        "4 sec", "3 sec", "2.5 sec",
-        "2 sec", "1.6 sec", "1.3 sec",
-        "1 sec", "1/1.3 sec", "1/1.6 sec",
-        "1/2 sec", "1/2.5 sec", "1/3 sec",
-        "1/4 sec", "1/5 sec", "1/6 sec",
-        "1/8 sec", "1/10 sec", "1/13 sec",
-        "1/15 sec", "1/20 sec", "1/25 sec",
-        "1/30 sec", "1/40 sec", "1/50 sec",
-        "1/60 sec", "1/80 sec", "1/100 sec",
-        "1/125 sec", "1/160 sec", "1/200 sec",
-        "1/250 sec", "1/320 sec", "1/400 sec",
-        "1/500 sec", "1/640 sec", "1/800 sec",
-        "1/1000 sec", "1/1250 sec", "1/1600 sec",
-        "1/2000 sec", "1/2500 sec", "1/3200 sec",
-        "1/4000 sec", "1/5000 sec", "1/6400 sec",
-        "1/8000 sec"
-        };
-	
-	private static final String APERTURE_LIST[] = { 
-		"f/1", "f/1.12", "f/1.25",
-	    "f/1.4", "f/1.6", "f/1.8", "f/2.0", "f/2.3", "f/2.5", "f/2.8",
-	    "f/3.2", "f/3.6", "f/4", "f/4.5", "f/5", "f/5.6", "f/6.3", "f/7",
-	    "f/8", "f/9", "f/10", "f/11", "f/12.5", "f/14", "f/16", "f/18",
-	    "f/20", "f/22", "f/25", "f/28", "f/32", "f/36", "f/40", "f/45",
-	    "f/50", "f/57", "f/64", "f/72", "f/80", "f/90", "f/100", "f/115",
-	    "f/128", "f/145", "f/160", "f/180", "f/200", "f/230", "f/256",
-	    "f/290", "f/320", "f/360"
-	    };
-	
+	/**
+	 * Table containing all possible aperture values.
+	 */
 	private static final double APERTURE_VALUE_LIST[] = {
-		/*1, 1.12, 1.2, 1.25,
-		1.4, 1.6, 1.7, 1.8,
-		2, 2.3, 2.4, 2.5,
-		2.8, 3.2, 3.4, 3.6,
-		4, 4.5, 4.8, 5,
-		5.6, 6.3, 6.8, 7,
-		8, 9, 9.5, 10,
-		11, 12.5, 13.5, 14,
-		16, 18, 19, 20,
-		22, 25, 27, 28,
-		32, 36, 38, 40,
-		45, 50, 54, 57,
-		64, 72, 76, 80,
-		90, 100, 110, 115,
-		128, 145, 150, 160,
-		180, 200, 215, 230,
-		256, 290, 300, 320,
-		360*/
 		360, 320, 300, 290,
 		256, 230, 215, 200,
 		180, 160, 150, 145,
@@ -235,127 +105,62 @@ public class EvMathTable implements EvTable {
 	    2, 1.8, 1.7, 1.6,
 	    1.4, 1.25, 1.2, 1.12,
 	    1
-	    };
+	};
 	
-	private static final int EV_TABLE[][] = {
-	    { 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13},
-	    { 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12},
-	    { 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11},
-	    { 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10},
-	    { 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9},
-	    { 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8},
-	    { 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7},
-	    { 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6},
-	    { 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5},
-	    { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4},
-	    { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3},
-	    { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2},
-	    { 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1},
-	    { 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0},
-	    { 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1},
-	    { 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2},
-	    { 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3},
-	    { 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4},
-	    { 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5},
-	    { 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6},
-	    { 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7},
-	    { 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8},
-	    { 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9},
-	    { 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10},
-	    { 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11},
-	    { 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12},
-	    { 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13},
-	    { 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14},
-	    { 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15},
-	    { 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16},
-	    { 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17},
-	    { 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18},
-	    { 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19},
-	    { 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20},
-	    { 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21},
-	    { 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22},
-	    { 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23},
-	    { 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24},
-	    { 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25},
-	    { 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26},
-	    { 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27},
-	    { 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28},
-	    { 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29},
-	    { 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30},
-	    { 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31},
-	    { 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32} };
-	
-	private static final String SHUTTERS_TABLE[][] = {
-	    {"512 min","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"},
-	    {"256 min","512 min","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"},
-	    {"128 min","256 min","512 min","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"},
-	    {"64 min","128 min","256 min","512 min","0","0","0","0","0","0","0","0","0","0","0","0","0","0"},
-	    {"32 min","64 min","128 min","256 min","512 min","0","0","0","0","0","0","0","0","0","0","0","0","0"},
-	    {"16 min","32 min","64 min","128 min","256 min","512 min","0","0","0","0","0","0","0","0","0","0","0","0"},
-	    {"8 min","16 min","32 min","64 min","128 min","256 min","512 min","0","0","0","0","0","0","0","0","0","0","0"},
-	    {"4 min","8 min","16 min","32 min","64 min","128 min","256 min","512 min","0","0","0","0","0","0","0","0","0","0"},
-	    {"2 min","4 min","8 min","16 min","32 min","64 min","128 min","256 min","512 min","0","0","0","0","0","0","0","0","0"},
-	    {"1 min","2 min","4 min","8 min","16 min","32 min","64 min","128 min","256 min","512 min","0","0","0","0","0","0","0","0"},
-	    {"30 sec","1 min","2 min","4 min","8 min","16 min","32 min","64 min","128 min","256 min","512 min","0","0","0","0","0","0","0"},
-	    {"15 sec","30 sec","1 min","2 min","4 min","8 min","16 min","32 min","64 min","128 min","256 min","512 min","0","0","0","0","0","0"},
-	    {"8 sec","15 sec","30 sec","1 min","2 min","4 min","8 min","16 min","32 min","64 min","128 min","256 min","512 min","0","0","0","0","0"},
-	    {"4 sec","8 sec","15 sec","30 sec","1 min","2 min","4 min","8 min","16 min","32 min","64 min","128 min","256 min","512 min","0","0","0","0"},
-	    {"2 sec","4 sec","8 sec","15 sec","30 sec","1 min","2 min","4 min","8 min","16 min","32 min","64 min","128 min","256 min","512 min","0","0","0"},
-	    {"1 sec","2 sec","4 sec","8 sec","15 sec","30 sec","1 min","2 min","4 min","8 min","16 min","32 min","64 min","128 min","256 min","512 min","0","0"},
-	    {"1/2 sec","1 sec","2 sec","4 sec","8 sec","15 sec","30 sec","1 min","2 min","4 min","8 min","16 min","32 min","64 min","128 min","256 min","512 min","0"},
-	    {"1/4 sec","1/2 sec","1 sec","2 sec","4 sec","8 sec","15 sec","30 sec","1 min","2 min","4 min","8 min","16 min","32 min","64 min","128 min","256 min","512 min"},
-	    {"1/8 sec","1/4 sec","1/2 sec","1 sec","2 sec","4 sec","8 sec","15 sec","30 sec","1 min","2 min","4 min","8 min","16 min","32 min","64 min","128 min","256 min"},
-	    {"1/15 sec","1/8 sec","1/4 sec","1/2 sec","1 sec","2 sec","4 sec","8 sec","15 sec","30 sec","1 min","2 min","4 min","8 min","16 min","32 min","64 min","128 min"},
-	    {"1/30 sec","1/15 sec","1/8 sec","1/4 sec","1/2 sec","1 sec","2 sec","4 sec","8 sec","15 sec","30 sec","1 min","2 min","4 min","8 min","16 min","32 min","64 min"},
-	    {"1/60 sec","1/30 sec","1/15 sec","1/8 sec","1/4 sec","1/2 sec","1 sec","2 sec","4 sec","8 sec","15 sec","30 sec","1 min","2 min","4 min","8 min","16 min","32 min"},
-	    {"1/125 sec","1/60 sec","1/30 sec","1/15 sec","1/8 sec","1/4 sec","1/2 sec","1 sec","2 sec","4 sec","8 sec","15 sec","30 sec","1 min","2 min","4 min","8 min","16 min"},
-	    {"1/250 sec","1/125 sec","1/60 sec","1/30 sec","1/15 sec","1/8 sec","1/4 sec","1/2 sec","1 sec","2 sec","4 sec","8 sec","15 sec","30 sec","1 min","2 min","4 min","8 min"},
-	    {"1/500 sec","1/250 sec","1/125 sec","1/60 sec","1/30 sec","1/15 sec","1/8 sec","1/4 sec","1/2 sec","1 sec","2 sec","4 sec","8 sec","15 sec","30 sec","1 min","2 min","4 min"},
-	    {"1/1000 sec","1/500 sec","1/250 sec","1/125 sec","1/60 sec","1/30 sec","1/15 sec","1/8 sec","1/4 sec","1/2 sec","1 sec","2 sec","4 sec","8 sec","15 sec","30 sec","1 min","2 min"},
-	    {"1/2000 sec","1/1000 sec","1/500 sec","1/250 sec","1/125 sec","1/60 sec","1/30 sec","1/15 sec","1/8 sec","1/4 sec","1/2 sec","1 sec","2 sec","4 sec","8 sec","15 sec","30 sec","1 min"},
-	    {"1/4000 sec","1/2000 sec","1/1000 sec","1/500 sec","1/250 sec","1/125 sec","1/60 sec","1/30 sec","1/15 sec","1/8 sec","1/4 sec","1/2 sec","1 sec","2 sec","4 sec","8 sec","15 sec","30 sec"},
-	    {"1/8000 sec","1/4000 sec","1/2000 sec","1/1000 sec","1/500 sec","1/250 sec","1/125 sec","1/60 sec","1/30 sec","1/15 sec","1/8 sec","1/4 sec","1/2 sec","1 sec","2 sec","4 sec","8 sec","15 sec"},
-	    {"0","1/8000 sec","1/4000 sec","1/2000 sec","1/1000 sec","1/500 sec","1/250 sec","1/125 sec","1/60 sec","1/30 sec","1/15 sec","1/8 sec","1/4 sec","1/2 sec","1 sec","2 sec","4 sec","8 sec"},
-	    {"0","0","1/8000 sec","1/4000 sec","1/2000 sec","1/1000 sec","1/500 sec","1/250 sec","1/125 sec","1/60 sec","1/30 sec","1/15 sec","1/8 sec","1/4 sec","1/2 sec","1 sec","2 sec","4 sec"},
-	    {"0","0","0","1/8000 sec","1/4000 sec","1/2000 sec","1/1000 sec","1/500 sec","1/250 sec","1/125 sec","1/60 sec","1/30 sec","1/15 sec","1/8 sec","1/4 sec","1/2 sec","1 sec","2 sec"},
-	    {"0","0","0","0","1/8000 sec","1/4000 sec","1/2000 sec","1/1000 sec","1/500 sec","1/250 sec","1/125 sec","1/60 sec","1/30 sec","1/15 sec","1/8 sec","1/4 sec","1/2 sec","1 sec"},
-	    {"0","0","0","0","0","1/8000 sec","1/4000 sec","1/2000 sec","1/1000 sec","1/500 sec","1/250 sec","1/125 sec","1/60 sec","1/30 sec","1/15 sec","1/8 sec","1/4 sec","1/2 sec"},
-	    {"0","0","0","0","0","0","1/8000 sec","1/4000 sec","1/2000 sec","1/1000 sec","1/500 sec","1/250 sec","1/125 sec","1/60 sec","1/30 sec","1/15 sec","1/8 sec","1/4 sec"},
-	    {"0","0","0","0","0","0","0","1/8000 sec","1/4000 sec","1/2000 sec","1/1000 sec","1/500 sec","1/250 sec","1/125 sec","1/60 sec","1/30 sec","1/15 sec","1/8 sec"},
-	    {"0","0","0","0","0","0","0","0","1/8000 sec","1/4000 sec","1/2000 sec","1/1000 sec","1/500 sec","1/250 sec","1/125 sec","1/60 sec","1/30 sec","1/15 sec"},
-	    {"0","0","0","0","0","0","0","0","0","1/8000 sec","1/4000 sec","1/2000 sec","1/1000 sec","1/500 sec","1/250 sec","1/125 sec","1/60 sec","1/30 sec"},
-	    {"0","0","0","0","0","0","0","0","0","0","1/8000 sec","1/4000 sec","1/2000 sec","1/1000 sec","1/500 sec","1/250 sec","1/125 sec","1/60 sec"},
-	    {"0","0","0","0","0","0","0","0","0","0","0","1/8000 sec","1/4000 sec","1/2000 sec","1/1000 sec","1/500 sec","1/250 sec","1/125 sec"},
-	    {"0","0","0","0","0","0","0","0","0","0","0","0","1/8000 sec","1/4000 sec","1/2000 sec","1/1000 sec","1/500 sec","1/250 sec"},
-	    {"0","0","0","0","0","0","0","0","0","0","0","0","0","1/8000 sec","1/4000 sec","1/2000 sec","1/1000 sec","1/500 sec"},
-	    {"0","0","0","0","0","0","0","0","0","0","0","0","0","0","1/8000 sec","1/4000 sec","1/2000 sec","1/1000 sec"},
-	    {"0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","1/8000 sec","1/4000 sec","1/2000 sec"},
-	    {"0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","1/8000 sec","1/4000 sec"},
-	    {"0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","1/8000 sec"} };
-	        
-	@Override
-	public String[] getIsoList() {
-	    return ISO_LIST;
+	/**
+	 * @param index
+	 * @param stopDistribution
+	 * @return whether or not the given index belongs to the chosen distribution.
+	 */
+	private static boolean selectValues(int index, int stopDistribution) {
+    	boolean selection = false;
+		switch(stopDistribution){
+			case 1: selection = (index%4==0); break;
+			case 2: selection = (index%2==0); break;
+			case 3: selection = (index%4!=2); break;
+			default: selection = false;
+		}
+		return selection;
 	}
 	
-	@Override
-	public String[] getApertureList() {
-	    return APERTURE_LIST;
+	/**
+	 * @param listOfValues
+	 * @param stopDistribution
+	 * @return the subset of values contained in listOfValues which belong to the chosen distribution.
+	 */
+	private static Double[] getValues(double [] listOfValues, int stopDistribution){
+		ArrayList<Double> fullValues = new ArrayList<Double>();
+		int index;
+		int limit = listOfValues.length;
+		for(index = 0; index < limit; index++) {
+			if(selectValues(index, stopDistribution)){
+				fullValues.add(0,listOfValues[index]);
+			}
+		}
+		return fullValues.toArray(new Double[fullValues.size()]);
 	}
 	
-	@Override
-	public String[] getShutterList() {
-	    return SHUTTER_LIST;
-	}
+	/**
+	 * @param stopDistribution
+	 * @return Iso values matching the chosen distribution.
+	 */
+	public static Double[] getISOValues(int stopDistribution) {
+		return getValues(ISO_VALUE_LIST, stopDistribution);
+	};
 	
-	@Override
-	public int[][] getEvTable() {
-	    return EV_TABLE;
-	}
+	/**
+	 * @param stopDistribution
+	 * @return Shutter speed values matching the chosen distribution.
+	 */
+	public static Double[] getShutterValues(int stopDistribution) {
+		return getValues(SHUTTER_VALUE_LIST, stopDistribution);
+	};
 	
-	@Override
-	public String[][] getShutterTable() {
-	    return SHUTTERS_TABLE;
-	}
-
+	/**
+	 * @param stopDistribution
+	 * @return Aperture values matching the chosen distribution.
+	 */
+	public static Double[] getApertureValues(int stopDistribution) {
+		return getValues(APERTURE_VALUE_LIST, stopDistribution);
+	};
 }
