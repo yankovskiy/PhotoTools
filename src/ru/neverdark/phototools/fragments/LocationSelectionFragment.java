@@ -18,7 +18,8 @@ package ru.neverdark.phototools.fragments;
 import java.util.ArrayList;
 
 import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.db.LocationsDbAdapter;
+import ru.neverdark.phototools.db.DbAdapter;
+import ru.neverdark.phototools.db.LocationsTable;
 import ru.neverdark.phototools.utils.LocationAdapter;
 import ru.neverdark.phototools.utils.LocationAdapter.LocationImageChangeListener;
 import ru.neverdark.phototools.utils.Constants;
@@ -41,7 +42,7 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
     private View mView;
     private ListView mListView;
     private ArrayList<LocationRecord> mArrayList;
-    private LocationsDbAdapter mDbAdapter;
+    private DbAdapter mDbAdapter;
     private Cursor mCursor;
     private LocationAdapter mAdapter;
 
@@ -65,7 +66,7 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
 
         LocationRecord record = mAdapter.getItem(position);
 
-        mDbAdapter.deleteLocation(record._id);
+        mDbAdapter.getLocations().deleteLocation(record._id);
         mAdapter.remove(record);
         mAdapter.notifyDataSetChanged();
     }
@@ -99,15 +100,15 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
     private void loadDynamicData() {
         Log.message("Enter");
 
-        mCursor = mDbAdapter.fetchAllLocations();
+        mCursor = mDbAdapter.getLocations().fetchAllLocations();
         final int KEY_ROWID = mCursor
-                .getColumnIndex(LocationsDbAdapter.KEY_ROWID);
+                .getColumnIndex(LocationsTable.KEY_ROWID);
         final int KEY_LOCATION_NAME = mCursor
-                .getColumnIndex(LocationsDbAdapter.KEY_LOCATION_NAME);
+                .getColumnIndex(LocationsTable.KEY_LOCATION_NAME);
         final int KEY_LATITUDE = mCursor
-                .getColumnIndex(LocationsDbAdapter.KEY_LATITUDE);
+                .getColumnIndex(LocationsTable.KEY_LATITUDE);
         final int KEY_LONGITUDE = mCursor
-                .getColumnIndex(LocationsDbAdapter.KEY_LONGITUDE);
+                .getColumnIndex(LocationsTable.KEY_LONGITUDE);
 
         while (mCursor.moveToNext()) {
             LocationRecord dbRecord = new LocationRecord();
@@ -207,7 +208,7 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
         super.onResume();
         Log.message("Enter");
         if (mDbAdapter == null) {
-            mDbAdapter = new LocationsDbAdapter(mView.getContext());
+            mDbAdapter = new DbAdapter(mView.getContext());
         }
 
         mDbAdapter.open();
@@ -233,7 +234,7 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
 
                 LocationRecord record = mAdapter.getItem(position);
 
-                mDbAdapter.udateLastAccessTime(record._id);
+                mDbAdapter.getLocations().udateLastAccessTime(record._id);
 
                 ((SunsetFragment) getTargetFragment())
                         .handleLocationSelection(record);

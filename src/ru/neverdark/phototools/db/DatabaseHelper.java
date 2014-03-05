@@ -26,10 +26,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "applicationdata";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String CREATE_LOCATIONS_QUERY = "create table locations (_id integer primary key autoincrement, location_name text not null, latitude real not null, longitude real not null, last_access integer not null);";
     private static final String RESERVED_QUERY = "insert into locations values (1, 'reserved', 0, 0, 0);";
 
+    private static final String CREATE_USER_CAMERAS_QUERY = "create table user_cameras (_id integer primary key autoincrement, camera_name text not null, resolution_width integer not null, resolution_height integer not null, sensor_width real not null, sensor_height real not null, coc real not null, is_custom_coc integer not null);";
+    
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -39,13 +41,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.message("Enter");
         database.execSQL(CREATE_LOCATIONS_QUERY);
         database.execSQL(RESERVED_QUERY);
+        database.execSQL(CREATE_USER_CAMERAS_QUERY);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion,
             int newVersion) {
         Log.message("Enter");
-        // TODO need write
+        if (oldVersion < newVersion) {
+            switch (oldVersion) {
+            case 1:
+                database.execSQL(CREATE_USER_CAMERAS_QUERY);
+                break;
+            }
+            
+            onUpgrade(database, ++oldVersion, newVersion);
+        }
     }
 
 }

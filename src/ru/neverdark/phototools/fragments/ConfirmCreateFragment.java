@@ -17,7 +17,7 @@ package ru.neverdark.phototools.fragments;
 
 import ru.neverdark.phototools.MapActivity;
 import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.db.LocationsDbAdapter;
+import ru.neverdark.phototools.db.DbAdapter;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
 import android.app.AlertDialog;
@@ -172,10 +172,10 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
                                 /* if not edit mode - check for location exist */
                             } else if (mIsEdit == false){
 
-                                LocationsDbAdapter dbAdapter = new LocationsDbAdapter(
+                                DbAdapter dbAdapter = new DbAdapter(
                                         mView.getContext());
                                 dbAdapter.open();
-                                boolean isExists = dbAdapter
+                                boolean isExists = dbAdapter.getLocations()
                                         .isLocationExists(locationName);
 
                                 dbAdapter.close();
