@@ -117,9 +117,9 @@ public class EvData {
 	private static boolean selectValues(int index, int stopDistribution) {
     	boolean selection = false;
 		switch(stopDistribution){
-			case 1: selection = (index%4==0); break;
-			case 2: selection = (index%2==0); break;
-			case 3: selection = (index%4!=2); break;
+			case FULL_STOP: selection = (index%4==0); break;
+			case HALF_STOP: selection = (index%2==0); break;
+			case THIRD_STOP: selection = (index%4!=2); break;
 			default: selection = false;
 		}
 		return selection;
