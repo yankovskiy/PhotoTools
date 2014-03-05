@@ -167,7 +167,9 @@ public class MapActivity extends SherlockFragmentActivity implements
     public boolean onPrepareOptionsMenu(Menu menu) {
         Log.enter();
         mMenuItemDone = menu.findItem(R.id.map_button_done);
-        setButtonVisible(isButtonVisible);
+        if (mMenuItemDone != null) {
+            setButtonVisible(isButtonVisible);
+        }
         return true;
     }
 
