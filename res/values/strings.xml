@@ -185,5 +185,7 @@
     
     <string name="plugins_available">Available</string>
     <string name="plugins_installed">Installed</string>
+    
+    <string name="userCameraModel">Camera model</string>
 
 </resources>

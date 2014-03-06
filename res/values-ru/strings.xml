@@ -189,4 +189,6 @@
     <string name="plugins_available">Доступные</string>
     <string name="plugins_installed">Установленные</string>
     
+    <string name="userCameraModel">Модель камеры</string>
+    
 </resources>
