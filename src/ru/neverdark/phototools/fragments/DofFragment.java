@@ -45,6 +45,7 @@ import android.widget.TextView;
  */
 public class DofFragment extends SherlockFragment {
 
+    private Context mContext;
     private View mView;
 
     private WheelView mWheelVendor;
@@ -183,7 +184,15 @@ public class DofFragment extends SherlockFragment {
         BigDecimal coc = CameraData.getCocForCamera(vendor, camera);
         Log.variable("camera", camera);
         Log.variable("vendor", vendor.toString());
-        Log.variable("coc", coc.toString());
+
+        if (Log.DEBUG) {
+            if (coc != null) {
+                Log.variable("coc", coc.toString());
+            } else {
+                Log.variable("coc", "null");
+            }
+        }
+
         return coc;
     }
 
@@ -317,7 +326,8 @@ public class DofFragment extends SherlockFragment {
         long start = Log.enter();
         super.onCreateView(inflater, container, savedInstanceState);
         mView = inflater.inflate(R.layout.activity_dof, container, false);
-
+        mContext = mView.getContext();
+        
         bindObjectsToResources();
 
         if (isTabPresent() == true) {
@@ -350,7 +360,7 @@ public class DofFragment extends SherlockFragment {
     private void populateCameraByVendor() {
         CameraData.Vendor vendor = (CameraData.Vendor) mWheelVendor
                 .getSelectedItem();
-        String cameras[] = CameraData.getCameraByVendor(vendor);
+        String cameras[] = CameraData.getCameraByVendor(vendor, mContext);
         final int textSize = R.dimen.wheelCameraTextSize;
 
         Common.setWheelAdapter(mActivity, mWheelCamera, cameras, textSize,
@@ -367,22 +377,31 @@ public class DofFragment extends SherlockFragment {
         BigDecimal aperture = getAperture();
         BigDecimal focusLength = getFocalLength();
         BigDecimal coc = getCoc();
-        int measureUnit = getMeasureUnit();
-        BigDecimal subjectDistance = getSubjectDistance();
 
-        DofCalculator dofCalc = new DofCalculator(aperture, focusLength, coc,
-                subjectDistance, measureUnit);
-        DofCalculator.CalculationResult calculationResult = dofCalc
-                .calculate(mMeasureResultUnit);
+        /* if user cameras is empty coc is null */
+        if (coc != null) {
+            int measureUnit = getMeasureUnit();
+            BigDecimal subjectDistance = getSubjectDistance();
 
-        mLabelFarLimitResult.setText(calculationResult.format(calculationResult
-                .getFarLimit()));
-        mLabelNearLimitResult.setText(calculationResult
-                .format(calculationResult.getNearLimit()));
-        mLabelHyperFocalResult.setText(calculationResult
-                .format(calculationResult.getHyperFocal()));
-        mLabelTotalResutl.setText(calculationResult.format(calculationResult
-                .getTotal()));
+            DofCalculator dofCalc = new DofCalculator(aperture, focusLength,
+                    coc, subjectDistance, measureUnit);
+            DofCalculator.CalculationResult calculationResult = dofCalc
+                    .calculate(mMeasureResultUnit);
+
+            mLabelFarLimitResult.setText(calculationResult
+                    .format(calculationResult.getFarLimit()));
+            mLabelNearLimitResult.setText(calculationResult
+                    .format(calculationResult.getNearLimit()));
+            mLabelHyperFocalResult.setText(calculationResult
+                    .format(calculationResult.getHyperFocal()));
+            mLabelTotalResutl.setText(calculationResult
+                    .format(calculationResult.getTotal()));
+        } else {
+            mLabelFarLimitResult.setText("");
+            mLabelNearLimitResult.setText("");
+            mLabelHyperFocalResult.setText("");
+            mLabelTotalResutl.setText("");
+        }
     }
 
     /**

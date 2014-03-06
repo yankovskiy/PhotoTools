@@ -57,6 +57,14 @@ public class DbAdapter {
     }
 
     /**
+     * Gets object for user_cameras table
+     * @return
+     */
+    public UserCamerasTable getUserCameras() {
+        return mUserCameras;
+    }
+    
+    /**
      * Returns true if the database is currently open.
      * 
      * @return true if the database is currently open.
