@@ -30,11 +30,13 @@ public class DbAdapter {
     private SQLiteDatabase mDatabase;
     private DatabaseHelper mDatabaseHelper;
     private LocationsTable mLocations;
+    private UserCamerasTable mUserCameras;
 
     public DbAdapter(Context context) {
         Log.message("Enter");
         mContext = context;
         mLocations = new LocationsTable();
+        mUserCameras = new UserCamerasTable();
     }
 
     /**
@@ -74,6 +76,7 @@ public class DbAdapter {
         mDatabaseHelper = new DatabaseHelper(mContext);
         mDatabase = mDatabaseHelper.getWritableDatabase();
         mLocations.setDatabase(mDatabase);
+        mUserCameras.setDatabase(mDatabase);
         return this;
     }
 
