@@ -36,5 +36,10 @@ public class LocationRecord {
     public LocationRecord() {
         super();
     }
+    
+    @Override
+    public String toString() {
+        return locationName;
+    }
 
 }

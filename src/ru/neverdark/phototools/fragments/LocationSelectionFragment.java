@@ -20,12 +20,13 @@ import java.util.ArrayList;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.db.DbAdapter;
 import ru.neverdark.phototools.db.LocationsTable;
+import ru.neverdark.phototools.fragments.DeleteConfirmationDialog.OnDeleteConfirmationListener;
 import ru.neverdark.phototools.utils.LocationAdapter;
 import ru.neverdark.phototools.utils.LocationAdapter.LocationImageChangeListener;
-import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.LocationRecord;
 import ru.neverdark.phototools.utils.Log;
 import android.app.Dialog;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -39,12 +40,28 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 public class LocationSelectionFragment extends SherlockDialogFragment implements
         LocationImageChangeListener {
 
+    /**
+     * Implements listener for "ok" button on the delete confirmation dialog
+     */
+    private class DeleteConfirmationListener implements
+            OnDeleteConfirmationListener {
+        @Override
+        public void onDeleteConfirmationHandler(Object deleteRecord) {
+            LocationRecord record = (LocationRecord) deleteRecord;
+
+            mDbAdapter.getLocations().deleteLocation(record._id);
+            mAdapter.remove(record);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
     private View mView;
     private ListView mListView;
     private ArrayList<LocationRecord> mArrayList;
     private DbAdapter mDbAdapter;
     private Cursor mCursor;
     private LocationAdapter mAdapter;
+    private Context mContext;
 
     /**
      * Binds classes objects to resources
@@ -52,23 +69,6 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
     private void bindObjectsToResources() {
         mListView = (ListView) mView
                 .findViewById(R.id.locationSelection_listView);
-    }
-
-    /**
-     * Delete selected location from database and listView
-     * 
-     * @param position
-     *            location position for delete
-     */
-    public void deleteLocation(final int position) {
-        Log.message("Enter");
-        Log.variable("Position", String.valueOf(position));
-
-        LocationRecord record = mAdapter.getItem(position);
-
-        mDbAdapter.getLocations().deleteLocation(record._id);
-        mAdapter.remove(record);
-        mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -151,6 +151,7 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
         mView = inflater.inflate(R.layout.activity_location_selection,
                 container, false);
 
+        mContext = mView.getContext();
         bindObjectsToResources();
         setOnItemClickListener(this);
 
@@ -184,13 +185,11 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
      */
     public void onLocationImageRemove(int position) {
         Log.message("Enter");
-        Log.variable("position", String.valueOf(position));
 
-        ConfirmDeleteFragment deleteFragment = ConfirmDeleteFragment
-                .NewInstance(mAdapter.getItem(position).locationName, position);
-        deleteFragment
-                .setTargetFragment(this, Constants.DELETE_DIALOG_FRAGMENT);
-        deleteFragment.show(getFragmentManager(), Constants.DELETE_DIALOG);
+        DeleteConfirmationDialog dialog = DeleteConfirmationDialog.getInstance(mContext);
+        dialog.setCallback(new DeleteConfirmationListener());
+        dialog.setObjectForDelete(mAdapter.getItem(position));
+        dialog.show(getFragmentManager(), DeleteConfirmationDialog.DIALOG_TAG);
     }
 
     @Override
