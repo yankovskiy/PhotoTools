@@ -157,10 +157,10 @@
     <string name="dialogConfirmCreate_error_emptyLocationName">The location name cannot be empty</string>
     <string name="dialogConfirmCreate_error_alreayExist">The location with such name is already exist</string>
     
-    <string name="sunset_deleteConfirm_title">Delete confirmation</string>
-    <string name="sunset_deleteConfirm_message">Do you really wish remove the record \"%s\"?</string>
-    <string name="sunset_deleteConfirm_positive">Yes</string>
-    <string name="sunset_deleteConfirm_negative">No</string>
+    <string name="deleteConfirmation_dialog_title">Delete confirmation</string>
+    <string name="deleteConfirmation_dialog_message">Do you really wish remove the record \"%s\"?</string>
+    <string name="dialog_button_ok">Yes</string>
+    <string name="dialog_button_cancel">No</string>
     
     <string name="sunset_information_timeZoneStart">Determining of the time zone. Please, wait</string>
     <string name="sunset_information_timeZoneSuccess">The time zone is successfully picked</string>

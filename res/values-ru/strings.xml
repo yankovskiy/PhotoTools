@@ -160,10 +160,10 @@
     <string name="dialogConfirmCreate_error_emptyLocationName">Название местоположения не может быть пустым</string>
     <string name="dialogConfirmCreate_error_alreayExist">Местоположение с таким названием уже есть</string>
     
-    <string name="sunset_deleteConfirm_title">Подтверждение удаления</string>
-    <string name="sunset_deleteConfirm_message">Вы действительно хотите удалить запись \"%s\"?</string>
-    <string name="sunset_deleteConfirm_positive">Да</string>
-    <string name="sunset_deleteConfirm_negative">Нет</string>
+    <string name="deleteConfirmation_dialog_title">Подтверждение удаления</string>
+    <string name="deleteConfirmation_dialog_message">Вы действительно хотите удалить запись \"%s\"?</string>
+    <string name="dialog_button_ok">Да</string>
+    <string name="dialog_button_cancel">Нет</string>
     
     <string name="sunset_information_timeZoneStart">Определение временной зоны. Подождите</string>
     <string name="sunset_information_timeZoneSuccess">Временная зона успешно определена</string>
