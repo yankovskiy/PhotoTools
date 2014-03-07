@@ -190,6 +190,9 @@
     <string name="plugins_installed">Установленные</string>
     
     <string name="userCameraModel">Модель камеры</string>
+    <string name="userCamera_label_coc">Кружок нерезкости:</string>
+    <string name="userCamera_label_resolution">Максимальное разрешение:</string>
+    <string name="userCamera_label_sensor">Размер сенсора:</string>
     
     <string name="cameraManagementTitle">Управление камерами</string>
     

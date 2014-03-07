@@ -187,6 +187,9 @@
     <string name="plugins_installed">Installed</string>
     
     <string name="userCameraModel">Camera model</string>
+    <string name="userCamera_label_coc">Circle of confusion:</string>
+    <string name="userCamera_label_resolution">Maximum resolution:</string>
+    <string name="userCamera_label_sensor">Sensor size:</string>
     
     <string name="cameraManagementTitle">Cameras management</string>
 

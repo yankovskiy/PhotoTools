@@ -21,8 +21,8 @@ package ru.neverdark.phototools.db;
 public class UserCamerasRecord {
     private String mCameraName;
     private float mCoc;
-    boolean mIsCustomCoc;
-    long mRecordId;
+    private boolean mIsCustomCoc;
+    private long mRecordId;
     private int mResolutionHeight;
     private int mResolutionWidth;
     private float mSensorHeight;
@@ -178,5 +178,10 @@ public class UserCamerasRecord {
      */
     public void setSensorWidth(float sensorWidth) {
         this.mSensorWidth = sensorWidth;
+    }
+    
+    @Override
+    public String toString() {
+        return mCameraName;
     }
 }
