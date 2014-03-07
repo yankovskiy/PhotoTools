@@ -187,5 +187,7 @@
     <string name="plugins_installed">Installed</string>
     
     <string name="userCameraModel">Camera model</string>
+    
+    <string name="cameraManagementTitle">Cameras management</string>
 
 </resources>

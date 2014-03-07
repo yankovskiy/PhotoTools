@@ -191,4 +191,6 @@
     
     <string name="userCameraModel">Модель камеры</string>
     
+    <string name="cameraManagementTitle">Управление камерами</string>
+    
 </resources>
