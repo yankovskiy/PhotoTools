@@ -188,5 +188,8 @@
 
     <string name="plugins_available">Доступные</string>
     <string name="plugins_installed">Установленные</string>
+
+    <string name="error">Ошибка</string>
+    <string name="error_cameraAlreadyExist">Камера с таким именем уже существует</string>
     
 </resources>

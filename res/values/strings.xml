@@ -185,5 +185,8 @@
     
     <string name="plugins_available">Available</string>
     <string name="plugins_installed">Installed</string>
+    
+    <string name="error">Error</string>
+    <string name="error_cameraAlreadyExist">Camera with same name already exist</string>
 
 </resources>
