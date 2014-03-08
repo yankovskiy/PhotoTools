@@ -192,5 +192,8 @@
     <string name="userCamera_label_sensor">Sensor size:</string>
     
     <string name="cameraManagementTitle">Cameras management</string>
+    
+    <string name="error">Error</string>
+    <string name="error_cameraAlreadyExist">Camera with same name already exist</string>
 
 </resources>
