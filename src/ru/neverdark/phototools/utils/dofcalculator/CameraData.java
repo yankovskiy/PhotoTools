@@ -22,13 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.app.Activity;
 import android.content.Context;
 
 import ru.neverdark.phototools.db.DbAdapter;
 import ru.neverdark.phototools.db.UserCamerasRecord;
-import ru.neverdark.phototools.utils.Log;
-
 
 /**
  * Class CameraData
@@ -219,8 +216,9 @@ public class CameraData {
      * Function get cameras array by vendor
      * 
      * @param vendor
-     *            - camera vendor
-     * @param context TODO
+     *            camera vendor
+     * @param context
+     *            application context
      * @return array contain cameras model for specified vendor
      */
     public static String[] getCameraByVendor(Vendor vendor, Context context) {
@@ -229,7 +227,7 @@ public class CameraData {
         if (vendor == Vendor.USER) {
             loadDataFromDb(context);
         }
-        
+
         for (CameraData cameraData : DATABASE.get(vendor)) {
             list.add(cameraData.getModel());
         }
@@ -269,9 +267,9 @@ public class CameraData {
      * Function get circle of confusion for special camera
      * 
      * @param vendor
-     *            - camera vendor
+     *            camera vendor
      * @param camera
-     *            - camera model
+     *            camera model
      * @return circle of confusion or null if camera not found
      */
     public static BigDecimal getCocForCamera(Vendor vendor, String camera) {
@@ -318,9 +316,9 @@ public class CameraData {
      * Class constructor
      * 
      * @param vendor
-     *            - camera vendor
+     *            camera vendor
      * @param model
-     *            - camera model
+     *            camera model
      * @param coc
      *            custom circle of confusion
      */

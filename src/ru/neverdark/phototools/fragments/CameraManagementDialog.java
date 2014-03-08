@@ -81,8 +81,9 @@ public class CameraManagementDialog extends SherlockDialogFragment {
             String cameraName = mModel.getText().toString().trim();
             if (cameraName.length() > 0) {
                 if (mAdapter.isCameraExist(cameraName)) {
-                    // TODO
-                    // отобразить диалог о том, что камера уже существует
+                    ShowMessageDialog dialog = ShowMessageDialog.getInstance(mContext);
+                    dialog.setMessages(R.string.error, R.string.error_cameraAlreadyExist);
+                    dialog.show(getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
                 } else {
                     CameraEditorDialog dialog = CameraEditorDialog.getInstance(mContext);
                     dialog.setCallback(new CameraEditorListener());

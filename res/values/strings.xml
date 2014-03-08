@@ -187,13 +187,21 @@
     <string name="plugins_installed">Installed</string>
     
     <string name="userCameraModel">Camera model</string>
-    <string name="userCamera_label_coc">Circle of confusion:</string>
-    <string name="userCamera_label_resolution">Maximum resolution:</string>
-    <string name="userCamera_label_sensor">Sensor size:</string>
+    <string name="userCamera_label_coc">Circle of confusion</string>
+    <string name="userCamera_label_resolution">Maximum resolution</string>
+    <string name="userCamera_label_sensor">Sensor size</string>
     
     <string name="cameraManagementTitle">Cameras management</string>
     
     <string name="error">Error</string>
     <string name="error_cameraAlreadyExist">Camera with same name already exist</string>
+    
+    <string name="userCamera_addCamera">Add new camera</string>
+    <string name="userCamera_editCamera">Edit camera</string>
+    <string name="userCamera_cameraName">Camera name</string>
+    <string name="userCamera_autoCalc">Automatic calculation</string>
+    
+    <string name="width">Width</string>
+    <string name="height">Height</string>
 
 </resources>

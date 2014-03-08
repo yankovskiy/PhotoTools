@@ -33,9 +33,10 @@ import android.widget.TextView;
 public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
     public interface OnEditAndRemoveListener {
         public void onEditHandler(UserCamerasRecord record);
+
         public void onRemoveHandler(UserCamerasRecord record);
     }
-    
+
     private class RemoveClickListener implements OnClickListener {
         private UserCamerasRecord mRecord;
 
@@ -172,12 +173,13 @@ public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
 
         UserCamerasRecord record = getItem(position);
         String model = record.getCameraName();
-        String coc = mContext.getString(R.string.userCamera_label_coc).concat(
-                String.valueOf(record.getCoc()));
-        String resolution = String.format(Locale.US, "%s %d %d",
+        String coc = String.format(Locale.US, "%s: %f",
+                mContext.getString(R.string.userCamera_label_coc),
+                record.getCoc());
+        String resolution = String.format(Locale.US, "%s: %d %d",
                 mContext.getString(R.string.userCamera_label_resolution),
                 record.getResolutionWidth(), record.getResolutionHeight());
-        String sensor = String.format(Locale.US, "%s %f %f",
+        String sensor = String.format(Locale.US, "%s: %f %f",
                 mContext.getString(R.string.userCamera_label_resolution),
                 record.getResolutionWidth(), record.getResolutionHeight());
 
@@ -186,11 +188,12 @@ public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
         holder.mCameraResolution.setText(resolution);
         holder.mCameraSensor.setText(sensor);
         holder.mEditButton.setOnClickListener(new EditClickListener(record));
-        holder.mRemoveButton.setOnClickListener(new RemoveClickListener(record));
+        holder.mRemoveButton
+                .setOnClickListener(new RemoveClickListener(record));
 
         return row;
     }
-    
+
     public void setCallback(OnEditAndRemoveListener callback) {
         mCallback = callback;
     }

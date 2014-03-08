@@ -199,4 +199,12 @@
     
     <string name="cameraManagementTitle">Управление камерами</string>
     
+    <string name="userCamera_addCamera">Добавление камеры</string>
+    <string name="userCamera_editCamera">Редактирование камеры</string>
+    <string name="userCamera_cameraName">Название камеры</string>
+    <string name="userCamera_autoCalc">Автоматическое вычисление</string>
+    
+    <string name="width">Ширина</string>
+    <string name="height">Высота</string>
+    
 </resources>
