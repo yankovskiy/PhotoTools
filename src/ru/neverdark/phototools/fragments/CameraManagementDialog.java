@@ -1,9 +1,27 @@
+/*******************************************************************************
+ * Copyright (C) 2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * 
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ * 
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.db.UserCamerasAdapter;
 import ru.neverdark.phototools.db.UserCamerasAdapter.OnEditAndRemoveListener;
 import ru.neverdark.phototools.db.UserCamerasRecord;
+import ru.neverdark.phototools.fragments.CameraEditorDialog.OnCameraEditorListener;
+import ru.neverdark.phototools.fragments.DeleteConfirmationDialog.OnDeleteConfirmationListener;
+import ru.neverdark.phototools.utils.Log;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -17,20 +35,44 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 public class CameraManagementDialog extends SherlockDialogFragment {
-    private class EditAndRemoveListener implements OnEditAndRemoveListener {
+    private class CameraEditorListener implements OnCameraEditorListener {
+        @Override
+        public void onEditCamera(UserCamerasRecord record) {
+            mAdapter.updateCamera(record);
+        }
 
         @Override
+        public void onAddCamera(UserCamerasRecord record) {
+            mAdapter.createCamera(record);
+        }
+    }
+
+    private class DeleteConfirmationListener implements
+            OnDeleteConfirmationListener {
+        @Override
+        public void onDeleteConfirmationHandler(Object deleteRecord) {
+            UserCamerasRecord record = (UserCamerasRecord) deleteRecord;
+            mAdapter.deleteCamera(record);
+        }
+    }
+
+    private class EditAndRemoveListener implements OnEditAndRemoveListener {
+        @Override
         public void onEditHandler(UserCamerasRecord record) {
-            // TODO Auto-generated method stub
-            // отобразить диалог для редактирования записи
+            CameraEditorDialog dialog = CameraEditorDialog.getInstance(mContext);
+            dialog.setCallback(new CameraEditorListener());
+            dialog.setActionType(CameraEditorDialog.ACTION_EDIT);
+            dialog.setDataForEdit(record);
+            dialog.show(getFragmentManager(), CameraEditorDialog.DIALOG_TAG);
         }
 
         @Override
         public void onRemoveHandler(UserCamerasRecord record) {
-            // TODO Auto-generated method stub
-            // отобразить диалог для подтверждения удаления записи
+            DeleteConfirmationDialog dialog = DeleteConfirmationDialog.getInstance(mContext);
+            dialog.setCallback(new DeleteConfirmationListener());
+            dialog.setObjectForDelete(record);
+            dialog.show(getFragmentManager(), DeleteConfirmationDialog.DIALOG_TAG);
         }
-
     }
 
     private class AddCameraClickListener implements OnClickListener {
@@ -42,8 +84,11 @@ public class CameraManagementDialog extends SherlockDialogFragment {
                     // TODO
                     // отобразить диалог о том, что камера уже существует
                 } else {
-                    // TODO
-                    // отобразить диалог для добавления камеры
+                    CameraEditorDialog dialog = CameraEditorDialog.getInstance(mContext);
+                    dialog.setCallback(new CameraEditorListener());
+                    dialog.setActionType(CameraEditorDialog.ACTION_ADD);
+                    dialog.setCameraName(cameraName);
+                    dialog.show(getFragmentManager(), CameraEditorDialog.DIALOG_TAG);
                 }
             }
         }
@@ -92,6 +137,8 @@ public class CameraManagementDialog extends SherlockDialogFragment {
     
     @Override
     public void onResume() {
+        Log.enter();
+        
         super.onResume();
         if (mAdapter == null) {
             mAdapter = new UserCamerasAdapter(mContext);
@@ -106,6 +153,8 @@ public class CameraManagementDialog extends SherlockDialogFragment {
     
     @Override
     public void onPause() {
+        Log.enter();
+        
         super.onPause();
         if (mAdapter != null) {
             mAdapter.closeDb();
