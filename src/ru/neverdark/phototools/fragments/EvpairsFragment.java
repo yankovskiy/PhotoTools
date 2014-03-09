@@ -35,7 +35,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,8 +61,6 @@ public class EvpairsFragment extends SherlockFragment {
     private TextView mLabelStepFull;
     private TextView mLabelStepHalf;
     private TextView mLabelStepThird;
-
-    private TabHost mTabHost;
 
     private EvCalculator mEvCalculator;
 
@@ -103,27 +100,7 @@ public class EvpairsFragment extends SherlockFragment {
         mLabelStepThird = (TextView) mView
                 .findViewById(R.id.ev_label_stepThird);
 
-        mTabHost = (TabHost) mView.findViewById(android.R.id.tabhost);
-
         mActivity = getSherlockActivity();
-    }
-
-    /**
-     * Builds tabs for small devices
-     */
-    private void buildTabs() {
-        mTabHost.setup();
-
-        TabHost.TabSpec spec = mTabHost.newTabSpec("tag1");
-
-        spec.setContent(R.id.tab1);
-        spec.setIndicator(getString(R.string.evpairs_label_currentValues));
-        mTabHost.addTab(spec);
-
-        spec = mTabHost.newTabSpec("tag2");
-        spec.setContent(R.id.tab2);
-        spec.setIndicator(getString(R.string.evpairs_label_newValues));
-        mTabHost.addTab(spec);
     }
 
     /**
@@ -226,13 +203,6 @@ public class EvpairsFragment extends SherlockFragment {
     }
 
     /**
-     * @return true if layout contains tabs
-     */
-    private boolean isTabPresent() {
-        return (mTabHost != null);
-    }
-
-    /**
      * Load saved values from shared prefs
      */
     private void loadValues() {
@@ -267,10 +237,6 @@ public class EvpairsFragment extends SherlockFragment {
         mView = inflater.inflate(R.layout.activity_evpairs, container, false);
         bindObjectsToResources();
         setCyclicToWheels();
-
-        if (isTabPresent() == true) {
-            buildTabs();
-        }
 
         mEvCalculator = new EvCalculator();
 

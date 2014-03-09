@@ -70,7 +70,11 @@ public class DbAdapter {
      * @return true if the database is currently open.
      */
     public boolean isOpen() {
-        return mDatabase.isOpen();
+        if (mDatabase == null) {
+            return false;
+        } else {
+            return mDatabase.isOpen();
+        }
     }
 
     /**

@@ -106,7 +106,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/width"
-                android:inputType="number" >
+                android:inputType="numberDecimal" >
             </EditText>
 
             <TextView
@@ -123,7 +123,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/height"
-                android:inputType="number" >
+                android:inputType="numberDecimal" >
             </EditText>
         </LinearLayout>
 

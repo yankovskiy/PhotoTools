@@ -146,7 +146,10 @@ public class CameraManagementDialog extends SherlockDialogFragment {
             mAdapter.setCallback(new EditAndRemoveListener());
         }
         
-        mAdapter.openDb();
+        if (mAdapter.isDbOpen() == false) {
+            mAdapter.openDb();
+        }
+        
         mAdapter.loadData();
         
         mCameraList.setAdapter(mAdapter);

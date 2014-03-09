@@ -37,13 +37,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.TabHost;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
  * Fragment contains Depth of Field calculator UI
  */
 public class DofFragment extends SherlockFragment {
+
+    private class ButtonClickListener implements OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+            case R.id.dof_cameraManagement:
+                CameraManagementDialog dialog = CameraManagementDialog.getInstance(mContext);
+                dialog.show(getFragmentManager(), CameraManagementDialog.DIALOG_TAG);
+                break;
+            }
+        }
+    }
 
     private Context mContext;
     private View mView;
@@ -64,8 +77,8 @@ public class DofFragment extends SherlockFragment {
     private TextView mLabelFarLimitResult;
     private TextView mLabelHyperFocalResult;
     private TextView mLabelTotalResutl;
-
-    private TabHost mTabHost;
+    
+    private ImageView mCameraManagement;
 
     private final static String VENDOR = "dof_vendor";
     private final static String CAMERA = "dof_camera";
@@ -134,34 +147,8 @@ public class DofFragment extends SherlockFragment {
         mLabelTotalResutl = (TextView) mView
                 .findViewById(R.id.dof_label_totalResult);
 
-        mTabHost = (TabHost) mView.findViewById(android.R.id.tabhost);
-
+        mCameraManagement = (ImageView) mView.findViewById(R.id.dof_cameraManagement);
         mActivity = getSherlockActivity();
-    }
-
-    /**
-     * Builds tabs for small devices
-     */
-    private void buildTabs() {
-        mTabHost.setup();
-
-        TabHost.TabSpec spec = mTabHost.newTabSpec("tag1");
-
-        spec.setContent(R.id.tab1);
-        spec.setIndicator(getString(R.string.dof_tab_parameters));
-        mTabHost.addTab(spec);
-
-        spec = mTabHost.newTabSpec("tag2");
-        spec.setContent(R.id.tab2);
-        spec.setIndicator(getString(R.string.dof_tab_result));
-        mTabHost.addTab(spec);
-
-        spec = mTabHost.newTabSpec("tag3");
-        spec.setContent(R.id.tab3);
-        spec.setIndicator(getString(R.string.dof_tab_camera));
-        mTabHost.addTab(spec);
-
-        // mTabHost.setCurrentTab(0);
     }
 
     /**
@@ -222,13 +209,6 @@ public class DofFragment extends SherlockFragment {
         String distance = (String) mWheelSubjectDistance.getSelectedItem();
         Log.variable("distance", distance);
         return new BigDecimal(distance);
-    }
-
-    /**
-     * @return true if layout contains tabs
-     */
-    private boolean isTabPresent() {
-        return (mTabHost != null);
     }
 
     /**
@@ -330,10 +310,6 @@ public class DofFragment extends SherlockFragment {
         
         bindObjectsToResources();
 
-        if (isTabPresent() == true) {
-            buildTabs();
-        }
-
         setCyclicToWheels();
         arrayToWheels();
         loadSavedData();
@@ -342,9 +318,14 @@ public class DofFragment extends SherlockFragment {
         measureButtonsHandler();
         wheelsHandler();
         updateMeasureButtons();
-
+        setClickListeners();
+        
         Log.exit(start);
         return mView;
+    }
+
+    private void setClickListeners() {
+        mCameraManagement.setOnClickListener(new ButtonClickListener());
     }
 
     @Override

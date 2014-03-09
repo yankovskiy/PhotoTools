@@ -94,7 +94,6 @@ public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
         mResource = resource;
         mContext = context;
         mDbAdapter = new DbAdapter(mContext);
-        setNotifyOnChange(true);
     }
 
     public void openDb() {
@@ -107,7 +106,7 @@ public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
 
     public void loadData() {
         mDbAdapter.getUserCameras().fetchAllCameras(mObjects);
-        // notifyDataSetChanged();
+        notifyDataSetChanged();
     }
 
     public void deleteCamera(UserCamerasRecord record) {
@@ -115,7 +114,7 @@ public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
 
         remove(record);
         mDbAdapter.getUserCameras().deleteCamera(recordId);
-        // notifyDataSetChanged();
+        notifyDataSetChanged();
     }
 
     public boolean isCameraExist(String cameraName) {
@@ -127,8 +126,9 @@ public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
                 record.getResolutionWidth(), record.getResolutionHeight(),
                 record.getSensorWidth(), record.getSensorHeight(),
                 record.getCoc(), record.isCustomCoc());
-        add(record);
-        // notifyDataSetChanged();
+        mDbAdapter.getUserCameras().fetchAllCameras(mObjects);
+        
+        notifyDataSetChanged();
     }
 
     public void updateCamera(UserCamerasRecord record) {
@@ -140,7 +140,7 @@ public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
                         record.isCustomCoc());
         mDbAdapter.getUserCameras().fetchAllCameras(mObjects);
 
-        // notifyDataSetChanged();
+        notifyDataSetChanged();
     }
 
     @Override
@@ -173,15 +173,15 @@ public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
 
         UserCamerasRecord record = getItem(position);
         String model = record.getCameraName();
-        String coc = String.format(Locale.US, "%s: %f",
+        String coc = String.format(Locale.US, "%s: %s",
                 mContext.getString(R.string.userCamera_label_coc),
                 record.getCoc());
-        String resolution = String.format(Locale.US, "%s: %d %d",
+        String resolution = String.format(Locale.US, "%s: %dx%d",
                 mContext.getString(R.string.userCamera_label_resolution),
                 record.getResolutionWidth(), record.getResolutionHeight());
-        String sensor = String.format(Locale.US, "%s: %f %f",
-                mContext.getString(R.string.userCamera_label_resolution),
-                record.getResolutionWidth(), record.getResolutionHeight());
+        String sensor = String.format(Locale.US, "%s: %sx%s",
+                mContext.getString(R.string.userCamera_label_sensor),
+                record.getSensorWidth(), record.getSensorHeight());
 
         holder.mCameraCoc.setText(coc);
         holder.mCameraModel.setText(model);
@@ -196,5 +196,9 @@ public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
 
     public void setCallback(OnEditAndRemoveListener callback) {
         mCallback = callback;
+    }
+    
+    public boolean isDbOpen() {
+        return mDbAdapter.isOpen();
     }
 }

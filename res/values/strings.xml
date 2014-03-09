@@ -159,8 +159,8 @@
     
     <string name="deleteConfirmation_dialog_title">Delete confirmation</string>
     <string name="deleteConfirmation_dialog_message">Do you really wish remove the record \"%s\"?</string>
-    <string name="dialog_button_ok">Yes</string>
-    <string name="dialog_button_cancel">No</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_button_cancel">Cancel</string>
     
     <string name="sunset_information_timeZoneStart">Determining of the time zone. Please, wait</string>
     <string name="sunset_information_timeZoneSuccess">The time zone is successfully picked</string>
@@ -196,7 +196,6 @@
     <string name="error">Error</string>
     <string name="error_cameraAlreadyExist">Camera with same name already exist</string>
     <string name="error_cameraNameEmpty">Camera name is empty</string>
-    <string name="error_incorrectData">Incorrect data for sensor size or for maximum resolution</string>
     <string name="error_notAllValuesFilled">Sensor size and maximum resolution must be specified</string>
     <string name="error_cocNotFilled">Circle of confusion must be specified</string>
     

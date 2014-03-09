@@ -26,6 +26,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -46,7 +47,7 @@ public class CameraEditorDialog extends SherlockDialogFragment {
         private static final long serialVersionUID = -3433785378864484422L;
 
         public CameraEditorDialogException(int resourceId) {
-            ShowMessageDialog dialog = new ShowMessageDialog();
+            ShowMessageDialog dialog = ShowMessageDialog.getInstance(mContext);
             dialog.setMessages(R.string.error, resourceId);
             dialog.show(getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
         }
@@ -65,20 +66,7 @@ public class CameraEditorDialog extends SherlockDialogFragment {
         public void onEditCamera(UserCamerasRecord record);
     }
 
-    private class PositiveClickListener implements OnClickListener {
-        private boolean isDataValid() {
-
-            float resolutionWidth = Float.valueOf(mResolutionWidth.getText()
-                    .toString());
-            float resolutionHeight = Float.valueOf(mResolutionHeight.getText()
-                    .toString());
-            float sensorWidth = Float
-                    .valueOf(mSensorWidth.getText().toString());
-            float sensorHeight = Float.valueOf(mSensorHeight.getText()
-                    .toString());
-
-            return (sensorWidth / resolutionWidth) == (sensorHeight / resolutionHeight);
-        }
+    private class PositiveClickListener implements View.OnClickListener {
 
         private boolean isDataFilled() {
             boolean isFilled;
@@ -102,7 +90,7 @@ public class CameraEditorDialog extends SherlockDialogFragment {
         }
 
         @Override
-        public void onClick(DialogInterface dialog, int which) {
+        public void onClick(View v) {
             String cameraName = mCameraModel.getText().toString().trim();
 
             try {
@@ -116,11 +104,6 @@ public class CameraEditorDialog extends SherlockDialogFragment {
                             R.string.error_notAllValuesFilled);
                 }
 
-                if (isDataValid() == false) {
-                    throw new CameraEditorDialogException(
-                            R.string.error_incorrectData);
-                }
-
                 if (mAutoCalcCoc.isChecked() == false
                         && mCoc.getText().toString().trim().length() == 0) {
                     throw new CameraEditorDialogException(
@@ -130,8 +113,8 @@ public class CameraEditorDialog extends SherlockDialogFragment {
                 boolean exist = false;
 
                 if ((mActionType == ACTION_ADD)
-                        || (mActionType == ACTION_EDIT && cameraName != mUserCamerasRecord
-                                .getCameraName())) {
+                        || (mActionType == ACTION_EDIT && cameraName.equals(mUserCamerasRecord
+                                .getCameraName()) == false)) {
                     DbAdapter dbAdapter = new DbAdapter(mContext).open();
                     exist = dbAdapter.getUserCameras()
                             .isCameraExist(cameraName);
@@ -143,7 +126,7 @@ public class CameraEditorDialog extends SherlockDialogFragment {
                             R.string.error_cameraAlreadyExist);
                 }
 
-                dialog.dismiss();
+                dismiss();
 
                 if (mCallback != null) {
                     fillUserCamerasRecord(mUserCamerasRecord);
@@ -155,7 +138,7 @@ public class CameraEditorDialog extends SherlockDialogFragment {
                     }
                 }
             } catch (CameraEditorDialogException e) {
-
+                
             }
         }
     }
@@ -215,6 +198,8 @@ public class CameraEditorDialog extends SherlockDialogFragment {
             mAlertDialog.setTitle(R.string.userCamera_addCamera);
             disableCustomCoc(true);
             mCameraModel.setText(mCameraName);
+            mAutoCalcCoc.setChecked(true);
+            mUserCamerasRecord = new UserCamerasRecord();
         } else if (mActionType == ACTION_EDIT) {
             mAlertDialog.setTitle(R.string.userCamera_editCamera);
 
@@ -242,20 +227,19 @@ public class CameraEditorDialog extends SherlockDialogFragment {
     }
 
     private void fillUserCamerasRecord(UserCamerasRecord record) {
-        if (mActionType == ACTION_ADD) {
-            record = new UserCamerasRecord();
-        }
-
         String cameraName = mCameraModel.getText().toString().trim();
         boolean isCustomCoc = !mAutoCalcCoc.isChecked();
         int resolutionWidth = Integer.valueOf(mResolutionWidth.getText().toString().trim());
         int resolutionHeight = Integer.valueOf(mResolutionHeight.getText().toString().trim());
         float sensorWidth = Float.valueOf(mSensorWidth.getText().toString().trim());
         float sensorHeight = Float.valueOf(mSensorHeight.getText().toString().trim());
-        float coc = Float.valueOf(mCoc.getText().toString().trim());
+        
+        if (mAutoCalcCoc.isChecked() == false) {
+            float coc = Float.valueOf(mCoc.getText().toString().trim());
+            record.setCoc(coc);
+        }
         
         record.setCameraName(cameraName);
-        record.setCoc(coc);
         record.setIsCustomCoc(isCustomCoc);
         record.setResolutionHeight(resolutionHeight);
         record.setResolutionWidth(resolutionWidth);
@@ -289,10 +273,23 @@ public class CameraEditorDialog extends SherlockDialogFragment {
     }
 
     private void setOnClickListener() {
-        mAlertDialog.setPositiveButton(R.string.dialog_button_ok,
-                new PositiveClickListener());
+        mAlertDialog.setPositiveButton(R.string.dialog_button_ok, null);
         mAlertDialog.setNegativeButton(R.string.dialog_button_cancel,
                 new NegativeClickListener());
         mAutoCalcCoc.setOnCheckedChangeListener(new CheckedChangeListener());
+        
+    }
+    
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        
+        AlertDialog d = (AlertDialog)getDialog();
+        if(d != null)
+        {
+            Button positiveButton = (Button) d.getButton(Dialog.BUTTON_POSITIVE);
+            positiveButton.setOnClickListener(new PositiveClickListener());
+        }
     }
 }

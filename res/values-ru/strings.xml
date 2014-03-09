@@ -162,8 +162,8 @@
     
     <string name="deleteConfirmation_dialog_title">Подтверждение удаления</string>
     <string name="deleteConfirmation_dialog_message">Вы действительно хотите удалить запись \"%s\"?</string>
-    <string name="dialog_button_ok">Да</string>
-    <string name="dialog_button_cancel">Нет</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_button_cancel">Отмена</string>
     
     <string name="sunset_information_timeZoneStart">Определение временной зоны. Подождите</string>
     <string name="sunset_information_timeZoneSuccess">Временная зона успешно определена</string>
@@ -192,7 +192,6 @@
     <string name="error">Ошибка</string>
     <string name="error_cameraAlreadyExist">Камера с таким именем уже существует</string>
     <string name="error_cameraNameEmpty">Не задано название камеры</string>
-    <string name="error_incorrectData">Неверные значения для размера сенсора или для максимального разрешения</string>
     <string name="error_notAllValuesFilled">Размеры сенсора и максимального разрешения должны быть указаны</string>
     <string name="error_cocNotFilled">Кружок нерезкости должен быть задан</string>
     
