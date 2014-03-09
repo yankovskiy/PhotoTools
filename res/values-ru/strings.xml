@@ -191,6 +191,10 @@
 
     <string name="error">Ошибка</string>
     <string name="error_cameraAlreadyExist">Камера с таким именем уже существует</string>
+    <string name="error_cameraNameEmpty">Не задано название камеры</string>
+    <string name="error_incorrectData">Неверные значения для размера сенсора или для максимального разрешения</string>
+    <string name="error_notAllValuesFilled">Размеры сенсора и максимального разрешения должны быть указаны</string>
+    <string name="error_cocNotFilled">Кружок нерезкости должен быть задан</string>
     
     <string name="userCameraModel">Модель камеры</string>
     <string name="userCamera_label_coc">Кружок нерезкости:</string>
