@@ -209,5 +209,7 @@
     
     <string name="userCameraRow_resolution">Resolution</string>
     <string name="userCameraRow_sensor">Sensor</string>
+    
+    <string name="mm">mm</string>
 
 </resources>

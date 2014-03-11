@@ -213,5 +213,5 @@
     <string name="userCameraRow_resolution">Разрешение</string>
     <string name="userCameraRow_sensor">Сенсор</string>
     
-    
+    <string name="mm">мм</string>
 </resources>
