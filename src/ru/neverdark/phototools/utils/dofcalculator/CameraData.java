@@ -26,6 +26,7 @@ import android.content.Context;
 
 import ru.neverdark.phototools.db.DbAdapter;
 import ru.neverdark.phototools.db.UserCamerasRecord;
+import ru.neverdark.phototools.utils.Log;
 
 /**
  * Class CameraData
@@ -239,6 +240,7 @@ public class CameraData {
      * Loads user cameras from database
      */
     private static void loadDataFromDb(Context context) {
+        Log.enter();
         List<UserCamerasRecord> list = new ArrayList<UserCamerasRecord>();
         DbAdapter adapter = new DbAdapter(context).open();
         adapter.getUserCameras().fetchAllCameras(list);

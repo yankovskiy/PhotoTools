@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.ui.ImageOnTouchListener;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -127,7 +128,7 @@ public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
                 record.getSensorWidth(), record.getSensorHeight(),
                 record.getCoc(), record.isCustomCoc());
         mDbAdapter.getUserCameras().fetchAllCameras(mObjects);
-        
+
         notifyDataSetChanged();
     }
 
@@ -176,11 +177,11 @@ public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
         String coc = String.format(Locale.US, "%s: %s",
                 mContext.getString(R.string.userCamera_label_coc),
                 record.getCoc());
-        String resolution = String.format(Locale.US, "%s: %dx%d",
-                mContext.getString(R.string.userCamera_label_resolution),
+        String resolution = String.format(Locale.US, "%s: %d x %d",
+                mContext.getString(R.string.userCameraRow_resolution),
                 record.getResolutionWidth(), record.getResolutionHeight());
-        String sensor = String.format(Locale.US, "%s: %sx%s",
-                mContext.getString(R.string.userCamera_label_sensor),
+        String sensor = String.format(Locale.US, "%s: %s x %s",
+                mContext.getString(R.string.userCameraRow_sensor),
                 record.getSensorWidth(), record.getSensorHeight());
 
         holder.mCameraCoc.setText(coc);
@@ -190,6 +191,8 @@ public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
         holder.mEditButton.setOnClickListener(new EditClickListener(record));
         holder.mRemoveButton
                 .setOnClickListener(new RemoveClickListener(record));
+        holder.mEditButton.setOnTouchListener(new ImageOnTouchListener());
+        holder.mRemoveButton.setOnTouchListener(new ImageOnTouchListener());
 
         return row;
     }
@@ -197,7 +200,7 @@ public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
     public void setCallback(OnEditAndRemoveListener callback) {
         mCallback = callback;
     }
-    
+
     public boolean isDbOpen() {
         return mDbAdapter.isOpen();
     }

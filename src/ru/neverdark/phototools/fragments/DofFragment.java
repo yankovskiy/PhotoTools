@@ -24,12 +24,15 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.fragments.CameraManagementDialog.OnCameraManagementListener;
+import ru.neverdark.phototools.ui.ImageOnTouchListener;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.dofcalculator.Array;
 import ru.neverdark.phototools.utils.dofcalculator.CameraData;
 import ru.neverdark.phototools.utils.dofcalculator.DofCalculator;
+import ru.neverdark.phototools.utils.dofcalculator.CameraData.Vendor;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -45,6 +48,18 @@ import android.widget.TextView;
  */
 public class DofFragment extends SherlockFragment {
 
+    private class CameraManagementListener implements
+            OnCameraManagementListener {
+        @Override
+        public void cameraManagementOnBack() {
+            CameraData.Vendor vendor = (CameraData.Vendor) mWheelVendor.getSelectedItem();
+            if (vendor.equals(Vendor.USER)) {
+                populateCameraByVendor();
+                recalculate();
+            }
+        }
+    }
+
     private class ButtonClickListener implements OnClickListener {
 
         @Override
@@ -52,6 +67,7 @@ public class DofFragment extends SherlockFragment {
             switch (v.getId()) {
             case R.id.dof_cameraManagement:
                 CameraManagementDialog dialog = CameraManagementDialog.getInstance(mContext);
+                dialog.setCallback(new CameraManagementListener());
                 dialog.show(getFragmentManager(), CameraManagementDialog.DIALOG_TAG);
                 break;
             }
@@ -326,13 +342,21 @@ public class DofFragment extends SherlockFragment {
 
     private void setClickListeners() {
         mCameraManagement.setOnClickListener(new ButtonClickListener());
+        mCameraManagement.setOnTouchListener(new ImageOnTouchListener());
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        Log.enter();
 
         saveData();
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.enter();
     }
 
     /**
