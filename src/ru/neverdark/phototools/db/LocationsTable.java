@@ -23,6 +23,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+/**
+ * Class for tables "locations"
+ */
 public class LocationsTable {
     public static final String KEY_LAST_ACCESS = "last_access";
 
@@ -198,6 +201,10 @@ public class LocationsTable {
         mDatabase.update(TABLE_NAME, updateValues, where, whereArgs);
     }
 
+    /**
+     * Sets database object for management
+     * @param database
+     */
     public void setDatabase(SQLiteDatabase database) {
         mDatabase = database;
     }

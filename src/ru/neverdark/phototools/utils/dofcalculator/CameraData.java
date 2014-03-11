@@ -45,15 +45,43 @@ public class CameraData {
         SONY,
         USER
     }
+    /**
+     * Function get circle of confusion for special camera
+     * 
+     * @param vendor
+     *            camera vendor
+     * @param camera
+     *            camera model
+     * @return circle of confusion or null if camera not found
+     */
+    public static BigDecimal getCocForCamera(Vendor vendor, String camera) {
+        List<CameraData> camerasForVendor = DATABASE.get(vendor);
+        for (CameraData cameraData : camerasForVendor) {
+            if (cameraData.getModel().equals(camera)) {
+                return cameraData.getCoc();
+            }
+        }
+        return null;
+    }
+    /**
+     * Function get vendors array
+     * 
+     * @return vendor array
+     */
+    public static Vendor[] getVendors() {
+        return Vendor.values();
+    }
     /** Multiply factor for CoC calculation */
     private final BigDecimal MULTIPLY_FACTOR = new BigDecimal("3.065333276");
     /** camera model */
     private String mModel;
+
     /** circle of confusion = pixel size multiply to MULTIPLY_FACTOR */
     private BigDecimal mCoc;
+
     /** camera vendor */
     private Vendor mVendor;
-
+    
     /** DATABASE contains all cameras */
     private static final Map<Vendor, List<CameraData>> DATABASE = new HashMap<Vendor, List<CameraData>>();
 
@@ -212,7 +240,7 @@ public class CameraData {
         List<CameraData> userCameras = new ArrayList<CameraData>();
         DATABASE.put(Vendor.USER, userCameras);
     }
-    
+
     /**
      * Function get cameras array by vendor
      * 
@@ -245,52 +273,43 @@ public class CameraData {
         DbAdapter adapter = new DbAdapter(context).open();
         adapter.getUserCameras().fetchAllCameras(list);
         adapter.close();
-        
+
         DATABASE.get(Vendor.USER).clear();
         Vendor vendor = Vendor.USER;
-        
-        for(UserCamerasRecord record: list) {
+
+        for (UserCamerasRecord record : list) {
             String model = record.getCameraName();
-            
+
             if (record.isCustomCoc() == false) {
                 BigDecimal sensorWidth = new BigDecimal(record.getSensorWidth());
-                BigDecimal resolutionWidth = new BigDecimal(record.getResolutionWidth());
-                
-                DATABASE.get(vendor).add(new CameraData(vendor, model, sensorWidth, resolutionWidth));
+                BigDecimal resolutionWidth = new BigDecimal(
+                        record.getResolutionWidth());
+
+                DATABASE.get(vendor).add(
+                        new CameraData(vendor, model, sensorWidth,
+                                resolutionWidth));
             } else {
                 BigDecimal coc = new BigDecimal(record.getCoc());
-                
+
                 DATABASE.get(vendor).add(new CameraData(vendor, model, coc));
             }
         }
     }
 
     /**
-     * Function get circle of confusion for special camera
+     * Class constructor
      * 
      * @param vendor
      *            camera vendor
-     * @param camera
+     * @param model
      *            camera model
-     * @return circle of confusion or null if camera not found
+     * @param coc
+     *            custom circle of confusion
      */
-    public static BigDecimal getCocForCamera(Vendor vendor, String camera) {
-        List<CameraData> camerasForVendor = DATABASE.get(vendor);
-        for (CameraData cameraData : camerasForVendor) {
-            if (cameraData.getModel().equals(camera)) {
-                return cameraData.getCoc();
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Function get vendors array
-     * 
-     * @return vendor array
-     */
-    public static Vendor[] getVendors() {
-        return Vendor.values();
+    public CameraData(Vendor vendor, String model, BigDecimal coc) {
+        mModel = model;
+        mVendor = vendor;
+        mCoc = coc;
     }
 
     /**
@@ -312,22 +331,6 @@ public class CameraData {
         mCoc = pixelSize.multiply(MULTIPLY_FACTOR);
         mModel = model;
         mVendor = vendor;
-    }
-    
-    /**
-     * Class constructor
-     * 
-     * @param vendor
-     *            camera vendor
-     * @param model
-     *            camera model
-     * @param coc
-     *            custom circle of confusion
-     */
-    public CameraData(Vendor vendor, String model, BigDecimal coc) {
-        mModel = model;
-        mVendor = vendor;
-        mCoc = coc;
     }
 
     /**

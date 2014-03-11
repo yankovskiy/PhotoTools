@@ -46,8 +46,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/userCamera_addButton"
-        android:hint="@string/userCameraModel"
-        android:ems="10" >
+        android:ems="10"
+        android:hint="@string/userCameraModel" >
     </EditText>
 
     <ImageView

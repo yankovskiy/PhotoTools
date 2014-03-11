@@ -26,6 +26,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
+
         <TextView
             android:id="@+id/dof_label_camera"
             style="?android:attr/listSeparatorTextViewStyle"

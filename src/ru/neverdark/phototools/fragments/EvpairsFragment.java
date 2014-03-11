@@ -42,6 +42,27 @@ import android.widget.Toast;
  * Fragment contains EV Pairs calculator UI
  */
 public class EvpairsFragment extends SherlockFragment {
+    /** how much allow filled fields (new fields) */
+    private static final byte MAXIMUM_ALLOWED_FILLED_FIELDS = 2;
+
+    private String CURRENT_APERTURE_INDEX = "ev_currentAperture";
+    private String CURRENT_ISO_INDEX = "ev_currentIso";
+    private String CURRENT_SHUTTER_INDEX = "ev_currentShutter";
+    private SherlockFragmentActivity mActivity;
+    private int mCurrentAperturePosition;
+    private int mCurrentIsoPosition;
+
+    private int mCurrentShutterSpeedPosition;
+    private EvCalculator mEvCalculator;
+    private TextView mLabelStepFull;
+    private TextView mLabelStepHalf;
+    private TextView mLabelStepThird;
+    private int mNewAperturePosition;
+
+    private int mNewIsoPostion;
+    private int mNewShutterSpeedPosition;
+    private int mStepIndex;
+
     private View mView;
 
     private WheelView mWheel_currentAperture;
@@ -50,34 +71,13 @@ public class EvpairsFragment extends SherlockFragment {
     private WheelView mWheel_newAperture;
     private WheelView mWheel_newIso;
     private WheelView mWheel_newShutter;
-
-    private int mCurrentAperturePosition;
-    private int mCurrentIsoPosition;
-    private int mCurrentShutterSpeedPosition;
-    private int mNewAperturePosition;
-    private int mNewIsoPostion;
-    private int mNewShutterSpeedPosition;
-
-    private TextView mLabelStepFull;
-    private TextView mLabelStepHalf;
-    private TextView mLabelStepThird;
-
-    private EvCalculator mEvCalculator;
-
-    private String STEP_INDEX = "ev_stepIndex";
-    private String CURRENT_APERTURE_INDEX = "ev_currentAperture";
-    private String CURRENT_ISO_INDEX = "ev_currentIso";
-    private String CURRENT_SHUTTER_INDEX = "ev_currentShutter";
     private String NEW_APERTURE_INDEX = "ev_newAperture";
+
     private String NEW_ISO_INDEX = "ev_newIso";
+
     private String NEW_SHUTTER_INDEX = "ev_newShutter";
 
-    /** how much allow filled fields (new fields) */
-    private static final byte MAXIMUM_ALLOWED_FILLED_FIELDS = 2;
-
-    private int mStepIndex;
-
-    private SherlockFragmentActivity mActivity;
+    private String STEP_INDEX = "ev_stepIndex";
 
     /**
      * Binds classes objects to resources

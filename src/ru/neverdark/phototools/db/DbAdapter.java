@@ -21,8 +21,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
- * A class for working with Locations table
- * 
+ * Provides API for database
  */
 public class DbAdapter {
     private Context mContext;

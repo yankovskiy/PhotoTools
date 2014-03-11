@@ -31,31 +31,22 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * ArrayAdapter for "user_cameras" table
+ */
 public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
-    public interface OnEditAndRemoveListener {
-        public void onEditHandler(UserCamerasRecord record);
-
-        public void onRemoveHandler(UserCamerasRecord record);
-    }
-
-    private class RemoveClickListener implements OnClickListener {
-        private UserCamerasRecord mRecord;
-
-        public RemoveClickListener(UserCamerasRecord record) {
-            mRecord = record;
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (mCallback != null) {
-                mCallback.onRemoveHandler(mRecord);
-            }
-        }
-    }
-
+    /**
+     * Click listener for "Edit" button
+     */
     private class EditClickListener implements OnClickListener {
         private UserCamerasRecord mRecord;
 
+        /**
+         * Constructor
+         * 
+         * @param record
+         *            record for edit
+         */
         public EditClickListener(UserCamerasRecord record) {
             mRecord = record;
         }
@@ -68,26 +59,92 @@ public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
         }
     }
 
-    private OnEditAndRemoveListener mCallback;
-    private Context mContext;
-    private List<UserCamerasRecord> mObjects;
-    private int mResource;
-    private DbAdapter mDbAdapter;
+    /**
+     * Interface provide callback methods called for handling "Edit" and
+     * "Remove" buttons on the list
+     */
+    public interface OnEditAndRemoveListener {
+        /**
+         * Called when user press "Edit" button
+         * 
+         * @param record
+         *            for edition
+         */
+        public void onEditHandler(UserCamerasRecord record);
 
+        /**
+         * Called when user press "Remove" button
+         * 
+         * @param record
+         *            for remove
+         */
+        public void onRemoveHandler(UserCamerasRecord record);
+    }
+
+    /**
+     * Click listener for "Remove" button
+     */
+    private class RemoveClickListener implements OnClickListener {
+        private UserCamerasRecord mRecord;
+
+        /**
+         * Constructor
+         * 
+         * @param record
+         *            record for remove
+         */
+        public RemoveClickListener(UserCamerasRecord record) {
+            mRecord = record;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mCallback != null) {
+                mCallback.onRemoveHandler(mRecord);
+            }
+        }
+    }
+
+    /**
+     * Single row in the list
+     */
     private static class RowHolder {
+        private TextView mCameraCoc;
         private TextView mCameraModel;
         private TextView mCameraResolution;
         private TextView mCameraSensor;
-        private TextView mCameraCoc;
-        private ImageView mRemoveButton;
         private ImageView mEditButton;
+        private ImageView mRemoveButton;
     }
+    private OnEditAndRemoveListener mCallback;
+    private Context mContext;
+    private DbAdapter mDbAdapter;
+    private List<UserCamerasRecord> mObjects;
 
+    private int mResource;
+
+    /**
+     * Constructor
+     * 
+     * @param context
+     *            application context
+     */
     public UserCamerasAdapter(Context context) {
         this(context, R.layout.user_camera_row,
                 new ArrayList<UserCamerasRecord>());
     }
 
+    /**
+     * Constructor
+     * 
+     * @param context
+     *            application context
+     * @param resource
+     *            resource ID for a layout file containing a TextView to use
+     *            when instantiating views.
+     * @param list
+     *            objects to represent in the ListView
+     */
     private UserCamerasAdapter(Context context, int resource,
             List<UserCamerasRecord> list) {
         super(context, resource, list);
@@ -97,31 +154,19 @@ public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
         mDbAdapter = new DbAdapter(mContext);
     }
 
-    public void openDb() {
-        mDbAdapter.open();
-    }
-
+    /**
+     * Closes database
+     */
     public void closeDb() {
         mDbAdapter.close();
     }
 
-    public void loadData() {
-        mDbAdapter.getUserCameras().fetchAllCameras(mObjects);
-        notifyDataSetChanged();
-    }
-
-    public void deleteCamera(UserCamerasRecord record) {
-        long recordId = record.getRecordId();
-
-        remove(record);
-        mDbAdapter.getUserCameras().deleteCamera(recordId);
-        notifyDataSetChanged();
-    }
-
-    public boolean isCameraExist(String cameraName) {
-        return mDbAdapter.getUserCameras().isCameraExist(cameraName);
-    }
-
+    /**
+     * Creates camera
+     * 
+     * @param record
+     *            a record contains data for new camera
+     */
     public void createCamera(UserCamerasRecord record) {
         mDbAdapter.getUserCameras().createCamera(record.getCameraName(),
                 record.getResolutionWidth(), record.getResolutionHeight(),
@@ -132,15 +177,17 @@ public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
         notifyDataSetChanged();
     }
 
-    public void updateCamera(UserCamerasRecord record) {
-        mDbAdapter.getUserCameras()
-                .updateCamera(record.getRecordId(), record.getCameraName(),
-                        record.getResolutionWidth(),
-                        record.getResolutionHeight(), record.getSensorWidth(),
-                        record.getSensorHeight(), record.getCoc(),
-                        record.isCustomCoc());
-        mDbAdapter.getUserCameras().fetchAllCameras(mObjects);
+    /**
+     * Deletes camera
+     * 
+     * @param record
+     *            record for remove
+     */
+    public void deleteCamera(UserCamerasRecord record) {
+        long recordId = record.getRecordId();
 
+        remove(record);
+        mDbAdapter.getUserCameras().deleteCamera(recordId);
         notifyDataSetChanged();
     }
 
@@ -197,11 +244,66 @@ public class UserCamerasAdapter extends ArrayAdapter<UserCamerasRecord> {
         return row;
     }
 
+    /**
+     * Checks table for exists camera
+     * 
+     * @param cameraName
+     *            camera name for check
+     * @return true if camera exist
+     */
+    public boolean isCameraExist(String cameraName) {
+        return mDbAdapter.getUserCameras().isCameraExist(cameraName);
+    }
+
+    /**
+     * Checks database state
+     * 
+     * @return true if database open
+     */
+    public boolean isDbOpen() {
+        return mDbAdapter.isOpen();
+    }
+
+    /**
+     * Loads data from database to objects
+     */
+    public void loadData() {
+        mDbAdapter.getUserCameras().fetchAllCameras(mObjects);
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Opens database
+     */
+    public void openDb() {
+        mDbAdapter.open();
+    }
+
+    /**
+     * Sets callback object for handling "Edit" and "Remove" buttons on the list
+     * 
+     * @param callback
+     *            object for handling "Edit" and "Remove" buttons on the list
+     */
     public void setCallback(OnEditAndRemoveListener callback) {
         mCallback = callback;
     }
 
-    public boolean isDbOpen() {
-        return mDbAdapter.isOpen();
+    /**
+     * Updates camera information
+     * 
+     * @param record
+     *            a record contains data for update camera
+     */
+    public void updateCamera(UserCamerasRecord record) {
+        mDbAdapter.getUserCameras()
+                .updateCamera(record.getRecordId(), record.getCameraName(),
+                        record.getResolutionWidth(),
+                        record.getResolutionHeight(), record.getSensorWidth(),
+                        record.getSensorHeight(), record.getCoc(),
+                        record.isCustomCoc());
+        mDbAdapter.getUserCameras().fetchAllCameras(mObjects);
+
+        notifyDataSetChanged();
     }
 }

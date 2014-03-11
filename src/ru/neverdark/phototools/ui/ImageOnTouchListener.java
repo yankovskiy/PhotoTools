@@ -20,6 +20,9 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 
+/**
+ * OnTouchListener for ImageView onClick highlights
+ */
 public class ImageOnTouchListener implements OnTouchListener {
     @Override
     public boolean onTouch(View v, MotionEvent event) {

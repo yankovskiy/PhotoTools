@@ -37,7 +37,13 @@ import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
+/**
+ * Implements dialog for camera management
+ */
 public class CameraManagementDialog extends SherlockDialogFragment {
+    /**
+     * Click listener for "Add" button
+     */
     private class AddCameraClickListener implements OnClickListener {
         @Override
         public void onClick(View v) {
@@ -63,6 +69,9 @@ public class CameraManagementDialog extends SherlockDialogFragment {
         }
     }
 
+    /**
+     * Listener for handling data from CameraEditorDialog
+     */
     private class CameraEditorListener implements OnCameraEditorListener {
         @Override
         public void onAddCamera(UserCamerasRecord record) {
@@ -78,10 +87,9 @@ public class CameraManagementDialog extends SherlockDialogFragment {
         }
     }
 
-    public interface OnCameraManagementListener {
-        public void cameraManagementOnBack();
-    }
-
+    /**
+     * Called when user confirm delete record in the DeleteConfirmationDialog
+     */
     private class DeleteConfirmationListener implements
             OnDeleteConfirmationListener {
         @Override
@@ -92,6 +100,9 @@ public class CameraManagementDialog extends SherlockDialogFragment {
         }
     }
 
+    /**
+     * Listener for handling "Back" button on the dialog
+     */
     private class DialogKeyListener implements Dialog.OnKeyListener {
         @Override
         public boolean onKey(DialogInterface arg0, int keyCode, KeyEvent event) {
@@ -103,6 +114,10 @@ public class CameraManagementDialog extends SherlockDialogFragment {
             return false;
         }
     }
+
+    /**
+     * Listener called for "Edit" or "Remove" buttons in the list
+     */
     private class EditAndRemoveListener implements OnEditAndRemoveListener {
         @Override
         public void onEditHandler(UserCamerasRecord record) {
@@ -124,12 +139,35 @@ public class CameraManagementDialog extends SherlockDialogFragment {
                     DeleteConfirmationDialog.DIALOG_TAG);
         }
     }
+
+    /**
+     * Interface provides callback method calls for "Back" button in the dialog
+     */
+    public interface OnCameraManagementListener {
+        /**
+         * Calls when user "Back" button
+         */
+        public void cameraManagementOnBack();
+    }
+
+    /**
+     * Dialog tag for fragment manager
+     */
     public static final String DIALOG_TAG = "cameraManagementDialog";
+
+    /**
+     * Creates dialog
+     * 
+     * @param context
+     *            application context
+     * @return dialog
+     */
     public static CameraManagementDialog getInstance(Context context) {
         CameraManagementDialog dialog = new CameraManagementDialog();
         dialog.mContext = context;
         return dialog;
     }
+
     private UserCamerasAdapter mAdapter;
     private ImageView mAddButton;
     private AlertDialog.Builder mAlertDialog;
@@ -143,6 +181,9 @@ public class CameraManagementDialog extends SherlockDialogFragment {
 
     private View mView;
 
+    /**
+     * Binds objects to resources
+     */
     private void bindObjectToResource() {
         mView = View.inflate(mContext, R.layout.user_camera_dialog, null);
         mAddButton = (ImageView) mView.findViewById(R.id.userCamera_addButton);
@@ -150,6 +191,9 @@ public class CameraManagementDialog extends SherlockDialogFragment {
         mModel = (EditText) mView.findViewById(R.id.userCamera_model);
     }
 
+    /**
+     * Creates alert dialog
+     */
     private void createDialog() {
         mAlertDialog = new AlertDialog.Builder(mContext);
         mAlertDialog.setView(mView);
@@ -194,10 +238,18 @@ public class CameraManagementDialog extends SherlockDialogFragment {
         mCameraList.setAdapter(mAdapter);
     }
 
+    /**
+     * Sets callback object for handling "Back" button on the dialog
+     * 
+     * @param callback
+     */
     public void setCallback(OnCameraManagementListener callback) {
         mCallback = callback;
     }
 
+    /**
+     * Sets listeners for objects
+     */
     private void setListeners() {
         mAddButton.setOnClickListener(new AddCameraClickListener());
         mAddButton.setOnTouchListener(new ImageOnTouchListener());

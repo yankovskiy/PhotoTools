@@ -148,10 +148,10 @@
             android:id="@+id/cameraEditor_coc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/cameraEditor_autoCalc"
             android:ems="10"
             android:hint="@string/userCamera_label_coc"
-            android:inputType="numberDecimal"
-            android:layout_below="@+id/cameraEditor_autoCalc" >
+            android:inputType="numberDecimal" >
         </EditText>
     </RelativeLayout>
 

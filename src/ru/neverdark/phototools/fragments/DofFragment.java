@@ -48,11 +48,33 @@ import android.widget.TextView;
  */
 public class DofFragment extends SherlockFragment {
 
+    /**
+     * Click listener for "Camera management" button
+     */
+    private class ButtonClickListener implements OnClickListener {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+            case R.id.dof_cameraManagement:
+                CameraManagementDialog dialog = CameraManagementDialog
+                        .getInstance(mContext);
+                dialog.setCallback(new CameraManagementListener());
+                dialog.show(getFragmentManager(),
+                        CameraManagementDialog.DIALOG_TAG);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Listener for handling "Back" button in the CameraManagementDialog
+     */
     private class CameraManagementListener implements
             OnCameraManagementListener {
         @Override
         public void cameraManagementOnBack() {
-            CameraData.Vendor vendor = (CameraData.Vendor) mWheelVendor.getSelectedItem();
+            CameraData.Vendor vendor = (CameraData.Vendor) mWheelVendor
+                    .getSelectedItem();
             if (vendor.equals(Vendor.USER)) {
                 populateCameraByVendor();
                 recalculate();
@@ -60,60 +82,46 @@ public class DofFragment extends SherlockFragment {
         }
     }
 
-    private class ButtonClickListener implements OnClickListener {
+    private final static String APERTURE = "dof_aperture";
+    private final static String CAMERA = "dof_camera";
 
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-            case R.id.dof_cameraManagement:
-                CameraManagementDialog dialog = CameraManagementDialog.getInstance(mContext);
-                dialog.setCallback(new CameraManagementListener());
-                dialog.show(getFragmentManager(), CameraManagementDialog.DIALOG_TAG);
-                break;
-            }
-        }
-    }
+    private final static String FAR_LIMIT = "dof_farLimit";
+    private final static String FOCAL_LENGTH = "dof_focalLength";
+    private final static String HYPERFOCAL = "dof_hyperfocal";
+    private final static String MEASURE_RESULT_UNIT = "dof_measureResultUnit";
+    private final static String MEASURE_UNIT = "dof_measureUnit";
+    private final static String NEAR_LIMIT = "dof_nearLimit";
 
+    private final static String SUBJECT_DISTANCE = "dof_subjectDistance";
+    private final static String TOTAL = "dof_total";
+    private final static String VENDOR = "dof_vendor";
+    private SherlockFragmentActivity mActivity;
+
+    private int mCameraId;
+    private ImageView mCameraManagement;
     private Context mContext;
-    private View mView;
+    private TextView mLabelCm;
 
-    private WheelView mWheelVendor;
-    private WheelView mWheelCamera;
+    private TextView mLabelFarLimitResult;
+
+    private TextView mLabelFt;
+    private TextView mLabelHyperFocalResult;
+    private TextView mLabelIn;
+    private TextView mLabelM;
+    private TextView mLabelNearLimitResult;
+    private TextView mLabelTotalResutl;
+    private int mMeasureResultUnit;
+    private int mVendorId;
+    private View mView;
     private WheelView mWheelAperture;
+    private WheelView mWheelCamera;
+
     private WheelView mWheelFocalLength;
-    private WheelView mWheelSubjectDistance;
     private WheelView mWheelMeasureUnit;
 
-    private TextView mLabelM;
-    private TextView mLabelCm;
-    private TextView mLabelFt;
-    private TextView mLabelIn;
+    private WheelView mWheelSubjectDistance;
 
-    private TextView mLabelNearLimitResult;
-    private TextView mLabelFarLimitResult;
-    private TextView mLabelHyperFocalResult;
-    private TextView mLabelTotalResutl;
-    
-    private ImageView mCameraManagement;
-
-    private final static String VENDOR = "dof_vendor";
-    private final static String CAMERA = "dof_camera";
-    private final static String APERTURE = "dof_aperture";
-    private final static String FOCAL_LENGTH = "dof_focalLength";
-    private final static String SUBJECT_DISTANCE = "dof_subjectDistance";
-    private final static String MEASURE_UNIT = "dof_measureUnit";
-    private final static String MEASURE_RESULT_UNIT = "dof_measureResultUnit";
-    private final static String NEAR_LIMIT = "dof_nearLimit";
-    private final static String FAR_LIMIT = "dof_farLimit";
-    private final static String HYPERFOCAL = "dof_hyperfocal";
-    private final static String TOTAL = "dof_total";
-
-    private int mVendorId;
-    private int mCameraId;
-
-    private int mMeasureResultUnit;
-
-    private SherlockFragmentActivity mActivity;
+    private WheelView mWheelVendor;
 
     /**
      * Loads arrays to wheels
@@ -163,7 +171,8 @@ public class DofFragment extends SherlockFragment {
         mLabelTotalResutl = (TextView) mView
                 .findViewById(R.id.dof_label_totalResult);
 
-        mCameraManagement = (ImageView) mView.findViewById(R.id.dof_cameraManagement);
+        mCameraManagement = (ImageView) mView
+                .findViewById(R.id.dof_cameraManagement);
         mActivity = getSherlockActivity();
     }
 
@@ -323,7 +332,7 @@ public class DofFragment extends SherlockFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         mView = inflater.inflate(R.layout.activity_dof, container, false);
         mContext = mView.getContext();
-        
+
         bindObjectsToResources();
 
         setCyclicToWheels();
@@ -335,14 +344,9 @@ public class DofFragment extends SherlockFragment {
         wheelsHandler();
         updateMeasureButtons();
         setClickListeners();
-        
+
         Log.exit(start);
         return mView;
-    }
-
-    private void setClickListeners() {
-        mCameraManagement.setOnClickListener(new ButtonClickListener());
-        mCameraManagement.setOnTouchListener(new ImageOnTouchListener());
     }
 
     @Override
@@ -352,7 +356,7 @@ public class DofFragment extends SherlockFragment {
 
         saveData();
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
@@ -433,6 +437,11 @@ public class DofFragment extends SherlockFragment {
         editor.putString(TOTAL, mLabelTotalResutl.getText().toString());
 
         editor.commit();
+    }
+
+    private void setClickListeners() {
+        mCameraManagement.setOnClickListener(new ButtonClickListener());
+        mCameraManagement.setOnTouchListener(new ImageOnTouchListener());
     }
 
     /**
