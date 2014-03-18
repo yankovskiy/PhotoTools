@@ -266,11 +266,6 @@ public class DofFragment extends SherlockFragment {
         mVendorId = prefs.getInt(VENDOR, 0);
         mCameraId = prefs.getInt(CAMERA, 0);
 
-        mLabelFarLimitResult.setText(prefs.getString(FAR_LIMIT, ""));
-        mLabelHyperFocalResult.setText(prefs.getString(HYPERFOCAL, ""));
-        mLabelNearLimitResult.setText(prefs.getString(NEAR_LIMIT, ""));
-        mLabelTotalResutl.setText(prefs.getString(TOTAL, ""));
-
         mWheelAperture.setCurrentItem(prefs.getInt(APERTURE, 0));
         mWheelFocalLength.setCurrentItem(prefs.getInt(FOCAL_LENGTH, 0));
         mWheelMeasureUnit.setCurrentItem(prefs.getInt(MEASURE_UNIT, 0));
@@ -343,6 +338,7 @@ public class DofFragment extends SherlockFragment {
         measureButtonsHandler();
         wheelsHandler();
         updateMeasureButtons();
+        recalculate();
         setClickListeners();
 
         Log.exit(start);
