@@ -18,6 +18,7 @@ package ru.neverdark.phototools.utils;
 import java.util.ArrayList;
 
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.ui.ImageOnTouchListener;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -35,28 +36,34 @@ public class LocationAdapter extends ArrayAdapter<LocationRecord> {
     /**
      * Interface for LocationImageChangeListener
      */
-    public interface LocationImageChangeListener{
+    public interface LocationImageChangeListener {
         /**
          * Listener for handling Edit image clicked
-         * @param position position in ListView
+         * 
+         * @param position
+         *            position in ListView
          */
         public void onLocationImageEdit(int position);
+
         /**
          * Listener for handling Remove image clicked
-         * @param position position in ListView
+         * 
+         * @param position
+         *            position in ListView
          */
         public void onLocationImageRemove(int position);
     }
-    
+
     private LocationImageChangeListener mCallback;
-    
+
     private Context mContext;
     private int mResource;
-    
+
     private ArrayList<LocationRecord> mObjects = new ArrayList<LocationRecord>();
 
     public LocationAdapter(Context context, int resource,
-            ArrayList<LocationRecord> objects, LocationImageChangeListener callback) {
+            ArrayList<LocationRecord> objects,
+            LocationImageChangeListener callback) {
         super(context, resource, objects);
         Log.message("Enter");
         mContext = context;
@@ -89,12 +96,17 @@ public class LocationAdapter extends ArrayAdapter<LocationRecord> {
 
         LocationRecord record = mObjects.get(position);
         holder.locationRow_label.setText(record.locationName);
-        
+
         /* if is not current location and not point on map */
         if (position > Constants.LOCATION_POINT_ON_MAP_CHOICE) {
             holder.locationRow_image_edit.setVisibility(View.VISIBLE);
             holder.locationRow_image_remove.setVisibility(View.VISIBLE);
-                        
+
+            holder.locationRow_image_edit
+                    .setOnTouchListener(new ImageOnTouchListener());
+            holder.locationRow_image_remove
+                    .setOnTouchListener(new ImageOnTouchListener());
+
             holder.locationRow_image_edit
                     .setOnClickListener(new OnClickListener() {
 
