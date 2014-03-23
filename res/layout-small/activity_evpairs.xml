@@ -21,7 +21,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="10dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -91,68 +91,66 @@
             android:text="@string/evpairs_label_currentValues"
             android:textColor="#ff33b5e5" />
 
-        <TableLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
 
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+            <TextView
+                android:id="@+id/ev_label_currentAperture"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/evpairs_label_apperture"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/ev_label_currentAperture"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:text="@string/evpairs_label_apperture"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+            <TextView
+                android:id="@+id/ev_label_currentIso"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/evpairs_label_iso"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/ev_label_currentIso"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:text="@string/evpairs_label_iso"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+            <TextView
+                android:id="@+id/ev_label_currentShutter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/evpairs_label_shutterSpeed"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/ev_label_currentShutter"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:text="@string/evpairs_label_shutterSpeed"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-            </TableRow>
+        <LinearLayout
+            android:id="@+id/ev_linear_current"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
 
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+            <kankan.wheel.widget.WheelView
+                android:id="@+id/ev_wheel_currentAperture"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_weight="1" />
 
-                <kankan.wheel.widget.WheelView
-                    android:id="@+id/ev_wheel_currentAperture"
-                    android:layout_width="0dp"
-                    android:layout_height="110dp"
-                    android:layout_weight="1" />
+            <kankan.wheel.widget.WheelView
+                android:id="@+id/ev_wheel_currentIso"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_weight="1" />
 
-                <kankan.wheel.widget.WheelView
-                    android:id="@+id/ev_wheel_currentIso"
-                    android:layout_width="0dp"
-                    android:layout_height="110dp"
-                    android:layout_weight="1" />
-
-                <kankan.wheel.widget.WheelView
-                    android:id="@+id/ev_wheel_currentShutter"
-                    android:layout_width="0dp"
-                    android:layout_height="110dp"
-                    android:layout_weight="1" />
-            </TableRow>
-        </TableLayout>
+            <kankan.wheel.widget.WheelView
+                android:id="@+id/ev_wheel_currentShutter"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_weight="1" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/ev_label_newValues"
@@ -162,89 +160,76 @@
             android:text="@string/evpairs_label_newValues"
             android:textColor="#ff33b5e5" />
 
-        <TableLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:background="@drawable/grey_round_corner"
+            android:orientation="horizontal" >
 
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+            <TextView
+                android:id="@+id/ev_label_newAperture"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/left_blue_button"
+                android:gravity="center"
+                android:text="@string/evpairs_label_apperture"
+                android:textColor="#ffffffff"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/ev_label_newAperture"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:text="@string/evpairs_label_apperture"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+            <TextView
+                android:id="@+id/ev_label_newIso"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/right_stroke"
+                android:gravity="center"
+                android:text="@string/evpairs_label_iso"
+                android:textColor="#ffffffff"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/ev_label_newIso"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:text="@string/evpairs_label_iso"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+            <TextView
+                android:id="@+id/ev_label_newShutter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/right_stroke"
+                android:gravity="center"
+                android:text="@string/evpairs_label_shutterSpeed"
+                android:textColor="#ffffffff"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/ev_label_newShutter"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:text="@string/evpairs_label_shutterSpeed"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <kankan.wheel.widget.WheelView
-                    android:id="@+id/ev_wheel_newAperture"
-                    android:layout_width="0dp"
-                    android:layout_height="110dp"
-                    android:layout_weight="1" />
-
-                <kankan.wheel.widget.WheelView
-                    android:id="@+id/ev_wheel_newIso"
-                    android:layout_width="0dp"
-                    android:layout_height="110dp"
-                    android:layout_weight="1" />
-
-                <kankan.wheel.widget.WheelView
-                    android:id="@+id/ev_wheel_newShutter"
-                    android:layout_width="0dp"
-                    android:layout_height="110dp"
-                    android:layout_weight="1" />
-            </TableRow>
-        </TableLayout>
-
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/ev_linear_new"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
 
-            <Button
-                android:id="@+id/ev_button_calculate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:text="@string/evpairs_button_calculate" />
+            <kankan.wheel.widget.WheelView
+                android:id="@+id/ev_wheel_newAperture"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_weight="1" />
 
-            <Button
-                android:id="@+id/ev_button_clear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:text="@string/evpairs_button_clear" />
-        </RelativeLayout>
+            <kankan.wheel.widget.WheelView
+                android:id="@+id/ev_wheel_newIso"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_weight="1" />
+
+            <kankan.wheel.widget.WheelView
+                android:id="@+id/ev_wheel_newShutter"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_weight="1" />
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

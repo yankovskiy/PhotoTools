@@ -22,11 +22,49 @@ import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
 
 public class Common {
+
+    /**
+     * Converts pixels to DP
+     * 
+     * @param context
+     *            application context
+     * @param pixelValue
+     *            pixel value for convert
+     * @return DP value
+     */
+    public static int convertPixelToDp(Context context, int pixelValue) {
+        return (int) (pixelValue / context.getResources().getDisplayMetrics().density);
+    }
+
+    /**
+     * Gets screen heights in DP
+     * 
+     * @param context
+     *            application context
+     * @return screen heights
+     */
+    public static int getHeightDp(Context context) {
+        int height = context.getResources().getDisplayMetrics().heightPixels;
+        return convertPixelToDp(context, height);
+    }
+
+    /**
+     * Gets screen width in DP
+     * 
+     * @param context
+     *            application context
+     * @return screen width
+     */
+    public static int getWidthDp(Context context) {
+        int width = context.getResources().getDisplayMetrics().widthPixels;
+        return convertPixelToDp(context, width);
+    }
 
     /**
      * Sets background from drawable resource
@@ -51,8 +89,8 @@ public class Common {
     /**
      * Sets adapter for wheel
      * 
-     * @param activity
-     *            application activity
+     * @param context
+     *            application context
      * @param wheel
      *            object for sets adapter
      * @param values
@@ -62,22 +100,23 @@ public class Common {
      * @param isFirstEmpty
      *            true if need first empty item
      */
-    public static void setWheelAdapter(SherlockFragmentActivity activity,
+    public static void setWheelAdapter(Context context,
             WheelView wheel, String values[], int textSizeResourceId,
             boolean isFirstEmpty) {
         AbstractWheelTextAdapter adapter;
-        int textSize = (int) (activity.getResources().getDimension(
-                textSizeResourceId) / activity.getResources()
+        int textSize = (int) (context.getResources().getDimension(
+                textSizeResourceId) / context.getResources()
                 .getDisplayMetrics().density);
         Log.variable("textSize", String.valueOf(textSize));
 
         if (isFirstEmpty == false) {
-            adapter = new ArrayWheelAdapter<String>(activity, values);
+            adapter = new ArrayWheelAdapter<String>(context, values);
         } else {
-            adapter = new WheelAdapter<String>(activity, values);
+            adapter = new WheelAdapter<String>(context, values);
         }
 
         adapter.setTextSize(textSize);
         wheel.setViewAdapter(adapter);
     }
+
 }

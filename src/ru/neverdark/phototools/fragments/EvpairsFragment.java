@@ -300,12 +300,15 @@ public class EvpairsFragment extends SherlockFragment {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
+                // TODO: переписать
+                /*
                 case R.id.ev_button_calculate:
                     calculate();
                     break;
                 case R.id.ev_button_clear:
                     clearNewValues();
                     break;
+                    */
                 case R.id.ev_label_stepFull:
                     mStepIndex = EvData.FULL_STOP;
                     updateStepButtons();
@@ -325,10 +328,6 @@ public class EvpairsFragment extends SherlockFragment {
             }
         };
 
-        mView.findViewById(R.id.ev_button_calculate).setOnClickListener(
-                clickListener);
-        mView.findViewById(R.id.ev_button_clear).setOnClickListener(
-                clickListener);
         mLabelStepFull.setOnClickListener(clickListener);
         mLabelStepHalf.setOnClickListener(clickListener);
         mLabelStepThird.setOnClickListener(clickListener);
