@@ -65,7 +65,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="ru.neverdark.phototools.DetailsActivity" />
+        <activity
+            android:name="ru.neverdark.phototools.DetailsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
             android:name="ru.neverdark.phototools.MapActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

@@ -20,40 +20,21 @@ import java.util.TimeZone;
 
 import ru.neverdark.phototools.utils.Log;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
- * A class for working with Locations table
- * 
+ * Class for tables "locations"
  */
-public class LocationsDbAdapter {
-    /* Locations table fields */
-    public static final String KEY_ROWID = "_id";
-    public static final String KEY_LOCATION_NAME = "location_name";
-    public static final String KEY_LATITUDE = "latitude";
-    public static final String KEY_LONGITUDE = "longitude";
+public class LocationsTable {
     public static final String KEY_LAST_ACCESS = "last_access";
+
+    public static final String KEY_LATITUDE = "latitude";
+    public static final String KEY_LOCATION_NAME = "location_name";
+    public static final String KEY_LONGITUDE = "longitude";
+    public static final String KEY_ROWID = "_id";
     private static final String TABLE_NAME = "locations";
-
-    private Context mContext;
     private SQLiteDatabase mDatabase;
-    private DatabaseHelper mDatabaseHelper;
-
-    public LocationsDbAdapter(Context context) {
-        Log.message("Enter");
-        mContext = context;
-    }
-
-    /**
-     * Closes database
-     */
-    public void close() {
-        Log.message("Enter");
-        mDatabaseHelper.close();
-    }
 
     /**
      * Creates ContentValues for insert or update to database
@@ -183,28 +164,6 @@ public class LocationsDbAdapter {
     }
 
     /**
-     * Returns true if the database is currently open.
-     * 
-     * @return true if the database is currently open.
-     */
-    public boolean isOpen() {
-        return mDatabase.isOpen();
-    }
-
-    /**
-     * Opens database
-     * 
-     * @return LocationDbAdapter object for feature operations with table
-     * @throws SQLException
-     */
-    public LocationsDbAdapter open() throws SQLException {
-        Log.message("Enter");
-        mDatabaseHelper = new DatabaseHelper(mContext);
-        mDatabase = mDatabaseHelper.getWritableDatabase();
-        return this;
-    }
-
-    /**
      * Updates last_access field for current timestamp
      * 
      * @param recordId
@@ -240,5 +199,13 @@ public class LocationsDbAdapter {
         ContentValues updateValues = createContentValues(locationName,
                 latitude, longitude);
         mDatabase.update(TABLE_NAME, updateValues, where, whereArgs);
+    }
+
+    /**
+     * Sets database object for management
+     * @param database
+     */
+    public void setDatabase(SQLiteDatabase database) {
+        mDatabase = database;
     }
 }

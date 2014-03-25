@@ -160,10 +160,10 @@
     <string name="dialogConfirmCreate_error_emptyLocationName">Название местоположения не может быть пустым</string>
     <string name="dialogConfirmCreate_error_alreayExist">Местоположение с таким названием уже есть</string>
     
-    <string name="sunset_deleteConfirm_title">Подтверждение удаления</string>
-    <string name="sunset_deleteConfirm_message">Вы действительно хотите удалить запись \"%s\"?</string>
-    <string name="sunset_deleteConfirm_positive">Да</string>
-    <string name="sunset_deleteConfirm_negative">Нет</string>
+    <string name="deleteConfirmation_dialog_title">Подтверждение удаления</string>
+    <string name="deleteConfirmation_dialog_message">Вы действительно хотите удалить запись \"%s\"?</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_button_cancel">Отмена</string>
     
     <string name="sunset_information_timeZoneStart">Определение временной зоны. Подождите</string>
     <string name="sunset_information_timeZoneSuccess">Временная зона успешно определена</string>
@@ -188,5 +188,30 @@
 
     <string name="plugins_available">Доступные</string>
     <string name="plugins_installed">Установленные</string>
+
+    <string name="error">Ошибка</string>
+    <string name="error_cameraAlreadyExist">Камера с таким именем уже существует</string>
+    <string name="error_cameraNameEmpty">Не задано название камеры</string>
+    <string name="error_notAllValuesFilled">Размеры сенсора и максимального разрешения должны быть указаны</string>
+    <string name="error_cocNotFilled">Кружок нерезкости должен быть задан</string>
     
+    <string name="userCameraModel">Модель камеры</string>
+    <string name="userCamera_label_coc">Кружок нерезкости</string>
+    <string name="userCamera_label_resolution">Максимальное разрешение</string>
+    <string name="userCamera_label_sensor">Размер сенсора</string>
+    
+    <string name="cameraManagementTitle">Управление камерами</string>
+    
+    <string name="userCamera_addCamera">Добавление камеры</string>
+    <string name="userCamera_editCamera">Редактирование камеры</string>
+    <string name="userCamera_cameraName">Название камеры</string>
+    <string name="userCamera_autoCalc">Автоматическое вычисление</string>
+    
+    <string name="width">Ширина</string>
+    <string name="height">Высота</string>
+    
+    <string name="userCameraRow_resolution">Разрешение</string>
+    <string name="userCameraRow_sensor">Сенсор</string>
+    
+    <string name="mm">мм</string>
 </resources>

@@ -157,10 +157,10 @@
     <string name="dialogConfirmCreate_error_emptyLocationName">The location name cannot be empty</string>
     <string name="dialogConfirmCreate_error_alreayExist">The location with such name is already exist</string>
     
-    <string name="sunset_deleteConfirm_title">Delete confirmation</string>
-    <string name="sunset_deleteConfirm_message">Do you really wish remove the record \"%s\"?</string>
-    <string name="sunset_deleteConfirm_positive">Yes</string>
-    <string name="sunset_deleteConfirm_negative">No</string>
+    <string name="deleteConfirmation_dialog_title">Delete confirmation</string>
+    <string name="deleteConfirmation_dialog_message">Do you really wish remove the record \"%s\"?</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_button_cancel">Cancel</string>
     
     <string name="sunset_information_timeZoneStart">Determining of the time zone. Please, wait</string>
     <string name="sunset_information_timeZoneSuccess">The time zone is successfully picked</string>
@@ -185,5 +185,31 @@
     
     <string name="plugins_available">Available</string>
     <string name="plugins_installed">Installed</string>
+    
+    <string name="userCameraModel">Camera model</string>
+    <string name="userCamera_label_coc">Circle of confusion</string>
+    <string name="userCamera_label_resolution">Maximum resolution</string>
+    <string name="userCamera_label_sensor">Sensor size</string>
+    
+    <string name="cameraManagementTitle">Cameras management</string>
+    
+    <string name="error">Error</string>
+    <string name="error_cameraAlreadyExist">Camera with same name already exist</string>
+    <string name="error_cameraNameEmpty">Camera name is empty</string>
+    <string name="error_notAllValuesFilled">Sensor size and maximum resolution must be specified</string>
+    <string name="error_cocNotFilled">Circle of confusion must be specified</string>
+    
+    <string name="userCamera_addCamera">Add new camera</string>
+    <string name="userCamera_editCamera">Edit camera</string>
+    <string name="userCamera_cameraName">Camera name</string>
+    <string name="userCamera_autoCalc">Automatic calculation</string>
+    
+    <string name="width">Width</string>
+    <string name="height">Height</string>
+    
+    <string name="userCameraRow_resolution">Resolution</string>
+    <string name="userCameraRow_sensor">Sensor</string>
+    
+    <string name="mm">mm</string>
 
 </resources>

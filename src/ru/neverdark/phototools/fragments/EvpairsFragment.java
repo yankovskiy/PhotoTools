@@ -12,9 +12,13 @@
  * 
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *     
+ * 	Modification:
+ * 		2014/03/03 Rudy Dordonne (rudy@itu.dk)
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
+import kankan.wheel.widget.OnWheelScrollListener;
 import kankan.wheel.widget.WheelView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -24,6 +28,7 @@ import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.evcalculator.EvCalculator;
+import ru.neverdark.phototools.utils.evcalculator.EvData;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -31,52 +36,71 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Fragment contains EV Pairs calculator UI
  */
 public class EvpairsFragment extends SherlockFragment {
+    private class WheelScrollListener implements OnWheelScrollListener {
+
+        @Override
+        public void onScrollingFinished(WheelView wheel) {
+            recalculate();
+        }
+
+        @Override
+        public void onScrollingStarted(WheelView wheel) {
+            // TODO Auto-generated method stub
+
+        }
+
+    }
+
+    private static final String CALCULATE_INDEX = "ev_calculateIndex";
+
+    private static final String NEW_APERTURE_INDEX = "ev_newAperture";
+    private static final String NEW_ISO_INDEX = "ev_newIso";
+    private static final String NEW_SHUTTER_INDEX = "ev_newShutter";
+
+    private static final String STEP_INDEX = "ev_stepIndex";
+
+    private String CURRENT_APERTURE_INDEX = "ev_currentAperture";
+    private String CURRENT_ISO_INDEX = "ev_currentIso";
+    private String CURRENT_SHUTTER_INDEX = "ev_currentShutter";
+
+    private SherlockFragmentActivity mActivity;
+
+    private int mCalculateIndex;
+
+    private int mCurrentAperturePosition;
+    private int mCurrentIsoPosition;
+    private int mCurrentShutterSpeedPosition;
+
+    private EvCalculator mEvCalculator;
+
+    private TextView mLabelAperture;
+    private TextView mLabelIso;
+    private TextView mLabelShutter;
+    private TextView mLabelStepFull;
+    private TextView mLabelStepHalf;
+    private TextView mLabelStepThird;
+
+    private int mNewAperturePosition;
+    private int mNewIsoPostion;
+    private int mNewShutterSpeedPosition;
+
+    private int mStepIndex;
+
     private View mView;
 
     private WheelView mWheel_currentAperture;
     private WheelView mWheel_currentIso;
     private WheelView mWheel_currentShutter;
+
     private WheelView mWheel_newAperture;
     private WheelView mWheel_newIso;
     private WheelView mWheel_newShutter;
-
-    private int mCurrentAperturePosition;
-    private int mCurrentIsoPosition;
-    private int mCurrentShutterSpeedPosition;
-    private int mNewAperturePosition;
-    private int mNewIsoPostion;
-    private int mNewShutterSpeedPosition;
-
-    private TextView mLabelStepFull;
-    private TextView mLabelStepHalf;
-    private TextView mLabelStepThird;
-
-    private TabHost mTabHost;
-
-    private EvCalculator mEvCalculator;
-
-    private String STEP_INDEX = "ev_stepIndex";
-    private String CURRENT_APERTURE_INDEX = "ev_currentAperture";
-    private String CURRENT_ISO_INDEX = "ev_currentIso";
-    private String CURRENT_SHUTTER_INDEX = "ev_currentShutter";
-    private String NEW_APERTURE_INDEX = "ev_newAperture";
-    private String NEW_ISO_INDEX = "ev_newIso";
-    private String NEW_SHUTTER_INDEX = "ev_newShutter";
-
-    /** how much allow filled fields (new fields) */
-    private static final byte MAXIMUM_ALLOWED_FILLED_FIELDS = 2;
-
-    private int mStepIndex;
-
-    private SherlockFragmentActivity mActivity;
 
     /**
      * Binds classes objects to resources
@@ -99,80 +123,22 @@ public class EvpairsFragment extends SherlockFragment {
         mLabelStepThird = (TextView) mView
                 .findViewById(R.id.ev_label_stepThird);
 
-        mTabHost = (TabHost) mView.findViewById(android.R.id.tabhost);
+        mLabelAperture = (TextView) mView
+                .findViewById(R.id.ev_label_newAperture);
+        mLabelIso = (TextView) mView.findViewById(R.id.ev_label_newIso);
+        mLabelShutter = (TextView) mView.findViewById(R.id.ev_label_newShutter);
 
         mActivity = getSherlockActivity();
     }
 
-    /**
-     * Builds tabs for small devices
-     */
-    private void buildTabs() {
-        mTabHost.setup();
-
-        TabHost.TabSpec spec = mTabHost.newTabSpec("tag1");
-
-        spec.setContent(R.id.tab1);
-        spec.setIndicator(getString(R.string.evpairs_label_currentValues));
-        mTabHost.addTab(spec);
-
-        spec = mTabHost.newTabSpec("tag2");
-        spec.setContent(R.id.tab2);
-        spec.setIndicator(getString(R.string.evpairs_label_newValues));
-        mTabHost.addTab(spec);
-    }
-
-    /**
-     * Calculates EV pairs
-     */
-    private void calculate() {
-        getSelectedItemsPositions();
-
-        if (isOnlyOneFieldEmpty() == true) {
-            mEvCalculator.prepare(mCurrentAperturePosition,
-                    mCurrentIsoPosition, mCurrentShutterSpeedPosition,
-                    mNewAperturePosition, mNewIsoPostion,
-                    mNewShutterSpeedPosition);
-
-            int index = mEvCalculator.calculate();
-
-            if (index != EvCalculator.INVALID_INDEX) {
-                fillEmptyWheel(index);
-            } else {
-                Toast.makeText(getActivity(),
-                        getString(R.string.evpairs_error_calculationProblem),
-                        Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    /**
-     * Clears new values
-     */
-    private void clearNewValues() {
-        mWheel_newAperture.setCurrentItem(0);
-        mWheel_newIso.setCurrentItem(0);
-        mWheel_newShutter.setCurrentItem(0);
-    }
-
-    /**
-     * Function determine empty wheel and sets selelection for him.
-     * 
-     * @param index
-     *            - item index getting from calculations
-     */
-    private void fillEmptyWheel(final int index) {
-        WheelView wheel;
-
-        if (mNewAperturePosition == 0) {
-            wheel = (WheelView) mView.findViewById(R.id.ev_wheel_newAperture);
-        } else if (mNewIsoPostion == 0) {
-            wheel = (WheelView) mView.findViewById(R.id.ev_wheel_newIso);
+    private void fillCalculatedWheel(final int index) {
+        if (mCalculateIndex == EvCalculator.CALCULATE_APERTURE) {
+            mWheel_newAperture.setCurrentItem(index);
+        } else if (mCalculateIndex == EvCalculator.CALCULATE_ISO) {
+            mWheel_newIso.setCurrentItem(index);
         } else {
-            wheel = (WheelView) mView.findViewById(R.id.ev_wheel_newShutter);
+            mWheel_newShutter.setCurrentItem(index);
         }
-
-        wheel.setCurrentItem(index);
     }
 
     /**
@@ -189,53 +155,15 @@ public class EvpairsFragment extends SherlockFragment {
     }
 
     /**
-     * Verifies that only one new fields are empty. Function display an error
-     * message if new fields does not contain only one empty field
-     * 
-     * @return true if new fields contain only one empty field
-     */
-    private boolean isOnlyOneFieldEmpty() {
-        boolean isOnlyOneEmpty = false;
-        byte notEmptyCount = 0;
-
-        if (mNewAperturePosition > 0) {
-            notEmptyCount++;
-        }
-
-        if (mNewIsoPostion > 0) {
-            notEmptyCount++;
-        }
-
-        if (mNewShutterSpeedPosition > 0) {
-            notEmptyCount++;
-        }
-
-        if (notEmptyCount != MAXIMUM_ALLOWED_FILLED_FIELDS) {
-            Toast.makeText(getActivity(),
-                    getString(R.string.evpairs_error_onlyOneFieldMustBeEpmty),
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            isOnlyOneEmpty = true;
-        }
-
-        return isOnlyOneEmpty;
-    }
-
-    /**
-     * @return true if layout contains tabs
-     */
-    private boolean isTabPresent() {
-        return (mTabHost != null);
-    }
-
-    /**
      * Load saved values from shared prefs
      */
     private void loadValues() {
         SharedPreferences preferenced = getActivity().getPreferences(
                 Context.MODE_PRIVATE);
 
-        mStepIndex = preferenced.getInt(STEP_INDEX, EvCalculator.FULL_STOP);
+        mStepIndex = preferenced.getInt(STEP_INDEX, EvData.FULL_STOP);
+        mCalculateIndex = preferenced.getInt(CALCULATE_INDEX,
+                EvCalculator.CALCULATE_SHUTTER);
 
         mCurrentAperturePosition = preferenced
                 .getInt(CURRENT_APERTURE_INDEX, 0);
@@ -246,7 +174,14 @@ public class EvpairsFragment extends SherlockFragment {
         mNewAperturePosition = preferenced.getInt(NEW_APERTURE_INDEX, 0);
         mNewIsoPostion = preferenced.getInt(NEW_ISO_INDEX, 0);
         mNewShutterSpeedPosition = preferenced.getInt(NEW_SHUTTER_INDEX, 0);
+    }
 
+    private void lockCalculateWheel() {
+        mWheel_newAperture
+                .setEnabled(mCalculateIndex != EvCalculator.CALCULATE_APERTURE);
+        mWheel_newIso.setEnabled(mCalculateIndex != EvCalculator.CALCULATE_ISO);
+        mWheel_newShutter
+                .setEnabled(mCalculateIndex != EvCalculator.CALCULATE_SHUTTER);
     }
 
     /*
@@ -263,19 +198,19 @@ public class EvpairsFragment extends SherlockFragment {
         mView = inflater.inflate(R.layout.activity_evpairs, container, false);
         bindObjectsToResources();
         setCyclicToWheels();
-        
-        if (isTabPresent() == true) {
-            buildTabs();
-        }
 
         mEvCalculator = new EvCalculator();
 
         loadValues();
         updateStepButtons();
+        updateCalculateButtons();
+        lockCalculateWheel();
         setOldWheelPositions();
 
         setClickListener();
-
+        wheelsHandler();
+        recalculate();
+        
         return mView;
     }
 
@@ -283,6 +218,28 @@ public class EvpairsFragment extends SherlockFragment {
     public void onPause() {
         super.onPause();
         saveValues();
+    }
+
+    /**
+     * Calculates EV pairs
+     */
+    private void recalculate() {
+        getSelectedItemsPositions();
+
+        mEvCalculator.prepare(mCurrentAperturePosition, mCurrentIsoPosition,
+                mCurrentShutterSpeedPosition, mNewAperturePosition,
+                mNewIsoPostion, mNewShutterSpeedPosition, mCalculateIndex);
+
+        int index = mEvCalculator.calculate();
+        boolean isError = false;
+
+        if (index != EvData.INVALID_INDEX) {
+            fillCalculatedWheel(index);
+        } else {
+            isError = true;
+        }
+
+        setErrorHighlight(isError);
     }
 
     /**
@@ -296,6 +253,7 @@ public class EvpairsFragment extends SherlockFragment {
 
         SharedPreferences.Editor editor = preferenced.edit();
         editor.putInt(STEP_INDEX, mStepIndex);
+        editor.putInt(CALCULATE_INDEX, mCalculateIndex);
 
         editor.putInt(CURRENT_APERTURE_INDEX, mCurrentAperturePosition);
         editor.putInt(CURRENT_ISO_INDEX, mCurrentIsoPosition);
@@ -330,24 +288,36 @@ public class EvpairsFragment extends SherlockFragment {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                case R.id.ev_button_calculate:
-                    calculate();
+                case R.id.ev_label_newAperture:
+                    mCalculateIndex = EvCalculator.CALCULATE_APERTURE;
+                    updateCalculateButtons();
+                    lockCalculateWheel();
+                    recalculate();
                     break;
-                case R.id.ev_button_clear:
-                    clearNewValues();
+                case R.id.ev_label_newIso:
+                    mCalculateIndex = EvCalculator.CALCULATE_ISO;
+                    updateCalculateButtons();
+                    lockCalculateWheel();
+                    recalculate();
+                    break;
+                case R.id.ev_label_newShutter:
+                    mCalculateIndex = EvCalculator.CALCULATE_SHUTTER;
+                    updateCalculateButtons();
+                    lockCalculateWheel();
+                    recalculate();
                     break;
                 case R.id.ev_label_stepFull:
-                    mStepIndex = EvCalculator.FULL_STOP;
+                    mStepIndex = EvData.FULL_STOP;
                     updateStepButtons();
                     setAllWheelsToFirstPos();
                     break;
                 case R.id.ev_label_stepHalf:
-                    mStepIndex = EvCalculator.HALF_STOP;
+                    mStepIndex = EvData.HALF_STOP;
                     updateStepButtons();
                     setAllWheelsToFirstPos();
                     break;
                 case R.id.ev_label_stepThird:
-                    mStepIndex = EvCalculator.THIRD_STOP;
+                    mStepIndex = EvData.THIRD_STOP;
                     updateStepButtons();
                     setAllWheelsToFirstPos();
                     break;
@@ -355,16 +325,15 @@ public class EvpairsFragment extends SherlockFragment {
             }
         };
 
-        mView.findViewById(R.id.ev_button_calculate).setOnClickListener(
-                clickListener);
-        mView.findViewById(R.id.ev_button_clear).setOnClickListener(
-                clickListener);
         mLabelStepFull.setOnClickListener(clickListener);
         mLabelStepHalf.setOnClickListener(clickListener);
         mLabelStepThird.setOnClickListener(clickListener);
+
+        mLabelAperture.setOnClickListener(clickListener);
+        mLabelIso.setOnClickListener(clickListener);
+        mLabelShutter.setOnClickListener(clickListener);
     }
 
-    
     /**
      * Sets wheels to cyclic
      */
@@ -372,11 +341,41 @@ public class EvpairsFragment extends SherlockFragment {
         mWheel_currentAperture.setCyclic(true);
         mWheel_currentIso.setCyclic(true);
         mWheel_currentShutter.setCyclic(true);
-        
+
         mWheel_newAperture.setCyclic(true);
         mWheel_newIso.setCyclic(true);
         mWheel_newShutter.setCyclic(true);
     }
+
+    /**
+     * Sets red highlights for current item in calculated wheel
+     * 
+     * @param isError
+     *            true for highlights red or false for back to normal
+     */
+    private void setErrorHighlight(boolean isError) {
+        int normal = R.drawable.wheel_val;
+        int error = R.drawable.wheel_val_err;
+
+        mWheel_newAperture.setCurrentDrawable(normal);
+        mWheel_newIso.setCurrentDrawable(normal);
+        mWheel_newShutter.setCurrentDrawable(normal);
+
+        if (isError) {
+            switch (mCalculateIndex) {
+            case EvCalculator.CALCULATE_APERTURE:
+                mWheel_newAperture.setCurrentDrawable(error);
+                break;
+            case EvCalculator.CALCULATE_ISO:
+                mWheel_newIso.setCurrentDrawable(error);
+                break;
+            case EvCalculator.CALCULATE_SHUTTER:
+                mWheel_newShutter.setCurrentDrawable(error);
+                break;
+            }
+        }
+    }
+
     /**
      * Sets old wheel positions
      */
@@ -400,6 +399,24 @@ public class EvpairsFragment extends SherlockFragment {
         wheel.setCurrentItem(0);
     }
 
+    private void updateCalculateButtons() {
+        Common.setBg(mLabelAperture, R.drawable.right_stroke);
+        Common.setBg(mLabelIso, R.drawable.right_stroke);
+        Common.setBg(mLabelShutter, R.drawable.right_stroke);
+
+        switch (mCalculateIndex) {
+        case EvCalculator.CALCULATE_APERTURE:
+            Common.setBg(mLabelAperture, R.drawable.left_blue_button);
+            break;
+        case EvCalculator.CALCULATE_ISO:
+            Common.setBg(mLabelIso, R.drawable.middle_blue_button);
+            break;
+        case EvCalculator.CALCULATE_SHUTTER:
+            Common.setBg(mLabelShutter, R.drawable.right_blue_button);
+            break;
+        }
+    }
+
     /**
      * Update steps
      * 
@@ -419,12 +436,12 @@ public class EvpairsFragment extends SherlockFragment {
                 false);
 
         Common.setWheelAdapter(mActivity, mWheel_newAperture,
-                mEvCalculator.getApertureList(), textSize, true);
+                mEvCalculator.getApertureList(), textSize, false);
         Common.setWheelAdapter(mActivity, mWheel_newIso,
-                mEvCalculator.getIsoList(), textSize, true);
+                mEvCalculator.getIsoList(), textSize, false);
         Common.setWheelAdapter(mActivity, mWheel_newShutter,
                 mEvCalculator.getShutterList(), R.dimen.wheelSutterTextSize,
-                true);
+                false);
     }
 
     private void updateStepButtons() {
@@ -433,17 +450,26 @@ public class EvpairsFragment extends SherlockFragment {
         Common.setBg(mLabelStepThird, R.drawable.right_stroke);
 
         switch (mStepIndex) {
-        case EvCalculator.FULL_STOP:
+        case EvData.FULL_STOP:
             Common.setBg(mLabelStepFull, R.drawable.left_blue_button);
             break;
-        case EvCalculator.HALF_STOP:
+        case EvData.HALF_STOP:
             Common.setBg(mLabelStepHalf, R.drawable.middle_blue_button);
             break;
-        case EvCalculator.THIRD_STOP:
+        case EvData.THIRD_STOP:
             Common.setBg(mLabelStepThird, R.drawable.right_blue_button);
             break;
         }
 
         updateStep();
+    }
+
+    private void wheelsHandler() {
+        mWheel_currentAperture.addScrollingListener(new WheelScrollListener());
+        mWheel_currentIso.addScrollingListener(new WheelScrollListener());
+        mWheel_currentShutter.addScrollingListener(new WheelScrollListener());
+        mWheel_newAperture.addScrollingListener(new WheelScrollListener());
+        mWheel_newIso.addScrollingListener(new WheelScrollListener());
+        mWheel_newShutter.addScrollingListener(new WheelScrollListener());
     }
 }

@@ -15,7 +15,7 @@
  ******************************************************************************/
 package ru.neverdark.phototools;
 
-import ru.neverdark.phototools.db.LocationsDbAdapter;
+import ru.neverdark.phototools.db.DbAdapter;
 import ru.neverdark.phototools.fragments.ConfirmCreateFragment;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
@@ -182,15 +182,14 @@ public class MapActivity extends SherlockFragmentActivity implements
     private void saveDataToDatabase(String locationName) {
         Log.message("Enter");
 
-        LocationsDbAdapter dbAdapter = new LocationsDbAdapter(
-                getApplicationContext());
-        dbAdapter.open();
+        DbAdapter dbAdapter = new DbAdapter(
+                getApplicationContext()).open();
 
         if (mAction == Constants.LOCATION_ACTION_ADD) {
-            mRecordId = dbAdapter.createLocation(locationName,
+            mRecordId = dbAdapter.getLocations().createLocation(locationName,
                     mMarkerPosition.latitude, mMarkerPosition.longitude);
         } else if (mAction == Constants.LOCATION_ACTION_EDIT) {
-            dbAdapter.updateLocation(mRecordId, locationName,
+            dbAdapter.getLocations().updateLocation(mRecordId, locationName,
                     mMarkerPosition.latitude, mMarkerPosition.longitude);
         }
 

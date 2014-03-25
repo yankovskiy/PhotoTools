@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (C) 2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
+      This program is free software: you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as published by
+      the Free Software Foundation, either version 3 of the License, or
+      (at your option) any later version.
+  
+      This program is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU General Public License for more details.
+  
+      You should have received a copy of the GNU General Public License
+      along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cameraEditorScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:padding="16dp" >
+
+        <EditText
+            android:id="@+id/cameraEditor_cameraName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:ems="10"
+            android:hint="@string/userCamera_cameraName" >
+        </EditText>
+
+        <TextView
+            android:id="@+id/cameraEditor_label_resolution"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cameraEditor_cameraName"
+            android:layout_marginTop="10dp"
+            android:text="@string/userCamera_label_resolution"
+            android:textColor="@color/headear" />
+
+        <LinearLayout
+            android:id="@+id/cameraEditor_resolution"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cameraEditor_label_resolution"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/cameraEditor_resolutionWidth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/width"
+                android:inputType="number" >
+            </EditText>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="x"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/divider" />
+
+            <EditText
+                android:id="@+id/cameraEditor_resolutionHeight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/height"
+                android:inputType="number" >
+            </EditText>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/cameraEditor_label_sensor"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cameraEditor_resolution"
+            android:layout_marginTop="10dp"
+            android:text="@string/userCamera_label_sensor"
+            android:textColor="@color/headear" />
+
+        <LinearLayout
+            android:id="@+id/cameraEditor_sensor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cameraEditor_label_sensor"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/cameraEditor_sensorWidth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/width"
+                android:inputType="numberDecimal" >
+            </EditText>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="x"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/divider" />
+
+            <EditText
+                android:id="@+id/cameraEditor_sensorHeight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/height"
+                android:inputType="numberDecimal" >
+            </EditText>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mm"
+                android:textColor="@color/divider" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/cameraEditor_label_coc"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cameraEditor_sensor"
+            android:layout_marginTop="10dp"
+            android:text="@string/userCamera_label_coc"
+            android:textColor="@color/headear" />
+
+        <CheckBox
+            android:id="@+id/cameraEditor_autoCalc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cameraEditor_label_coc"
+            android:text="@string/userCamera_autoCalc" />
+
+        <EditText
+            android:id="@+id/cameraEditor_coc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cameraEditor_autoCalc"
+            android:ems="10"
+            android:hint="@string/userCamera_label_coc"
+            android:inputType="numberDecimal" >
+        </EditText>
+    </RelativeLayout>
+
+</ScrollView>

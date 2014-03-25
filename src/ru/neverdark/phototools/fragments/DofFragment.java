@@ -24,12 +24,15 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.fragments.CameraManagementDialog.OnCameraManagementListener;
+import ru.neverdark.phototools.ui.ImageOnTouchListener;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.dofcalculator.Array;
 import ru.neverdark.phototools.utils.dofcalculator.CameraData;
 import ru.neverdark.phototools.utils.dofcalculator.DofCalculator;
+import ru.neverdark.phototools.utils.dofcalculator.CameraData.Vendor;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -37,7 +40,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.TabHost;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -45,45 +48,80 @@ import android.widget.TextView;
  */
 public class DofFragment extends SherlockFragment {
 
-    private View mView;
+    /**
+     * Click listener for "Camera management" button
+     */
+    private class ButtonClickListener implements OnClickListener {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+            case R.id.dof_cameraManagement:
+                CameraManagementDialog dialog = CameraManagementDialog
+                        .getInstance(mContext);
+                dialog.setCallback(new CameraManagementListener());
+                dialog.show(getFragmentManager(),
+                        CameraManagementDialog.DIALOG_TAG);
+                break;
+            }
+        }
+    }
 
-    private WheelView mWheelVendor;
-    private WheelView mWheelCamera;
+    /**
+     * Listener for handling "Back" button in the CameraManagementDialog
+     */
+    private class CameraManagementListener implements
+            OnCameraManagementListener {
+        @Override
+        public void cameraManagementOnBack() {
+            CameraData.Vendor vendor = (CameraData.Vendor) mWheelVendor
+                    .getSelectedItem();
+            if (vendor.equals(Vendor.USER)) {
+                populateCameraByVendor();
+                recalculate();
+            }
+        }
+    }
+
+    private final static String APERTURE = "dof_aperture";
+    private final static String CAMERA = "dof_camera";
+
+    private final static String FAR_LIMIT = "dof_farLimit";
+    private final static String FOCAL_LENGTH = "dof_focalLength";
+    private final static String HYPERFOCAL = "dof_hyperfocal";
+    private final static String MEASURE_RESULT_UNIT = "dof_measureResultUnit";
+    private final static String MEASURE_UNIT = "dof_measureUnit";
+    private final static String NEAR_LIMIT = "dof_nearLimit";
+
+    private final static String SUBJECT_DISTANCE = "dof_subjectDistance";
+    private final static String TOTAL = "dof_total";
+    private final static String VENDOR = "dof_vendor";
+    private SherlockFragmentActivity mActivity;
+
+    private int mCameraId;
+    private ImageView mCameraManagement;
+    private Context mContext;
+    private TextView mLabelCm;
+
+    private TextView mLabelFarLimitResult;
+
+    private TextView mLabelFt;
+    private TextView mLabelHyperFocalResult;
+    private TextView mLabelIn;
+    private TextView mLabelM;
+    private TextView mLabelNearLimitResult;
+    private TextView mLabelTotalResutl;
+    private int mMeasureResultUnit;
+    private int mVendorId;
+    private View mView;
     private WheelView mWheelAperture;
+    private WheelView mWheelCamera;
+
     private WheelView mWheelFocalLength;
-    private WheelView mWheelSubjectDistance;
     private WheelView mWheelMeasureUnit;
 
-    private TextView mLabelM;
-    private TextView mLabelCm;
-    private TextView mLabelFt;
-    private TextView mLabelIn;
+    private WheelView mWheelSubjectDistance;
 
-    private TextView mLabelNearLimitResult;
-    private TextView mLabelFarLimitResult;
-    private TextView mLabelHyperFocalResult;
-    private TextView mLabelTotalResutl;
-
-    private TabHost mTabHost;
-
-    private final static String VENDOR = "dof_vendor";
-    private final static String CAMERA = "dof_camera";
-    private final static String APERTURE = "dof_aperture";
-    private final static String FOCAL_LENGTH = "dof_focalLength";
-    private final static String SUBJECT_DISTANCE = "dof_subjectDistance";
-    private final static String MEASURE_UNIT = "dof_measureUnit";
-    private final static String MEASURE_RESULT_UNIT = "dof_measureResultUnit";
-    private final static String NEAR_LIMIT = "dof_nearLimit";
-    private final static String FAR_LIMIT = "dof_farLimit";
-    private final static String HYPERFOCAL = "dof_hyperfocal";
-    private final static String TOTAL = "dof_total";
-
-    private int mVendorId;
-    private int mCameraId;
-
-    private int mMeasureResultUnit;
-
-    private SherlockFragmentActivity mActivity;
+    private WheelView mWheelVendor;
 
     /**
      * Loads arrays to wheels
@@ -133,34 +171,9 @@ public class DofFragment extends SherlockFragment {
         mLabelTotalResutl = (TextView) mView
                 .findViewById(R.id.dof_label_totalResult);
 
-        mTabHost = (TabHost) mView.findViewById(android.R.id.tabhost);
-
+        mCameraManagement = (ImageView) mView
+                .findViewById(R.id.dof_cameraManagement);
         mActivity = getSherlockActivity();
-    }
-
-    /**
-     * Builds tabs for small devices
-     */
-    private void buildTabs() {
-        mTabHost.setup();
-
-        TabHost.TabSpec spec = mTabHost.newTabSpec("tag1");
-
-        spec.setContent(R.id.tab1);
-        spec.setIndicator(getString(R.string.dof_tab_parameters));
-        mTabHost.addTab(spec);
-
-        spec = mTabHost.newTabSpec("tag2");
-        spec.setContent(R.id.tab2);
-        spec.setIndicator(getString(R.string.dof_tab_result));
-        mTabHost.addTab(spec);
-
-        spec = mTabHost.newTabSpec("tag3");
-        spec.setContent(R.id.tab3);
-        spec.setIndicator(getString(R.string.dof_tab_camera));
-        mTabHost.addTab(spec);
-
-        // mTabHost.setCurrentTab(0);
     }
 
     /**
@@ -183,7 +196,15 @@ public class DofFragment extends SherlockFragment {
         BigDecimal coc = CameraData.getCocForCamera(vendor, camera);
         Log.variable("camera", camera);
         Log.variable("vendor", vendor.toString());
-        Log.variable("coc", coc.toString());
+
+        if (Log.DEBUG) {
+            if (coc != null) {
+                Log.variable("coc", coc.toString());
+            } else {
+                Log.variable("coc", "null");
+            }
+        }
+
         return coc;
     }
 
@@ -216,13 +237,6 @@ public class DofFragment extends SherlockFragment {
     }
 
     /**
-     * @return true if layout contains tabs
-     */
-    private boolean isTabPresent() {
-        return (mTabHost != null);
-    }
-
-    /**
      * Loads cameras data to wheels
      */
     private void loadCamerasDataToWheel() {
@@ -251,11 +265,6 @@ public class DofFragment extends SherlockFragment {
                 Context.MODE_PRIVATE);
         mVendorId = prefs.getInt(VENDOR, 0);
         mCameraId = prefs.getInt(CAMERA, 0);
-
-        mLabelFarLimitResult.setText(prefs.getString(FAR_LIMIT, ""));
-        mLabelHyperFocalResult.setText(prefs.getString(HYPERFOCAL, ""));
-        mLabelNearLimitResult.setText(prefs.getString(NEAR_LIMIT, ""));
-        mLabelTotalResutl.setText(prefs.getString(TOTAL, ""));
 
         mWheelAperture.setCurrentItem(prefs.getInt(APERTURE, 0));
         mWheelFocalLength.setCurrentItem(prefs.getInt(FOCAL_LENGTH, 0));
@@ -317,12 +326,9 @@ public class DofFragment extends SherlockFragment {
         long start = Log.enter();
         super.onCreateView(inflater, container, savedInstanceState);
         mView = inflater.inflate(R.layout.activity_dof, container, false);
+        mContext = mView.getContext();
 
         bindObjectsToResources();
-
-        if (isTabPresent() == true) {
-            buildTabs();
-        }
 
         setCyclicToWheels();
         arrayToWheels();
@@ -332,6 +338,8 @@ public class DofFragment extends SherlockFragment {
         measureButtonsHandler();
         wheelsHandler();
         updateMeasureButtons();
+        recalculate();
+        setClickListeners();
 
         Log.exit(start);
         return mView;
@@ -340,8 +348,15 @@ public class DofFragment extends SherlockFragment {
     @Override
     public void onPause() {
         super.onPause();
+        Log.enter();
 
         saveData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.enter();
     }
 
     /**
@@ -350,7 +365,7 @@ public class DofFragment extends SherlockFragment {
     private void populateCameraByVendor() {
         CameraData.Vendor vendor = (CameraData.Vendor) mWheelVendor
                 .getSelectedItem();
-        String cameras[] = CameraData.getCameraByVendor(vendor);
+        String cameras[] = CameraData.getCameraByVendor(vendor, mContext);
         final int textSize = R.dimen.wheelCameraTextSize;
 
         Common.setWheelAdapter(mActivity, mWheelCamera, cameras, textSize,
@@ -367,22 +382,31 @@ public class DofFragment extends SherlockFragment {
         BigDecimal aperture = getAperture();
         BigDecimal focusLength = getFocalLength();
         BigDecimal coc = getCoc();
-        int measureUnit = getMeasureUnit();
-        BigDecimal subjectDistance = getSubjectDistance();
 
-        DofCalculator dofCalc = new DofCalculator(aperture, focusLength, coc,
-                subjectDistance, measureUnit);
-        DofCalculator.CalculationResult calculationResult = dofCalc
-                .calculate(mMeasureResultUnit);
+        /* if user cameras is empty coc is null */
+        if (coc != null) {
+            int measureUnit = getMeasureUnit();
+            BigDecimal subjectDistance = getSubjectDistance();
 
-        mLabelFarLimitResult.setText(calculationResult.format(calculationResult
-                .getFarLimit()));
-        mLabelNearLimitResult.setText(calculationResult
-                .format(calculationResult.getNearLimit()));
-        mLabelHyperFocalResult.setText(calculationResult
-                .format(calculationResult.getHyperFocal()));
-        mLabelTotalResutl.setText(calculationResult.format(calculationResult
-                .getTotal()));
+            DofCalculator dofCalc = new DofCalculator(aperture, focusLength,
+                    coc, subjectDistance, measureUnit);
+            DofCalculator.CalculationResult calculationResult = dofCalc
+                    .calculate(mMeasureResultUnit);
+
+            mLabelFarLimitResult.setText(calculationResult
+                    .format(calculationResult.getFarLimit()));
+            mLabelNearLimitResult.setText(calculationResult
+                    .format(calculationResult.getNearLimit()));
+            mLabelHyperFocalResult.setText(calculationResult
+                    .format(calculationResult.getHyperFocal()));
+            mLabelTotalResutl.setText(calculationResult
+                    .format(calculationResult.getTotal()));
+        } else {
+            mLabelFarLimitResult.setText("");
+            mLabelNearLimitResult.setText("");
+            mLabelHyperFocalResult.setText("");
+            mLabelTotalResutl.setText("");
+        }
     }
 
     /**
@@ -409,6 +433,11 @@ public class DofFragment extends SherlockFragment {
         editor.putString(TOTAL, mLabelTotalResutl.getText().toString());
 
         editor.commit();
+    }
+
+    private void setClickListeners() {
+        mCameraManagement.setOnClickListener(new ButtonClickListener());
+        mCameraManagement.setOnTouchListener(new ImageOnTouchListener());
     }
 
     /**

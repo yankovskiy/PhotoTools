@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
+  Copyright (C) 2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
       the Free Software Foundation, either version 3 of the License, or
@@ -14,10 +15,5 @@
       along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    
-    <dimen name="wheelTextSize">20sp</dimen>
-    <dimen name="wheelMeasureUnitTextSize">20sp</dimen>
-    <dimen name="wheelCameraTextSize">20sp</dimen>
-    <dimen name="wheelSutterTextSize">18sp</dimen>
-    
+    <color name="divider">#ff798081</color>
 </resources>
