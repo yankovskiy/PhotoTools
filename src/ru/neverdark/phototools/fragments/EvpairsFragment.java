@@ -42,42 +42,57 @@ import android.widget.Toast;
  * Fragment contains EV Pairs calculator UI
  */
 public class EvpairsFragment extends SherlockFragment {
+    private static final int CALCULATE_APERTURE = 0;
+    private static final int CALCULATE_ISO = 1;
+    private static final int CALCULATE_SHUTTER = 2;
+    
+    private static final String CALCULATE_INDEX = "ev_calculateIndex";
+    
     /** how much allow filled fields (new fields) */
     private static final byte MAXIMUM_ALLOWED_FILLED_FIELDS = 2;
-
+    
+    private static final String NEW_APERTURE_INDEX = "ev_newAperture";
+    private static final String NEW_ISO_INDEX = "ev_newIso";
+    private static final String NEW_SHUTTER_INDEX = "ev_newShutter";
+    
+    private static final String STEP_INDEX = "ev_stepIndex";
+    
     private String CURRENT_APERTURE_INDEX = "ev_currentAperture";
     private String CURRENT_ISO_INDEX = "ev_currentIso";
     private String CURRENT_SHUTTER_INDEX = "ev_currentShutter";
+
     private SherlockFragmentActivity mActivity;
+    
+    private int mCalculateIndex;
+    
     private int mCurrentAperturePosition;
     private int mCurrentIsoPosition;
-
     private int mCurrentShutterSpeedPosition;
+    
     private EvCalculator mEvCalculator;
+    
+    private TextView mLabelAperture;
+    private TextView mLabelIso;
+    private TextView mLabelShutter;
     private TextView mLabelStepFull;
     private TextView mLabelStepHalf;
     private TextView mLabelStepThird;
-    private int mNewAperturePosition;
 
+    private int mNewAperturePosition;
     private int mNewIsoPostion;
     private int mNewShutterSpeedPosition;
+    
     private int mStepIndex;
-
+    
     private View mView;
-
+    
     private WheelView mWheel_currentAperture;
     private WheelView mWheel_currentIso;
     private WheelView mWheel_currentShutter;
+    
     private WheelView mWheel_newAperture;
     private WheelView mWheel_newIso;
     private WheelView mWheel_newShutter;
-    private String NEW_APERTURE_INDEX = "ev_newAperture";
-
-    private String NEW_ISO_INDEX = "ev_newIso";
-
-    private String NEW_SHUTTER_INDEX = "ev_newShutter";
-
-    private String STEP_INDEX = "ev_stepIndex";
 
     /**
      * Binds classes objects to resources
@@ -99,6 +114,11 @@ public class EvpairsFragment extends SherlockFragment {
         mLabelStepHalf = (TextView) mView.findViewById(R.id.ev_label_stepHalf);
         mLabelStepThird = (TextView) mView
                 .findViewById(R.id.ev_label_stepThird);
+
+        mLabelAperture = (TextView) mView
+                .findViewById(R.id.ev_label_newAperture);
+        mLabelIso = (TextView) mView.findViewById(R.id.ev_label_newIso);
+        mLabelShutter = (TextView) mView.findViewById(R.id.ev_label_newShutter);
 
         mActivity = getSherlockActivity();
     }
@@ -210,6 +230,8 @@ public class EvpairsFragment extends SherlockFragment {
                 Context.MODE_PRIVATE);
 
         mStepIndex = preferenced.getInt(STEP_INDEX, EvData.FULL_STOP);
+        mCalculateIndex = preferenced
+                .getInt(CALCULATE_INDEX, CALCULATE_SHUTTER);
 
         mCurrentAperturePosition = preferenced
                 .getInt(CURRENT_APERTURE_INDEX, 0);
@@ -220,7 +242,12 @@ public class EvpairsFragment extends SherlockFragment {
         mNewAperturePosition = preferenced.getInt(NEW_APERTURE_INDEX, 0);
         mNewIsoPostion = preferenced.getInt(NEW_ISO_INDEX, 0);
         mNewShutterSpeedPosition = preferenced.getInt(NEW_SHUTTER_INDEX, 0);
+    }
 
+    private void lockCalculateWheel() {
+        mWheel_newAperture.setEnabled(mCalculateIndex != CALCULATE_APERTURE);
+        mWheel_newIso.setEnabled(mCalculateIndex != CALCULATE_ISO);
+        mWheel_newShutter.setEnabled(mCalculateIndex != CALCULATE_SHUTTER);
     }
 
     /*
@@ -242,6 +269,8 @@ public class EvpairsFragment extends SherlockFragment {
 
         loadValues();
         updateStepButtons();
+        updateCalculateButtons();
+        lockCalculateWheel();
         setOldWheelPositions();
 
         setClickListener();
@@ -266,6 +295,7 @@ public class EvpairsFragment extends SherlockFragment {
 
         SharedPreferences.Editor editor = preferenced.edit();
         editor.putInt(STEP_INDEX, mStepIndex);
+        editor.putInt(CALCULATE_INDEX, mCalculateIndex);
 
         editor.putInt(CURRENT_APERTURE_INDEX, mCurrentAperturePosition);
         editor.putInt(CURRENT_ISO_INDEX, mCurrentIsoPosition);
@@ -300,15 +330,21 @@ public class EvpairsFragment extends SherlockFragment {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                // TODO: переписать
-                /*
-                case R.id.ev_button_calculate:
-                    calculate();
+                case R.id.ev_label_newAperture:
+                    mCalculateIndex = CALCULATE_APERTURE;
+                    updateCalculateButtons();
+                    lockCalculateWheel();
                     break;
-                case R.id.ev_button_clear:
-                    clearNewValues();
+                case R.id.ev_label_newIso:
+                    mCalculateIndex = CALCULATE_ISO;
+                    updateCalculateButtons();
+                    lockCalculateWheel();
                     break;
-                    */
+                case R.id.ev_label_newShutter:
+                    mCalculateIndex = CALCULATE_SHUTTER;
+                    updateCalculateButtons();
+                    lockCalculateWheel();
+                    break;
                 case R.id.ev_label_stepFull:
                     mStepIndex = EvData.FULL_STOP;
                     updateStepButtons();
@@ -331,6 +367,10 @@ public class EvpairsFragment extends SherlockFragment {
         mLabelStepFull.setOnClickListener(clickListener);
         mLabelStepHalf.setOnClickListener(clickListener);
         mLabelStepThird.setOnClickListener(clickListener);
+
+        mLabelAperture.setOnClickListener(clickListener);
+        mLabelIso.setOnClickListener(clickListener);
+        mLabelShutter.setOnClickListener(clickListener);
     }
 
     /**
@@ -367,6 +407,24 @@ public class EvpairsFragment extends SherlockFragment {
      */
     private void setWheelToFirstPos(WheelView wheel) {
         wheel.setCurrentItem(0);
+    }
+
+    private void updateCalculateButtons() {
+        Common.setBg(mLabelAperture, R.drawable.right_stroke);
+        Common.setBg(mLabelIso, R.drawable.right_stroke);
+        Common.setBg(mLabelShutter, R.drawable.right_stroke);
+
+        switch (mCalculateIndex) {
+        case CALCULATE_APERTURE:
+            Common.setBg(mLabelAperture, R.drawable.left_blue_button);
+            break;
+        case CALCULATE_ISO:
+            Common.setBg(mLabelIso, R.drawable.middle_blue_button);
+            break;
+        case CALCULATE_SHUTTER:
+            Common.setBg(mLabelShutter, R.drawable.right_blue_button);
+            break;
+        }
     }
 
     /**
