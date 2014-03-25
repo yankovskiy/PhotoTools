@@ -15,6 +15,7 @@
  ******************************************************************************/
 package ru.neverdark.phototools.utils;
 
+import ru.neverdark.phototools.R;
 import kankan.wheel.widget.WheelView;
 import kankan.wheel.widget.adapters.AbstractWheelTextAdapter;
 import kankan.wheel.widget.adapters.ArrayWheelAdapter;

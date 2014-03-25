@@ -24,7 +24,11 @@ import java.util.Locale;
 import ru.neverdark.phototools.utils.Log;
 
 public class EvCalculator {
-
+    public static final int CALCULATE_APERTURE = 0;
+    public static final int CALCULATE_ISO = 1;
+    public static final int CALCULATE_SHUTTER = 2;
+    
+    private int mCalculateIndex;
     private int mCurrentAperturePosition;
     private int mCurrentIsoPosition;
     private int mCurrentShutterSpeedPosition;
@@ -40,15 +44,17 @@ public class EvCalculator {
 
     public void prepare(int currentAperturePosition, int currentIsoPosition,
             int currentShutterSpeedPosition, int newAperturePosition,
-            int newIsoPostion, int newShutterSpeedPosition) {
+            int newIsoPostion, int newShutterSpeedPosition, int calculateIndex) {
 
         mCurrentAperturePosition = currentAperturePosition;
         mCurrentIsoPosition = currentIsoPosition;
         mCurrentShutterSpeedPosition = currentShutterSpeedPosition;
 
-        mNewAperturePosition = newAperturePosition - 1;
-        mNewIsoPostion = newIsoPostion - 1;
-        mNewShutterSpeedPosition = newShutterSpeedPosition - 1;
+        mNewAperturePosition = newAperturePosition;
+        mNewIsoPostion = newIsoPostion;
+        mNewShutterSpeedPosition = newShutterSpeedPosition;
+        
+        mCalculateIndex = calculateIndex;
 
         Log.variable("mCurrentAperturePosition",
                 String.valueOf(mCurrentAperturePosition));
@@ -167,9 +173,9 @@ public class EvCalculator {
      * @return index for the empty spinner
      */
     public int calculate() {
-        int wIndex = 1;
+        int wIndex = 0;
 
-        if (mNewAperturePosition < 0) {
+        if (mCalculateIndex == CALCULATE_APERTURE) {
             double isoStopDifference = calculateIsoDifference();
             double shutterStopDifference = calculateShutterDifference();
             double expectedApertureStopDifference = isoStopDifference
@@ -182,7 +188,7 @@ public class EvCalculator {
             if (mIndex > APERTURE_VALUE_LIST.length) {
                 mIndex = APERTURE_VALUE_LIST.length;
             }
-        } else if (mNewIsoPostion < 0) {
+        } else if (mCalculateIndex == CALCULATE_ISO) {
             double apertureStopDifference = calculateApertureDifference();
             double shutterStopDifference = calculateShutterDifference();
             double expectedIsoStopDifference = apertureStopDifference
@@ -196,7 +202,7 @@ public class EvCalculator {
                 mIndex = ISO_VALUE_LIST.length;
             }
 
-        } else if (mNewShutterSpeedPosition < 0) {
+        } else if (mCalculateIndex == CALCULATE_SHUTTER) {
             double apertureStopDifference = calculateApertureDifference();
             double isoStopDifference = calculateIsoDifference();
             double expectedShutterStopDifference = apertureStopDifference
@@ -205,13 +211,16 @@ public class EvCalculator {
             wIndex += (int) Math
                     .round(((double) (expectedShutterStopDifference * mStopDistribution)));
             mIndex = mCurrentShutterSpeedPosition + wIndex;
-
+            
+            Log.variable("mIndex", String.valueOf(mIndex));
+            Log.variable("SHUTTER_VALUE_LIST.length", String.valueOf(SHUTTER_VALUE_LIST.length));
+            
             if (mIndex > SHUTTER_VALUE_LIST.length) {
                 mIndex = SHUTTER_VALUE_LIST.length;
             }
         }
 
-        if (mIndex < 1) {
+        if (mIndex < 0) {
             mIndex = EvData.INVALID_INDEX;
         }
 
