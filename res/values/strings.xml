@@ -24,9 +24,7 @@
     <string name="about_label_evpairs">EV Pairs</string>
     <string name="about_label_evPairsManual">The window is divided on two parts: \"Current values\" and \"New values\". All parameters of 
         the shooting, that is going on now, should be filled in \"Current values\". Desirable parameters of shooting except parameters 
-        that needs to calculate are brought in window \"New values\". The field with required parameter needs to be left empty. The empty 
-        field in a window \"New values\" will calculate and will be filled automatically after the pressing of the button \"Calculate\". 
-        Press button \"Clear\" for the window clearing \"New values\".</string>
+        that needs to calculate are brought in window \"New values\". The field with required parameter must be choosed by taped on the header</string>
     <string name="about_label_license">License information</string>
     <string name="about_label_sunsetSunrise">Sunsets and sunrises</string>
     <string name="about_label_sunsetSunriseManual">For the calculation of the time of a sunset and sunrise for certain day, choose the 
