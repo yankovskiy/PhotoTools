@@ -155,6 +155,7 @@ public class CameraData {
         nikonCameras.add(new CameraData(Vendor.NIKON, "D300", new BigDecimal("23.6"), new BigDecimal("4288")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D300S", new BigDecimal("23.6"), new BigDecimal("4288")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D600", new BigDecimal("35.9"), new BigDecimal("6016")));
+        nikonCameras.add(new CameraData(Vendor.NIKON, "D610", new BigDecimal("35.9"), new BigDecimal("6016")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D70", new BigDecimal("23.7"), new BigDecimal("3008")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D70s", new BigDecimal("23.7"), new BigDecimal("3008")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D80", new BigDecimal("23.6"), new BigDecimal("3872")));
@@ -171,6 +172,7 @@ public class CameraData {
         nikonCameras.add(new CameraData(Vendor.NIKON, "D3000", new BigDecimal("23.6"), new BigDecimal("3872")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D3100", new BigDecimal("23.1"), new BigDecimal("4608")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D3200", new BigDecimal("23.2"), new BigDecimal("6016")));
+        nikonCameras.add(new CameraData(Vendor.NIKON, "D3300", new BigDecimal("23.2"), new BigDecimal("6000")));
         DATABASE.put(Vendor.NIKON, nikonCameras);
 
         List<CameraData> olympusCameras = new ArrayList<CameraData>();
