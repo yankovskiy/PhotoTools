@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
+ * Copyright (C) 2014 Rudy Dordonne (rudy@itu.dk).
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
  *     the Free Software Foundation, either version 3 of the License, or
@@ -13,8 +13,6 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *     
- * 	Modification:
- * 		2014/03/03 Rudy Dordonne (rudy@itu.dk)	
  ******************************************************************************/
 package ru.neverdark.phototools.utils.evcalculator;
 
@@ -110,8 +108,8 @@ public class EvCalculator {
         int index = 0;
 
         for (index = 0; index < APERTURE_VALUE_LIST.length; index++) {
-            apertures.add("f/"
-                    + cleanNumberToString(APERTURE_VALUE_LIST[index]));
+            apertures.add(new String("f/")
+                    .concat(cleanNumberToString(APERTURE_VALUE_LIST[index])));
         }
 
         return apertures.toArray(new String[apertures.size()]);
@@ -129,16 +127,16 @@ public class EvCalculator {
 
         for (index = 0; index < SHUTTER_VALUE_LIST.length; index++) {
             if (SHUTTER_VALUE_LIST[index] < 1.0) {
-                element = "1/"
-                        + cleanNumberToString(1 / SHUTTER_VALUE_LIST[index])
-                        + " sec";
+                element = new String("1/")
+                        .concat(cleanNumberToString(1 / SHUTTER_VALUE_LIST[index]))
+                        .concat(" sec");
             } else if (SHUTTER_VALUE_LIST[index] >= 1
                     && SHUTTER_VALUE_LIST[index] < 60.0) {
                 element = cleanNumberToString(SHUTTER_VALUE_LIST[index])
-                        + " sec";
+                		.concat(" sec");
             } else if (SHUTTER_VALUE_LIST[index] >= 60.0) {
                 element = cleanNumberToString((Double) (SHUTTER_VALUE_LIST[index] / 60))
-                        + " min";
+                		.concat(" min");
             }
 
             shutters.add(element);
