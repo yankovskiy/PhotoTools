@@ -19,6 +19,13 @@
     </style>
   </head>
   <body>
+$ 0.9
+  % Version 0.9
+  _ 01.04.2014
+    * The possibility to create custom camera models is added
+    * Change interface for EV-pairs
+    * Change EV-pairs kernel (Rudy Dordonne)
+    * Added new cameras
 $ 0.8
   % Version 0.8
   _ 01.03.2014
