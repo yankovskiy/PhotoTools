@@ -57,17 +57,17 @@ public class EvpairsFragment extends SherlockFragment {
 
     }
 
-    private static final String CALCULATE_INDEX = "ev_calculateIndex";
+    private static final String CALCULATE_INDEX = "ev1_calculateIndex";
 
-    private static final String NEW_APERTURE_INDEX = "ev_newAperture";
-    private static final String NEW_ISO_INDEX = "ev_newIso";
-    private static final String NEW_SHUTTER_INDEX = "ev_newShutter";
+    private static final String NEW_APERTURE_INDEX = "ev1_newAperture";
+    private static final String NEW_ISO_INDEX = "ev1_newIso";
+    private static final String NEW_SHUTTER_INDEX = "ev1_newShutter";
 
-    private static final String STEP_INDEX = "ev_stepIndex";
+    private static final String STEP_INDEX = "ev1_stepIndex";
 
-    private String CURRENT_APERTURE_INDEX = "ev_currentAperture";
-    private String CURRENT_ISO_INDEX = "ev_currentIso";
-    private String CURRENT_SHUTTER_INDEX = "ev_currentShutter";
+    private String CURRENT_APERTURE_INDEX = "ev1_currentAperture";
+    private String CURRENT_ISO_INDEX = "ev1_currentIso";
+    private String CURRENT_SHUTTER_INDEX = "ev1_currentShutter";
 
     private SherlockFragmentActivity mActivity;
 
