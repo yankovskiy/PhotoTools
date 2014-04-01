@@ -20,6 +20,7 @@ You can get latest stable build [here](https://play.google.com/store/apps/detail
 
 Other information:
 ----------
-1. [How to build](https://github.com/yankovskiy/PhotoTools/wiki/How-to-build).
+1. [How to build](https://github.com/yankovskiy/PhotoTools/wiki/How-to-build)
+2. [How to create plugin](https://github.com/yankovskiy/PhotoTools/wiki/How-to-create-plugin)
 
 
