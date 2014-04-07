@@ -29,13 +29,25 @@
         android:paddingTop="10dp"
         tools:context=".MainActivity" >
 
-        <TextView
-            android:id="@+id/ev_label_step"
-            style="?android:attr/listSeparatorTextViewStyle"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/evpairs_label_step"
-            android:textColor="#ff33b5e5" />
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/ev_label_step"
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/evpairs_label_step"
+                android:textColor="@color/headear" />
+
+            <ImageView
+                android:id="@+id/ev_limitation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_action_settings" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
