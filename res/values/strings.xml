@@ -196,6 +196,7 @@
     <string name="error_cameraNameEmpty">Camera name is empty</string>
     <string name="error_notAllValuesFilled">Sensor size and maximum resolution must be specified</string>
     <string name="error_cocNotFilled">Circle of confusion must be specified</string>
+    <string name="error_availableOnlyInPaid">This feature available only in full version</string>
     
     <string name="userCamera_addCamera">Add new camera</string>
     <string name="userCamera_editCamera">Edit camera</string>

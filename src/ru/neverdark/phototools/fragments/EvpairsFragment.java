@@ -25,7 +25,11 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.fragments.DofLimitationDialog.OnDofLimitationListener;
+import ru.neverdark.phototools.ui.ImageOnTouchListener;
 import ru.neverdark.phototools.utils.Common;
+import ru.neverdark.phototools.utils.Constants;
+import ru.neverdark.phototools.utils.Limit;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.evcalculator.EvCalculator;
 import ru.neverdark.phototools.utils.evcalculator.EvData;
@@ -36,12 +40,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
  * Fragment contains EV Pairs calculator UI
  */
 public class EvpairsFragment extends SherlockFragment {
+
+    /**
+     * Listener for OK button in the DofLimitationDialog
+     */
+    private class DofLimitationListener implements OnDofLimitationListener {
+
+        @Override
+        public void onDofLimitationHandler(Limit data) {
+            // TODO handle changing limitation
+            mLimit = data;
+        }
+    }
+
     private class WheelScrollListener implements OnWheelScrollListener {
 
         @Override
@@ -86,6 +104,8 @@ public class EvpairsFragment extends SherlockFragment {
     private TextView mLabelStepHalf;
     private TextView mLabelStepThird;
 
+    private ImageView mEvLimit;
+
     private int mNewAperturePosition;
     private int mNewIsoPostion;
     private int mNewShutterSpeedPosition;
@@ -101,6 +121,8 @@ public class EvpairsFragment extends SherlockFragment {
     private WheelView mWheel_newAperture;
     private WheelView mWheel_newIso;
     private WheelView mWheel_newShutter;
+
+    private Limit mLimit;
 
     /**
      * Binds classes objects to resources
@@ -127,6 +149,8 @@ public class EvpairsFragment extends SherlockFragment {
                 .findViewById(R.id.ev_label_newAperture);
         mLabelIso = (TextView) mView.findViewById(R.id.ev_label_newIso);
         mLabelShutter = (TextView) mView.findViewById(R.id.ev_label_newShutter);
+
+        mEvLimit = (ImageView) mView.findViewById(R.id.ev_limitation);
 
         mActivity = getSherlockActivity();
     }
@@ -210,7 +234,7 @@ public class EvpairsFragment extends SherlockFragment {
         setClickListener();
         wheelsHandler();
         recalculate();
-        
+
         return mView;
     }
 
@@ -321,6 +345,9 @@ public class EvpairsFragment extends SherlockFragment {
                     updateStepButtons();
                     setAllWheelsToFirstPos();
                     break;
+                case R.id.ev_limitation:
+                    showLimitationDialog();
+                    break;
                 }
             }
         };
@@ -332,6 +359,9 @@ public class EvpairsFragment extends SherlockFragment {
         mLabelAperture.setOnClickListener(clickListener);
         mLabelIso.setOnClickListener(clickListener);
         mLabelShutter.setOnClickListener(clickListener);
+
+        mEvLimit.setOnClickListener(clickListener);
+        mEvLimit.setOnTouchListener(new ImageOnTouchListener());
     }
 
     /**
@@ -397,6 +427,21 @@ public class EvpairsFragment extends SherlockFragment {
      */
     private void setWheelToFirstPos(WheelView wheel) {
         wheel.setCurrentItem(0);
+    }
+
+    private void showLimitationDialog() {
+        if (Constants.PAID) {
+            DofLimitationDialog dialog = DofLimitationDialog
+                    .getInstance(mActivity);
+            dialog.setCallback(new DofLimitationListener());
+            dialog.setLimitData(mLimit);
+            dialog.show(getFragmentManager(), DofLimitationDialog.DIALOG_TAG);
+        } else {
+            ShowMessageDialog dialog = ShowMessageDialog.getInstance(mActivity);
+            dialog.setMessages(R.string.error,
+                    R.string.error_availableOnlyInPaid);
+            dialog.show(getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
+        }
     }
 
     private void updateCalculateButtons() {

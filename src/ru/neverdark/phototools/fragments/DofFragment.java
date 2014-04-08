@@ -25,9 +25,11 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.fragments.CameraManagementDialog.OnCameraManagementListener;
+import ru.neverdark.phototools.fragments.DofLimitationDialog.OnDofLimitationListener;
 import ru.neverdark.phototools.ui.ImageOnTouchListener;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Constants;
+import ru.neverdark.phototools.utils.Limit;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.dofcalculator.Array;
 import ru.neverdark.phototools.utils.dofcalculator.CameraData;
@@ -49,18 +51,21 @@ import android.widget.TextView;
 public class DofFragment extends SherlockFragment {
 
     /**
-     * Click listener for "Camera management" button
+     * Click listener for "Camera management" and "Limit" button
      */
     private class ButtonClickListener implements OnClickListener {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
             case R.id.dof_cameraManagement:
-                CameraManagementDialog dialog = CameraManagementDialog
+                CameraManagementDialog cameraDialog = CameraManagementDialog
                         .getInstance(mContext);
-                dialog.setCallback(new CameraManagementListener());
-                dialog.show(getFragmentManager(),
+                cameraDialog.setCallback(new CameraManagementListener());
+                cameraDialog.show(getFragmentManager(),
                         CameraManagementDialog.DIALOG_TAG);
+                break;
+            case R.id.dof_limitation:
+                showLimitataionDialog();
                 break;
             }
         }
@@ -82,29 +87,42 @@ public class DofFragment extends SherlockFragment {
         }
     }
 
-    private final static String APERTURE = "dof_aperture";
-    private final static String CAMERA = "dof_camera";
+    /**
+     * Listener for handling OK button in the DofLimitationDialog
+     */
+    private class DofLimitationListener implements OnDofLimitationListener {
+        @Override
+        public void onDofLimitationHandler(Limit data) {
+            // TODO handle changing limitation
+            mLimit = data;
+        }
+    }
 
+    private final static String APERTURE = "dof_aperture";
+
+    private final static String CAMERA = "dof_camera";
     private final static String FAR_LIMIT = "dof_farLimit";
+
     private final static String FOCAL_LENGTH = "dof_focalLength";
     private final static String HYPERFOCAL = "dof_hyperfocal";
     private final static String MEASURE_RESULT_UNIT = "dof_measureResultUnit";
     private final static String MEASURE_UNIT = "dof_measureUnit";
     private final static String NEAR_LIMIT = "dof_nearLimit";
-
     private final static String SUBJECT_DISTANCE = "dof_subjectDistance";
+
     private final static String TOTAL = "dof_total";
     private final static String VENDOR = "dof_vendor";
     private SherlockFragmentActivity mActivity;
-
     private int mCameraId;
+
     private ImageView mCameraManagement;
+    private ImageView mDofLimit;
     private Context mContext;
     private TextView mLabelCm;
-
     private TextView mLabelFarLimitResult;
 
     private TextView mLabelFt;
+
     private TextView mLabelHyperFocalResult;
     private TextView mLabelIn;
     private TextView mLabelM;
@@ -115,13 +133,14 @@ public class DofFragment extends SherlockFragment {
     private View mView;
     private WheelView mWheelAperture;
     private WheelView mWheelCamera;
-
     private WheelView mWheelFocalLength;
-    private WheelView mWheelMeasureUnit;
 
+    private WheelView mWheelMeasureUnit;
     private WheelView mWheelSubjectDistance;
 
     private WheelView mWheelVendor;
+
+    private Limit mLimit;
 
     /**
      * Loads arrays to wheels
@@ -173,6 +192,8 @@ public class DofFragment extends SherlockFragment {
 
         mCameraManagement = (ImageView) mView
                 .findViewById(R.id.dof_cameraManagement);
+        mDofLimit = (ImageView) mView.findViewById(R.id.dof_limitation);
+
         mActivity = getSherlockActivity();
     }
 
@@ -438,6 +459,9 @@ public class DofFragment extends SherlockFragment {
     private void setClickListeners() {
         mCameraManagement.setOnClickListener(new ButtonClickListener());
         mCameraManagement.setOnTouchListener(new ImageOnTouchListener());
+
+        mDofLimit.setOnClickListener(new ButtonClickListener());
+        mDofLimit.setOnTouchListener(new ImageOnTouchListener());
     }
 
     /**
@@ -450,6 +474,22 @@ public class DofFragment extends SherlockFragment {
         mWheelMeasureUnit.setCyclic(true);
         mWheelSubjectDistance.setCyclic(true);
         mWheelVendor.setCyclic(true);
+    }
+
+    private void showLimitataionDialog() {
+        if (Constants.PAID) {
+            DofLimitationDialog limitDialog = DofLimitationDialog
+                    .getInstance(mContext);
+            limitDialog.setCallback(new DofLimitationListener());
+            limitDialog.setLimitData(mLimit);
+            limitDialog.show(getFragmentManager(),
+                    DofLimitationDialog.DIALOG_TAG);
+        } else {
+            ShowMessageDialog dialog = ShowMessageDialog.getInstance(mActivity);
+            dialog.setMessages(R.string.error,
+                    R.string.error_availableOnlyInPaid);
+            dialog.show(getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
+        }
     }
 
     /**
