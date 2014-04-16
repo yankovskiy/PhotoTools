@@ -16,10 +16,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
+    android:orientation="vertical"
+    android:paddingBottom="16dp"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingBottom="16dp">
+    android:paddingRight="16dp" >
 
     <TextView
         style="?android:attr/listSeparatorTextViewStyle"
@@ -36,10 +36,21 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/evpairs_label_apperture"
-            android:textSize="@dimen/evWheelTitleTextSize"
+            android:text="@string/dof_label_aperture"
+            android:textSize="@dimen/dofWheelTitleTextSize"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/dof_label_focalLength"
+            android:textSize="@dimen/dofWheelTitleTextSize"
             android:textStyle="bold" />
 
         <TextView
@@ -47,17 +58,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/evpairs_label_iso"
-            android:textSize="@dimen/evWheelTitleTextSize"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/evpairs_label_shutterSpeed"
-            android:textSize="@dimen/evWheelTitleTextSize"
+            android:text="@string/dof_label_subjectDistance"
+            android:textSize="@dimen/dofWheelTitleTextSize"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -68,19 +70,19 @@
         android:orientation="horizontal" >
 
         <kankan.wheel.widget.WheelView
-            android:id="@+id/evLimitation_minAperture"
+            android:id="@+id/dofLimitation_minAperture"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <kankan.wheel.widget.WheelView
-            android:id="@+id/evLimitation_minIso"
+            android:id="@+id/dofLimitation_minFocalLength"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <kankan.wheel.widget.WheelView
-            android:id="@+id/evLimitation_minShutter"
+            android:id="@+id/dofLimitation_minSubjectDistance"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
@@ -101,10 +103,21 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/evpairs_label_apperture"
-            android:textSize="@dimen/evWheelTitleTextSize"
+            android:text="@string/dof_label_aperture"
+            android:textSize="@dimen/dofWheelTitleTextSize"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/dof_label_focalLength"
+            android:textSize="@dimen/dofWheelTitleTextSize"
             android:textStyle="bold" />
 
         <TextView
@@ -112,17 +125,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/evpairs_label_iso"
-            android:textSize="@dimen/evWheelTitleTextSize"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/evpairs_label_shutterSpeed"
-            android:textSize="@dimen/evWheelTitleTextSize"
+            android:text="@string/dof_label_subjectDistance"
+            android:textSize="@dimen/dofWheelTitleTextSize"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -133,19 +137,19 @@
         android:orientation="horizontal" >
 
         <kankan.wheel.widget.WheelView
-            android:id="@+id/evLimitation_maxAperture"
+            android:id="@+id/dofLimitation_maxAperture"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <kankan.wheel.widget.WheelView
-            android:id="@+id/evLimitation_maxIso"
+            android:id="@+id/dofLimitation_maxFocalLength"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <kankan.wheel.widget.WheelView
-            android:id="@+id/evLimitation_maxShutter"
+            android:id="@+id/dofLimitation_maxSubjectDistance"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />

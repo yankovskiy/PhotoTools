@@ -24,5 +24,6 @@
     <dimen name="wheelCameraTextSize">14sp</dimen>
     <dimen name="wheelSutterTextSize">14sp</dimen>
     
-    <dimen name="wheelTitleTextSize">16sp</dimen>
+    <dimen name="evWheelTitleTextSize">16sp</dimen>
+    <dimen name="dofWheelTitleTextSize">12sp</dimen>
 </resources>

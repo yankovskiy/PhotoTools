@@ -19,7 +19,7 @@ package ru.neverdark.phototools.utils;
  * Constants for PhotoTools application
  */
 public class Constants {
-    public static final boolean PAID = false;
+    public static final boolean PAID = true;
     
     public static final String CURRENT_CHOICE = "currentChoice";
     public static final String SHOWN_INDEX = "detailsIndex";
