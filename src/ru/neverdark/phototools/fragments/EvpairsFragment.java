@@ -25,7 +25,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.fragments.DofLimitationDialog.OnDofLimitationListener;
+import ru.neverdark.phototools.fragments.EvLimitationDialog.OnEvLimitationListener;
 import ru.neverdark.phototools.ui.ImageOnTouchListener;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Constants;
@@ -47,16 +47,16 @@ import android.widget.TextView;
  * Fragment contains EV Pairs calculator UI
  */
 public class EvpairsFragment extends SherlockFragment {
-
     /**
      * Listener for OK button in the DofLimitationDialog
      */
-    private class DofLimitationListener implements OnDofLimitationListener {
+    private class EvLimitationListener implements OnEvLimitationListener {
 
         @Override
-        public void onDofLimitationHandler(Limit data) {
+        public void onEvLimitationHandler(Limit data) {
             // TODO handle changing limitation
             mLimit = data;
+
         }
     }
 
@@ -431,11 +431,11 @@ public class EvpairsFragment extends SherlockFragment {
 
     private void showLimitationDialog() {
         if (Constants.PAID) {
-            DofLimitationDialog dialog = DofLimitationDialog
+            EvLimitationDialog dialog = EvLimitationDialog
                     .getInstance(mActivity);
-            dialog.setCallback(new DofLimitationListener());
+            dialog.setCallback(new EvLimitationListener());
             dialog.setLimitData(mLimit);
-            dialog.show(getFragmentManager(), DofLimitationDialog.DIALOG_TAG);
+            dialog.show(getFragmentManager(), EvLimitationDialog.DIALOG_TAG);
         } else {
             ShowMessageDialog dialog = ShowMessageDialog.getInstance(mActivity);
             dialog.setMessages(R.string.error,

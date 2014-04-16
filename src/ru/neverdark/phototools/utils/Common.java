@@ -15,6 +15,8 @@
  ******************************************************************************/
 package ru.neverdark.phototools.utils;
 
+import java.util.List;
+
 import ru.neverdark.phototools.R;
 import kankan.wheel.widget.WheelView;
 import kankan.wheel.widget.adapters.AbstractWheelTextAdapter;
@@ -101,9 +103,29 @@ public class Common {
      * @param isFirstEmpty
      *            true if need first empty item
      */
-    public static void setWheelAdapter(Context context,
-            WheelView wheel, String values[], int textSizeResourceId,
-            boolean isFirstEmpty) {
+    public static void setWheelAdapter(Context context, WheelView wheel,
+            List<String> values, int textSizeResourceId, boolean isFirstEmpty) {
+        String[] localValues = values.toArray(new String[values.size()]);
+        setWheelAdapter(context, wheel, localValues, textSizeResourceId,
+                isFirstEmpty);
+    }
+
+    /**
+     * Sets adapter for wheel
+     * 
+     * @param context
+     *            application context
+     * @param wheel
+     *            object for sets adapter
+     * @param values
+     *            values for adapter
+     * @param resourceId
+     *            text size resource id for wheels
+     * @param isFirstEmpty
+     *            true if need first empty item
+     */
+    public static void setWheelAdapter(Context context, WheelView wheel,
+            String values[], int textSizeResourceId, boolean isFirstEmpty) {
         AbstractWheelTextAdapter adapter;
         int textSize = (int) (context.getResources().getDimension(
                 textSizeResourceId) / context.getResources()

@@ -20,5 +20,6 @@
     <dimen name="wheelCameraTextSize">24sp</dimen>
     <dimen name="wheelSutterTextSize">24sp</dimen>
     <dimen name="activity_horizontal_margin">24dp</dimen>
-
+    
+    <dimen name="wheelTitleTextSize">20sp</dimen>
 </resources>
