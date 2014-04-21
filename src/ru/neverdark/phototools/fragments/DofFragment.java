@@ -109,7 +109,14 @@ public class DofFragment extends SherlockFragment {
     private final static String MEASURE_UNIT = "dof_measureUnit";
     private final static String NEAR_LIMIT = "dof_nearLimit";
     private final static String SUBJECT_DISTANCE = "dof_subjectDistance";
-
+    
+    private static final String LIMIT_APERTURE_MIN = "dof_aperture_min_limit";
+    private static final String LIMIT_APERTURE_MAX = "dof_aperture_max_limit";
+    private static final String LIMIT_FOCAL_LENGTH_MIN = "dof_focal_length_min_limit";
+    private static final String LIMIT_FOCAL_LENGTH_MAX = "dof_focal_length_max_limit";
+    private static final String LIMIT_SUBJECT_DISTANCE_MIN = "dof_subject_distance_min_limit";
+    private static final String LIMIT_SUBJECT_DISTANCE_MAX = "dof_subject_distance_max_limit";
+    
     private final static String TOTAL = "dof_total";
     private final static String VENDOR = "dof_vendor";
     private SherlockFragmentActivity mActivity;
@@ -293,6 +300,17 @@ public class DofFragment extends SherlockFragment {
         mWheelSubjectDistance.setCurrentItem(prefs.getInt(SUBJECT_DISTANCE, 0));
 
         mMeasureResultUnit = prefs.getInt(MEASURE_RESULT_UNIT, Constants.METER);
+        
+        String minAperture = prefs.getString(LIMIT_APERTURE_MIN, null);
+        if (minAperture != null) {
+            mLimit = new Limit();
+            mLimit.setMinAperture(minAperture);
+            mLimit.setMaxAperture(prefs.getString(LIMIT_APERTURE_MAX, null));
+            mLimit.setMaxSubjectDistance(prefs.getString(LIMIT_SUBJECT_DISTANCE_MAX, null));
+            mLimit.setMinSubjectDistance(prefs.getString(LIMIT_SUBJECT_DISTANCE_MIN, null));
+            mLimit.setMaxFocalLength(prefs.getString(LIMIT_FOCAL_LENGTH_MAX, null));
+            mLimit.setMinFocalLength(prefs.getString(LIMIT_FOCAL_LENGTH_MIN, null));
+        }
     }
 
     /**
@@ -452,6 +470,15 @@ public class DofFragment extends SherlockFragment {
         editor.putString(HYPERFOCAL, mLabelHyperFocalResult.getText()
                 .toString());
         editor.putString(TOTAL, mLabelTotalResutl.getText().toString());
+        
+        if (mLimit != null) {
+            editor.putString(LIMIT_APERTURE_MAX, mLimit.getMaxAperture());
+            editor.putString(LIMIT_APERTURE_MIN, mLimit.getMinAperture());
+            editor.putString(LIMIT_FOCAL_LENGTH_MAX, mLimit.getMaxFocalLength());
+            editor.putString(LIMIT_FOCAL_LENGTH_MIN, mLimit.getMinFocalLength());
+            editor.putString(LIMIT_SUBJECT_DISTANCE_MAX, mLimit.getMaxSubjectDistance());
+            editor.putString(LIMIT_SUBJECT_DISTANCE_MIN, mLimit.getMinSubjectDistance());
+        }
 
         editor.commit();
     }
