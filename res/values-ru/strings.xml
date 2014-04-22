@@ -194,6 +194,7 @@
     <string name="error_notAllValuesFilled">Размеры сенсора и максимального разрешения должны быть указаны</string>
     <string name="error_cocNotFilled">Кружок нерезкости должен быть задан</string>
     <string name="error_availableOnlyInPaid">Эта функция доступна только в полной версии</string>
+    <string name="error_locationNotDetermine">Местоположение не определено. Пожалуйста, проверьте статус gps или выберите местоположение на карте</string>
     
     <string name="userCameraModel">Модель камеры</string>
     <string name="userCamera_label_coc">Кружок нерезкости</string>
