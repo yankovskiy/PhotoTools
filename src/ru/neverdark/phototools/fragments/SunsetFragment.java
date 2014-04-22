@@ -74,6 +74,15 @@ import com.luckycatlabs.sunrisesunset.dto.Location;
  * Fragment contains sunrise / sunset UI
  */
 public class SunsetFragment extends SherlockFragment {
+    private class LocationNotDetermineException extends Exception {
+
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 5446852956370468838L;
+
+    }
+
     /**
      * Thread for getting timeZone from Google Online Map If Internet connection
      * does not available we have use devices TimeZone
@@ -360,42 +369,53 @@ public class SunsetFragment extends SherlockFragment {
     private void calculateSunset() {
         Log.message("Enter");
 
-        if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
-            setDefaultTimeZone();
-            getCurrentLocation();
+        try {
+            if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
+                setDefaultTimeZone();
+                if (getCurrentLocation() == false) {
+                    throw new LocationNotDetermineException();
+                }
+            }
+
+            if (mTimeZone == null) {
+                showTimeZoneSelectionDialog();
+                return;
+            }
+
+            Location location = new Location(mLatitude, mLongitude);
+            SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(
+                    location, mTimeZone);
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(mYear, mMonth, mDay);
+
+            mOfficialSunrise = calculator.getOfficialSunriseForDate(calendar);
+            mOfficialSunset = calculator.getOfficialSunsetForDate(calendar);
+
+            mAstroSunrise = calculator.getAstronomicalSunriseForDate(calendar);
+            mAstroSunset = calculator.getAstronomicalSunsetForDate(calendar);
+
+            mNauticalSunrise = calculator.getNauticalSunriseForDate(calendar);
+            mNauticalSunset = calculator.getNauticalSunsetForDate(calendar);
+
+            mCivilSunrise = calculator.getCivilSunriseForDate(calendar);
+            mCivilSunset = calculator.getCivilSunsetForDate(calendar);
+
+            mIsVisibleResult = true;
+            setVisibleCalculculationResult();
+        } catch (LocationNotDetermineException e) {
+            ShowMessageDialog dialog = ShowMessageDialog.getInstance(mContext);
+            dialog.setMessages(R.string.error, R.string.error_locationNotDetermine);
+            dialog.show(getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
         }
-
-        if (mTimeZone == null) {
-            showTimeZoneSelectionDialog();
-            return;
-        }
-
-        Location location = new Location(mLatitude, mLongitude);
-        SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(
-                location, mTimeZone);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(mYear, mMonth, mDay);
-
-        mOfficialSunrise = calculator.getOfficialSunriseForDate(calendar);
-        mOfficialSunset = calculator.getOfficialSunsetForDate(calendar);
-
-        mAstroSunrise = calculator.getAstronomicalSunriseForDate(calendar);
-        mAstroSunset = calculator.getAstronomicalSunsetForDate(calendar);
-
-        mNauticalSunrise = calculator.getNauticalSunriseForDate(calendar);
-        mNauticalSunset = calculator.getNauticalSunsetForDate(calendar);
-
-        mCivilSunrise = calculator.getCivilSunriseForDate(calendar);
-        mCivilSunset = calculator.getCivilSunsetForDate(calendar);
-
-        mIsVisibleResult = true;
-        setVisibleCalculculationResult();
     }
 
     /**
      * Gets current location
+     * 
+     * @return true of location gets successful
      */
-    private void getCurrentLocation() {
+    private boolean getCurrentLocation() {
+        boolean success = false;
         Log.message("Enter");
 
         if (mGeoLocationService.canGetLocation()) {
@@ -403,7 +423,10 @@ public class SunsetFragment extends SherlockFragment {
             mLongitude = mGeoLocationService.getLongitude();
             Log.variable("mlatitude", String.valueOf(mLatitude));
             Log.variable("mlongitude", String.valueOf(mLongitude));
+            success = (mLatitude != 0.0 || mLongitude != 0.0);
         }
+
+        return success;
     }
 
     /**
