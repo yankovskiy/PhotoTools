@@ -56,6 +56,9 @@ public class DofLimitationDialog extends SherlockDialogFragment {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             if (mCallback != null) {
+                // TODO: контроль введенных значений 
+                // минимальные значения не должны быть больше, либо равны максимальным
+                // в случае ошибки показывать соответствующий диалог, текущий при этом не закрывать
                 storeWheelsData();
 
                 mCallback.onDofLimitationHandler(mLimitData);

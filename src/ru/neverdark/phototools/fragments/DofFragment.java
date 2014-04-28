@@ -16,6 +16,10 @@
 package ru.neverdark.phototools.fragments;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import kankan.wheel.widget.OnWheelScrollListener;
 import kankan.wheel.widget.WheelView;
 import kankan.wheel.widget.adapters.ArrayWheelAdapter;
@@ -95,6 +99,73 @@ public class DofFragment extends SherlockFragment {
         public void onDofLimitationHandler(Limit data) {
             // TODO handle changing limitation
             mLimit = data;
+            MinMaxValues minMaxAperture = MinMaxValues
+                    .getMinMax(mWheelAperture);
+            MinMaxValues minMaxFocalLength = MinMaxValues
+                    .getMinMax(mWheelFocalLength);
+            MinMaxValues minMaxSubjectDistance = MinMaxValues
+                    .getMinMax(mWheelSubjectDistance);
+
+            SavedData savedData = new SavedData();
+
+            if (minMaxAperture.getMinValue().equals(data.getMinAperture()) == false
+                    || minMaxAperture.getMaxValue().equals(
+                            data.getMaxAperture()) == false) {
+                savedData.setAperturePosition(0);
+            } else {
+                savedData.setAperturePosition(mWheelAperture.getCurrentItem());
+            }
+
+            if (minMaxFocalLength.getMinValue()
+                    .equals(data.getMinFocalLength()) == false
+                    || minMaxFocalLength.getMaxValue().equals(
+                            data.getMaxFocalLength()) == false) {
+                savedData.setFocalLengthPosition(0);
+            } else {
+                savedData.setFocalLengthPosition(mWheelFocalLength
+                        .getCurrentItem());
+            }
+
+            if (minMaxSubjectDistance.getMinValue().equals(
+                    data.getMinSubjectDistance()) == false
+                    || minMaxSubjectDistance.getMaxValue().equals(
+                            data.getMaxSubjectDistance()) == false) {
+                savedData.setSubjectDistancePosition(0);
+            } else {
+                savedData.setSubjectDistancePosition(mWheelSubjectDistance
+                        .getCurrentItem());
+            }
+
+            savedData
+                    .setMeasureUnitPosition(mWheelMeasureUnit.getCurrentItem());
+
+            arrayToWheels(savedData);
+
+            recalculate();
+        }
+    }
+
+    private static class MinMaxValues {
+        public String getMinValue() {
+            return mMinValue;
+        }
+
+        public String getMaxValue() {
+            return mMaxValue;
+        }
+
+        private String mMinValue;
+        private String mMaxValue;
+
+        public static MinMaxValues getMinMax(WheelView wheel) {
+            MinMaxValues minMax = new MinMaxValues();
+            int count = wheel.getViewAdapter().getItemsCount();
+            minMax.mMinValue = (String) wheel.getViewAdapter()
+                    .getItemByIndex(0);
+            minMax.mMaxValue = (String) wheel.getViewAdapter().getItemByIndex(
+                    count - 1);
+
+            return minMax;
         }
     }
 
@@ -109,14 +180,14 @@ public class DofFragment extends SherlockFragment {
     private final static String MEASURE_UNIT = "dof_measureUnit";
     private final static String NEAR_LIMIT = "dof_nearLimit";
     private final static String SUBJECT_DISTANCE = "dof_subjectDistance";
-    
+
     private static final String LIMIT_APERTURE_MIN = "dof_aperture_min_limit";
     private static final String LIMIT_APERTURE_MAX = "dof_aperture_max_limit";
     private static final String LIMIT_FOCAL_LENGTH_MIN = "dof_focal_length_min_limit";
     private static final String LIMIT_FOCAL_LENGTH_MAX = "dof_focal_length_max_limit";
     private static final String LIMIT_SUBJECT_DISTANCE_MIN = "dof_subject_distance_min_limit";
     private static final String LIMIT_SUBJECT_DISTANCE_MAX = "dof_subject_distance_max_limit";
-    
+
     private final static String TOTAL = "dof_total";
     private final static String VENDOR = "dof_vendor";
     private SherlockFragmentActivity mActivity;
@@ -151,21 +222,54 @@ public class DofFragment extends SherlockFragment {
 
     /**
      * Loads arrays to wheels
+     * 
+     * @param savedData
+     *            saved position for wheels
      */
-    private void arrayToWheels() {
+    private void arrayToWheels(SavedData savedData) {
         final String measureUnits[] = getResources().getStringArray(
                 R.array.dof_measureUnits);
         final int commonWheelSize = R.dimen.wheelTextSize;
         final int measureWheelTextSize = R.dimen.wheelMeasureUnitTextSize;
 
-        Common.setWheelAdapter(mActivity, mWheelAperture, Array.APERTURE_LIST,
+        List<String> apertureList;
+        List<String> focalLengthList;
+        List<String> subjectDistance;
+
+        if (mLimit != null) {
+            apertureList = Array.getValues(Array.APERTURE_LIST,
+                    mLimit.getMinAperture(), mLimit.getMaxAperture());
+            focalLengthList = Array.getValues(Array.FOCAL_LENGTH,
+                    mLimit.getMinFocalLength(), mLimit.getMaxFocalLength());
+            subjectDistance = Array.getValues(Array.SUBJECT_DISTANCE,
+                    mLimit.getMinSubjectDistance(),
+                    mLimit.getMaxSubjectDistance());
+        } else {
+            apertureList = new ArrayList<String>(
+                    Arrays.asList(Array.APERTURE_LIST));
+            focalLengthList = new ArrayList<String>(
+                    Arrays.asList(Array.FOCAL_LENGTH));
+            subjectDistance = new ArrayList<String>(
+                    Arrays.asList(Array.SUBJECT_DISTANCE));
+        }
+
+        Common.setWheelAdapter(mActivity, mWheelAperture, apertureList,
                 commonWheelSize, false);
-        Common.setWheelAdapter(mActivity, mWheelFocalLength,
-                Array.FOCAL_LENGTH, commonWheelSize, false);
+
+        Common.setWheelAdapter(mActivity, mWheelFocalLength, focalLengthList,
+                commonWheelSize, false);
+
         Common.setWheelAdapter(mActivity, mWheelMeasureUnit, measureUnits,
                 measureWheelTextSize, false);
+
         Common.setWheelAdapter(mActivity, mWheelSubjectDistance,
-                Array.SUBJECT_DISTANCE, commonWheelSize, false);
+                subjectDistance, commonWheelSize, false);
+
+        mWheelAperture.setCurrentItem(savedData.getAperturePosition());
+        mWheelFocalLength.setCurrentItem(savedData.getFocalLengthPosition());
+        mWheelMeasureUnit.setCurrentItem(savedData.getMeasureUnitPosition());
+        mWheelSubjectDistance.setCurrentItem(savedData
+                .getSubjectDistancePosition());
     }
 
     /**
@@ -209,7 +313,9 @@ public class DofFragment extends SherlockFragment {
      */
     private BigDecimal getAperture() {
         BigDecimal aperture = new BigDecimal(
-                Array.SCIENTIFIC_ARERTURES[mWheelAperture.getCurrentItem()]);
+                Array.SCIENTIFIC_ARERTURES[Array
+                        .getApertureIndex((String) mWheelAperture
+                                .getSelectedItem())]);
         Log.variable("aperture", aperture.toString());
         return aperture;
     }
@@ -284,33 +390,82 @@ public class DofFragment extends SherlockFragment {
         populateCameraByVendor();
     }
 
+    private class SavedData {
+        private int mAperturePosition;
+        private int mFocalLengthPosition;
+        private int mMeasureUnitPosition;
+        private int mSubjectDistancePosition;
+
+        public int getAperturePosition() {
+            return mAperturePosition;
+        }
+
+        public void setAperturePosition(int aperturePosition) {
+            this.mAperturePosition = aperturePosition;
+        }
+
+        public int getFocalLengthPosition() {
+            return mFocalLengthPosition;
+        }
+
+        public void setFocalLengthPosition(int focalLengthPosition) {
+            this.mFocalLengthPosition = focalLengthPosition;
+        }
+
+        public int getMeasureUnitPosition() {
+            return mMeasureUnitPosition;
+        }
+
+        public void setMeasureUnitPosition(int measureUnitPosition) {
+            this.mMeasureUnitPosition = measureUnitPosition;
+        }
+
+        public int getSubjectDistancePosition() {
+            return mSubjectDistancePosition;
+        }
+
+        public void setSubjectDistancePosition(int subjectDistancePosition) {
+            this.mSubjectDistancePosition = subjectDistancePosition;
+        }
+    }
+
     /**
      * Loads data from shared preferences
+     * 
+     * @return saved position for wheels
      */
-    private void loadSavedData() {
+    private SavedData loadSavedData() {
         Log.enter();
+        SavedData savedData = new SavedData();
+
         SharedPreferences prefs = getActivity().getPreferences(
                 Context.MODE_PRIVATE);
         mVendorId = prefs.getInt(VENDOR, 0);
         mCameraId = prefs.getInt(CAMERA, 0);
 
-        mWheelAperture.setCurrentItem(prefs.getInt(APERTURE, 0));
-        mWheelFocalLength.setCurrentItem(prefs.getInt(FOCAL_LENGTH, 0));
-        mWheelMeasureUnit.setCurrentItem(prefs.getInt(MEASURE_UNIT, 0));
-        mWheelSubjectDistance.setCurrentItem(prefs.getInt(SUBJECT_DISTANCE, 0));
+        savedData.setAperturePosition(prefs.getInt(APERTURE, 0));
+        savedData.setFocalLengthPosition(prefs.getInt(FOCAL_LENGTH, 0));
+        savedData.setMeasureUnitPosition(prefs.getInt(MEASURE_UNIT, 0));
+        savedData.setSubjectDistancePosition(prefs.getInt(SUBJECT_DISTANCE, 0));
 
         mMeasureResultUnit = prefs.getInt(MEASURE_RESULT_UNIT, Constants.METER);
-        
+
         String minAperture = prefs.getString(LIMIT_APERTURE_MIN, null);
         if (minAperture != null) {
             mLimit = new Limit();
             mLimit.setMinAperture(minAperture);
             mLimit.setMaxAperture(prefs.getString(LIMIT_APERTURE_MAX, null));
-            mLimit.setMaxSubjectDistance(prefs.getString(LIMIT_SUBJECT_DISTANCE_MAX, null));
-            mLimit.setMinSubjectDistance(prefs.getString(LIMIT_SUBJECT_DISTANCE_MIN, null));
-            mLimit.setMaxFocalLength(prefs.getString(LIMIT_FOCAL_LENGTH_MAX, null));
-            mLimit.setMinFocalLength(prefs.getString(LIMIT_FOCAL_LENGTH_MIN, null));
+            mLimit.setMaxSubjectDistance(prefs.getString(
+                    LIMIT_SUBJECT_DISTANCE_MAX, null));
+            mLimit.setMinSubjectDistance(prefs.getString(
+                    LIMIT_SUBJECT_DISTANCE_MIN, null));
+            mLimit.setMaxFocalLength(prefs.getString(LIMIT_FOCAL_LENGTH_MAX,
+                    null));
+            mLimit.setMinFocalLength(prefs.getString(LIMIT_FOCAL_LENGTH_MIN,
+                    null));
         }
+
+        return savedData;
     }
 
     /**
@@ -370,8 +525,8 @@ public class DofFragment extends SherlockFragment {
         bindObjectsToResources();
 
         setCyclicToWheels();
-        arrayToWheels();
-        loadSavedData();
+        SavedData savedData = loadSavedData();
+        arrayToWheels(savedData);
         loadCamerasDataToWheel();
         vendorSelectionHandler();
         measureButtonsHandler();
@@ -470,14 +625,16 @@ public class DofFragment extends SherlockFragment {
         editor.putString(HYPERFOCAL, mLabelHyperFocalResult.getText()
                 .toString());
         editor.putString(TOTAL, mLabelTotalResutl.getText().toString());
-        
+
         if (mLimit != null) {
             editor.putString(LIMIT_APERTURE_MAX, mLimit.getMaxAperture());
             editor.putString(LIMIT_APERTURE_MIN, mLimit.getMinAperture());
             editor.putString(LIMIT_FOCAL_LENGTH_MAX, mLimit.getMaxFocalLength());
             editor.putString(LIMIT_FOCAL_LENGTH_MIN, mLimit.getMinFocalLength());
-            editor.putString(LIMIT_SUBJECT_DISTANCE_MAX, mLimit.getMaxSubjectDistance());
-            editor.putString(LIMIT_SUBJECT_DISTANCE_MIN, mLimit.getMinSubjectDistance());
+            editor.putString(LIMIT_SUBJECT_DISTANCE_MAX,
+                    mLimit.getMaxSubjectDistance());
+            editor.putString(LIMIT_SUBJECT_DISTANCE_MIN,
+                    mLimit.getMinSubjectDistance());
         }
 
         editor.commit();

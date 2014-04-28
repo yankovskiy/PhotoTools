@@ -15,6 +15,10 @@
  ******************************************************************************/
 package ru.neverdark.phototools.utils.dofcalculator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Array {
     public final static double SCIENTIFIC_ARERTURES[] = { 1.0000000000,
             1.1224620483, 1.2599210499, 1.4142135624, 1.5874010520,
@@ -75,4 +79,27 @@ public class Array {
             "810", "820", "830", "840", "850", "860", "870", "880", "890",
             "900", "910", "920", "930", "940", "950", "960", "970", "980",
             "990", "1000" };
+    
+    public static final List<String> getValues(String array[], String minValue, String maxValue) {
+        List<String> list = new ArrayList<String>();
+        List<String> input = new ArrayList<String>(Arrays.asList(array));
+        int minIndex = input.indexOf(minValue);
+        int maxIndex = input.indexOf(maxValue);
+        
+        for (int index = minIndex; index <= maxIndex; index++) {
+            list.add(input.get(index));
+        }
+        
+        return list;
+    }
+    
+    public static final int getApertureIndex(String aperture) {
+        for (int index = 0; index < APERTURE_LIST.length; index++) {
+            if (APERTURE_LIST[index].equals(aperture)) {
+                return index;
+            }
+        }
+        
+        return -1;
+    }
 }
