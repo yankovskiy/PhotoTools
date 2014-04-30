@@ -26,10 +26,9 @@ import ru.neverdark.phototools.utils.dofcalculator.Array;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
@@ -51,17 +50,22 @@ public class DofLimitationDialog extends SherlockDialogFragment {
     /**
      * Listener for handle OK dialog button
      */
-    private class PositiveClickListener implements OnClickListener {
+    private class PositiveClickListener implements View.OnClickListener {
 
         @Override
-        public void onClick(DialogInterface dialog, int which) {
+        public void onClick(View v) {
             if (mCallback != null) {
-                // TODO: контроль введенных значений 
-                // минимальные значения не должны быть больше, либо равны максимальным
-                // в случае ошибки показывать соответствующий диалог, текущий при этом не закрывать
-                storeWheelsData();
-
-                mCallback.onDofLimitationHandler(mLimitData);
+                if (isDataValid()) {
+                    storeWheelsData();
+                    mCallback.onDofLimitationHandler(mLimitData);
+                    dismiss();
+                } else {
+                    ShowMessageDialog errorDialog = ShowMessageDialog
+                            .getInstance(mContext);
+                    errorDialog.setMessages(R.string.error,
+                            R.string.error_minMaxIncorrect);
+                    errorDialog.show(getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
+                }
             }
         }
     }
@@ -88,12 +92,12 @@ public class DofLimitationDialog extends SherlockDialogFragment {
     private Limit mLimitData;
 
     private WheelView mWheelMinAperture;
+
     private WheelView mWheelMaxAperture;
     private WheelView mWheelMinFocalLength;
     private WheelView mWheelMaxFocalLength;
     private WheelView mWheelMinSubjectDistance;
     private WheelView mWheelMaxSubjectDistance;
-
     private AlertDialog.Builder mAlertDialog;
 
     private View mView;
@@ -124,6 +128,27 @@ public class DofLimitationDialog extends SherlockDialogFragment {
         mAlertDialog = new AlertDialog.Builder(mContext);
         mAlertDialog.setView(mView);
         mAlertDialog.setTitle(R.string.dofLimitation);
+    }
+
+    /**
+     * Checks input data for valid values
+     * 
+     * @return true if input data is valid
+     */
+    private boolean isDataValid() {
+        boolean isValid = false;
+
+        int minAperture = mWheelMinAperture.getCurrentItem();
+        int maxAperture = mWheelMaxAperture.getCurrentItem();
+        int minFocalLength = mWheelMinFocalLength.getCurrentItem();
+        int maxFocalLength = mWheelMaxFocalLength.getCurrentItem();
+        int minSubjectDistance = mWheelMinSubjectDistance.getCurrentItem();
+        int maxSubjectDistance = mWheelMaxSubjectDistance.getCurrentItem();
+
+        isValid = ((minAperture < maxAperture)
+                && (minFocalLength < maxFocalLength) && (minSubjectDistance < maxSubjectDistance));
+
+        return isValid;
     }
 
     /**
@@ -182,6 +207,18 @@ public class DofLimitationDialog extends SherlockDialogFragment {
         return mAlertDialog.create();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        AlertDialog d = (AlertDialog) getDialog();
+        if (d != null) {
+            Button positiveButton = (Button) d
+                    .getButton(Dialog.BUTTON_POSITIVE);
+            positiveButton.setOnClickListener(new PositiveClickListener());
+        }
+    }
+
     /**
      * Sets callback object for handling OK button on the dialog
      * 
@@ -206,8 +243,7 @@ public class DofLimitationDialog extends SherlockDialogFragment {
      * Sets listeners for objects
      */
     private void setListeners() {
-        mAlertDialog.setPositiveButton(R.string.dialog_button_ok,
-                new PositiveClickListener());
+        mAlertDialog.setPositiveButton(R.string.dialog_button_ok, null);
     }
 
     /**
