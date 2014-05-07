@@ -127,7 +127,7 @@ public class EvLimitationDialog extends SherlockDialogFragment {
     private void loadWheelsData() {
         final int textSize = R.dimen.wheelTextSize;
         EvCalculator data = new EvCalculator();
-        data.initArrays(EvData.FULL_STOP);
+        data.initArrays(EvData.THIRD_STOP);
 
         final List<String> apertures = Arrays.asList(data.getApertureList());
         final List<String> isos = Arrays.asList(data.getIsoList());
