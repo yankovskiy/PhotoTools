@@ -32,6 +32,7 @@ import ru.neverdark.phototools.fragments.CameraManagementDialog.OnCameraManageme
 import ru.neverdark.phototools.fragments.DofLimitationDialog.OnDofLimitationListener;
 import ru.neverdark.phototools.ui.ImageOnTouchListener;
 import ru.neverdark.phototools.utils.Common;
+import ru.neverdark.phototools.utils.Common.MinMaxValues;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Limit;
 import ru.neverdark.phototools.utils.Log;
@@ -142,30 +143,6 @@ public class DofFragment extends SherlockFragment {
             arrayToWheels(savedData);
 
             recalculate();
-        }
-    }
-
-    private static class MinMaxValues {
-        public String getMinValue() {
-            return mMinValue;
-        }
-
-        public String getMaxValue() {
-            return mMaxValue;
-        }
-
-        private String mMinValue;
-        private String mMaxValue;
-
-        public static MinMaxValues getMinMax(WheelView wheel) {
-            MinMaxValues minMax = new MinMaxValues();
-            int count = wheel.getViewAdapter().getItemsCount();
-            minMax.mMinValue = (String) wheel.getViewAdapter()
-                    .getItemByIndex(0);
-            minMax.mMaxValue = (String) wheel.getViewAdapter().getItemByIndex(
-                    count - 1);
-
-            return minMax;
         }
     }
 

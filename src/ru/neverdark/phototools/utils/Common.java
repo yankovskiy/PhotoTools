@@ -17,12 +17,9 @@ package ru.neverdark.phototools.utils;
 
 import java.util.List;
 
-import ru.neverdark.phototools.R;
 import kankan.wheel.widget.WheelView;
 import kankan.wheel.widget.adapters.AbstractWheelTextAdapter;
 import kankan.wheel.widget.adapters.ArrayWheelAdapter;
-
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -31,7 +28,29 @@ import android.os.Build;
 import android.view.View;
 
 public class Common {
+    public static class MinMaxValues {
+        public String getMinValue() {
+            return mMinValue;
+        }
 
+        public String getMaxValue() {
+            return mMaxValue;
+        }
+
+        private String mMinValue;
+        private String mMaxValue;
+
+        public static MinMaxValues getMinMax(WheelView wheel) {
+            MinMaxValues minMax = new MinMaxValues();
+            int count = wheel.getViewAdapter().getItemsCount();
+            minMax.mMinValue = (String) wheel.getViewAdapter()
+                    .getItemByIndex(0);
+            minMax.mMaxValue = (String) wheel.getViewAdapter().getItemByIndex(
+                    count - 1);
+
+            return minMax;
+        }
+    }
     /**
      * Converts pixels to DP
      * 
