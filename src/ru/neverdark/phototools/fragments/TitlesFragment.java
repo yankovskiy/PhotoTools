@@ -106,8 +106,12 @@ public class TitlesFragment extends SherlockListFragment {
                 Constants.RATE_CHOICE));
         list.add(createMainMenuItem(getString(R.string.main_button_feedback),
                 Constants.FEEDBACK_CHOICE));
-        list.add(createMainMenuItem(getString(R.string.main_button_donate),
-                Constants.DONATE_CHOICE));
+        
+        if (Constants.PAID == false) {
+            list.add(createMainMenuItem(getString(R.string.main_button_donate),
+                    Constants.DONATE_CHOICE));
+        }
+        
         list.add(createMainMenuItem(getString(R.string.main_button_about),
                 Constants.ABOUT_CHOICE));
 
@@ -127,9 +131,9 @@ public class TitlesFragment extends SherlockListFragment {
      * Opens market detail application page
      */
     private void gotoMarket() {
+        String url = "market://details?id=".concat(mActivity.getPackageName());
         Intent marketIntent = new Intent(Intent.ACTION_VIEW);
-        marketIntent.setData(Uri
-                .parse("market://details?id=ru.neverdark.phototools"));
+        marketIntent.setData(Uri.parse(url));
         startActivity(marketIntent);
     }
 
