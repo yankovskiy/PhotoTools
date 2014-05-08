@@ -218,4 +218,8 @@
     
     <string name="evLimitation">Ev: limitation values</string>
     <string name="dofLimitation">DoF: limitation values</string>
+    
+    <string name="progress_dialog_title">Calculation</string>
+    <string name="progress_dialog_message">Calculation in progress. Please wait</string>
+    <string name="menu_item_search">Search</string>
 </resources>

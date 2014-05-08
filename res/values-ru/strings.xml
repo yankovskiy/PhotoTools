@@ -222,4 +222,8 @@
     <string name="dofLimitation">ГРИП: ограничение значений</string>
     
     <string name="mm">мм</string>
+    
+    <string name="progress_dialog_title">Расчет</string>
+    <string name="progress_dialog_message">Производятся вычисления. Пожалуйста, подождите</string>
+    <string name="menu_item_search">Поиск</string>
 </resources>

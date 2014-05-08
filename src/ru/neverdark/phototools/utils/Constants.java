@@ -21,6 +21,9 @@ package ru.neverdark.phototools.utils;
 public class Constants {
     public static final boolean PAID = true;
     
+    public static final int STATUS_SUCCESS = 0;
+    public static final int STATUS_FAIL = 1;
+    
     public static final String CURRENT_CHOICE = "currentChoice";
     public static final String SHOWN_INDEX = "detailsIndex";
     
