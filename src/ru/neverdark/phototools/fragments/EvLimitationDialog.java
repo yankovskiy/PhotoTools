@@ -27,10 +27,9 @@ import ru.neverdark.phototools.utils.evcalculator.EvData;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
@@ -51,14 +50,23 @@ public class EvLimitationDialog extends SherlockDialogFragment {
     /**
      * Listener for handle OK dialog button
      */
-    private class PositiveClickListener implements OnClickListener {
+    private class PositiveClickListener implements View.OnClickListener {
 
         @Override
-        public void onClick(DialogInterface dialog, int which) {
+        public void onClick(View v) {
             if (mCallback != null) {
-                storeWheelsData();
-
-                mCallback.onEvLimitationHandler(mLimitData);
+                if (isDataValid()) {
+                    storeWheelsData();
+                    mCallback.onEvLimitationHandler(mLimitData);
+                    dismiss();
+                } else {
+                    ShowMessageDialog errorDialog = ShowMessageDialog
+                            .getInstance(mContext);
+                    errorDialog.setMessages(R.string.error,
+                            R.string.error_minMaxIncorrect);
+                    errorDialog.show(getFragmentManager(),
+                            ShowMessageDialog.DIALOG_TAG);
+                }
             }
         }
     }
@@ -76,6 +84,17 @@ public class EvLimitationDialog extends SherlockDialogFragment {
         EvLimitationDialog dialog = new EvLimitationDialog();
         dialog.mContext = context;
         return dialog;
+    }
+
+    public boolean isDataValid() {
+        int minAperture = mWheelMinAperture.getCurrentItem();
+        int maxAperture = mWheelMaxAperture.getCurrentItem();
+        int minIso = mWheelMinIso.getCurrentItem();
+        int maxIso = mWheelMaxIso.getCurrentItem();
+        int minShutter = mWheelMinShutter.getCurrentItem();
+        int maxShutter = mWheelMaxShutter.getCurrentItem();
+
+        return ((minAperture < maxAperture) && (minIso < maxIso) && (minShutter < maxShutter));
     }
 
     private Context mContext;
@@ -197,8 +216,19 @@ public class EvLimitationDialog extends SherlockDialogFragment {
      * Sets listeners for objects
      */
     private void setListeners() {
-        mAlertDialog.setPositiveButton(R.string.dialog_button_ok,
-                new PositiveClickListener());
+        mAlertDialog.setPositiveButton(R.string.dialog_button_ok, null);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        AlertDialog d = (AlertDialog) getDialog();
+        if (d != null) {
+            Button positiveButton = (Button) d
+                    .getButton(Dialog.BUTTON_POSITIVE);
+            positiveButton.setOnClickListener(new PositiveClickListener());
+        }
     }
 
     /**

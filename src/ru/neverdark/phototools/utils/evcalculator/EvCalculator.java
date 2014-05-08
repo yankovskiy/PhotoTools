@@ -17,7 +17,6 @@
 package ru.neverdark.phototools.utils.evcalculator;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import ru.neverdark.phototools.utils.Log;
 
