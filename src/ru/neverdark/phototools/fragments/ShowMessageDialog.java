@@ -55,6 +55,7 @@ public class ShowMessageDialog extends SherlockDialogFragment {
     private int mMessageResourceId;
     private Context mContext;
     private AlertDialog.Builder mAlertDialog;
+    private String mMessage;
 
     /**
      * Creates alert dialog
@@ -62,7 +63,11 @@ public class ShowMessageDialog extends SherlockDialogFragment {
     private void createDialog() {
         mAlertDialog = new AlertDialog.Builder(mContext);
         mAlertDialog.setTitle(mTitleResourceId);
-        mAlertDialog.setMessage(mMessageResourceId);
+        if (mMessage == null) {
+            mAlertDialog.setMessage(mMessageResourceId);
+        } else {
+            mAlertDialog.setMessage(mMessage);
+        }
     }
 
     @Override
@@ -92,5 +97,10 @@ public class ShowMessageDialog extends SherlockDialogFragment {
     public void setMessages(int titleResourceId, int messageResourceId) {
         mTitleResourceId = titleResourceId;
         mMessageResourceId = messageResourceId;
+    }
+    
+    public void setMessages(int titleResourceId, String message) {
+        mTitleResourceId = titleResourceId;
+        mMessage = message;
     }
 }

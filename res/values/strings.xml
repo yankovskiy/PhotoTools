@@ -222,4 +222,7 @@
     <string name="progress_dialog_title">Calculation</string>
     <string name="progress_dialog_message">Calculation in progress. Please wait</string>
     <string name="menu_item_search">Search</string>
+    <string name="search_hint">Search by address</string>
+    <string name="error_geoCoderNotAvailable">Could not determine coordinates for specific address. Please, check your Internet connection</string>
+    <string name="error_notFound">No results found for address \"%s\"</string>
 </resources>

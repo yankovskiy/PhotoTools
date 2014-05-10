@@ -226,4 +226,7 @@
     <string name="progress_dialog_title">Расчет</string>
     <string name="progress_dialog_message">Производятся вычисления. Пожалуйста, подождите</string>
     <string name="menu_item_search">Поиск</string>
+    <string name="search_hint">Поиск по адресу</string>
+    <string name="error_geoCoderNotAvailable">Не удалось определить координаты по заданному адресу. Пожалуйста, проверьте ваше Internet-соединение</string>
+    <string name="error_notFound">Не найдено результатов для адреса \"%s\"</string>
 </resources>
