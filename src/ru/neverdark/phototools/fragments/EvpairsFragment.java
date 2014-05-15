@@ -28,6 +28,7 @@ import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.fragments.EvLimitationDialog.OnEvLimitationListener;
 import ru.neverdark.phototools.ui.ImageOnTouchListener;
 import ru.neverdark.phototools.utils.Common;
+import ru.neverdark.phototools.utils.Common.MinMaxValues;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Limit;
 import ru.neverdark.phototools.utils.Log;
@@ -54,9 +55,36 @@ public class EvpairsFragment extends SherlockFragment {
 
         @Override
         public void onEvLimitationHandler(Limit data) {
-            // TODO handle changing limitation
             setLimit(data);
+            MinMaxValues minMaxApertures = MinMaxValues.getMinMax(mWheel_currentAperture);
+            MinMaxValues minMaxIsos = MinMaxValues.getMinMax(mWheel_currentIso);
+            MinMaxValues minMaxShutters = MinMaxValues.getMinMax(mWheel_currentShutter);
 
+            SavedData savedData = getSelectedItemsPositions();
+            
+            if (minMaxApertures.getMinValue().equals(data.getMinAperture()) == false || 
+                    minMaxApertures.getMaxValue().equals(data.getMaxAperture()) == false) {
+                savedData.setCurrentAperturePosition(0);
+                savedData.setNewAperturePosition(0);
+            } 
+            
+            if (minMaxIsos.getMinValue().equals(data.getMinIso()) == false || 
+                    minMaxIsos.getMaxValue().equals(data.getMaxIso()) == false) {
+                savedData.setCurrentIsoPosition(0);
+                savedData.setNewIsoPosition(0);
+            }
+            
+            if (minMaxShutters.getMinValue().equals(data.getMinAperture()) == false ||
+                    minMaxShutters.getMaxValue().equals(data.getMaxShutter()) == false) {
+                savedData.setCurrentShutterPosition(0);
+                savedData.setNewShutterPosition(0);
+            }
+            
+            /*
+             * TODO добавить загрузку необходимого набора данных
+             * добавить позиционирование на новых элементах
+             * добавить перерасчет
+             */
         }
     }
 
@@ -284,6 +312,8 @@ public class EvpairsFragment extends SherlockFragment {
         savedData.setNewIsoPosition(prefs.getInt(NEW_ISO_INDEX, 0));
         savedData.setNewShutterPosition(prefs.getInt(NEW_SHUTTER_INDEX, 0));
         
+        // TODO добавить загрузку минимальных и максимальных значений в колесах
+        
         return savedData;
     }
 
@@ -376,6 +406,7 @@ public class EvpairsFragment extends SherlockFragment {
         editor.putInt(NEW_ISO_INDEX, savedData.getNewIsoPosition());
         editor.putInt(NEW_SHUTTER_INDEX, savedData.getNewShutterPosition());
 
+        // TODO добавить сохранение минимальных и максимальных значений в колесах
         editor.commit();
     }
 
