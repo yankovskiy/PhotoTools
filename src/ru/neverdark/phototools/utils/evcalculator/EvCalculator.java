@@ -13,6 +13,9 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *     
+ *     Modification:
+ *      Artem Yankovskiy (artemyankovskiy@gmail.com)
+ *     
  ******************************************************************************/
 package ru.neverdark.phototools.utils.evcalculator;
 
@@ -24,7 +27,7 @@ public class EvCalculator {
     public static final int CALCULATE_APERTURE = 0;
     public static final int CALCULATE_ISO = 1;
     public static final int CALCULATE_SHUTTER = 2;
-    
+
     private int mCalculateIndex;
     private int mCurrentAperturePosition;
     private int mCurrentIsoPosition;
@@ -50,7 +53,7 @@ public class EvCalculator {
         mNewAperturePosition = newAperturePosition;
         mNewIsoPostion = newIsoPostion;
         mNewShutterSpeedPosition = newShutterSpeedPosition;
-        
+
         mCalculateIndex = calculateIndex;
 
         Log.variable("mCurrentAperturePosition",
@@ -68,6 +71,23 @@ public class EvCalculator {
         mIndex = EvData.INVALID_INDEX;
     }
 
+    public void getPositions(String currentAperture, String currentIso,
+            String currentShutter, String newAperture, String newIso,
+            String newShutter, int calculateIndex) {
+        int currentAperturePosition = 0;
+        int currentIsoPosition = 0;
+        int currentShutterPosition = 0;
+        int newAperturePosition = 0;
+        int newIsoPosition = 0;
+        int newShutterPosition = 0;
+
+        // TODO дописать получение индексов по позиции в списках
+
+        prepare(currentAperturePosition, currentIsoPosition,
+                currentShutterPosition, newAperturePosition, newIsoPosition,
+                newShutterPosition, calculateIndex);
+    }
+
     /**
      * Inits local arrays by EV step
      * 
@@ -81,12 +101,25 @@ public class EvCalculator {
         SHUTTER_VALUE_LIST = EvData.getShutterValues(evStep);
     }
 
+    public void initArrays(final int evStep, int minApertureIndex,
+            int maxApertureIndex, int minIsoIndex, int maxIsoIndex,
+            int minShutterIndex, int maxShutterIndex) {
+        mStopDistribution = evStep;
+        APERTURE_VALUE_LIST = EvData.getApertureValues(mStopDistribution,
+                minApertureIndex, maxApertureIndex);
+        ISO_VALUE_LIST = EvData.getIsoValues(mStopDistribution, minIsoIndex,
+                maxIsoIndex);
+        SHUTTER_VALUE_LIST = EvData.getShutterValues(mStopDistribution,
+                minShutterIndex, maxShutterIndex);
+    }
+
     /**
      * Gets effective ISO values list to be displayed
      * 
      * @return array contains possible ISO values
      */
     public String[] getIsoList() {
+        // TODO переделать на список
         ArrayList<String> isos = new ArrayList<String>();
         int index = 0;
 
@@ -103,6 +136,7 @@ public class EvCalculator {
      * @return array contains possible aperture values
      */
     public String[] getApertureList() {
+        // TODO переделать на список
         ArrayList<String> apertures = new ArrayList<String>();
         int index = 0;
 
@@ -120,22 +154,24 @@ public class EvCalculator {
      * @return array contains possible shutter speed values
      */
     public String[] getShutterList() {
+        // TODO переделать на список
         ArrayList<String> shutters = new ArrayList<String>();
         int index = 0;
         String element = "";
 
         for (index = 0; index < SHUTTER_VALUE_LIST.length; index++) {
             if (SHUTTER_VALUE_LIST[index] < 1.0) {
-                element = new String("1/")
-                        .concat(cleanNumberToString(1 / SHUTTER_VALUE_LIST[index]))
+                element = new String("1/").concat(
+                        cleanNumberToString(1 / SHUTTER_VALUE_LIST[index]))
                         .concat(" sec");
             } else if (SHUTTER_VALUE_LIST[index] >= 1
                     && SHUTTER_VALUE_LIST[index] < 60.0) {
                 element = cleanNumberToString(SHUTTER_VALUE_LIST[index])
-                		.concat(" sec");
+                        .concat(" sec");
             } else if (SHUTTER_VALUE_LIST[index] >= 60.0) {
-                element = cleanNumberToString((Double) (SHUTTER_VALUE_LIST[index] / 60))
-                		.concat(" min");
+                element = cleanNumberToString(
+                        (Double) (SHUTTER_VALUE_LIST[index] / 60)).concat(
+                        " min");
             }
 
             shutters.add(element);
@@ -208,10 +244,11 @@ public class EvCalculator {
             wIndex += (int) Math
                     .round(((double) (expectedShutterStopDifference * mStopDistribution)));
             mIndex = mCurrentShutterSpeedPosition + wIndex;
-            
+
             Log.variable("mIndex", String.valueOf(mIndex));
-            Log.variable("SHUTTER_VALUE_LIST.length", String.valueOf(SHUTTER_VALUE_LIST.length));
-            
+            Log.variable("SHUTTER_VALUE_LIST.length",
+                    String.valueOf(SHUTTER_VALUE_LIST.length));
+
             if (mIndex > SHUTTER_VALUE_LIST.length) {
                 mIndex = SHUTTER_VALUE_LIST.length;
             }

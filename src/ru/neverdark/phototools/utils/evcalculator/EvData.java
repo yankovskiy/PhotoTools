@@ -13,6 +13,9 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *     
+ *     Modifications:
+ *      Artem Yankovskiy (artemyankovskiy@gmail.com)
+ *     
  ******************************************************************************/
 
 package ru.neverdark.phototools.utils.evcalculator;
@@ -143,5 +146,23 @@ public class EvData {
      */
     public static Double[] getApertureValues(int stopDistribution) {
         return getValues(APERTURE_VALUE_LIST, stopDistribution);
+    }
+
+    public static Double[] getApertureValues(int mStopDistribution,
+            int minApertureIndex, int maxApertureIndex) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public static Double[] getIsoValues(int mStopDistribution, int minIsoIndex,
+            int maxIsoIndex) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public static Double[] getShutterValues(int mStopDistribution,
+            int minShutterIndex, int maxShutterIndex) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
