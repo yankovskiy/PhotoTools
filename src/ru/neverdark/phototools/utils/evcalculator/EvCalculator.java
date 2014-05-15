@@ -20,6 +20,7 @@
 package ru.neverdark.phototools.utils.evcalculator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ru.neverdark.phototools.utils.Log;
 
@@ -116,28 +117,26 @@ public class EvCalculator {
     /**
      * Gets effective ISO values list to be displayed
      * 
-     * @return array contains possible ISO values
+     * @return list contains possible ISO values
      */
-    public String[] getIsoList() {
-        // TODO переделать на список
-        ArrayList<String> isos = new ArrayList<String>();
+    public List<String> getIsoList() {
+        List<String> isos = new ArrayList<String>();
         int index = 0;
 
         for (index = 0; index < ISO_VALUE_LIST.length; index++) {
             isos.add(cleanNumberToString(ISO_VALUE_LIST[index]));
         }
 
-        return isos.toArray(new String[isos.size()]);
+        return isos;
     }
 
     /**
      * Gets effective aperture values and formats them list to be displayed
      * 
-     * @return array contains possible aperture values
+     * @return list contains possible aperture values
      */
-    public String[] getApertureList() {
-        // TODO переделать на список
-        ArrayList<String> apertures = new ArrayList<String>();
+    public List<String> getApertureList() {
+        List<String> apertures = new ArrayList<String>();
         int index = 0;
 
         for (index = 0; index < APERTURE_VALUE_LIST.length; index++) {
@@ -145,17 +144,16 @@ public class EvCalculator {
                     .concat(cleanNumberToString(APERTURE_VALUE_LIST[index])));
         }
 
-        return apertures.toArray(new String[apertures.size()]);
+        return apertures;
     }
 
     /**
      * Gets effective shutter values list and formats them to be displayed
      * 
-     * @return array contains possible shutter speed values
+     * @return list contains possible shutter speed values
      */
-    public String[] getShutterList() {
-        // TODO переделать на список
-        ArrayList<String> shutters = new ArrayList<String>();
+    public List<String> getShutterList() {
+        List<String> shutters = new ArrayList<String>();
         int index = 0;
         String element = "";
 
@@ -177,7 +175,7 @@ public class EvCalculator {
             shutters.add(element);
         }
 
-        return shutters.toArray(new String[shutters.size()]);
+        return shutters;
     }
 
     /**

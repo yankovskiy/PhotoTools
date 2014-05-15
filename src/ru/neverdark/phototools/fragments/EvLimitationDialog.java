@@ -15,7 +15,6 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
-import java.util.Arrays;
 import java.util.List;
 
 import kankan.wheel.widget.WheelView;
@@ -148,9 +147,9 @@ public class EvLimitationDialog extends SherlockDialogFragment {
         EvCalculator data = new EvCalculator();
         data.initArrays(EvData.THIRD_STOP);
 
-        final List<String> apertures = Arrays.asList(data.getApertureList());
-        final List<String> isos = Arrays.asList(data.getIsoList());
-        final List<String> shutters = Arrays.asList(data.getShutterList());
+        final List<String> apertures = data.getApertureList();
+        final List<String> isos = data.getIsoList();
+        final List<String> shutters = data.getShutterList();
 
         Common.setWheelAdapter(mContext, mWheelMaxAperture, apertures,
                 textSize, false);
