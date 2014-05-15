@@ -164,21 +164,14 @@ public class EvLimitationDialog extends SherlockDialogFragment {
                 false);
 
         if (mLimitData != null) {
-            int minApertureIndex = apertures.indexOf(mLimitData
+            mWheelMinAperture.setCurrentItem(mLimitData
                     .getMinAperture());
-            int maxApertureIndex = apertures.indexOf(mLimitData
+            mWheelMaxAperture.setCurrentItem(mLimitData
                     .getMaxAperture());
-            int minIsoIndex = isos.indexOf(mLimitData.getMinIso());
-            int maxIsoIndex = isos.indexOf(mLimitData.getMaxIso());
-            int minShutterIndex = shutters.indexOf(mLimitData.getMinShutter());
-            int maxShutterIndex = shutters.indexOf(mLimitData.getMaxShutter());
-
-            mWheelMinAperture.setCurrentItem(minApertureIndex);
-            mWheelMaxAperture.setCurrentItem(maxApertureIndex);
-            mWheelMinIso.setCurrentItem(minIsoIndex);
-            mWheelMaxIso.setCurrentItem(maxIsoIndex);
-            mWheelMinShutter.setCurrentItem(minShutterIndex);
-            mWheelMaxShutter.setCurrentItem(maxShutterIndex);
+            mWheelMinIso.setCurrentItem(mLimitData.getMinIso());
+            mWheelMaxIso.setCurrentItem(mLimitData.getMaxIso());
+            mWheelMinShutter.setCurrentItem(mLimitData.getMinShutter());
+            mWheelMaxShutter.setCurrentItem(mLimitData.getMaxShutter());
         }
     }
 
@@ -239,11 +232,11 @@ public class EvLimitationDialog extends SherlockDialogFragment {
             mLimitData = new Limit();
         }
 
-        mLimitData.setMinAperture((String) mWheelMinAperture.getSelectedItem());
-        mLimitData.setMaxAperture((String) mWheelMaxAperture.getSelectedItem());
-        mLimitData.setMinIso((String) mWheelMinIso.getSelectedItem());
-        mLimitData.setMaxIso((String) mWheelMaxIso.getSelectedItem());
-        mLimitData.setMinShutter((String) mWheelMinShutter.getSelectedItem());
-        mLimitData.setMaxShutter((String) mWheelMaxShutter.getSelectedItem());
+        mLimitData.setMinAperture(mWheelMinAperture.getCurrentItem());
+        mLimitData.setMaxAperture(mWheelMaxAperture.getCurrentItem());
+        mLimitData.setMinIso(mWheelMinIso.getCurrentItem());
+        mLimitData.setMaxIso(mWheelMaxIso.getCurrentItem());
+        mLimitData.setMinShutter(mWheelMinShutter.getCurrentItem());
+        mLimitData.setMaxShutter(mWheelMaxShutter.getCurrentItem());
     }
 }

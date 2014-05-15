@@ -17,8 +17,12 @@ package ru.neverdark.phototools;
 
 import ru.neverdark.phototools.db.DbAdapter;
 import ru.neverdark.phototools.fragments.ConfirmCreateFragment;
+import ru.neverdark.phototools.fragments.ShowMessageDialog;
+import ru.neverdark.phototools.utils.AsyncGeoCoder;
+import ru.neverdark.phototools.utils.AsyncGeoCoder.OnGeoCoderListener;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -26,6 +30,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
+import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
@@ -38,6 +44,75 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapActivity extends SherlockFragmentActivity implements
         OnMapLongClickListener {
 
+    private class GeoCoderListener implements OnGeoCoderListener {
+
+        @Override
+        public void onGetResultFail() {
+            showErrorDialog(R.string.error_geoCoderNotAvailable);
+        }
+
+        @Override
+        public void onGetResultSuccess(LatLng coordinates, String searchString) {
+            if (coordinates != null) {
+
+                float zoom = mMap.getCameraPosition().zoom;
+
+                // move camera to saved position
+                CameraPosition currentPosition = new CameraPosition.Builder()
+                        .target(coordinates).zoom(zoom).build();
+                mMap.moveCamera(CameraUpdateFactory
+                        .newCameraPosition(currentPosition));
+            } else {
+                String errorMessage = String.format(
+                        getString(R.string.error_notFound), searchString);
+                showErrorDialog(errorMessage);
+            }
+        }
+
+    }
+
+    private class QueryTextListener implements OnQueryTextListener {
+
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            mMenuItemSearch.collapseActionView();
+            initSearchProcess(query);
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+    }
+
+    /**
+     * Inits process for searching coordinates by address
+     * 
+     * @param query
+     *            address for searching in GeoCoder
+     */
+    public void initSearchProcess(String query) {
+        AsyncGeoCoder geo = new AsyncGeoCoder(mContext);
+        geo.setSearchString(query);
+        geo.setCallback(new GeoCoderListener());
+        geo.execute();
+    }
+
+    private void showErrorDialog(String errorMessage) {
+        ShowMessageDialog dialog = ShowMessageDialog.getInstance(mContext);
+        dialog.setMessages(R.string.error, errorMessage);
+        dialog.show(getSupportFragmentManager(), ShowMessageDialog.DIALOG_TAG);
+    }
+
+    private void showErrorDialog(int resourceId) {
+        ShowMessageDialog dialog = ShowMessageDialog.getInstance(mContext);
+        dialog.setMessages(R.string.error, resourceId);
+        dialog.show(getSupportFragmentManager(), ShowMessageDialog.DIALOG_TAG);
+    }
+
     private GoogleMap mMap;
     private MenuItem mMenuItemDone;
     private Marker mMarker;
@@ -45,7 +120,8 @@ public class MapActivity extends SherlockFragmentActivity implements
     private int mAction;
     private long mRecordId;
     private String mLocationName;
-    private boolean isButtonVisible = false;
+    private Context mContext;
+    private MenuItem mMenuItemSearch;
 
     /**
      * Handles getting information from Confirmation dialog
@@ -123,14 +199,29 @@ public class MapActivity extends SherlockFragmentActivity implements
         setContentView(R.layout.activity_map);
 
         initMap();
+
+        mContext = this;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.enter();
+
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.map_actions, menu);
-        return super.onCreateOptionsMenu(menu);
+        mMenuItemSearch = menu.findItem(R.id.map_action_search);
+        mMenuItemDone = menu.findItem(R.id.map_button_done);
+        
+        if (Constants.PAID) {
+            SearchView mSearchView = new SearchView(mContext);
+            mSearchView.setQueryHint(getString(R.string.search_hint));
+            mSearchView.setOnQueryTextListener(new QueryTextListener());
+            mMenuItemSearch.setActionView(mSearchView);
+        } else {
+            mMenuItemSearch.setActionView(null);
+        }
+
+        return true;
     }
 
     @Override
@@ -159,18 +250,13 @@ public class MapActivity extends SherlockFragmentActivity implements
         case R.id.map_type_hybrid:
             mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
             return true;
+        case R.id.map_action_search:
+            if (Constants.PAID == false) {
+                showErrorDialog(R.string.error_availableOnlyInPaid);
+            }
+            break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        Log.enter();
-        mMenuItemDone = menu.findItem(R.id.map_button_done);
-        if (mMenuItemDone != null) {
-            setButtonVisible(isButtonVisible);
-        }
-        return true;
     }
 
     /**
@@ -182,8 +268,7 @@ public class MapActivity extends SherlockFragmentActivity implements
     private void saveDataToDatabase(String locationName) {
         Log.message("Enter");
 
-        DbAdapter dbAdapter = new DbAdapter(
-                getApplicationContext()).open();
+        DbAdapter dbAdapter = new DbAdapter(getApplicationContext()).open();
 
         if (mAction == Constants.LOCATION_ACTION_ADD) {
             mRecordId = dbAdapter.getLocations().createLocation(locationName,
@@ -204,13 +289,6 @@ public class MapActivity extends SherlockFragmentActivity implements
      */
     private void setButtonVisible(final boolean isVisible) {
         Log.message("Enter");
-        if (isVisible == true) {
-            mMenuItemDone.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM
-                    | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        } else {
-            mMenuItemDone.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        }
-        
         mMenuItemDone.setVisible(isVisible);
     }
 
@@ -226,8 +304,7 @@ public class MapActivity extends SherlockFragmentActivity implements
             mMap.clear();
         }
         mMarker = mMap.addMarker(new MarkerOptions().position(mMarkerPosition));
-        isButtonVisible = true;
-        invalidateOptionsMenu();
+        setButtonVisible(true);
     }
 
     /**

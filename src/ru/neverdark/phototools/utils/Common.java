@@ -17,9 +17,14 @@ package ru.neverdark.phototools.utils;
 
 import java.util.List;
 
+import ru.neverdark.phototools.fragments.ShowMessageDialog;
+import ru.neverdark.phototools.R;
 import kankan.wheel.widget.WheelView;
 import kankan.wheel.widget.adapters.AbstractWheelTextAdapter;
 import kankan.wheel.widget.adapters.ArrayWheelAdapter;
+
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -161,4 +166,18 @@ public class Common {
         wheel.setViewAdapter(adapter);
     }
 
+    /**
+     * Shows dialog "This feature available only in paid version"
+     * 
+     * @param context
+     *            application context
+     * @param fragment
+     *            fragment caller
+     */
+    public static void showOnlyInPaidDialog(Context context,
+            SherlockFragment fragment) {
+        ShowMessageDialog dialog = ShowMessageDialog.getInstance(context);
+        dialog.setMessages(R.string.error, R.string.error_availableOnlyInPaid);
+        dialog.show(fragment.getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
+    }
 }

@@ -16,7 +16,6 @@
 package ru.neverdark.phototools.utils.dofcalculator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Array {
@@ -80,14 +79,11 @@ public class Array {
             "900", "910", "920", "930", "940", "950", "960", "970", "980",
             "990", "1000" };
     
-    public static final List<String> getValues(String array[], String minValue, String maxValue) {
+    public static final List<String> getValues(String array[], int minIndex, int maxIndex) {
         List<String> list = new ArrayList<String>();
-        List<String> input = new ArrayList<String>(Arrays.asList(array));
-        int minIndex = input.indexOf(minValue);
-        int maxIndex = input.indexOf(maxValue);
         
         for (int index = minIndex; index <= maxIndex; index++) {
-            list.add(input.get(index));
+            list.add(array[index]);
         }
         
         return list;

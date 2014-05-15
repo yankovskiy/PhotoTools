@@ -98,7 +98,6 @@ public class DofFragment extends SherlockFragment {
     private class DofLimitationListener implements OnDofLimitationListener {
         @Override
         public void onDofLimitationHandler(Limit data) {
-            // TODO handle changing limitation
             mLimit = data;
             MinMaxValues minMaxAperture = MinMaxValues
                     .getMinMax(mWheelAperture);
@@ -109,28 +108,33 @@ public class DofFragment extends SherlockFragment {
 
             SavedData savedData = new SavedData();
 
-            if (minMaxAperture.getMinValue().equals(data.getMinAperture()) == false
-                    || minMaxAperture.getMaxValue().equals(
-                            data.getMaxAperture()) == false) {
+            String minAperture = Array.APERTURE_LIST[data.getMinAperture()];
+            String maxAperture = Array.APERTURE_LIST[data.getMaxAperture()];
+            String minFocal = Array.FOCAL_LENGTH[data.getMinFocalLength()];
+            String maxFocal = Array.FOCAL_LENGTH[data.getMaxFocalLength()];
+            String minSubjectDistance = Array.SUBJECT_DISTANCE[data
+                    .getMinSubjectDistance()];
+            String maxSubjectDistance = Array.SUBJECT_DISTANCE[data
+                    .getMaxSubjectDistance()];
+
+            if (minMaxAperture.getMinValue().equals(minAperture) == false
+                    || minMaxAperture.getMaxValue().equals(maxAperture) == false) {
                 savedData.setAperturePosition(0);
             } else {
                 savedData.setAperturePosition(mWheelAperture.getCurrentItem());
             }
 
-            if (minMaxFocalLength.getMinValue()
-                    .equals(data.getMinFocalLength()) == false
-                    || minMaxFocalLength.getMaxValue().equals(
-                            data.getMaxFocalLength()) == false) {
+            if (minMaxFocalLength.getMinValue().equals(minFocal) == false
+                    || minMaxFocalLength.getMaxValue().equals(maxFocal) == false) {
                 savedData.setFocalLengthPosition(0);
             } else {
                 savedData.setFocalLengthPosition(mWheelFocalLength
                         .getCurrentItem());
             }
 
-            if (minMaxSubjectDistance.getMinValue().equals(
-                    data.getMinSubjectDistance()) == false
+            if (minMaxSubjectDistance.getMinValue().equals(minSubjectDistance) == false
                     || minMaxSubjectDistance.getMaxValue().equals(
-                            data.getMaxSubjectDistance()) == false) {
+                            maxSubjectDistance) == false) {
                 savedData.setSubjectDistancePosition(0);
             } else {
                 savedData.setSubjectDistancePosition(mWheelSubjectDistance
@@ -158,6 +162,7 @@ public class DofFragment extends SherlockFragment {
     private final static String NEAR_LIMIT = "dof_nearLimit";
     private final static String SUBJECT_DISTANCE = "dof_subjectDistance";
 
+    private static final String IS_LIMIT_PRESENT = "dof_is_limit_present";
     private static final String LIMIT_APERTURE_MIN = "dof_aperture_min_limit";
     private static final String LIMIT_APERTURE_MAX = "dof_aperture_max_limit";
     private static final String LIMIT_FOCAL_LENGTH_MIN = "dof_focal_length_min_limit";
@@ -427,21 +432,17 @@ public class DofFragment extends SherlockFragment {
 
         mMeasureResultUnit = prefs.getInt(MEASURE_RESULT_UNIT, Constants.METER);
 
-        String minAperture = prefs.getString(LIMIT_APERTURE_MIN, null);
-        if (minAperture != null) {
+        if (prefs.getBoolean(IS_LIMIT_PRESENT, false)) {
             mLimit = new Limit();
-            mLimit.setMinAperture(minAperture);
-            mLimit.setMaxAperture(prefs.getString(LIMIT_APERTURE_MAX, null));
-            mLimit.setMaxSubjectDistance(prefs.getString(
-                    LIMIT_SUBJECT_DISTANCE_MAX, null));
-            mLimit.setMinSubjectDistance(prefs.getString(
-                    LIMIT_SUBJECT_DISTANCE_MIN, null));
-            mLimit.setMaxFocalLength(prefs.getString(LIMIT_FOCAL_LENGTH_MAX,
-                    null));
-            mLimit.setMinFocalLength(prefs.getString(LIMIT_FOCAL_LENGTH_MIN,
-                    null));
+            mLimit.setMinAperture(prefs.getInt(LIMIT_APERTURE_MIN, -1));
+            mLimit.setMaxAperture(prefs.getInt(LIMIT_APERTURE_MAX, -1));
+            mLimit.setMaxSubjectDistance(prefs.getInt(
+                    LIMIT_SUBJECT_DISTANCE_MAX, -1));
+            mLimit.setMinSubjectDistance(prefs.getInt(
+                    LIMIT_SUBJECT_DISTANCE_MIN, -1));
+            mLimit.setMaxFocalLength(prefs.getInt(LIMIT_FOCAL_LENGTH_MAX, -1));
+            mLimit.setMinFocalLength(prefs.getInt(LIMIT_FOCAL_LENGTH_MIN, -1));
         }
-
         return savedData;
     }
 
@@ -603,17 +604,19 @@ public class DofFragment extends SherlockFragment {
                 .toString());
         editor.putString(TOTAL, mLabelTotalResutl.getText().toString());
 
-        if (mLimit != null) {
-            editor.putString(LIMIT_APERTURE_MAX, mLimit.getMaxAperture());
-            editor.putString(LIMIT_APERTURE_MIN, mLimit.getMinAperture());
-            editor.putString(LIMIT_FOCAL_LENGTH_MAX, mLimit.getMaxFocalLength());
-            editor.putString(LIMIT_FOCAL_LENGTH_MIN, mLimit.getMinFocalLength());
-            editor.putString(LIMIT_SUBJECT_DISTANCE_MAX,
+        boolean isLimitPresent = (mLimit != null);
+        if (isLimitPresent) {
+            editor.putInt(LIMIT_APERTURE_MAX, mLimit.getMaxAperture());
+            editor.putInt(LIMIT_APERTURE_MIN, mLimit.getMinAperture());
+            editor.putInt(LIMIT_FOCAL_LENGTH_MAX, mLimit.getMaxFocalLength());
+            editor.putInt(LIMIT_FOCAL_LENGTH_MIN, mLimit.getMinFocalLength());
+            editor.putInt(LIMIT_SUBJECT_DISTANCE_MAX,
                     mLimit.getMaxSubjectDistance());
-            editor.putString(LIMIT_SUBJECT_DISTANCE_MIN,
+            editor.putInt(LIMIT_SUBJECT_DISTANCE_MIN,
                     mLimit.getMinSubjectDistance());
         }
 
+        editor.putBoolean(IS_LIMIT_PRESENT, isLimitPresent);
         editor.commit();
     }
 

@@ -19,7 +19,7 @@
     <item
         android:id="@+id/map_button_done"
         android:icon="@drawable/ic_action_done"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom|collapseActionView"
         android:title="@string/map_button_confirmSelection"
         android:visible="false">
     </item>
@@ -42,6 +42,13 @@
         android:id="@+id/map_type_hybrid"
         android:showAsAction="never"
         android:title="@string/map_menu_mapType_hybrid">
+    </item>
+    <item
+        android:id="@+id/map_action_search"
+        android:actionViewClass="com.actionbarsherlock.widget.SearchView"
+        android:icon="@drawable/ic_action_search"
+        android:showAsAction="ifRoom|collapseActionView"
+        android:title="@string/menu_item_search">
     </item>
 
 </menu>
