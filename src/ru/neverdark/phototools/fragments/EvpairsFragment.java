@@ -103,12 +103,15 @@ public class EvpairsFragment extends SherlockFragment {
 
     }
 
+    private boolean mIsLimit = false;
+    
     private static final String LIMIT_APERTURE_MIN = "ev_aperture_min_limit";
     private static final String LIMIT_APERTURE_MAX = "ev_aperture_max_limit";
     private static final String LIMIT_ISO_MIN = "ev_iso_min_limit";
     private static final String LIMIT_ISO_MAX = "ev_iso_max_limit";
     private static final String LIMIT_SHUTTER_MIN = "ev_shutter_min_limit";
     private static final String LIMIT_SHUTTER_MAX = "ev_shutter_max_limit";
+    private static final String IS_LIMIT = "ev_is_limit";
 
     
     private static final String CALCULATE_INDEX = "ev1_calculateIndex";
@@ -407,6 +410,7 @@ public class EvpairsFragment extends SherlockFragment {
         editor.putInt(NEW_SHUTTER_INDEX, savedData.getNewShutterPosition());
 
         // TODO добавить сохранение минимальных и максимальных значений в колесах
+        
         editor.commit();
     }
 
