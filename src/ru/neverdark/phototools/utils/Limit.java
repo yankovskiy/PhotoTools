@@ -16,79 +16,79 @@
 package ru.neverdark.phototools.utils;
 
 public class Limit {
-    private String mMinAperture;
-    private String mMaxAperture;
+    private int mMinAperture;
+    private int mMaxAperture;
     
-    private String mMinIso;
-    private String mMaxIso;
+    private int mMinIso;
+    private int mMaxIso;
     
-    private String mMinShutter;
-    private String mMaxShutter;
+    private int mMinShutter;
+    private int mMaxShutter;
     
-    private String mMinFocalLength;
-    private String mMaxFocalLength;
+    private int mMinFocalLength;
+    private int mMaxFocalLength;
     
-    private String mMinSubjectDistance;
-    private String mMaxSubjectDistance;
+    private int mMinSubjectDistance;
+    private int mMaxSubjectDistance;
     
-    public String getMinAperture() {
+    public int getMinAperture() {
         return mMinAperture;
     }
-    public void setMinAperture(String minAperture) {
+    public void setMinAperture(int minAperture) {
         this.mMinAperture = minAperture;
     }
-    public String getMaxAperture() {
+    public int getMaxAperture() {
         return mMaxAperture;
     }
-    public void setMaxAperture(String maxAperture) {
+    public void setMaxAperture(int maxAperture) {
         this.mMaxAperture = maxAperture;
     }
-    public String getMinIso() {
+    public int getMinIso() {
         return mMinIso;
     }
-    public void setMinIso(String minIso) {
+    public void setMinIso(int minIso) {
         this.mMinIso = minIso;
     }
-    public String getMaxIso() {
+    public int getMaxIso() {
         return mMaxIso;
     }
-    public void setMaxIso(String maxIso) {
+    public void setMaxIso(int maxIso) {
         this.mMaxIso = maxIso;
     }
-    public String getMinShutter() {
+    public int getMinShutter() {
         return mMinShutter;
     }
-    public void setMinShutter(String minShutter) {
+    public void setMinShutter(int minShutter) {
         this.mMinShutter = minShutter;
     }
-    public String getMaxShutter() {
+    public int getMaxShutter() {
         return mMaxShutter;
     }
-    public void setMaxShutter(String maxShutter) {
+    public void setMaxShutter(int maxShutter) {
         this.mMaxShutter = maxShutter;
     }
-    public String getMinFocalLength() {
+    public int getMinFocalLength() {
         return mMinFocalLength;
     }
-    public void setMinFocalLength(String minFocalLength) {
+    public void setMinFocalLength(int minFocalLength) {
         this.mMinFocalLength = minFocalLength;
     }
-    public String getMaxFocalLength() {
+    public int getMaxFocalLength() {
         return mMaxFocalLength;
     }
-    public void setMaxFocalLength(String maxFocalLength) {
+    public void setMaxFocalLength(int maxFocalLength) {
         this.mMaxFocalLength = maxFocalLength;
     }
-    public String getMinSubjectDistance() {
+    public int getMinSubjectDistance() {
         return mMinSubjectDistance;
     }
-    public void setMinSubjectDistance(String minSubjectDistance) {
+    public void setMinSubjectDistance(int minSubjectDistance) {
         this.mMinSubjectDistance = minSubjectDistance;
     }
-    public String getMaxSubjectDistance() {
+    public int getMaxSubjectDistance() {
         return mMaxSubjectDistance;
     }
-    public void setMaxSubjectDistance(String maxSubjectDistance) {
+    public void setMaxSubjectDistance(int maxSubjectDistance) {
         this.mMaxSubjectDistance = maxSubjectDistance;
     }
 }

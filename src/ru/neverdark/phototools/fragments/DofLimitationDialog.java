@@ -175,25 +175,18 @@ public class DofLimitationDialog extends SherlockDialogFragment {
                 subjectDistance, textSize, false);
 
         if (mLimitData != null) {
-            int minApertureIndex = apertures.indexOf(mLimitData
+            mWheelMinAperture.setCurrentItem(mLimitData
                     .getMinAperture());
-            int maxApertureIndex = apertures.indexOf(mLimitData
+            mWheelMaxAperture.setCurrentItem(mLimitData
                     .getMaxAperture());
-            int minFocalLengthIndex = focalLengths.indexOf(mLimitData
+            mWheelMinFocalLength.setCurrentItem(mLimitData
                     .getMinFocalLength());
-            int maxFocalLengthIndex = focalLengths.indexOf(mLimitData
+            mWheelMaxFocalLength.setCurrentItem(mLimitData
                     .getMaxFocalLength());
-            int minSubjectDistanceIndex = subjectDistance.indexOf(mLimitData
+            mWheelMinSubjectDistance.setCurrentItem(mLimitData
                     .getMinSubjectDistance());
-            int maxSubjectDistanceIndex = subjectDistance.indexOf(mLimitData
+            mWheelMaxSubjectDistance.setCurrentItem(mLimitData
                     .getMaxSubjectDistance());
-
-            mWheelMinAperture.setCurrentItem(minApertureIndex);
-            mWheelMaxAperture.setCurrentItem(maxApertureIndex);
-            mWheelMinFocalLength.setCurrentItem(minFocalLengthIndex);
-            mWheelMaxFocalLength.setCurrentItem(maxFocalLengthIndex);
-            mWheelMinSubjectDistance.setCurrentItem(minSubjectDistanceIndex);
-            mWheelMaxSubjectDistance.setCurrentItem(maxSubjectDistanceIndex);
         }
     }
 
@@ -254,15 +247,15 @@ public class DofLimitationDialog extends SherlockDialogFragment {
             mLimitData = new Limit();
         }
 
-        mLimitData.setMinAperture((String) mWheelMinAperture.getSelectedItem());
-        mLimitData.setMaxAperture((String) mWheelMaxAperture.getSelectedItem());
-        mLimitData.setMinFocalLength((String) mWheelMinFocalLength
-                .getSelectedItem());
-        mLimitData.setMaxFocalLength((String) mWheelMaxFocalLength
-                .getSelectedItem());
-        mLimitData.setMinSubjectDistance((String) mWheelMinSubjectDistance
-                .getSelectedItem());
-        mLimitData.setMaxSubjectDistance((String) mWheelMaxSubjectDistance
-                .getSelectedItem());
+        mLimitData.setMinAperture( mWheelMinAperture.getCurrentItem());
+        mLimitData.setMaxAperture( mWheelMaxAperture.getCurrentItem());
+        mLimitData.setMinFocalLength( mWheelMinFocalLength
+                .getCurrentItem());
+        mLimitData.setMaxFocalLength( mWheelMaxFocalLength
+                .getCurrentItem());
+        mLimitData.setMinSubjectDistance( mWheelMinSubjectDistance
+                .getCurrentItem());
+        mLimitData.setMaxSubjectDistance( mWheelMaxSubjectDistance
+                .getCurrentItem());
     }
 }
