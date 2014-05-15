@@ -18,6 +18,8 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
+import java.util.List;
+
 import kankan.wheel.widget.OnWheelScrollListener;
 import kankan.wheel.widget.WheelView;
 
@@ -56,35 +58,45 @@ public class EvpairsFragment extends SherlockFragment {
         @Override
         public void onEvLimitationHandler(Limit data) {
             setLimit(data);
-            MinMaxValues minMaxApertures = MinMaxValues.getMinMax(mWheel_currentAperture);
+            MinMaxValues minMaxApertures = MinMaxValues
+                    .getMinMax(mWheel_currentAperture);
             MinMaxValues minMaxIsos = MinMaxValues.getMinMax(mWheel_currentIso);
-            MinMaxValues minMaxShutters = MinMaxValues.getMinMax(mWheel_currentShutter);
+            MinMaxValues minMaxShutters = MinMaxValues
+                    .getMinMax(mWheel_currentShutter);
 
             SavedData savedData = getSelectedItemsPositions();
-            
-            if (minMaxApertures.getMinValue().equals(data.getMinAperture()) == false || 
-                    minMaxApertures.getMaxValue().equals(data.getMaxAperture()) == false) {
+            List<String> apertures = mEvCalculator.getApertureList();
+            List<String> isos = mEvCalculator.getIsoList();
+            List<String> shutters = mEvCalculator.getShutterList();
+
+            if (apertures.indexOf(minMaxApertures.getMinValue()) != data
+                    .getMinAperture()
+                    || apertures.indexOf(minMaxApertures.getMaxValue()) != data
+                            .getMaxAperture()) {
                 savedData.setCurrentAperturePosition(0);
                 savedData.setNewAperturePosition(0);
-            } 
-            
-            if (minMaxIsos.getMinValue().equals(data.getMinIso()) == false || 
-                    minMaxIsos.getMaxValue().equals(data.getMaxIso()) == false) {
+            }
+
+            if (isos.indexOf(minMaxIsos.getMinValue()) != data.getMinIso()
+                    || isos.indexOf(minMaxIsos.getMaxValue()) != data
+                            .getMaxIso()) {
                 savedData.setCurrentIsoPosition(0);
                 savedData.setNewIsoPosition(0);
             }
-            
-            if (minMaxShutters.getMinValue().equals(data.getMinAperture()) == false ||
-                    minMaxShutters.getMaxValue().equals(data.getMaxShutter()) == false) {
+
+            if (shutters.indexOf(minMaxShutters.getMinValue()) != data
+                    .getMinShutter()
+                    || shutters.indexOf(minMaxShutters.getMaxValue()) != data
+                            .getMaxShutter()) {
                 savedData.setCurrentShutterPosition(0);
                 savedData.setNewShutterPosition(0);
             }
-            
-            /*
-             * TODO добавить загрузку необходимого набора данных
-             * добавить позиционирование на новых элементах
-             * добавить перерасчет
-             */
+
+            mIsLimit = true;
+    
+            updateStep();
+            setOldWheelPositions(savedData);
+            recalculate();
         }
     }
 
@@ -104,16 +116,15 @@ public class EvpairsFragment extends SherlockFragment {
     }
 
     private boolean mIsLimit = false;
-    
+
     private static final String LIMIT_APERTURE_MIN = "ev_aperture_min_limit";
     private static final String LIMIT_APERTURE_MAX = "ev_aperture_max_limit";
     private static final String LIMIT_ISO_MIN = "ev_iso_min_limit";
     private static final String LIMIT_ISO_MAX = "ev_iso_max_limit";
     private static final String LIMIT_SHUTTER_MIN = "ev_shutter_min_limit";
     private static final String LIMIT_SHUTTER_MAX = "ev_shutter_max_limit";
-    private static final String IS_LIMIT = "ev_is_limit";
+    private static final String IS_LIMIT_PRESENT = "ev_is_limit_present";
 
-    
     private static final String CALCULATE_INDEX = "ev1_calculateIndex";
 
     private static final String NEW_APERTURE_INDEX = "ev1_newAperture";
@@ -129,18 +140,21 @@ public class EvpairsFragment extends SherlockFragment {
     private SherlockFragmentActivity mActivity;
 
     private int mCalculateIndex;
-    
+
     /**
      * Gets wheels index for calculates
+     * 
      * @return
      */
     private int getCalculateIndex() {
         return mCalculateIndex;
     }
-    
+
     /**
      * Sets wheels by index for calculation
-     * @param calculateIndex index of wheels
+     * 
+     * @param calculateIndex
+     *            index of wheels
      */
     private void setCalculateIndex(int calculateIndex) {
         mCalculateIndex = calculateIndex;
@@ -158,11 +172,11 @@ public class EvpairsFragment extends SherlockFragment {
     private ImageView mEvLimit;
 
     private int mStepIndex;
-    
+
     private void setStepIndex(int stepIndex) {
         mStepIndex = stepIndex;
     }
-    
+
     private int getStepIndex() {
         return mStepIndex;
     }
@@ -178,11 +192,11 @@ public class EvpairsFragment extends SherlockFragment {
     private WheelView mWheel_newShutter;
 
     private Limit mLimit;
-    
+
     private void setLimit(Limit limit) {
         mLimit = limit;
     }
-    
+
     private Limit getLimit() {
         return mLimit;
     }
@@ -234,15 +248,17 @@ public class EvpairsFragment extends SherlockFragment {
      */
     private SavedData getSelectedItemsPositions() {
         SavedData savedData = new SavedData();
-        
-        savedData.setCurrentAperturePosition(mWheel_currentAperture.getCurrentItem());
+
+        savedData.setCurrentAperturePosition(mWheel_currentAperture
+                .getCurrentItem());
         savedData.setCurrentIsoPosition(mWheel_currentIso.getCurrentItem());
-        savedData.setCurrentShutterPosition(mWheel_currentShutter.getCurrentItem());
+        savedData.setCurrentShutterPosition(mWheel_currentShutter
+                .getCurrentItem());
 
         savedData.setNewAperturePosition(mWheel_newAperture.getCurrentItem());
         savedData.setNewIsoPosition(mWheel_newIso.getCurrentItem());
         savedData.setNewShutterPosition(mWheel_newShutter.getCurrentItem());
-        
+
         return savedData;
     }
 
@@ -250,56 +266,68 @@ public class EvpairsFragment extends SherlockFragment {
         private int mCurrentAperturePosition;
         private int mCurrentIsoPosition;
         private int mCurrentShutterPosition;
-        
+
         private int mNewAperturePosition;
         private int mNewIsoPosition;
         private int mNewShutterPosition;
-        
+
         public int getCurrentAperturePosition() {
             return mCurrentAperturePosition;
         }
+
         public void setCurrentAperturePosition(int currentAperturePosition) {
             this.mCurrentAperturePosition = currentAperturePosition;
         }
+
         public int getCurrentIsoPosition() {
             return mCurrentIsoPosition;
         }
+
         public void setCurrentIsoPosition(int currentIsoPosition) {
             this.mCurrentIsoPosition = currentIsoPosition;
         }
+
         public int getCurrentShutterPosition() {
             return mCurrentShutterPosition;
         }
+
         public void setCurrentShutterPosition(int currentShutterPosition) {
             this.mCurrentShutterPosition = currentShutterPosition;
         }
+
         public int getNewAperturePosition() {
             return mNewAperturePosition;
         }
+
         public void setNewAperturePosition(int newAperturePosition) {
             this.mNewAperturePosition = newAperturePosition;
         }
+
         public int getNewIsoPosition() {
             return mNewIsoPosition;
         }
+
         public void setNewIsoPosition(int newIsoPosition) {
             this.mNewIsoPosition = newIsoPosition;
         }
+
         public int getNewShutterPosition() {
             return mNewShutterPosition;
         }
+
         public void setNewShutterPosition(int newShutterPosition) {
             this.mNewShutterPosition = newShutterPosition;
         }
     }
-    
+
     /**
      * Load saved values from shared prefs
+     * 
      * @return saved positions for wheels
      */
     private SavedData loadSavedData() {
         SavedData savedData = new SavedData();
-        
+
         SharedPreferences prefs = getActivity().getPreferences(
                 Context.MODE_PRIVATE);
 
@@ -307,22 +335,34 @@ public class EvpairsFragment extends SherlockFragment {
         setCalculateIndex(prefs.getInt(CALCULATE_INDEX,
                 EvCalculator.CALCULATE_SHUTTER));
 
-        savedData.setCurrentAperturePosition(prefs.getInt(CURRENT_APERTURE_INDEX, 0));
+        savedData.setCurrentAperturePosition(prefs.getInt(
+                CURRENT_APERTURE_INDEX, 0));
         savedData.setCurrentIsoPosition(prefs.getInt(CURRENT_ISO_INDEX, 0));
-        savedData.setCurrentShutterPosition(prefs.getInt(CURRENT_SHUTTER_INDEX, 0));
+        savedData.setCurrentShutterPosition(prefs.getInt(CURRENT_SHUTTER_INDEX,
+                0));
 
         savedData.setNewAperturePosition(prefs.getInt(NEW_APERTURE_INDEX, 0));
         savedData.setNewIsoPosition(prefs.getInt(NEW_ISO_INDEX, 0));
         savedData.setNewShutterPosition(prefs.getInt(NEW_SHUTTER_INDEX, 0));
-        
-        // TODO добавить загрузку минимальных и максимальных значений в колесах
-        
+
+        mIsLimit = prefs.getBoolean(IS_LIMIT_PRESENT, false);
+
+        if (mIsLimit) {
+            mLimit = new Limit();
+            mLimit.setMinAperture(prefs.getInt(LIMIT_APERTURE_MIN, -1));
+            mLimit.setMaxAperture(prefs.getInt(LIMIT_APERTURE_MAX, -1));
+            mLimit.setMinIso(prefs.getInt(LIMIT_ISO_MIN, -1));
+            mLimit.setMaxIso(prefs.getInt(LIMIT_ISO_MAX, -1));
+            mLimit.setMinShutter(prefs.getInt(LIMIT_SHUTTER_MIN, -1));
+            mLimit.setMaxShutter(prefs.getInt(LIMIT_SHUTTER_MAX, -1));
+        }
+
         return savedData;
     }
 
     private void lockCalculateWheel() {
         int calculateIndex = getCalculateIndex();
-        
+
         mWheel_newAperture
                 .setEnabled(calculateIndex != EvCalculator.CALCULATE_APERTURE);
         mWheel_newIso.setEnabled(calculateIndex != EvCalculator.CALCULATE_ISO);
@@ -372,9 +412,12 @@ public class EvpairsFragment extends SherlockFragment {
     private void recalculate() {
         SavedData savedData = getSelectedItemsPositions();
 
-        mEvCalculator.prepare(savedData.getCurrentAperturePosition(), savedData.getCurrentIsoPosition(),
-                savedData.getCurrentShutterPosition(), savedData.getNewAperturePosition(),
-                savedData.getNewIsoPosition(), savedData.getNewShutterPosition(), getCalculateIndex());
+        mEvCalculator.prepare(savedData.getCurrentAperturePosition(),
+                savedData.getCurrentIsoPosition(),
+                savedData.getCurrentShutterPosition(),
+                savedData.getNewAperturePosition(),
+                savedData.getNewIsoPosition(),
+                savedData.getNewShutterPosition(), getCalculateIndex());
 
         int index = mEvCalculator.calculate();
         boolean isError = false;
@@ -401,16 +444,28 @@ public class EvpairsFragment extends SherlockFragment {
         editor.putInt(STEP_INDEX, getStepIndex());
         editor.putInt(CALCULATE_INDEX, getCalculateIndex());
 
-        editor.putInt(CURRENT_APERTURE_INDEX, savedData.getCurrentAperturePosition());
+        editor.putInt(CURRENT_APERTURE_INDEX,
+                savedData.getCurrentAperturePosition());
         editor.putInt(CURRENT_ISO_INDEX, savedData.getCurrentIsoPosition());
-        editor.putInt(CURRENT_SHUTTER_INDEX, savedData.getCurrentShutterPosition());
+        editor.putInt(CURRENT_SHUTTER_INDEX,
+                savedData.getCurrentShutterPosition());
 
         editor.putInt(NEW_APERTURE_INDEX, savedData.getNewAperturePosition());
         editor.putInt(NEW_ISO_INDEX, savedData.getNewIsoPosition());
         editor.putInt(NEW_SHUTTER_INDEX, savedData.getNewShutterPosition());
 
-        // TODO добавить сохранение минимальных и максимальных значений в колесах
-        
+        mIsLimit = (getLimit() != null);
+        editor.putBoolean(IS_LIMIT_PRESENT, mIsLimit);
+
+        if (mIsLimit) {
+            editor.putInt(LIMIT_APERTURE_MIN, mLimit.getMinAperture());
+            editor.putInt(LIMIT_APERTURE_MAX, mLimit.getMaxAperture());
+            editor.putInt(LIMIT_ISO_MIN, mLimit.getMinIso());
+            editor.putInt(LIMIT_ISO_MAX, mLimit.getMaxIso());
+            editor.putInt(LIMIT_SHUTTER_MIN, mLimit.getMinShutter());
+            editor.putInt(LIMIT_SHUTTER_MAX, mLimit.getMaxShutter());
+        }
+
         editor.commit();
     }
 
@@ -534,9 +589,11 @@ public class EvpairsFragment extends SherlockFragment {
      * Sets old wheel positions
      */
     private void setOldWheelPositions(SavedData savedData) {
-        mWheel_currentAperture.setCurrentItem(savedData.getCurrentAperturePosition());
+        mWheel_currentAperture.setCurrentItem(savedData
+                .getCurrentAperturePosition());
         mWheel_currentIso.setCurrentItem(savedData.getCurrentIsoPosition());
-        mWheel_currentShutter.setCurrentItem(savedData.getCurrentShutterPosition());
+        mWheel_currentShutter.setCurrentItem(savedData
+                .getCurrentShutterPosition());
 
         mWheel_newAperture.setCurrentItem(savedData.getNewAperturePosition());
         mWheel_newIso.setCurrentItem(savedData.getNewIsoPosition());
@@ -594,7 +651,11 @@ public class EvpairsFragment extends SherlockFragment {
         Log.enter();
 
         final int textSize = R.dimen.wheelTextSize;
-        mEvCalculator.initArrays(getStepIndex());
+        if (mIsLimit) {
+            mEvCalculator.initArrays(getStepIndex(), getLimit());
+        } else {
+            mEvCalculator.initArrays(getStepIndex());
+        }
 
         Common.setWheelAdapter(mActivity, mWheel_currentAperture,
                 mEvCalculator.getApertureList(), textSize, false);

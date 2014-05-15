@@ -22,6 +22,7 @@ package ru.neverdark.phototools.utils.evcalculator;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.neverdark.phototools.utils.Limit;
 import ru.neverdark.phototools.utils.Log;
 
 public class EvCalculator {
@@ -72,23 +73,6 @@ public class EvCalculator {
         mIndex = EvData.INVALID_INDEX;
     }
 
-    public void getPositions(String currentAperture, String currentIso,
-            String currentShutter, String newAperture, String newIso,
-            String newShutter, int calculateIndex) {
-        int currentAperturePosition = 0;
-        int currentIsoPosition = 0;
-        int currentShutterPosition = 0;
-        int newAperturePosition = 0;
-        int newIsoPosition = 0;
-        int newShutterPosition = 0;
-
-        // TODO дописать получение индексов по позиции в списках
-
-        prepare(currentAperturePosition, currentIsoPosition,
-                currentShutterPosition, newAperturePosition, newIsoPosition,
-                newShutterPosition, calculateIndex);
-    }
-
     /**
      * Inits local arrays by EV step
      * 
@@ -102,13 +86,18 @@ public class EvCalculator {
         SHUTTER_VALUE_LIST = EvData.getShutterValues(evStep);
     }
 
-    public void initArrays(final int evStep, int minApertureIndex,
-            int maxApertureIndex, int minIsoIndex, int maxIsoIndex,
-            int minShutterIndex, int maxShutterIndex) {
+    public void initArrays(final int evStep, Limit limit) {
+        int minApertureIndex = limit.getMinAperture();
+        int maxApertureIndex = limit.getMaxAperture();
+        int minIsoIndex = limit.getMinIso();
+        int maxIsoIndex = limit.getMaxIso();
+        int minShutterIndex = limit.getMinShutter();
+        int maxShutterIndex = limit.getMaxShutter();
+        
         mStopDistribution = evStep;
         APERTURE_VALUE_LIST = EvData.getApertureValues(mStopDistribution,
                 minApertureIndex, maxApertureIndex);
-        ISO_VALUE_LIST = EvData.getIsoValues(mStopDistribution, minIsoIndex,
+        ISO_VALUE_LIST = EvData.getISOValues(mStopDistribution, minIsoIndex,
                 maxIsoIndex);
         SHUTTER_VALUE_LIST = EvData.getShutterValues(mStopDistribution,
                 minShutterIndex, maxShutterIndex);

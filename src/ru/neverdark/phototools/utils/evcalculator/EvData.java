@@ -22,6 +22,8 @@ package ru.neverdark.phototools.utils.evcalculator;
 
 import java.util.ArrayList;
 
+import ru.neverdark.phototools.utils.Log;
+
 public class EvData {
 
     public static final int FULL_STOP = 1;
@@ -68,54 +70,25 @@ public class EvData {
             1.4, 1.25, 1.2, 1.12, 1 };
 
     /**
-     * Defines whether or not the given index belongs to the chosen
-     * distribution.
+     * Extract Aperture values belonging to the given stop distribution.
      * 
-     * @param index
      * @param stopDistribution
-     * @return boolean
+     * @return Aperture values matching the chosen distribution.
      */
-    private static boolean selectValues(int index, int stopDistribution) {
-        boolean selection = false;
-        switch (stopDistribution) {
-        case FULL_STOP:
-            selection = (index % 4 == 0);
-            break;
-        case HALF_STOP:
-            selection = (index % 2 == 0);
-            break;
-        case THIRD_STOP:
-            selection = (index % 4 != 2);
-            break;
-        default:
-            selection = false;
-        }
-        
-        return selection;
+    public static Double[] getApertureValues(int stopDistribution) {
+        return getValues(APERTURE_VALUE_LIST, stopDistribution);
     }
 
-    /**
-     * Extracts from a full list of values the ones which belong to the given
-     * stop distribution.
-     * 
-     * @param listOfValues
-     * @param stopDistribution
-     * @return the subset of values contained in listOfValues which belong to
-     *         the chosen distribution.
-     */
-    private static Double[] getValues(double[] listOfValues,
-            int stopDistribution) {
-        ArrayList<Double> fullValues = new ArrayList<Double>();
-        int index;
-        int limit = listOfValues.length;
-        
-        for (index = 0; index < limit; index++) {
-            if (selectValues(index, stopDistribution)) {
-                fullValues.add(0, listOfValues[index]);
-            }
-        }
-        
-        return fullValues.toArray(new Double[fullValues.size()]);
+    public static Double[] getApertureValues(int stopDistribution,
+            int minApertureIndex, int maxApertureIndex) {
+        return getValues(APERTURE_VALUE_LIST, stopDistribution,
+                minApertureIndex, maxApertureIndex, true);
+    }
+
+    public static Double[] getISOValues(int stopDistribution, int minIsoIndex,
+            int maxIsoIndex) {
+        return getValues(ISO_VALUE_LIST, stopDistribution, minIsoIndex,
+                maxIsoIndex, false);
     }
 
     /**
@@ -138,31 +111,101 @@ public class EvData {
         return getValues(SHUTTER_VALUE_LIST, stopDistribution);
     }
 
-    /**
-     * Extract Aperture values belonging to the given stop distribution.
-     * 
-     * @param stopDistribution
-     * @return Aperture values matching the chosen distribution.
-     */
-    public static Double[] getApertureValues(int stopDistribution) {
-        return getValues(APERTURE_VALUE_LIST, stopDistribution);
-    }
-
-    public static Double[] getApertureValues(int mStopDistribution,
-            int minApertureIndex, int maxApertureIndex) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public static Double[] getIsoValues(int mStopDistribution, int minIsoIndex,
-            int maxIsoIndex) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public static Double[] getShutterValues(int mStopDistribution,
+    public static Double[] getShutterValues(int stopDistribution,
             int minShutterIndex, int maxShutterIndex) {
-        // TODO Auto-generated method stub
-        return null;
+        return getValues(SHUTTER_VALUE_LIST, stopDistribution, minShutterIndex,
+                maxShutterIndex, false);
+    }
+
+    /**
+     * Extracts from a full list of values the ones which belong to the given
+     * stop distribution.
+     * 
+     * @param listOfValues
+     * @param stopDistribution
+     * @return the subset of values contained in listOfValues which belong to
+     *         the chosen distribution.
+     */
+    private static Double[] getValues(double[] listOfValues,
+            int stopDistribution) {
+        ArrayList<Double> fullValues = new ArrayList<Double>();
+        int index;
+        int limit = listOfValues.length;
+
+        for (index = 0; index < limit; index++) {
+            if (selectValues(index, stopDistribution)) {
+                fullValues.add(0, listOfValues[index]);
+            }
+        }
+
+        return fullValues.toArray(new Double[fullValues.size()]);
+    }
+
+    private static Double[] getValues(double[] listOfValues,
+            int stopDistribution, int minIndex, int maxIndex, boolean isAperture) {
+        /*
+         * TODO Переделать, чтобы полученный массив сканировался от минимального
+         * значения до максимального по значению
+         */
+        Double[] values = getValues(listOfValues, stopDistribution);
+
+        ArrayList<Double> fullValues = new ArrayList<Double>();
+
+        if (stopDistribution == THIRD_STOP) {
+            for (int index = minIndex; index <= maxIndex; index++) {
+                fullValues.add(values[index]);
+            }
+        } else {
+            Double[] thirdValues = getValues(listOfValues, THIRD_STOP);
+
+            for (int index = 0; index < values.length; index++) {
+                /*
+                Log.variable("values[index]", String.valueOf(values[index]));
+                Log.variable("thirdValues[minIndex]", String.valueOf(thirdValues[minIndex]));
+                Log.variable("thirdValues[maxIndex]", String.valueOf(thirdValues[maxIndex]));
+                */
+                if (isAperture) {
+                    if (values[index] >= thirdValues[minIndex]
+                            && values[index] <= thirdValues[maxIndex]) {
+                        fullValues.add(values[index]);
+                    }
+                } else {
+                    if (values[index] <= thirdValues[minIndex]
+                            && values[index] >= thirdValues[maxIndex]) {
+                        fullValues.add(values[index]);
+                    }
+                }
+            }
+        }
+
+        Log.variable("Length = ", String.valueOf(fullValues.size()));
+        return fullValues.toArray(new Double[fullValues.size()]);
+    }
+
+    /**
+     * Defines whether or not the given index belongs to the chosen
+     * distribution.
+     * 
+     * @param index
+     * @param stopDistribution
+     * @return boolean
+     */
+    private static boolean selectValues(int index, int stopDistribution) {
+        boolean selection = false;
+        switch (stopDistribution) {
+        case FULL_STOP:
+            selection = (index % 4 == 0);
+            break;
+        case HALF_STOP:
+            selection = (index % 2 == 0);
+            break;
+        case THIRD_STOP:
+            selection = (index % 4 != 2);
+            break;
+        default:
+            selection = false;
+        }
+
+        return selection;
     }
 }
