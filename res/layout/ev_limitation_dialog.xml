@@ -25,7 +25,7 @@
         style="?android:attr/listSeparatorTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/limitation_minimum"
+        android:text="@string/limitation_maximum"
         android:textColor="@color/headear" />
 
     <LinearLayout
@@ -90,7 +90,7 @@
         style="?android:attr/listSeparatorTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/limitation_maximum"
+        android:text="@string/limitation_minimum"
         android:textColor="@color/headear" />
 
     <LinearLayout

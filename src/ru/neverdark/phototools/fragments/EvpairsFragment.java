@@ -18,8 +18,6 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
-import java.util.List;
-
 import kankan.wheel.widget.OnWheelScrollListener;
 import kankan.wheel.widget.WheelView;
 
@@ -30,7 +28,6 @@ import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.fragments.EvLimitationDialog.OnEvLimitationListener;
 import ru.neverdark.phototools.ui.ImageOnTouchListener;
 import ru.neverdark.phototools.utils.Common;
-import ru.neverdark.phototools.utils.Common.MinMaxValues;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Limit;
 import ru.neverdark.phototools.utils.Log;
@@ -58,40 +55,15 @@ public class EvpairsFragment extends SherlockFragment {
         @Override
         public void onEvLimitationHandler(Limit data) {
             setLimit(data);
-            MinMaxValues minMaxApertures = MinMaxValues
-                    .getMinMax(mWheel_currentAperture);
-            MinMaxValues minMaxIsos = MinMaxValues.getMinMax(mWheel_currentIso);
-            MinMaxValues minMaxShutters = MinMaxValues
-                    .getMinMax(mWheel_currentShutter);
-
-            SavedData savedData = getSelectedItemsPositions();
-            List<String> apertures = mEvCalculator.getApertureList();
-            List<String> isos = mEvCalculator.getIsoList();
-            List<String> shutters = mEvCalculator.getShutterList();
-
-            if (apertures.indexOf(minMaxApertures.getMinValue()) != data
-                    .getMinAperture()
-                    || apertures.indexOf(minMaxApertures.getMaxValue()) != data
-                            .getMaxAperture()) {
-                savedData.setCurrentAperturePosition(0);
-                savedData.setNewAperturePosition(0);
-            }
-
-            if (isos.indexOf(minMaxIsos.getMinValue()) != data.getMinIso()
-                    || isos.indexOf(minMaxIsos.getMaxValue()) != data
-                            .getMaxIso()) {
-                savedData.setCurrentIsoPosition(0);
-                savedData.setNewIsoPosition(0);
-            }
-
-            if (shutters.indexOf(minMaxShutters.getMinValue()) != data
-                    .getMinShutter()
-                    || shutters.indexOf(minMaxShutters.getMaxValue()) != data
-                            .getMaxShutter()) {
-                savedData.setCurrentShutterPosition(0);
-                savedData.setNewShutterPosition(0);
-            }
-
+            
+            SavedData savedData = new SavedData();
+            savedData.setCurrentAperturePosition(0);
+            savedData.setNewAperturePosition(0);
+            savedData.setCurrentIsoPosition(0);
+            savedData.setNewIsoPosition(0);
+            savedData.setCurrentShutterPosition(0);
+            savedData.setNewShutterPosition(0);
+            
             mIsLimit = true;
     
             updateStep();
