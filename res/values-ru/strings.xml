@@ -73,7 +73,7 @@
     
     <string name="main_button_about">О программе</string>
     <string name="main_button_dofcalc">ГРИП-калькулятор</string>
-    <string name="main_button_donate">Донат</string>
+    <string name="main_button_donate">Полная версия</string>
     <string name="main_button_evpairs">EV Пары</string>
     <string name="main_button_feedback">Обратная связь</string>
     <string name="main_button_rateMe">Оценить</string>
