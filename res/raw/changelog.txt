@@ -19,6 +19,10 @@
     </style>
   </head>
   <body>
+$ 0.10.1
+  % Version 0.10.1
+  _ 09.06.2014
+    * Added focal length
 $ 0.10
   % Version 0.10
   _ 21.05.2014
