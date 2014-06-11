@@ -206,7 +206,7 @@ public class EvCalculator {
             mIndex = mCurrentAperturePosition + wIndex;
 
             if (mIndex > APERTURE_VALUE_LIST.length) {
-                mIndex = APERTURE_VALUE_LIST.length;
+                mIndex = EvData.INVALID_INDEX;
             }
         } else if (mCalculateIndex == CALCULATE_ISO) {
             double apertureStopDifference = calculateApertureDifference();
@@ -219,7 +219,7 @@ public class EvCalculator {
             mIndex = mCurrentIsoPosition + wIndex;
 
             if (mIndex > ISO_VALUE_LIST.length) {
-                mIndex = ISO_VALUE_LIST.length;
+                mIndex = EvData.INVALID_INDEX;
             }
 
         } else if (mCalculateIndex == CALCULATE_SHUTTER) {
@@ -237,7 +237,7 @@ public class EvCalculator {
                     String.valueOf(SHUTTER_VALUE_LIST.length));
 
             if (mIndex > SHUTTER_VALUE_LIST.length) {
-                mIndex = SHUTTER_VALUE_LIST.length;
+                mIndex = EvData.INVALID_INDEX;
             }
         }
 
