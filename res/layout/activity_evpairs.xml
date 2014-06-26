@@ -26,7 +26,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content" 
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/ev_label_step"
@@ -36,6 +37,14 @@
             android:text="@string/evpairs_label_step"
             android:textColor="@color/headear" />
 
+                <ImageView
+                    android:id="@+id/ev_compensation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/ev_limitation"
+                    android:paddingRight="10dp"
+                    android:src="@drawable/ic_action_ev_compensation" />
+        
         <ImageView
             android:id="@+id/ev_limitation"
             android:layout_width="wrap_content"

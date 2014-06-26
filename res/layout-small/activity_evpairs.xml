@@ -40,6 +40,15 @@
                 android:layout_height="wrap_content"
                 android:text="@string/evpairs_label_step"
                 android:textColor="@color/headear" />
+            
+                    
+                       <ImageView
+            android:id="@+id/ev_compensation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_ev_compensation"
+            android:paddingRight="10dp"
+            android:layout_toLeftOf="@id/ev_limitation"/>
 
             <ImageView
                 android:id="@+id/ev_limitation"

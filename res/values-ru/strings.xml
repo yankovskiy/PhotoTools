@@ -229,4 +229,6 @@
     <string name="search_hint">Поиск по адресу</string>
     <string name="error_geoCoderNotAvailable">Не удалось определить координаты по заданному адресу. Пожалуйста, проверьте ваше Internet-соединение</string>
     <string name="error_notFound">Не найдено результатов для адреса \"%s\"</string>
+    
+    <string name="evCompensation_title">Компенсация экспозиции</string>
 </resources>
