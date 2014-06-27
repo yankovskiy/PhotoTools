@@ -25,6 +25,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.fragments.EvCompensationDialog.OnEvCompensationListener;
 import ru.neverdark.phototools.fragments.EvLimitationDialog.OnEvLimitationListener;
 import ru.neverdark.phototools.ui.ImageOnTouchListener;
 import ru.neverdark.phototools.utils.Common;
@@ -47,6 +48,16 @@ import android.widget.TextView;
  * Fragment contains EV Pairs calculator UI
  */
 public class EvpairsFragment extends SherlockFragment {
+    private class EvCompensationListener implements OnEvCompensationListener {
+
+        @Override
+        public void onEvCompensationHandler(int compensationIndex) {
+            // TODO Auto-generated method stub
+
+        }
+
+    }
+
     /**
      * Listener for OK button in the DofLimitationDialog
      */
@@ -142,6 +153,7 @@ public class EvpairsFragment extends SherlockFragment {
     private TextView mLabelStepThird;
 
     private ImageView mEvLimit;
+    private ImageView mEvCompensation;
 
     private int mStepIndex;
 
@@ -200,6 +212,7 @@ public class EvpairsFragment extends SherlockFragment {
         mLabelShutter = (TextView) mView.findViewById(R.id.ev_label_newShutter);
 
         mEvLimit = (ImageView) mView.findViewById(R.id.ev_limitation);
+        mEvCompensation = (ImageView) mView.findViewById(R.id.ev_compensation);
 
         mActivity = getSherlockActivity();
     }
@@ -499,6 +512,9 @@ public class EvpairsFragment extends SherlockFragment {
                 case R.id.ev_limitation:
                     showLimitationDialog();
                     break;
+                case R.id.ev_compensation:
+                    showEvCompensationDialog();
+                    break;
                 }
             }
         };
@@ -513,6 +529,17 @@ public class EvpairsFragment extends SherlockFragment {
 
         mEvLimit.setOnClickListener(clickListener);
         mEvLimit.setOnTouchListener(new ImageOnTouchListener());
+        
+        mEvCompensation.setOnClickListener(clickListener);
+        mEvCompensation.setOnTouchListener(new ImageOnTouchListener());
+    }
+
+    private void showEvCompensationDialog() {
+        EvCompensationDialog dialog = EvCompensationDialog.getInstance(mActivity);
+        dialog.setCallback(new EvCompensationListener());
+        dialog.setStep(getStepIndex());
+        // TODO добавить передачу индекса коррекции
+        dialog.show(getFragmentManager(), EvCompensationDialog.DIALOG_TAG);
     }
 
     /**

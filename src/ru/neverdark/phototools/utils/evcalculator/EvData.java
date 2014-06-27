@@ -31,6 +31,21 @@ public class EvData {
     public static final int THIRD_STOP = 3;
     public static final int INVALID_INDEX = -100;
 
+    // TODO модицифицировать таблицу для отображения "+" и "EV"
+    /**
+     * Table containing all possible exposure compensation values.
+     */
+    private static final String EV_COMPENSATION_LIST[] = { "-10", "-9 ⅔",
+            "-9 ½", "-9 ⅓", "-9", "-8 ⅔", "-8 ½", "-8 ⅓", "-8", "-7 ⅔", "-7 ½",
+            "-7 ⅓", "-7", "-6 ⅔", "-6 ½", "-6 ⅓", "-6", "-5 ⅔", "-5 ½", "-5 ⅓",
+            "-5", "-4 ⅔", "-4 ½", "-4 ⅓", "-4", "-3 ⅔", "-3 ½", "-3 ⅓", "-3",
+            "-2 ⅔", "-2 ½", "-2 ⅓", "-2", "-1 ⅔", "-1 ½", "-1 ⅓", "-1", "-⅔",
+            "-½", "-⅓", "0", "⅓", "½", "⅔", "1", "1 ⅓", "1 ½", "1 ⅔",
+            "2", "2 ⅓", "2 ½", "2 ⅔", "3", "3 ⅓", "3 ½", "3 ⅔", "4", "4 ⅓",
+            "4 ½", "4 ⅔", "5", "5 ⅓", "5 ½", "5 ⅔", "6", "6 ⅓", "6 ½", "6 ⅔",
+            "7", "7 ⅓", "7 ½", "7 ⅔", "8", "8 ⅓", "8 ½", "8 ⅔", "9", "9 ⅓",
+            "9 ½", "9 ⅔", "10" };
+
     /**
      * Table containing all possible ISO values.
      */
@@ -83,6 +98,10 @@ public class EvData {
             int minApertureIndex, int maxApertureIndex) {
         return getValues(APERTURE_VALUE_LIST, stopDistribution,
                 minApertureIndex, maxApertureIndex, true);
+    }
+
+    public static String[] getEvCompensationValues(int stopDistribution) {
+        return getValues(EV_COMPENSATION_LIST, stopDistribution);
     }
 
     public static Double[] getISOValues(int stopDistribution, int minIsoIndex,
@@ -141,6 +160,21 @@ public class EvData {
         return fullValues.toArray(new Double[fullValues.size()]);
     }
 
+    private static String[] getValues(String[] listOfValues,
+            int stopDistribution) {
+        ArrayList<String> fullValues = new ArrayList<String>();
+        int index;
+        int limit = listOfValues.length;
+
+        for (index = 0; index < limit; index++) {
+            if (selectValues(index, stopDistribution)) {
+                fullValues.add(listOfValues[index]);
+            }
+        }
+
+        return fullValues.toArray(new String[fullValues.size()]);
+    }
+
     private static Double[] getValues(double[] listOfValues,
             int stopDistribution, int minIndex, int maxIndex, boolean isAperture) {
         /*
@@ -160,10 +194,12 @@ public class EvData {
 
             for (int index = 0; index < values.length; index++) {
                 /*
-                Log.variable("values[index]", String.valueOf(values[index]));
-                Log.variable("thirdValues[minIndex]", String.valueOf(thirdValues[minIndex]));
-                Log.variable("thirdValues[maxIndex]", String.valueOf(thirdValues[maxIndex]));
-                */
+                 * Log.variable("values[index]", String.valueOf(values[index]));
+                 * Log.variable("thirdValues[minIndex]",
+                 * String.valueOf(thirdValues[minIndex]));
+                 * Log.variable("thirdValues[maxIndex]",
+                 * String.valueOf(thirdValues[maxIndex]));
+                 */
                 if (isAperture) {
                     if (values[index] >= thirdValues[minIndex]
                             && values[index] <= thirdValues[maxIndex]) {
