@@ -31,20 +31,22 @@ public class EvData {
     public static final int THIRD_STOP = 3;
     public static final int INVALID_INDEX = -100;
 
-    // TODO модицифицировать таблицу для отображения "+" и "EV"
     /**
      * Table containing all possible exposure compensation values.
      */
-    private static final String EV_COMPENSATION_LIST[] = { "-10", "-9 ⅔",
-            "-9 ½", "-9 ⅓", "-9", "-8 ⅔", "-8 ½", "-8 ⅓", "-8", "-7 ⅔", "-7 ½",
-            "-7 ⅓", "-7", "-6 ⅔", "-6 ½", "-6 ⅓", "-6", "-5 ⅔", "-5 ½", "-5 ⅓",
-            "-5", "-4 ⅔", "-4 ½", "-4 ⅓", "-4", "-3 ⅔", "-3 ½", "-3 ⅓", "-3",
-            "-2 ⅔", "-2 ½", "-2 ⅓", "-2", "-1 ⅔", "-1 ½", "-1 ⅓", "-1", "-⅔",
-            "-½", "-⅓", "0", "⅓", "½", "⅔", "1", "1 ⅓", "1 ½", "1 ⅔",
-            "2", "2 ⅓", "2 ½", "2 ⅔", "3", "3 ⅓", "3 ½", "3 ⅔", "4", "4 ⅓",
-            "4 ½", "4 ⅔", "5", "5 ⅓", "5 ½", "5 ⅔", "6", "6 ⅓", "6 ½", "6 ⅔",
-            "7", "7 ⅓", "7 ½", "7 ⅔", "8", "8 ⅓", "8 ½", "8 ⅔", "9", "9 ⅓",
-            "9 ½", "9 ⅔", "10" };
+    private static final String EV_COMPENSATION_LIST[] = { "-10 EV", "-9 ⅔ EV",
+            "-9 ½ EV", "-9 ⅓ EV", "-9 EV", "-8 ⅔ EV", "-8 ½ EV", "-8 ⅓ EV",
+            "-8 EV", "-7 ⅔ EV", "-7 ½ EV", "-7 ⅓ EV", "-7 EV", "-6 ⅔ EV",
+            "-6 ½ EV", "-6 ⅓ EV", "-6 EV", "-5 ⅔ EV", "-5 ½ EV", "-5 ⅓ EV",
+            "-5 EV", "-4 ⅔ EV", "-4 ½ EV", "-4 ⅓ EV", "-4 EV", "-3 ⅔ EV",
+            "-3 ½ EV", "-3 ⅓ EV", "-3 EV", "-2 ⅔ EV", "-2 ½ EV", "-2 ⅓ EV",
+            "-2 EV", "-1 ⅔ EV", "-1 ½ EV", "-1 ⅓ EV", "-1 EV", "-⅔ EV",
+            "-½ EV", "-⅓ EV", "0 EV", "+⅓ EV", "+½ EV", "+⅔ EV", "+1 EV", "+1 ⅓ EV",
+            "+1 ½ EV", "+1 ⅔ EV", "+2 EV", "+2 ⅓ EV", "+2 ½ EV", "+2 ⅔ EV", "+3 EV",
+            "+3 ⅓ EV", "+3 ½ EV", "+3 ⅔ EV", "+4 EV", "+4 ⅓ EV", "+4 ½ EV", "+4 ⅔ EV",
+            "+5 EV", "+5 ⅓ EV", "+5 ½ EV", "+5 ⅔ EV", "+6 EV", "+6 ⅓ EV", "+6 ½ EV",
+            "+6 ⅔ EV", "+7 EV", "+7 ⅓ EV", "+7 ½ EV", "+7 ⅔ EV", "+8 EV", "+8 ⅓ EV",
+            "+8 ½ EV", "+8 ⅔ EV", "+9 EV", "+9 ⅓ EV", "+9 ½ EV", "+9 ⅔ EV", "+10 EV" };
 
     /**
      * Table containing all possible ISO values.
@@ -177,10 +179,6 @@ public class EvData {
 
     private static Double[] getValues(double[] listOfValues,
             int stopDistribution, int minIndex, int maxIndex, boolean isAperture) {
-        /*
-         * TODO Переделать, чтобы полученный массив сканировался от минимального
-         * значения до максимального по значению
-         */
         Double[] values = getValues(listOfValues, stopDistribution);
 
         ArrayList<Double> fullValues = new ArrayList<Double>();
@@ -193,13 +191,6 @@ public class EvData {
             Double[] thirdValues = getValues(listOfValues, THIRD_STOP);
 
             for (int index = 0; index < values.length; index++) {
-                /*
-                 * Log.variable("values[index]", String.valueOf(values[index]));
-                 * Log.variable("thirdValues[minIndex]",
-                 * String.valueOf(thirdValues[minIndex]));
-                 * Log.variable("thirdValues[maxIndex]",
-                 * String.valueOf(thirdValues[maxIndex]));
-                 */
                 if (isAperture) {
                     if (values[index] >= thirdValues[minIndex]
                             && values[index] <= thirdValues[maxIndex]) {

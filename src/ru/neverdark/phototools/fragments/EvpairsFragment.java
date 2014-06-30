@@ -51,9 +51,9 @@ public class EvpairsFragment extends SherlockFragment {
     private class EvCompensationListener implements OnEvCompensationListener {
 
         @Override
-        public void onEvCompensationHandler(int compensationIndex) {
-            // TODO Auto-generated method stub
-
+        public void onEvCompensationHandler(int compensationShift) {
+            setEvCompensationShift(compensationShift);
+            recalculate();
         }
 
     }
@@ -92,7 +92,6 @@ public class EvpairsFragment extends SherlockFragment {
 
         @Override
         public void onScrollingStarted(WheelView wheel) {
-            // TODO Auto-generated method stub
 
         }
 
@@ -115,6 +114,8 @@ public class EvpairsFragment extends SherlockFragment {
     private static final String NEW_SHUTTER_INDEX = "ev1_newShutter";
 
     private static final String STEP_INDEX = "ev1_stepIndex";
+    
+    private static final String EV_COMPENSATION_SHIFT = "ev_compensation_shift";
 
     private String CURRENT_APERTURE_INDEX = "ev1_currentAperture";
     private String CURRENT_ISO_INDEX = "ev1_currentIso";
@@ -176,6 +177,8 @@ public class EvpairsFragment extends SherlockFragment {
     private WheelView mWheel_newShutter;
 
     private Limit mLimit;
+
+    private int mEvCompensationShift;
 
     private void setLimit(Limit limit) {
         mLimit = limit;
@@ -316,6 +319,7 @@ public class EvpairsFragment extends SherlockFragment {
         SharedPreferences prefs = getActivity().getPreferences(
                 Context.MODE_PRIVATE);
 
+        setEvCompensationShift(prefs.getInt(EV_COMPENSATION_SHIFT, 0));
         setStepIndex(prefs.getInt(STEP_INDEX, EvData.FULL_STOP));
         setCalculateIndex(prefs.getInt(CALCULATE_INDEX,
                 EvCalculator.CALCULATE_SHUTTER));
@@ -343,6 +347,11 @@ public class EvpairsFragment extends SherlockFragment {
         }
 
         return savedData;
+    }
+    
+    private void setEvCompensationShift(int shift) {
+        mEvCompensationShift = shift;
+        Log.variable("mEvCompensationShift", String.valueOf(mEvCompensationShift));
     }
 
     private void lockCalculateWheel() {
@@ -402,7 +411,8 @@ public class EvpairsFragment extends SherlockFragment {
                 savedData.getCurrentShutterPosition(),
                 savedData.getNewAperturePosition(),
                 savedData.getNewIsoPosition(),
-                savedData.getNewShutterPosition(), getCalculateIndex());
+                savedData.getNewShutterPosition(), getCalculateIndex(),
+                getEvCompensationShift());
 
         int index = mEvCalculator.calculate();
         boolean isError = false;
@@ -426,6 +436,7 @@ public class EvpairsFragment extends SherlockFragment {
         SavedData savedData = getSelectedItemsPositions();
 
         SharedPreferences.Editor editor = preferenced.edit();
+        editor.putInt(EV_COMPENSATION_SHIFT, getEvCompensationShift());
         editor.putInt(STEP_INDEX, getStepIndex());
         editor.putInt(CALCULATE_INDEX, getCalculateIndex());
 
@@ -452,6 +463,10 @@ public class EvpairsFragment extends SherlockFragment {
         }
 
         editor.commit();
+    }
+
+    private int getEvCompensationShift() {
+        return mEvCompensationShift;
     }
 
     /**
@@ -496,16 +511,19 @@ public class EvpairsFragment extends SherlockFragment {
                     break;
                 case R.id.ev_label_stepFull:
                     setStepIndex(EvData.FULL_STOP);
+                    setEvCompensationShift(0);
                     updateStepButtons();
                     setAllWheelsToFirstPos();
                     break;
                 case R.id.ev_label_stepHalf:
                     setStepIndex(EvData.HALF_STOP);
+                    setEvCompensationShift(0);
                     updateStepButtons();
                     setAllWheelsToFirstPos();
                     break;
                 case R.id.ev_label_stepThird:
                     setStepIndex(EvData.THIRD_STOP);
+                    setEvCompensationShift(0);
                     updateStepButtons();
                     setAllWheelsToFirstPos();
                     break;
@@ -538,7 +556,7 @@ public class EvpairsFragment extends SherlockFragment {
         EvCompensationDialog dialog = EvCompensationDialog.getInstance(mActivity);
         dialog.setCallback(new EvCompensationListener());
         dialog.setStep(getStepIndex());
-        // TODO добавить передачу индекса коррекции
+        dialog.setShiftIndex(getEvCompensationShift());
         dialog.show(getFragmentManager(), EvCompensationDialog.DIALOG_TAG);
     }
 

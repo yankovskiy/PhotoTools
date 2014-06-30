@@ -27,7 +27,6 @@ public class EvCompensationDialog extends SherlockDialogFragment {
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-            // TODO Auto-generated method stub
 
         }
 
@@ -42,9 +41,7 @@ public class EvCompensationDialog extends SherlockDialogFragment {
 
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            // TODO переделать на передачу индекса (сдвига)
             if (mCallback != null) {
-
                 mCallback.onEvCompensationHandler(getShiftIndex());
             }
         }
@@ -68,7 +65,7 @@ public class EvCompensationDialog extends SherlockDialogFragment {
     private AlertDialog.Builder mAlertDialog;
 
     public interface OnEvCompensationListener {
-        public void onEvCompensationHandler(int compensationIndex);
+        public void onEvCompensationHandler(int compensationShift);
     }
 
     private OnEvCompensationListener mCallback;

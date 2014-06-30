@@ -39,6 +39,7 @@ public class EvCalculator {
     private int mNewShutterSpeedPosition;
     private int mIndex;
     private int mStopDistribution;
+    private int mCompensationShift;
 
     private Double ISO_VALUE_LIST[];
     private Double APERTURE_VALUE_LIST[];
@@ -46,7 +47,7 @@ public class EvCalculator {
 
     public void prepare(int currentAperturePosition, int currentIsoPosition,
             int currentShutterSpeedPosition, int newAperturePosition,
-            int newIsoPostion, int newShutterSpeedPosition, int calculateIndex) {
+            int newIsoPostion, int newShutterSpeedPosition, int calculateIndex, int compensationShift) {
 
         mCurrentAperturePosition = currentAperturePosition;
         mCurrentIsoPosition = currentIsoPosition;
@@ -57,6 +58,7 @@ public class EvCalculator {
         mNewShutterSpeedPosition = newShutterSpeedPosition;
 
         mCalculateIndex = calculateIndex;
+        mCompensationShift = compensationShift;
 
         Log.variable("mCurrentAperturePosition",
                 String.valueOf(mCurrentAperturePosition));
@@ -241,6 +243,8 @@ public class EvCalculator {
             }
         }
 
+        mIndex -= mCompensationShift;
+        
         if (mIndex < 0) {
             mIndex = EvData.INVALID_INDEX;
         }
