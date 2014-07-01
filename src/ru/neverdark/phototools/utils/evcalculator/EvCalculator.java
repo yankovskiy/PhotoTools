@@ -196,7 +196,8 @@ public class EvCalculator {
      */
     public int calculate() {
         int wIndex = 0;
-
+        mIndex = -mCompensationShift;
+        
         if (mCalculateIndex == CALCULATE_APERTURE) {
             double isoStopDifference = calculateIsoDifference();
             double shutterStopDifference = calculateShutterDifference();
@@ -205,9 +206,9 @@ public class EvCalculator {
 
             wIndex += (int) Math
                     .round(((double) (expectedApertureStopDifference * mStopDistribution)));
-            mIndex = mCurrentAperturePosition + wIndex;
+            mIndex += mCurrentAperturePosition + wIndex;
 
-            if (mIndex > APERTURE_VALUE_LIST.length) {
+            if (mIndex >= APERTURE_VALUE_LIST.length) {
                 mIndex = EvData.INVALID_INDEX;
             }
         } else if (mCalculateIndex == CALCULATE_ISO) {
@@ -218,9 +219,9 @@ public class EvCalculator {
 
             wIndex += (int) Math
                     .round(((double) (expectedIsoStopDifference * mStopDistribution)));
-            mIndex = mCurrentIsoPosition + wIndex;
+            mIndex += mCurrentIsoPosition + wIndex;
 
-            if (mIndex > ISO_VALUE_LIST.length) {
+            if (mIndex >= ISO_VALUE_LIST.length) {
                 mIndex = EvData.INVALID_INDEX;
             }
 
@@ -232,18 +233,18 @@ public class EvCalculator {
 
             wIndex += (int) Math
                     .round(((double) (expectedShutterStopDifference * mStopDistribution)));
-            mIndex = mCurrentShutterSpeedPosition + wIndex;
+            mIndex += mCurrentShutterSpeedPosition + wIndex;
 
             Log.variable("mIndex", String.valueOf(mIndex));
             Log.variable("SHUTTER_VALUE_LIST.length",
                     String.valueOf(SHUTTER_VALUE_LIST.length));
 
-            if (mIndex > SHUTTER_VALUE_LIST.length) {
+            if (mIndex >= SHUTTER_VALUE_LIST.length) {
                 mIndex = EvData.INVALID_INDEX;
             }
         }
 
-        mIndex -= mCompensationShift;
+        
         
         if (mIndex < 0) {
             mIndex = EvData.INVALID_INDEX;
