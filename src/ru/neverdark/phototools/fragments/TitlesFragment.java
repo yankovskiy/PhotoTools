@@ -20,6 +20,7 @@ import java.util.List;
 
 import ru.neverdark.phototools.DetailsActivity;
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.MainMenuAdapter;
@@ -46,16 +47,6 @@ public class TitlesFragment extends SherlockListFragment {
     private int mCurrentRecordId = 0;
     private SherlockFragmentActivity mActivity;
     private MainMenuAdapter mAdapter;
-
-    /**
-     * Opens market detail application page for donate app
-     */
-    private void gotoDonate() {
-        Intent marketIntent = new Intent(Intent.ACTION_VIEW);
-        marketIntent.setData(Uri
-                .parse("market://details?id=ru.neverdark.phototoolsdonate"));
-        startActivity(marketIntent);
-    }
 
     /**
      * Creates main menu item
@@ -354,7 +345,7 @@ public class TitlesFragment extends SherlockListFragment {
         if (recordId == Constants.RATE_CHOICE) {
             gotoMarket();
         } else if (recordId == Constants.DONATE_CHOICE) {
-            gotoDonate();
+            Common.gotoDonate(mActivity);
         } else if (recordId == Constants.FEEDBACK_CHOICE) {
             sendEmail();
         } else {

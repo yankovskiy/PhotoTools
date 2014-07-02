@@ -20,6 +20,7 @@ import ru.neverdark.phototools.fragments.ConfirmCreateFragment;
 import ru.neverdark.phototools.fragments.ShowMessageDialog;
 import ru.neverdark.phototools.utils.AsyncGeoCoder;
 import ru.neverdark.phototools.utils.AsyncGeoCoder.OnGeoCoderListener;
+import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
 import android.content.Context;
@@ -252,7 +253,7 @@ public class MapActivity extends SherlockFragmentActivity implements
             return true;
         case R.id.map_action_search:
             if (Constants.PAID == false) {
-                showErrorDialog(R.string.error_availableOnlyInPaid);
+                Common.gotoDonate(mContext);
             }
             break;
         }

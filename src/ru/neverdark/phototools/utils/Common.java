@@ -27,7 +27,9 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.view.View;
 
@@ -166,17 +168,14 @@ public class Common {
     }
 
     /**
-     * Shows dialog "This feature available only in paid version"
+     * Opens market detail application page for donate app
      * 
-     * @param context
-     *            application context
-     * @param fragment
-     *            fragment caller
+     * @param context application context
      */
-    public static void showOnlyInPaidDialog(Context context,
-            SherlockFragment fragment) {
-        ShowMessageDialog dialog = ShowMessageDialog.getInstance(context);
-        dialog.setMessages(R.string.error, R.string.error_availableOnlyInPaid);
-        dialog.show(fragment.getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
+    public static void gotoDonate(Context context) {
+        Intent marketIntent = new Intent(Intent.ACTION_VIEW);
+        marketIntent.setData(Uri
+                .parse("market://details?id=ru.neverdark.phototoolsdonate"));
+        context.startActivity(marketIntent);
     }
 }

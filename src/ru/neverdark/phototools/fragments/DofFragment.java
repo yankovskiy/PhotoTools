@@ -649,10 +649,7 @@ public class DofFragment extends SherlockFragment {
             limitDialog.show(getFragmentManager(),
                     DofLimitationDialog.DIALOG_TAG);
         } else {
-            ShowMessageDialog dialog = ShowMessageDialog.getInstance(mActivity);
-            dialog.setMessages(R.string.error,
-                    R.string.error_availableOnlyInPaid);
-            dialog.show(getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
+            Common.gotoDonate(mContext);
         }
     }
 

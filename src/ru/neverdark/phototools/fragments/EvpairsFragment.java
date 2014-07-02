@@ -635,10 +635,7 @@ public class EvpairsFragment extends SherlockFragment {
             dialog.setLimitData(getLimit());
             dialog.show(getFragmentManager(), EvLimitationDialog.DIALOG_TAG);
         } else {
-            ShowMessageDialog dialog = ShowMessageDialog.getInstance(mActivity);
-            dialog.setMessages(R.string.error,
-                    R.string.error_availableOnlyInPaid);
-            dialog.show(getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
+            Common.gotoDonate(mActivity);
         }
     }
 
