@@ -1,6 +1,7 @@
 package ru.neverdark.phototools.fragments;
 
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.utils.CancelClickListener;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.evcalculator.EvData;
 import android.app.AlertDialog;
@@ -133,6 +134,7 @@ public class EvCompensationDialog extends SherlockDialogFragment {
     private void setListeners() {
         mAlertDialog.setPositiveButton(R.string.dialog_button_ok,
                 new PositiveClickListener());
+        mAlertDialog.setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
         mSeekBar.setOnSeekBarChangeListener(new SeekBarChangeListener());
     }
 

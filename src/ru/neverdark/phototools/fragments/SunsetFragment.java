@@ -886,11 +886,11 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void showInformationDialog(final int messageId) {
         Log.message("Enter");
-        InfoFragment infoFragment = new InfoFragment();
+        InfoFragmentDialog infoFragment = new InfoFragmentDialog();
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.INFORMATION_MESSAGE_ID, messageId);
         infoFragment.setArguments(bundle);
-        infoFragment.show(getFragmentManager(), Constants.INFORMATION_DIALOG);
+        infoFragment.show(getFragmentManager(), InfoFragmentDialog.DIALOG_TAG);
     }
 
     /**
@@ -908,10 +908,10 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void showLocationSelectionDialog() {
         Log.message("Enter");
-        LocationSelectionFragment locationFragment = new LocationSelectionFragment();
+        LocationSelectionDialog locationFragment = LocationSelectionDialog.getInstance(mContext);
         locationFragment.setTargetFragment(this, Constants.DIALOG_FRAGMENT);
         locationFragment.show(getFragmentManager(),
-                Constants.LOCATION_SELECTION_DIALOG);
+                LocationSelectionDialog.DIALOG_TAG);
     }
 
     /**
@@ -920,8 +920,8 @@ public class SunsetFragment extends SherlockFragment {
      * */
     private void showSettingsAlert() {
         Log.message("Enter");
-        AlertFragment alertFragment = new AlertFragment();
-        alertFragment.show(getFragmentManager(), Constants.ALERT_DIALOG);
+        AlertSettingsDialog alertFragment = new AlertSettingsDialog();
+        alertFragment.show(getFragmentManager(), AlertSettingsDialog.DIALOG_ID);
     }
 
     /**

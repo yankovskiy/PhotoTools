@@ -16,27 +16,29 @@
 package ru.neverdark.phototools.fragments;
 
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.utils.CancelClickListener;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 /**
  * Implements information dialog
- *
+ * 
  */
-public class InfoFragment extends SherlockDialogFragment {
+public class InfoFragmentDialog extends SherlockDialogFragment {
+    public static final String DIALOG_TAG = "infoFragmentDialog";
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.message("Enter");
         String title = "";
         String message = "";
         int messageId = getArguments().getInt(Constants.INFORMATION_MESSAGE_ID);
-        
+
         switch (messageId) {
         case Constants.INFORMATION_SUNRISE:
             title = getString(R.string.information_title_sunrise);
@@ -71,10 +73,10 @@ public class InfoFragment extends SherlockDialogFragment {
             message = getString(R.string.information_message_civilSunset);
             break;
         }
-        
+
         Log.variable("title", title);
         Log.variable("message", message);
-        
+
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
 
         // Setting Dialog Title
@@ -84,13 +86,8 @@ public class InfoFragment extends SherlockDialogFragment {
         alertDialog.setMessage(message);
 
         // on pressing cancel button
-        alertDialog.setNegativeButton(R.string.information_button_close,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+        alertDialog.setNegativeButton(R.string.dialog_button_close,
+                new CancelClickListener());
 
         // Creating Alert Message
         return alertDialog.create();

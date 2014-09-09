@@ -21,23 +21,23 @@ import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.db.DbAdapter;
 import ru.neverdark.phototools.db.LocationsTable;
 import ru.neverdark.phototools.fragments.DeleteConfirmationDialog.OnDeleteConfirmationListener;
+import ru.neverdark.phototools.utils.CancelClickListener;
 import ru.neverdark.phototools.utils.LocationAdapter;
 import ru.neverdark.phototools.utils.LocationAdapter.LocationImageChangeListener;
 import ru.neverdark.phototools.utils.LocationRecord;
 import ru.neverdark.phototools.utils.Log;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
-public class LocationSelectionFragment extends SherlockDialogFragment implements
+public class LocationSelectionDialog extends SherlockDialogFragment implements
         LocationImageChangeListener {
 
     /**
@@ -55,20 +55,37 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
         }
     }
 
+    public static LocationSelectionDialog getInstance(Context context) {
+        LocationSelectionDialog dialog = new LocationSelectionDialog();
+        dialog.mContext = context;
+        return dialog;
+    }
     private View mView;
     private ListView mListView;
     private ArrayList<LocationRecord> mArrayList;
     private DbAdapter mDbAdapter;
     private Cursor mCursor;
     private LocationAdapter mAdapter;
-    private Context mContext;
 
+    private Context mContext;
+    
+    public static final String DIALOG_TAG = "locationSelectionDialog";
+    
+    private AlertDialog.Builder mAlertDialog;
+    
     /**
      * Binds classes objects to resources
      */
     private void bindObjectsToResources() {
+        mView = View.inflate(mContext, R.layout.activity_location_selection, null);
         mListView = (ListView) mView
                 .findViewById(R.id.locationSelection_listView);
+    }
+
+    private void createDialog() {
+        mAlertDialog = new AlertDialog.Builder(mContext);
+        mAlertDialog.setView(mView);
+        mAlertDialog.setTitle(R.string.locationSelection_label_selectLocation);
     }
 
     /**
@@ -122,7 +139,7 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
 
         mCursor.close();
     }
-
+    
     /**
      * Loads static data to the ListView
      */
@@ -138,24 +155,11 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.message("Enter");
-        Dialog dialog = new Dialog(getActivity());
-        dialog.setTitle(R.string.locationSelection_label_selectLocation);
-        return dialog;
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        Log.message("Enter");
-        super.onCreateView(inflater, container, savedInstanceState);
-        mView = inflater.inflate(R.layout.activity_location_selection,
-                container, false);
-
-        mContext = mView.getContext();
         bindObjectsToResources();
-        setOnItemClickListener(this);
-
-        return mView;
+        createDialog();
+        setClickListeners();
+        
+        return mAlertDialog.create();
     }
 
     /*
@@ -214,6 +218,11 @@ public class LocationSelectionFragment extends SherlockDialogFragment implements
 
         fillData();
 
+    }
+
+    private void setClickListeners() {
+        setOnItemClickListener(this);
+        mAlertDialog.setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
     }
 
     /**

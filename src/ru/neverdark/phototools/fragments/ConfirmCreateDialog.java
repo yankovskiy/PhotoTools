@@ -35,7 +35,9 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 /**
  * Implements confirm creation dialog
  */
-public class ConfirmCreateFragment extends SherlockDialogFragment {
+public class ConfirmCreateDialog extends SherlockDialogFragment {
+    public static final String DIALOG_ID = "confirmCreateDialog";
+
     /**
      * Creates and return new ConfirmCreateFragment object
      * 
@@ -45,10 +47,10 @@ public class ConfirmCreateFragment extends SherlockDialogFragment {
      *            the name of edited location
      * @return ConfirmCreateFragment object
      */
-    public static ConfirmCreateFragment NewInstance(int action,
+    public static ConfirmCreateDialog NewInstance(int action,
             String locationName) {
         Log.message("Enter");
-        ConfirmCreateFragment dialog = new ConfirmCreateFragment();
+        ConfirmCreateDialog dialog = new ConfirmCreateDialog();
         dialog.mAction = action;
         dialog.mLocationName = locationName;
         dialog.mIsEdit = (action == Constants.LOCATION_ACTION_EDIT);

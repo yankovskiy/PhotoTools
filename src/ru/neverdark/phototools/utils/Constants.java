@@ -19,7 +19,7 @@ package ru.neverdark.phototools.utils;
  * Constants for PhotoTools application
  */
 public class Constants {
-    public static final boolean PAID = false;
+    public static final boolean PAID = true;
     
     public static final int STATUS_SUCCESS = 0;
     public static final int STATUS_FAIL = 1;
@@ -43,8 +43,6 @@ public class Constants {
     
     public static final byte LOCATION_CURRENT_POSITION_CHOICE = 0;
     public static final byte LOCATION_POINT_ON_MAP_CHOICE = 1;
-    
-    public static final String LOCATION_SELECTION_DIALOG = "locationSelectionDialog";
     
     public static final byte DIALOG_FRAGMENT = 0;
     public static final byte DELETE_DIALOG_FRAGMENT = 1;
@@ -91,11 +89,6 @@ public class Constants {
     public static final int INFORMATION_CIVIL_SUNSET = 7;
     
     public static final String INFORMATION_MESSAGE_ID = "informationMessageId";
-    public static final String INFORMATION_DIALOG = "informationDialog";
-    
-    public static final String ALERT_DIALOG = "alertDialog";
-    public static final String DELETE_DIALOG = "deleteDialog";
-    public static final String CONFIRM_DIALOG = "confirmDialog";
     
     public static final String DELETE_LOCATION_NAME = "deleteLocationName";
     public static final String DELETE_LOCATION_POSITION = "deleteLocationPosition";

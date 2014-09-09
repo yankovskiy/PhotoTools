@@ -19,6 +19,7 @@ import java.util.List;
 
 import kankan.wheel.widget.WheelView;
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.utils.CancelClickListener;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Limit;
 import ru.neverdark.phototools.utils.evcalculator.EvCalculator;
@@ -209,6 +210,7 @@ public class EvLimitationDialog extends SherlockDialogFragment {
      */
     private void setListeners() {
         mAlertDialog.setPositiveButton(R.string.dialog_button_ok, null);
+        mAlertDialog.setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
     }
 
     @Override

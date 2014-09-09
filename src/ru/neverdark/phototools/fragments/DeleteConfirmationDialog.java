@@ -18,6 +18,7 @@ package ru.neverdark.phototools.fragments;
 import java.util.Locale;
 
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.utils.CancelClickListener;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -30,16 +31,6 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
  * Implements delete confirmation dialog
  */
 public class DeleteConfirmationDialog extends SherlockDialogFragment {
-
-    /**
-     * Click listener for "Cancel" button
-     */
-    private class NegativeClickListener implements OnClickListener {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            dialog.cancel();
-        }
-    }
 
     /**
      * The interface for processing the delete record action
@@ -120,7 +111,7 @@ public class DeleteConfirmationDialog extends SherlockDialogFragment {
         mAlertDialog.setPositiveButton(R.string.dialog_button_ok,
                 new PositiveClickListener());
         mAlertDialog.setNegativeButton(R.string.dialog_button_cancel,
-                new NegativeClickListener());
+                new CancelClickListener());
     }
 
     /**

@@ -16,7 +16,7 @@
 package ru.neverdark.phototools;
 
 import ru.neverdark.phototools.db.DbAdapter;
-import ru.neverdark.phototools.fragments.ConfirmCreateFragment;
+import ru.neverdark.phototools.fragments.ConfirmCreateDialog;
 import ru.neverdark.phototools.fragments.ShowMessageDialog;
 import ru.neverdark.phototools.utils.AsyncGeoCoder;
 import ru.neverdark.phototools.utils.AsyncGeoCoder.OnGeoCoderListener;
@@ -313,10 +313,10 @@ public class MapActivity extends SherlockFragmentActivity implements
      */
     private void showConfirmDialog() {
         Log.message("Enter");
-        ConfirmCreateFragment confirmDialog = ConfirmCreateFragment
+        ConfirmCreateDialog confirmDialog = ConfirmCreateDialog
                 .NewInstance(mAction, mLocationName);
         confirmDialog.show(getSupportFragmentManager(),
-                Constants.CONFIRM_DIALOG);
+                ConfirmCreateDialog.DIALOG_ID);
     }
 
 }

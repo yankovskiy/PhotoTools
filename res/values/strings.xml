@@ -137,9 +137,7 @@
         illumination on open place in mainly clear or cloudless weather.</string>
     <string name="information_message_civilSunset">Civil twilight is the period of time after a sunset, during which the sun is at 
         the angle of elevation from 0 ° to -6 ° over horizon level. It is possible to carry out any kind of works without additional 
-        illumination on open place in mainly clear or cloudless weather.</string>
-    
-    <string name="information_button_close">Close</string>
+        illumination on open place in mainly clear or cloudless weather.</string>    
     
     <string name="changelog_full_title">List of changes</string>
     <string name="changelog_title">What\'s new</string>
@@ -159,6 +157,7 @@
     <string name="deleteConfirmation_dialog_message">Do you really wish remove the record \"%s\"?</string>
     <string name="dialog_button_ok">OK</string>
     <string name="dialog_button_cancel">Cancel</string>
+    <string name="dialog_button_close">Close</string>
     
     <string name="sunset_information_timeZoneStart">Determining of the time zone. Please, wait</string>
     <string name="sunset_information_timeZoneSuccess">The time zone is successfully picked</string>

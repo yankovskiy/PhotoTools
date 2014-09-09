@@ -16,6 +16,7 @@
 package ru.neverdark.phototools.fragments;
 
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.utils.CancelClickListener;
 import ru.neverdark.phototools.utils.Log;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -29,7 +30,9 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 /**
  * Implements alert dialog
  */
-public class AlertFragment extends SherlockDialogFragment {
+public class AlertSettingsDialog extends SherlockDialogFragment {
+    public static final String DIALOG_ID = "alertSettingsDialog";
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.message("Enter");
@@ -53,13 +56,8 @@ public class AlertFragment extends SherlockDialogFragment {
                 });
 
         // on pressing cancel button
-        alertDialog.setNegativeButton(R.string.sunset_alert_negative,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+        alertDialog.setNegativeButton(R.string.dialog_button_cancel,
+                new CancelClickListener());
 
         // Showing Alert Message
         return alertDialog.create();

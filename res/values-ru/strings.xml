@@ -143,8 +143,6 @@
         солнце находится на высоте от 0° до -6° над уровнем горизонта. На открытой местности в малооблачную или безоблачную 
         погоду можно выполнять любой вид работ без дополнительного освещения.</string>
     
-    <string name="information_button_close">Закрыть</string>
-    
     <string name="changelog_full_title">Список изменений</string>
     <string name="changelog_title">Что нового</string>
     <string name="changelog_ok_button">OK</string>
@@ -163,6 +161,7 @@
     <string name="deleteConfirmation_dialog_message">Вы действительно хотите удалить запись \"%s\"?</string>
     <string name="dialog_button_ok">OK</string>
     <string name="dialog_button_cancel">Отмена</string>
+    <string name="dialog_button_close">Закрыть</string>
     
     <string name="sunset_information_timeZoneStart">Определение временной зоны. Подождите</string>
     <string name="sunset_information_timeZoneSuccess">Временная зона успешно определена</string>
