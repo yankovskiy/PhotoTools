@@ -26,7 +26,7 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 /**
  * Dialog fragment with DatePicker
  */
-public class DateFragment extends SherlockDialogFragment implements DatePickerDialog.OnDateSetListener {
+public class DateDialog extends SherlockDialogFragment implements DatePickerDialog.OnDateSetListener {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

@@ -869,7 +869,7 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void showDatePicker() {
         Log.message("Enter");
-        DateFragment dateFragment = new DateFragment();
+        DateDialog dateFragment = new DateDialog();
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.DATE_YEAR, mYear);
         bundle.putInt(Constants.DATE_MONTH, mMonth);
@@ -929,9 +929,9 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void showTimeZoneSelectionDialog() {
         Log.enter();
-        ZonePicker dialog = new ZonePicker();
+        ZonePickerDialog dialog = new ZonePickerDialog();
         dialog.setTargetFragment(this, Constants.DIALOG_FRAGMENT);
-        dialog.show(getFragmentManager(), ZonePicker.DIALOG);
+        dialog.show(getFragmentManager(), ZonePickerDialog.DIALOG);
     }
 
     /**

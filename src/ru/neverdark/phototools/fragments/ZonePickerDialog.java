@@ -47,7 +47,7 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
  * 
  * The class based on the ZonePicker from Android 4.1.2_r2.1
  */
-public class ZonePicker extends SherlockDialogFragment {
+public class ZonePickerDialog extends SherlockDialogFragment {
     public static final String DIALOG = "ZonePicker";
 
     private static final String KEY_ID = "id";
