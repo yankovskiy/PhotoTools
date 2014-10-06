@@ -16,50 +16,52 @@
 package ru.neverdark.phototools.fragments;
 
 import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.utils.CancelClickListener;
-import ru.neverdark.phototools.utils.Log;
-import android.app.AlertDialog;
-import android.app.Dialog;
+import ru.neverdark.abs.CancelClickListener;
+import ru.neverdark.abs.UfoDialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.os.Bundle;
 import android.provider.Settings;
-
-import com.actionbarsherlock.app.SherlockDialogFragment;
 
 /**
  * Implements alert dialog
  */
-public class AlertSettingsDialog extends SherlockDialogFragment {
+public class AlertSettingsDialog extends UfoDialogFragment {
+    private class OnPositiveClickListener implements OnClickListener {
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }
+    }
+
     public static final String DIALOG_ID = "alertSettingsDialog";
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.message("Enter");
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+    public void bindObjects() {
+        // TODO Auto-generated method stub
 
-        // Setting Dialog Title
-        alertDialog.setTitle(R.string.sunset_alert_title);
+    }
 
-        // Setting Dialog Message
-        alertDialog.setMessage(R.string.sunset_alert_message);
+    @Override
+    public void setListeners() {
+        mAlertDialog
+                .setPositiveButton(R.string.sunset_alert_positive, new OnPositiveClickListener());
+        mAlertDialog.setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
+    }
 
-        // On pressing Settings button
-        alertDialog.setPositiveButton(R.string.sunset_alert_positive,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(
-                                Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(intent);
-                    }
-                });
+    @Override
+    protected void createDialog() {
+        super.createDialog();
+        mAlertDialog.setTitle(R.string.sunset_alert_title);
+        mAlertDialog.setMessage(R.string.sunset_alert_message);
+    }
 
-        // on pressing cancel button
-        alertDialog.setNegativeButton(R.string.dialog_button_cancel,
-                new CancelClickListener());
-
-        // Showing Alert Message
-        return alertDialog.create();
+    public static AlertSettingsDialog getInstance(Context context) {
+        AlertSettingsDialog dialog = new AlertSettingsDialog();
+        dialog.mContext = context;
+        return dialog;
     }
 }

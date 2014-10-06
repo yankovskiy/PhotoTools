@@ -21,7 +21,7 @@ import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.db.DbAdapter;
 import ru.neverdark.phototools.db.LocationsTable;
 import ru.neverdark.phototools.fragments.DeleteConfirmationDialog.OnDeleteConfirmationListener;
-import ru.neverdark.phototools.utils.CancelClickListener;
+import ru.neverdark.abs.CancelClickListener;
 import ru.neverdark.phototools.utils.LocationAdapter;
 import ru.neverdark.phototools.utils.LocationAdapter.LocationImageChangeListener;
 import ru.neverdark.phototools.utils.LocationRecord;

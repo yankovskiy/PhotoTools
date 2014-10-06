@@ -15,8 +15,7 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
+import ru.neverdark.abs.UfoFragment;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.utils.Log;
 import android.os.Bundle;
@@ -32,37 +31,55 @@ import android.content.pm.PackageManager;
 /**
  * Contains About application fragment
  */
-public class AboutFragment extends SherlockFragment {
+public class AboutFragment extends UfoFragment {
+    private View mView;
+    private TextView mAuthor;
+    private TextView mLicense;
+    private TextView mVersion;
 
-    /* (non-Javadoc)
-     * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater,
+     * android.view.ViewGroup, android.os.Bundle)
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.activity_about, container, false);
- 
-        /* For clickable links */
-        TextView labelAuthor = (TextView) view.findViewById(R.id.about_label_author);
-        labelAuthor.setText(Html
-                .fromHtml(getString(R.string.about_label_author)));
-        labelAuthor.setMovementMethod(LinkMovementMethod.getInstance());
+        mView = inflater.inflate(R.layout.activity_about, container, false);
 
-        TextView labelLicense = (TextView) view.findViewById(R.id.about_label_licenseInformation);
-        labelLicense.setText(Html
-                .fromHtml(getString(R.string.about_label_licenseInformation)));
-        labelLicense.setMovementMethod(LinkMovementMethod.getInstance());
-        
-        TextView labelVersion = (TextView) view.findViewById(R.id.about_label_version);
+        /* For clickable links */
+        bindObjects();
+
+        mAuthor.setText(Html.fromHtml(getString(R.string.about_label_author)));
+        mAuthor.setMovementMethod(LinkMovementMethod.getInstance());
+        mLicense.setText(Html.fromHtml(getString(R.string.about_label_licenseInformation)));
+        mLicense.setMovementMethod(LinkMovementMethod.getInstance());
+
         String version = getString(R.string.about_label_version);
         try {
-            PackageInfo packageInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-            version += " "+ packageInfo.versionName;
+            PackageInfo packageInfo = getActivity().getPackageManager().getPackageInfo(
+                    getActivity().getPackageName(), 0);
+            version += " " + packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException nameNotFoundException) {
             Log.message("NameNotFoundException appeared");
-        }          
-        labelVersion.setText(version);
-        
-        return view;
+        }
+        mVersion.setText(version);
+
+        return mView;
+    }
+
+    @Override
+    public void bindObjects() {
+        mAuthor = (TextView) mView.findViewById(R.id.about_label_author);
+        mLicense = (TextView) mView.findViewById(R.id.about_label_licenseInformation);
+        mVersion = (TextView) mView.findViewById(R.id.about_label_version);
+    }
+
+    @Override
+    public void setListeners() {
+        // TODO Auto-generated method stub
+
     }
 }

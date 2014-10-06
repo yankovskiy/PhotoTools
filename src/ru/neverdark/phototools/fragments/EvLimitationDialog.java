@@ -19,7 +19,7 @@ import java.util.List;
 
 import kankan.wheel.widget.WheelView;
 import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.utils.CancelClickListener;
+import ru.neverdark.abs.CancelClickListener;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Limit;
 import ru.neverdark.phototools.utils.evcalculator.EvCalculator;

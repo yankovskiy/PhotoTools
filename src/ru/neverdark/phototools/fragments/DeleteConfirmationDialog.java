@@ -18,7 +18,7 @@ package ru.neverdark.phototools.fragments;
 import java.util.Locale;
 
 import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.utils.CancelClickListener;
+import ru.neverdark.abs.CancelClickListener;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;

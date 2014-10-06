@@ -920,7 +920,7 @@ public class SunsetFragment extends SherlockFragment {
      * */
     private void showSettingsAlert() {
         Log.message("Enter");
-        AlertSettingsDialog alertFragment = new AlertSettingsDialog();
+        AlertSettingsDialog alertFragment = AlertSettingsDialog.getInstance(mContext);
         alertFragment.show(getFragmentManager(), AlertSettingsDialog.DIALOG_ID);
     }
 
