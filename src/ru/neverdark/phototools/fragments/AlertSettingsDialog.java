@@ -47,21 +47,21 @@ public class AlertSettingsDialog extends UfoDialogFragment {
 
     @Override
     public void setListeners() {
-        mAlertDialog
+        getAlertDialog()
                 .setPositiveButton(R.string.sunset_alert_positive, new OnPositiveClickListener());
-        mAlertDialog.setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
+        getAlertDialog().setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
     }
 
     @Override
     protected void createDialog() {
         super.createDialog();
-        mAlertDialog.setTitle(R.string.sunset_alert_title);
-        mAlertDialog.setMessage(R.string.sunset_alert_message);
+        getAlertDialog().setTitle(R.string.sunset_alert_title);
+        getAlertDialog().setMessage(R.string.sunset_alert_message);
     }
 
     public static AlertSettingsDialog getInstance(Context context) {
         AlertSettingsDialog dialog = new AlertSettingsDialog();
-        dialog.mContext = context;
+        dialog.setContext(context);
         return dialog;
     }
 }

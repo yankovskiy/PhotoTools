@@ -15,6 +15,8 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
+import ru.neverdark.abs.OnCallback;
+import ru.neverdark.abs.UfoDialogFragment;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.db.UserCamerasAdapter;
 import ru.neverdark.phototools.db.UserCamerasAdapter.OnEditAndRemoveListener;
@@ -40,7 +42,7 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 /**
  * Implements dialog for camera management
  */
-public class CameraManagementDialog extends SherlockDialogFragment {
+public class CameraManagementDialog extends UfoDialogFragment {
     /**
      * Click listener for "Add" button
      */
@@ -51,14 +53,14 @@ public class CameraManagementDialog extends SherlockDialogFragment {
             if (cameraName.length() > 0) {
                 if (mAdapter.isCameraExist(cameraName)) {
                     ShowMessageDialog dialog = ShowMessageDialog
-                            .getInstance(mContext);
+                            .getInstance(getContext());
                     dialog.setMessages(R.string.error,
                             R.string.error_cameraAlreadyExist);
                     dialog.show(getFragmentManager(),
                             ShowMessageDialog.DIALOG_TAG);
                 } else {
                     CameraEditorDialog dialog = CameraEditorDialog
-                            .getInstance(mContext);
+                            .getInstance(getContext());
                     dialog.setCallback(new CameraEditorListener());
                     dialog.setActionType(CameraEditorDialog.ACTION_ADD);
                     dialog.setCameraName(cameraName);
@@ -72,7 +74,7 @@ public class CameraManagementDialog extends SherlockDialogFragment {
     /**
      * Listener for handling data from CameraEditorDialog
      */
-    private class CameraEditorListener implements OnCameraEditorListener {
+    private class CameraEditorListener implements OnCameraEditorListener, OnCallback {
         @Override
         public void onAddCamera(UserCamerasRecord record) {
             mAdapter.createCamera(record);
@@ -107,8 +109,9 @@ public class CameraManagementDialog extends SherlockDialogFragment {
         @Override
         public boolean onKey(DialogInterface arg0, int keyCode, KeyEvent event) {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
-                if (mIsOperationSuccess && mCallback != null) {
-                    mCallback.cameraManagementOnBack();
+                OnCameraManagementListener callback = (OnCameraManagementListener) getCallback();
+                if (mIsOperationSuccess && callback != null) {
+                    callback.cameraManagementOnBack();
                 }
             }
             return false;
@@ -122,7 +125,7 @@ public class CameraManagementDialog extends SherlockDialogFragment {
         @Override
         public void onEditHandler(UserCamerasRecord record) {
             CameraEditorDialog dialog = CameraEditorDialog
-                    .getInstance(mContext);
+                    .getInstance(getContext());
             dialog.setCallback(new CameraEditorListener());
             dialog.setActionType(CameraEditorDialog.ACTION_EDIT);
             dialog.setDataForEdit(record);
@@ -132,7 +135,7 @@ public class CameraManagementDialog extends SherlockDialogFragment {
         @Override
         public void onRemoveHandler(UserCamerasRecord record) {
             DeleteConfirmationDialog dialog = DeleteConfirmationDialog
-                    .getInstance(mContext);
+                    .getInstance(getContext());
             dialog.setCallback(new DeleteConfirmationListener());
             dialog.setObjectForDelete(record);
             dialog.show(getFragmentManager(),
@@ -164,49 +167,25 @@ public class CameraManagementDialog extends SherlockDialogFragment {
      */
     public static CameraManagementDialog getInstance(Context context) {
         CameraManagementDialog dialog = new CameraManagementDialog();
-        dialog.mContext = context;
+        dialog.setContext(context);
         return dialog;
     }
 
     private UserCamerasAdapter mAdapter;
     private ImageView mAddButton;
-    private AlertDialog.Builder mAlertDialog;
-    private OnCameraManagementListener mCallback;
     private ListView mCameraList;
-    private Context mContext;
 
     private boolean mIsOperationSuccess = false;
 
     private EditText mModel;
 
-    private View mView;
-
-    /**
-     * Binds objects to resources
-     */
-    private void bindObjectToResource() {
-        mView = View.inflate(mContext, R.layout.user_camera_dialog, null);
-        mAddButton = (ImageView) mView.findViewById(R.id.userCamera_addButton);
-        mCameraList = (ListView) mView.findViewById(R.id.userCamera_list);
-        mModel = (EditText) mView.findViewById(R.id.userCamera_model);
-    }
-
     /**
      * Creates alert dialog
      */
-    private void createDialog() {
-        mAlertDialog = new AlertDialog.Builder(mContext);
-        mAlertDialog.setView(mView);
-        mAlertDialog.setTitle(R.string.cameraManagementTitle);
-    }
-
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        bindObjectToResource();
-        createDialog();
-        setListeners();
-
-        return mAlertDialog.create();
+    protected void createDialog() {
+        super.createDialog();
+        getAlertDialog().setTitle(R.string.cameraManagementTitle);
     }
 
     @Override
@@ -225,7 +204,7 @@ public class CameraManagementDialog extends SherlockDialogFragment {
 
         super.onResume();
         if (mAdapter == null) {
-            mAdapter = new UserCamerasAdapter(mContext);
+            mAdapter = new UserCamerasAdapter(getContext());
             mAdapter.setCallback(new EditAndRemoveListener());
         }
 
@@ -238,21 +217,19 @@ public class CameraManagementDialog extends SherlockDialogFragment {
         mCameraList.setAdapter(mAdapter);
     }
 
-    /**
-     * Sets callback object for handling "Back" button on the dialog
-     * 
-     * @param callback
-     */
-    public void setCallback(OnCameraManagementListener callback) {
-        mCallback = callback;
+
+    @Override
+    public void bindObjects() {
+        setDialogView( View.inflate(getContext(), R.layout.user_camera_dialog, null));
+        mAddButton = (ImageView) getDialogView().findViewById(R.id.userCamera_addButton);
+        mCameraList = (ListView) getDialogView().findViewById(R.id.userCamera_list);
+        mModel = (EditText) getDialogView().findViewById(R.id.userCamera_model);
     }
 
-    /**
-     * Sets listeners for objects
-     */
-    private void setListeners() {
+    @Override
+    public void setListeners() {
         mAddButton.setOnClickListener(new AddCameraClickListener());
         mAddButton.setOnTouchListener(new ImageOnTouchListener());
-        mAlertDialog.setOnKeyListener(new DialogKeyListener());
+        getAlertDialog().setOnKeyListener(new DialogKeyListener());
     }
 }

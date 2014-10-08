@@ -27,6 +27,7 @@ import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
+import ru.neverdark.abs.OnCallback;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.fragments.CameraManagementDialog.OnCameraManagementListener;
 import ru.neverdark.phototools.fragments.DofLimitationDialog.OnDofLimitationListener;
@@ -80,7 +81,7 @@ public class DofFragment extends SherlockFragment {
      * Listener for handling "Back" button in the CameraManagementDialog
      */
     private class CameraManagementListener implements
-            OnCameraManagementListener {
+            OnCameraManagementListener, OnCallback {
         @Override
         public void cameraManagementOnBack() {
             CameraData.Vendor vendor = (CameraData.Vendor) mWheelVendor

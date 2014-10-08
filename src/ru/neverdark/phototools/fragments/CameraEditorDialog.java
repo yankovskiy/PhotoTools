@@ -15,16 +15,15 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
+import ru.neverdark.abs.CancelClickListener;
+import ru.neverdark.abs.UfoDialogFragment;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.db.DbAdapter;
 import ru.neverdark.phototools.db.UserCamerasRecord;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -32,12 +31,10 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-
 /**
  * Implements dialog for additing/editig cameras
  */
-public class CameraEditorDialog extends SherlockDialogFragment {
+public class CameraEditorDialog extends UfoDialogFragment {
     /**
      * Custom exception for showing dialog with error message
      */
@@ -51,7 +48,7 @@ public class CameraEditorDialog extends SherlockDialogFragment {
          *            string Id contains error message
          */
         public CameraEditorDialogException(int resourceId) {
-            ShowMessageDialog dialog = ShowMessageDialog.getInstance(mContext);
+            ShowMessageDialog dialog = ShowMessageDialog.getInstance(getContext());
             dialog.setMessages(R.string.error, resourceId);
             dialog.show(getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
         }
@@ -62,19 +59,8 @@ public class CameraEditorDialog extends SherlockDialogFragment {
      */
     private class CheckedChangeListener implements OnCheckedChangeListener {
         @Override
-        public void onCheckedChanged(CompoundButton buttonView,
-                boolean isChecked) {
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             disableCustomCoc(isChecked);
-        }
-    }
-
-    /**
-     * Listener for "Cancel" button
-     */
-    private class NegativeClickListener implements OnClickListener {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            dialog.cancel();
         }
     }
 
@@ -115,8 +101,7 @@ public class CameraEditorDialog extends SherlockDialogFragment {
             isFilled = mResolutionWidth.getText().toString().trim().length() > 0;
 
             if (isFilled) {
-                isFilled = mResolutionHeight.getText().toString().trim()
-                        .length() > 0;
+                isFilled = mResolutionHeight.getText().toString().trim().length() > 0;
             }
 
             if (isFilled) {
@@ -136,46 +121,42 @@ public class CameraEditorDialog extends SherlockDialogFragment {
 
             try {
                 if (cameraName.length() == 0) {
-                    throw new CameraEditorDialogException(
-                            R.string.error_cameraNameEmpty);
+                    throw new CameraEditorDialogException(R.string.error_cameraNameEmpty);
                 }
 
                 if (isDataFilled() == false) {
-                    throw new CameraEditorDialogException(
-                            R.string.error_notAllValuesFilled);
+                    throw new CameraEditorDialogException(R.string.error_notAllValuesFilled);
                 }
 
                 if (mAutoCalcCoc.isChecked() == false
                         && mCoc.getText().toString().trim().length() == 0) {
-                    throw new CameraEditorDialogException(
-                            R.string.error_cocNotFilled);
+                    throw new CameraEditorDialogException(R.string.error_cocNotFilled);
                 }
 
                 boolean exist = false;
 
                 if ((mActionType == ACTION_ADD)
-                        || (mActionType == ACTION_EDIT && cameraName
-                                .equals(mUserCamerasRecord.getCameraName()) == false)) {
-                    DbAdapter dbAdapter = new DbAdapter(mContext).open();
-                    exist = dbAdapter.getUserCameras()
-                            .isCameraExist(cameraName);
+                        || (mActionType == ACTION_EDIT && cameraName.equals(mUserCamerasRecord
+                                .getCameraName()) == false)) {
+                    DbAdapter dbAdapter = new DbAdapter(getContext()).open();
+                    exist = dbAdapter.getUserCameras().isCameraExist(cameraName);
                     dbAdapter.close();
                 }
 
                 if (exist) {
-                    throw new CameraEditorDialogException(
-                            R.string.error_cameraAlreadyExist);
+                    throw new CameraEditorDialogException(R.string.error_cameraAlreadyExist);
                 }
 
                 dismiss();
 
-                if (mCallback != null) {
+                OnCameraEditorListener callback = (OnCameraEditorListener) getCallback();
+                if (callback != null) {
                     fillUserCamerasRecord(mUserCamerasRecord);
 
                     if (mActionType == ACTION_ADD) {
-                        mCallback.onAddCamera(mUserCamerasRecord);
+                        callback.onAddCamera(mUserCamerasRecord);
                     } else if (mActionType == ACTION_EDIT) {
-                        mCallback.onEditCamera(mUserCamerasRecord);
+                        callback.onEditCamera(mUserCamerasRecord);
                     }
                 }
             } catch (CameraEditorDialogException e) {
@@ -206,72 +187,40 @@ public class CameraEditorDialog extends SherlockDialogFragment {
      */
     public static CameraEditorDialog getInstance(Context context) {
         CameraEditorDialog dialog = new CameraEditorDialog();
-        dialog.mContext = context;
+        dialog.setContext(context);
         return dialog;
     }
 
     private int mActionType;
-    private AlertDialog.Builder mAlertDialog;
     private CheckBox mAutoCalcCoc;
-    private OnCameraEditorListener mCallback;
     private EditText mCameraModel;
     private String mCameraName;
     private EditText mCoc;
-    private Context mContext;
     private EditText mResolutionHeight;
     private EditText mResolutionWidth;
     private EditText mSensorHeight;
     private EditText mSensorWidth;
     private UserCamerasRecord mUserCamerasRecord;
 
-    private View mView;
-
-    /**
-     * Binds objects to resources
-     */
-    private void bindObjectToResource() {
-        mView = View.inflate(mContext, R.layout.camera_editor_dialog, null);
-        mResolutionWidth = (EditText) mView
-                .findViewById(R.id.cameraEditor_resolutionWidth);
-        mResolutionHeight = (EditText) mView
-                .findViewById(R.id.cameraEditor_resolutionHeight);
-        mSensorWidth = (EditText) mView
-                .findViewById(R.id.cameraEditor_sensorWidth);
-        mSensorHeight = (EditText) mView
-                .findViewById(R.id.cameraEditor_sensorHeight);
-        mCameraModel = (EditText) mView
-                .findViewById(R.id.cameraEditor_cameraName);
-        mCoc = (EditText) mView.findViewById(R.id.cameraEditor_coc);
-        mAutoCalcCoc = (CheckBox) mView
-                .findViewById(R.id.cameraEditor_autoCalc);
-    }
-
-    /**
-     * Creates alert dialog
-     */
-    private void createDialog() {
-        mAlertDialog = new AlertDialog.Builder(mContext);
-        mAlertDialog.setView(mView);
+    @Override
+    protected void createDialog() {
+        super.createDialog();
 
         if (mActionType == ACTION_ADD) {
-            mAlertDialog.setTitle(R.string.userCamera_addCamera);
+            getAlertDialog().setTitle(R.string.userCamera_addCamera);
             disableCustomCoc(true);
             mCameraModel.setText(mCameraName);
             mAutoCalcCoc.setChecked(true);
             mUserCamerasRecord = new UserCamerasRecord();
         } else if (mActionType == ACTION_EDIT) {
-            mAlertDialog.setTitle(R.string.userCamera_editCamera);
+            getAlertDialog().setTitle(R.string.userCamera_editCamera);
 
             boolean disableCoc = !mUserCamerasRecord.isCustomCoc();
             String cameraName = mUserCamerasRecord.getCameraName();
-            String resolutionWidth = String.valueOf(mUserCamerasRecord
-                    .getResolutionWidth());
-            String resolutionHeight = String.valueOf(mUserCamerasRecord
-                    .getResolutionHeight());
-            String sensorWidth = String.valueOf(mUserCamerasRecord
-                    .getSensorWidth());
-            String sensorHeight = String.valueOf(mUserCamerasRecord
-                    .getSensorHeight());
+            String resolutionWidth = String.valueOf(mUserCamerasRecord.getResolutionWidth());
+            String resolutionHeight = String.valueOf(mUserCamerasRecord.getResolutionHeight());
+            String sensorWidth = String.valueOf(mUserCamerasRecord.getSensorWidth());
+            String sensorHeight = String.valueOf(mUserCamerasRecord.getSensorHeight());
             String coc = String.valueOf(mUserCamerasRecord.getCoc());
 
             disableCustomCoc(disableCoc);
@@ -304,14 +253,10 @@ public class CameraEditorDialog extends SherlockDialogFragment {
     private void fillUserCamerasRecord(UserCamerasRecord record) {
         String cameraName = mCameraModel.getText().toString().trim();
         boolean isCustomCoc = !mAutoCalcCoc.isChecked();
-        int resolutionWidth = Integer.valueOf(mResolutionWidth.getText()
-                .toString().trim());
-        int resolutionHeight = Integer.valueOf(mResolutionHeight.getText()
-                .toString().trim());
-        float sensorWidth = Float.valueOf(mSensorWidth.getText().toString()
-                .trim());
-        float sensorHeight = Float.valueOf(mSensorHeight.getText().toString()
-                .trim());
+        int resolutionWidth = Integer.valueOf(mResolutionWidth.getText().toString().trim());
+        int resolutionHeight = Integer.valueOf(mResolutionHeight.getText().toString().trim());
+        float sensorWidth = Float.valueOf(mSensorWidth.getText().toString().trim());
+        float sensorHeight = Float.valueOf(mSensorHeight.getText().toString().trim());
 
         if (mAutoCalcCoc.isChecked() == false) {
             float coc = Float.valueOf(mCoc.getText().toString().trim());
@@ -327,22 +272,12 @@ public class CameraEditorDialog extends SherlockDialogFragment {
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        bindObjectToResource();
-        createDialog();
-        setListeners();
-
-        return mAlertDialog.create();
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
 
         AlertDialog d = (AlertDialog) getDialog();
         if (d != null) {
-            Button positiveButton = (Button) d
-                    .getButton(Dialog.BUTTON_POSITIVE);
+            Button positiveButton = (Button) d.getButton(DialogInterface.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(new PositiveClickListener());
         }
     }
@@ -355,16 +290,6 @@ public class CameraEditorDialog extends SherlockDialogFragment {
      */
     public void setActionType(int actionType) {
         mActionType = actionType;
-    }
-
-    /**
-     * Sets callback object for handling add or edit camera
-     * 
-     * @param callback
-     *            callback object
-     */
-    public void setCallback(OnCameraEditorListener callback) {
-        mCallback = callback;
     }
 
     /**
@@ -387,14 +312,25 @@ public class CameraEditorDialog extends SherlockDialogFragment {
         mUserCamerasRecord = record;
     }
 
-    /**
-     * Sets listeners for objects
-     */
-    private void setListeners() {
-        mAlertDialog.setPositiveButton(R.string.dialog_button_ok, null);
-        mAlertDialog.setNegativeButton(R.string.dialog_button_cancel,
-                new NegativeClickListener());
-        mAutoCalcCoc.setOnCheckedChangeListener(new CheckedChangeListener());
+    @Override
+    public void bindObjects() {
+        setDialogView(View.inflate(getContext(), R.layout.camera_editor_dialog, null));
+        mResolutionWidth = (EditText) getDialogView().findViewById(
+                R.id.cameraEditor_resolutionWidth);
+        mResolutionHeight = (EditText) getDialogView().findViewById(
+                R.id.cameraEditor_resolutionHeight);
+        mSensorWidth = (EditText) getDialogView().findViewById(R.id.cameraEditor_sensorWidth);
+        mSensorHeight = (EditText) getDialogView().findViewById(R.id.cameraEditor_sensorHeight);
+        mCameraModel = (EditText) getDialogView().findViewById(R.id.cameraEditor_cameraName);
+        mCoc = (EditText) getDialogView().findViewById(R.id.cameraEditor_coc);
+        mAutoCalcCoc = (CheckBox) getDialogView().findViewById(R.id.cameraEditor_autoCalc);
+    }
 
+    @Override
+    public void setListeners() {
+        getAlertDialog().setPositiveButton(R.string.dialog_button_ok, null);
+        getAlertDialog()
+                .setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
+        mAutoCalcCoc.setOnCheckedChangeListener(new CheckedChangeListener());
     }
 }
