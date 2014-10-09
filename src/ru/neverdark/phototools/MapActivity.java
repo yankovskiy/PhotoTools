@@ -23,6 +23,7 @@ import ru.neverdark.phototools.utils.AsyncGeoCoder.OnGeoCoderListener;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,8 +43,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapActivity extends SherlockFragmentActivity implements
-        OnMapLongClickListener {
+public class MapActivity extends SherlockFragmentActivity implements OnMapLongClickListener {
 
     private class GeoCoderListener implements OnGeoCoderListener {
 
@@ -59,13 +59,12 @@ public class MapActivity extends SherlockFragmentActivity implements
                 float zoom = mMap.getCameraPosition().zoom;
 
                 // move camera to saved position
-                CameraPosition currentPosition = new CameraPosition.Builder()
-                        .target(coordinates).zoom(zoom).build();
-                mMap.moveCamera(CameraUpdateFactory
-                        .newCameraPosition(currentPosition));
+                CameraPosition currentPosition = new CameraPosition.Builder().target(coordinates)
+                        .zoom(zoom).build();
+                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(currentPosition));
             } else {
-                String errorMessage = String.format(
-                        getString(R.string.error_notFound), searchString);
+                String errorMessage = String.format(getString(R.string.error_notFound),
+                        searchString);
                 showErrorDialog(errorMessage);
             }
         }
@@ -123,6 +122,7 @@ public class MapActivity extends SherlockFragmentActivity implements
     private String mLocationName;
     private Context mContext;
     private MenuItem mMenuItemSearch;
+    private boolean mIsVisible = false;
 
     /**
      * Handles getting information from Confirmation dialog
@@ -153,11 +153,12 @@ public class MapActivity extends SherlockFragmentActivity implements
     /**
      * Inits Google Map
      */
+    @SuppressLint("NewApi")
     private void initMap() {
         Log.message("Enter");
         if (mMap == null) {
-            mMap = ((SupportMapFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.map)).getMap();
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+                    .getMap();
 
             mMap.setMyLocationEnabled(true);
             mMap.setOnMapLongClickListener(this);
@@ -166,12 +167,10 @@ public class MapActivity extends SherlockFragmentActivity implements
         /* gets current coord if have */
         Intent intent = getIntent();
         Double latitude = intent.getDoubleExtra(Constants.LOCATION_LATITUDE, 0);
-        Double longitude = intent.getDoubleExtra(Constants.LOCATION_LONGITUDE,
-                0);
+        Double longitude = intent.getDoubleExtra(Constants.LOCATION_LONGITUDE, 0);
 
         /* gets action */
-        mAction = intent.getByteExtra(Constants.LOCATION_ACTION,
-                Constants.LOCATION_ACTION_ADD);
+        mAction = intent.getByteExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_ADD);
 
         if (mAction == Constants.LOCATION_ACTION_EDIT) {
             mRecordId = intent.getLongExtra(Constants.LOCATION_RECORD_ID,
@@ -184,10 +183,9 @@ public class MapActivity extends SherlockFragmentActivity implements
         /* checks for coordinates was received */
         if ((latitude != 0) || (longitude != 0)) {
             CameraPosition currentPosition = new CameraPosition.Builder()
-                    .target(new LatLng(latitude, longitude))
-                    .zoom(Constants.MAP_CAMERA_ZOOM).build();
-            mMap.moveCamera(CameraUpdateFactory
-                    .newCameraPosition(currentPosition));
+                    .target(new LatLng(latitude, longitude)).zoom(Constants.MAP_CAMERA_ZOOM)
+                    .build();
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(currentPosition));
         }
 
     }
@@ -212,6 +210,7 @@ public class MapActivity extends SherlockFragmentActivity implements
         inflater.inflate(R.menu.map_actions, menu);
         mMenuItemSearch = menu.findItem(R.id.map_action_search);
         mMenuItemDone = menu.findItem(R.id.map_button_done);
+        mMenuItemDone.setVisible(mIsVisible);
         
         if (Constants.PAID) {
             SearchView mSearchView = new SearchView(mContext);
@@ -290,7 +289,11 @@ public class MapActivity extends SherlockFragmentActivity implements
      */
     private void setButtonVisible(final boolean isVisible) {
         Log.message("Enter");
-        mMenuItemDone.setVisible(isVisible);
+        if (mMenuItemDone != null) { 
+            mMenuItemDone.setVisible(isVisible);
+        } 
+            mIsVisible = isVisible;
+        
     }
 
     /**
@@ -313,10 +316,9 @@ public class MapActivity extends SherlockFragmentActivity implements
      */
     private void showConfirmDialog() {
         Log.message("Enter");
-        ConfirmCreateDialog confirmDialog = ConfirmCreateDialog
-                .NewInstance(mAction, mLocationName);
-        confirmDialog.show(getSupportFragmentManager(),
-                ConfirmCreateDialog.DIALOG_ID);
+        ConfirmCreateDialog confirmDialog = ConfirmCreateDialog.getInstance(mContext, mAction,
+                mLocationName);
+        confirmDialog.show(getSupportFragmentManager(), ConfirmCreateDialog.DIALOG_ID);
     }
 
 }
