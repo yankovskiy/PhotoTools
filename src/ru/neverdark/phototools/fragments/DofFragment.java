@@ -96,7 +96,7 @@ public class DofFragment extends SherlockFragment {
     /**
      * Listener for handling OK button in the DofLimitationDialog
      */
-    private class DofLimitationListener implements OnDofLimitationListener {
+    private class DofLimitationListener implements OnDofLimitationListener, OnCallback {
         @Override
         public void onDofLimitationHandler(Limit data) {
             mLimit = data;

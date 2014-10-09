@@ -21,19 +21,17 @@ import java.util.List;
 import kankan.wheel.widget.WheelView;
 import ru.neverdark.phototools.R;
 import ru.neverdark.abs.CancelClickListener;
+import ru.neverdark.abs.UfoDialogFragment;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Limit;
 import ru.neverdark.phototools.utils.dofcalculator.Array;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.os.Bundle;
+import android.content.DialogInterface;
 import android.view.View;
 import android.widget.Button;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-
-public class DofLimitationDialog extends SherlockDialogFragment {
+public class DofLimitationDialog extends UfoDialogFragment {
 
     /**
      * Interface provides callback method calls for OK button in the dialog
@@ -55,16 +53,15 @@ public class DofLimitationDialog extends SherlockDialogFragment {
 
         @Override
         public void onClick(View v) {
-            if (mCallback != null) {
+            OnDofLimitationListener callback = (OnDofLimitationListener) getCallback();
+            if (callback != null) {
                 if (isDataValid()) {
                     storeWheelsData();
-                    mCallback.onDofLimitationHandler(mLimitData);
+                    callback.onDofLimitationHandler(mLimitData);
                     dismiss();
                 } else {
-                    ShowMessageDialog errorDialog = ShowMessageDialog
-                            .getInstance(mContext);
-                    errorDialog.setMessages(R.string.error,
-                            R.string.error_minMaxIncorrect);
+                    ShowMessageDialog errorDialog = ShowMessageDialog.getInstance(getContext());
+                    errorDialog.setMessages(R.string.error, R.string.error_minMaxIncorrect);
                     errorDialog.show(getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
                 }
             }
@@ -82,13 +79,9 @@ public class DofLimitationDialog extends SherlockDialogFragment {
      */
     public static DofLimitationDialog getInstance(Context context) {
         DofLimitationDialog dialog = new DofLimitationDialog();
-        dialog.mContext = context;
+        dialog.setContext(context);
         return dialog;
     }
-
-    private Context mContext;
-
-    private OnDofLimitationListener mCallback;
 
     private Limit mLimitData;
 
@@ -99,36 +92,32 @@ public class DofLimitationDialog extends SherlockDialogFragment {
     private WheelView mWheelMaxFocalLength;
     private WheelView mWheelMinSubjectDistance;
     private WheelView mWheelMaxSubjectDistance;
-    private AlertDialog.Builder mAlertDialog;
 
-    private View mView;
-
-    /**
-     * Binds objects to resources
-     */
-    private void bindObjectToResource() {
-        mView = View.inflate(mContext, R.layout.dof_limitation_dialog, null);
-        mWheelMinAperture = (WheelView) mView
+    @Override
+    public void bindObjects() {
+        setDialogView(View.inflate(getContext(), R.layout.dof_limitation_dialog, null));
+        mWheelMinAperture = (WheelView) getDialogView()
                 .findViewById(R.id.dofLimitation_minAperture);
-        mWheelMaxAperture = (WheelView) mView
+        mWheelMaxAperture = (WheelView) getDialogView()
                 .findViewById(R.id.dofLimitation_maxAperture);
-        mWheelMinFocalLength = (WheelView) mView
-                .findViewById(R.id.dofLimitation_minFocalLength);
-        mWheelMaxFocalLength = (WheelView) mView
-                .findViewById(R.id.dofLimitation_maxFocalLength);
-        mWheelMinSubjectDistance = (WheelView) mView
-                .findViewById(R.id.dofLimitation_minSubjectDistance);
-        mWheelMaxSubjectDistance = (WheelView) mView
-                .findViewById(R.id.dofLimitation_maxSubjectDistance);
+        mWheelMinFocalLength = (WheelView) getDialogView().findViewById(
+                R.id.dofLimitation_minFocalLength);
+        mWheelMaxFocalLength = (WheelView) getDialogView().findViewById(
+                R.id.dofLimitation_maxFocalLength);
+        mWheelMinSubjectDistance = (WheelView) getDialogView().findViewById(
+                R.id.dofLimitation_minSubjectDistance);
+        mWheelMaxSubjectDistance = (WheelView) getDialogView().findViewById(
+                R.id.dofLimitation_maxSubjectDistance);
     }
 
     /**
      * Creates alert dialog
      */
-    private void createDialog() {
-        mAlertDialog = new AlertDialog.Builder(mContext);
-        mAlertDialog.setView(mView);
-        mAlertDialog.setTitle(R.string.dofLimitation);
+    @Override
+    protected void createDialog() {
+        super.createDialog();
+        loadWheelsData();
+        getAlertDialog().setTitle(R.string.dofLimitation);
     }
 
     /**
@@ -146,8 +135,7 @@ public class DofLimitationDialog extends SherlockDialogFragment {
         int minSubjectDistance = mWheelMinSubjectDistance.getCurrentItem();
         int maxSubjectDistance = mWheelMaxSubjectDistance.getCurrentItem();
 
-        isValid = ((minAperture < maxAperture)
-                && (minFocalLength < maxFocalLength) && (minSubjectDistance < maxSubjectDistance));
+        isValid = ((minAperture < maxAperture) && (minFocalLength < maxFocalLength) && (minSubjectDistance < maxSubjectDistance));
 
         return isValid;
     }
@@ -159,46 +147,25 @@ public class DofLimitationDialog extends SherlockDialogFragment {
         final int textSize = R.dimen.wheelTextSize;
         final List<String> apertures = Arrays.asList(Array.APERTURE_LIST);
         final List<String> focalLengths = Arrays.asList(Array.FOCAL_LENGTH);
-        final List<String> subjectDistance = Arrays
-                .asList(Array.SUBJECT_DISTANCE);
+        final List<String> subjectDistance = Arrays.asList(Array.SUBJECT_DISTANCE);
 
-        Common.setWheelAdapter(mContext, mWheelMinAperture, apertures,
-                textSize, false);
-        Common.setWheelAdapter(mContext, mWheelMaxAperture, apertures,
-                textSize, false);
-        Common.setWheelAdapter(mContext, mWheelMinFocalLength, focalLengths,
-                textSize, false);
-        Common.setWheelAdapter(mContext, mWheelMaxFocalLength, focalLengths,
-                textSize, false);
-        Common.setWheelAdapter(mContext, mWheelMinSubjectDistance,
-                subjectDistance, textSize, false);
-        Common.setWheelAdapter(mContext, mWheelMaxSubjectDistance,
-                subjectDistance, textSize, false);
+        Common.setWheelAdapter(getContext(), mWheelMinAperture, apertures, textSize, false);
+        Common.setWheelAdapter(getContext(), mWheelMaxAperture, apertures, textSize, false);
+        Common.setWheelAdapter(getContext(), mWheelMinFocalLength, focalLengths, textSize, false);
+        Common.setWheelAdapter(getContext(), mWheelMaxFocalLength, focalLengths, textSize, false);
+        Common.setWheelAdapter(getContext(), mWheelMinSubjectDistance, subjectDistance, textSize,
+                false);
+        Common.setWheelAdapter(getContext(), mWheelMaxSubjectDistance, subjectDistance, textSize,
+                false);
 
         if (mLimitData != null) {
-            mWheelMinAperture.setCurrentItem(mLimitData
-                    .getMinAperture());
-            mWheelMaxAperture.setCurrentItem(mLimitData
-                    .getMaxAperture());
-            mWheelMinFocalLength.setCurrentItem(mLimitData
-                    .getMinFocalLength());
-            mWheelMaxFocalLength.setCurrentItem(mLimitData
-                    .getMaxFocalLength());
-            mWheelMinSubjectDistance.setCurrentItem(mLimitData
-                    .getMinSubjectDistance());
-            mWheelMaxSubjectDistance.setCurrentItem(mLimitData
-                    .getMaxSubjectDistance());
+            mWheelMinAperture.setCurrentItem(mLimitData.getMinAperture());
+            mWheelMaxAperture.setCurrentItem(mLimitData.getMaxAperture());
+            mWheelMinFocalLength.setCurrentItem(mLimitData.getMinFocalLength());
+            mWheelMaxFocalLength.setCurrentItem(mLimitData.getMaxFocalLength());
+            mWheelMinSubjectDistance.setCurrentItem(mLimitData.getMinSubjectDistance());
+            mWheelMaxSubjectDistance.setCurrentItem(mLimitData.getMaxSubjectDistance());
         }
-    }
-
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        bindObjectToResource();
-        loadWheelsData();
-        createDialog();
-        setListeners();
-
-        return mAlertDialog.create();
     }
 
     @Override
@@ -207,20 +174,9 @@ public class DofLimitationDialog extends SherlockDialogFragment {
 
         AlertDialog d = (AlertDialog) getDialog();
         if (d != null) {
-            Button positiveButton = (Button) d
-                    .getButton(Dialog.BUTTON_POSITIVE);
+            Button positiveButton = d.getButton(DialogInterface.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(new PositiveClickListener());
         }
-    }
-
-    /**
-     * Sets callback object for handling OK button on the dialog
-     * 
-     * @param callback
-     *            callback object
-     */
-    public void setCallback(OnDofLimitationListener callback) {
-        mCallback = callback;
     }
 
     /**
@@ -233,12 +189,11 @@ public class DofLimitationDialog extends SherlockDialogFragment {
         mLimitData = data;
     }
 
-    /**
-     * Sets listeners for objects
-     */
-    private void setListeners() {
-        mAlertDialog.setPositiveButton(R.string.dialog_button_ok, null);
-        mAlertDialog.setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
+    @Override
+    public void setListeners() {
+        getAlertDialog().setPositiveButton(R.string.dialog_button_ok, null);
+        getAlertDialog()
+                .setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
     }
 
     /**
@@ -249,15 +204,11 @@ public class DofLimitationDialog extends SherlockDialogFragment {
             mLimitData = new Limit();
         }
 
-        mLimitData.setMinAperture( mWheelMinAperture.getCurrentItem());
-        mLimitData.setMaxAperture( mWheelMaxAperture.getCurrentItem());
-        mLimitData.setMinFocalLength( mWheelMinFocalLength
-                .getCurrentItem());
-        mLimitData.setMaxFocalLength( mWheelMaxFocalLength
-                .getCurrentItem());
-        mLimitData.setMinSubjectDistance( mWheelMinSubjectDistance
-                .getCurrentItem());
-        mLimitData.setMaxSubjectDistance( mWheelMaxSubjectDistance
-                .getCurrentItem());
+        mLimitData.setMinAperture(mWheelMinAperture.getCurrentItem());
+        mLimitData.setMaxAperture(mWheelMaxAperture.getCurrentItem());
+        mLimitData.setMinFocalLength(mWheelMinFocalLength.getCurrentItem());
+        mLimitData.setMaxFocalLength(mWheelMaxFocalLength.getCurrentItem());
+        mLimitData.setMinSubjectDistance(mWheelMinSubjectDistance.getCurrentItem());
+        mLimitData.setMaxSubjectDistance(mWheelMaxSubjectDistance.getCurrentItem());
     }
 }
