@@ -15,71 +15,143 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
-import ru.neverdark.phototools.MapActivity;
+import ru.neverdark.abs.CancelClickListener;
+import ru.neverdark.abs.UfoDialogFragment;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.db.DbAdapter;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
-import android.app.AlertDialog;
-import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-
 /**
  * Implements confirm creation dialog
  */
-public class ConfirmCreateDialog extends SherlockDialogFragment {
+public class ConfirmCreateDialog extends UfoDialogFragment {
+
+    private class ConfirmCreateError extends Exception {
+        private static final long serialVersionUID = 748326812444861397L;
+        private int mMessageId;
+
+        public ConfirmCreateError(int messageId) {
+            mMessageId = messageId;
+        }
+
+        public void showErrorMessage() {
+            Toast.makeText(getContext(), mMessageId, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private class IsSaveClickListener implements OnClickListener {
+        @Override
+        public void onClick(View arg0) {
+            setLocationNameVisible(isSaveChecked());
+        }
+    }
+
+    public interface OnConfirmDialogHandler {
+        public void handleConfirmDialog(String locationName);
+    }
+
+    private class PositiveClickListener implements android.content.DialogInterface.OnClickListener {
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            String locationName = null;
+
+            try {
+                if (isSaveChecked()) {
+
+                    locationName = mEditText_locationName.getText().toString();
+
+                    if (locationName.length() == 0) {
+                        throw new ConfirmCreateError(
+                                R.string.dialogConfirmCreate_error_emptyLocationName);
+                        /* if not edit mode - check for location exist */
+                    } else if (mIsEdit == false) {
+
+                        DbAdapter dbAdapter = new DbAdapter(getContext());
+                        dbAdapter.open();
+                        boolean isExists = dbAdapter.getLocations().isLocationExists(locationName);
+
+                        dbAdapter.close();
+
+                        if (isExists == true) {
+                            throw new ConfirmCreateError(
+                                    R.string.dialogConfirmCreate_error_alreayExist);
+                        }
+                    }
+                } else {
+                    locationName = null;
+                }
+
+                OnConfirmDialogHandler callback = (OnConfirmDialogHandler) getCallback();
+                if (callback != null) {
+                    callback.handleConfirmDialog(locationName);
+                }
+            } catch (ConfirmCreateError error) {
+                error.showErrorMessage();
+            }
+
+            dialog.dismiss();
+        }
+    }
+
     public static final String DIALOG_ID = "confirmCreateDialog";
 
     /**
      * Creates and return new ConfirmCreateFragment object
      * 
-     * @param action
-     *            LOCATION_ACTION_ADD or LOCATION_ACTION_EDIT
-     * @param locationName
-     *            the name of edited location
+     * @param context
+     *            application context
      * @return ConfirmCreateFragment object
      */
-    public static ConfirmCreateDialog NewInstance(int action,
-            String locationName) {
+    public static ConfirmCreateDialog getInstance(Context context) {
         Log.message("Enter");
         ConfirmCreateDialog dialog = new ConfirmCreateDialog();
-        dialog.mAction = action;
-        dialog.mLocationName = locationName;
-        dialog.mIsEdit = (action == Constants.LOCATION_ACTION_EDIT);
-        
+        dialog.setContext(context);
         return dialog;
     }
     
     private CheckBox mCheckBox_isSave;
-    private View mView;
+    
     private EditText mEditText_locationName;
-    private AlertDialog.Builder mAlertDialog;
-    private boolean mIsVisible;
-    private String mLocationName;
 
+    private String mLocationName;
     private int mAction;
     private boolean mIsEdit;
 
     /**
-     * Binds classes objects to resources
+     * Shows error message by resourceId
+     * 
+     * @param resourceId
+     *            string resource id contains error message
      */
-    private void bindObjectToResource() {
-        Log.message("Enter");
-        mView = View.inflate(getSherlockActivity(),
-                R.layout.dialog_confirm_create, null);
 
-        mCheckBox_isSave = (CheckBox) mView
-                .findViewById(R.id.dialogConfirmCreate_checkbox_isSave);
-        mEditText_locationName = (EditText) mView
-                .findViewById(R.id.dialogConfirmCreate_editText);
+    @Override
+    public void bindObjects() {
+        setDialogView(View.inflate(getSherlockActivity(), R.layout.dialog_confirm_create, null));
+
+        mCheckBox_isSave = (CheckBox) getDialogView().findViewById(
+                R.id.dialogConfirmCreate_checkbox_isSave);
+        mEditText_locationName = (EditText) getDialogView().findViewById(
+                R.id.dialogConfirmCreate_editText);
+    }
+    @Override
+    protected void createDialog() {
+        super.createDialog();
+
+        if (mAction == Constants.LOCATION_ACTION_EDIT) {
+            initEditMode();
+        }
+
+        getAlertDialog().setTitle(R.string.dialogConfirmCreate_title);
+        getAlertDialog().setMessage(R.string.dialogConfirmCreate_message);
     }
 
     /**
@@ -101,41 +173,22 @@ public class ConfirmCreateDialog extends SherlockDialogFragment {
         return mCheckBox_isSave.isChecked();
     }
 
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.message("Enter");
-
-        bindObjectToResource();
-
-        if (mAction == Constants.LOCATION_ACTION_EDIT) {
-            initEditMode();
-        }
-
-        mAlertDialog = new AlertDialog.Builder(getActivity());
-        mAlertDialog.setView(mView);
-
-        mAlertDialog.setTitle(R.string.dialogConfirmCreate_title);
-
-        mAlertDialog.setMessage(R.string.dialogConfirmCreate_message);
-        setOnClickListeners();
-
-        if (savedInstanceState != null) {
-            mIsVisible = savedInstanceState
-                    .getBoolean(Constants.CONFIRM_CREATION_ISVISIBLE);
-            setLocationNameVisible(mIsVisible);
-            mIsEdit = savedInstanceState.getBoolean(Constants.CONFIRM_CREATION_ISEDIT);
-        } 
-        // Showing Alert Message
-        return mAlertDialog.create();
+    public void setAction(int action) {
+        mAction = action;
+        mIsEdit = (action == Constants.LOCATION_ACTION_EDIT);
     }
 
     @Override
-    public void onSaveInstanceState(Bundle putInstanseState) {
-        super.onSaveInstanceState(putInstanseState);
-        mIsVisible = isSaveChecked();
-        putInstanseState.putBoolean(Constants.CONFIRM_CREATION_ISVISIBLE,
-                mIsVisible);
-        putInstanseState.putBoolean(Constants.CONFIRM_CREATION_ISEDIT, mIsEdit);
+    public void setListeners() {
+        mCheckBox_isSave.setOnClickListener(new IsSaveClickListener());
+        getAlertDialog().setPositiveButton(R.string.dialogConfirmCreate_positive,
+                new PositiveClickListener());
+        getAlertDialog().setNegativeButton(R.string.dialogConfirmCreate_negative,
+                new CancelClickListener());
+    }
+
+    public void setLocationName(String locationName) {
+        mLocationName = locationName;
     }
 
     /**
@@ -150,83 +203,5 @@ public class ConfirmCreateDialog extends SherlockDialogFragment {
         } else {
             mEditText_locationName.setVisibility(View.GONE);
         }
-    }
-
-    /**
-     * Sets onClickListeners for UI objects
-     */
-    private void setOnClickListeners() {
-        // On pressing Yes button
-        mAlertDialog.setPositiveButton(R.string.dialogConfirmCreate_positive,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String locationName = null;
-                        boolean isError = false;
-
-                        if (isSaveChecked()) {
-                            locationName = mEditText_locationName.getText()
-                                    .toString();
-
-                            if (locationName.length() == 0) {
-                                showErrorMessage(R.string.dialogConfirmCreate_error_emptyLocationName);
-                                isError = true;
-                                /* if not edit mode - check for location exist */
-                            } else if (mIsEdit == false){
-
-                                DbAdapter dbAdapter = new DbAdapter(
-                                        mView.getContext());
-                                dbAdapter.open();
-                                boolean isExists = dbAdapter.getLocations()
-                                        .isLocationExists(locationName);
-
-                                dbAdapter.close();
-
-                                if (isExists == true) {
-                                    showErrorMessage(R.string.dialogConfirmCreate_error_alreayExist);
-                                    isError = true;
-                                }
-
-                            }
-                        } else {
-                            locationName = null;
-                        }
-
-                        if (isError == false) {
-                            ((MapActivity) getActivity())
-                                    .handleConfirmDialog(locationName);
-                        }
-
-                        dialog.dismiss();
-
-                    }
-                });
-
-        // on pressing No button
-        mAlertDialog.setNegativeButton(R.string.dialogConfirmCreate_negative,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-        mCheckBox_isSave.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setLocationNameVisible(isSaveChecked());
-            }
-        });
-    }
-
-    /**
-     * Shows error message by resourceId
-     * 
-     * @param resourceId
-     *            string resource id contains error message
-     */
-    private void showErrorMessage(int resourceId) {
-        Toast.makeText(mView.getContext(), resourceId, Toast.LENGTH_LONG)
-                .show();
     }
 }

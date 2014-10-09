@@ -15,8 +15,10 @@
  ******************************************************************************/
 package ru.neverdark.phototools;
 
+import ru.neverdark.abs.OnCallback;
 import ru.neverdark.phototools.db.DbAdapter;
 import ru.neverdark.phototools.fragments.ConfirmCreateDialog;
+import ru.neverdark.phototools.fragments.ConfirmCreateDialog.OnConfirmDialogHandler;
 import ru.neverdark.phototools.fragments.ShowMessageDialog;
 import ru.neverdark.phototools.utils.AsyncGeoCoder;
 import ru.neverdark.phototools.utils.AsyncGeoCoder.OnGeoCoderListener;
@@ -44,6 +46,31 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapActivity extends SherlockFragmentActivity implements OnMapLongClickListener {
+
+    private class ConfirmCreateDialogHandler implements OnConfirmDialogHandler, OnCallback {
+
+        @Override
+        public void handleConfirmDialog(String locationName) {
+            Log.message("Enter");
+
+            Intent intent = new Intent();
+            intent.putExtra(Constants.LOCATION_LATITUDE, mMarkerPosition.latitude);
+            intent.putExtra(Constants.LOCATION_LONGITUDE, mMarkerPosition.longitude);
+
+            if (locationName != null) {
+                saveDataToDatabase(locationName);
+                intent.putExtra(Constants.LOCATION_NAME, locationName);
+            } else {
+                mRecordId = Constants.LOCATION_POINT_ON_MAP_CHOICE;
+            }
+
+            intent.putExtra(Constants.LOCATION_RECORD_ID, mRecordId);
+
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+
+    }
 
     private class GeoCoderListener implements OnGeoCoderListener {
 
@@ -123,32 +150,6 @@ public class MapActivity extends SherlockFragmentActivity implements OnMapLongCl
     private Context mContext;
     private MenuItem mMenuItemSearch;
     private boolean mIsVisible = false;
-
-    /**
-     * Handles getting information from Confirmation dialog
-     * 
-     * @param locationName
-     *            location name
-     */
-    public void handleConfirmDialog(String locationName) {
-        Log.message("Enter");
-
-        Intent intent = new Intent();
-        intent.putExtra(Constants.LOCATION_LATITUDE, mMarkerPosition.latitude);
-        intent.putExtra(Constants.LOCATION_LONGITUDE, mMarkerPosition.longitude);
-
-        if (locationName != null) {
-            saveDataToDatabase(locationName);
-            intent.putExtra(Constants.LOCATION_NAME, locationName);
-        } else {
-            mRecordId = Constants.LOCATION_POINT_ON_MAP_CHOICE;
-        }
-
-        intent.putExtra(Constants.LOCATION_RECORD_ID, mRecordId);
-
-        setResult(RESULT_OK, intent);
-        finish();
-    }
 
     /**
      * Inits Google Map
@@ -316,8 +317,10 @@ public class MapActivity extends SherlockFragmentActivity implements OnMapLongCl
      */
     private void showConfirmDialog() {
         Log.message("Enter");
-        ConfirmCreateDialog confirmDialog = ConfirmCreateDialog.getInstance(mContext, mAction,
-                mLocationName);
+        ConfirmCreateDialog confirmDialog = ConfirmCreateDialog.getInstance(mContext);
+        confirmDialog.setCallback(new ConfirmCreateDialogHandler());
+        confirmDialog.setAction(mAction);
+        confirmDialog.setLocationName(mLocationName);
         confirmDialog.show(getSupportFragmentManager(), ConfirmCreateDialog.DIALOG_ID);
     }
 
