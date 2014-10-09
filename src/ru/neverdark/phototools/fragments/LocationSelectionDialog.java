@@ -22,6 +22,7 @@ import ru.neverdark.phototools.db.DbAdapter;
 import ru.neverdark.phototools.db.LocationsTable;
 import ru.neverdark.phototools.fragments.DeleteConfirmationDialog.OnDeleteConfirmationListener;
 import ru.neverdark.abs.CancelClickListener;
+import ru.neverdark.abs.OnCallback;
 import ru.neverdark.phototools.utils.LocationAdapter;
 import ru.neverdark.phototools.utils.LocationAdapter.LocationImageChangeListener;
 import ru.neverdark.phototools.utils.LocationRecord;
@@ -44,7 +45,7 @@ public class LocationSelectionDialog extends SherlockDialogFragment implements
      * Implements listener for "ok" button on the delete confirmation dialog
      */
     private class DeleteConfirmationListener implements
-            OnDeleteConfirmationListener {
+            OnDeleteConfirmationListener, OnCallback {
         @Override
         public void onDeleteConfirmationHandler(Object deleteRecord) {
             LocationRecord record = (LocationRecord) deleteRecord;

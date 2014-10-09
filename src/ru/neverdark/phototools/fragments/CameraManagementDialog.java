@@ -90,7 +90,7 @@ public class CameraManagementDialog extends UfoDialogFragment {
      * Called when user confirm delete record in the DeleteConfirmationDialog
      */
     private class DeleteConfirmationListener implements
-            OnDeleteConfirmationListener {
+            OnDeleteConfirmationListener, OnCallback {
         @Override
         public void onDeleteConfirmationHandler(Object deleteRecord) {
             UserCamerasRecord record = (UserCamerasRecord) deleteRecord;

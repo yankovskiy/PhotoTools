@@ -135,7 +135,7 @@ public class ConfirmCreateDialog extends UfoDialogFragment {
 
     @Override
     public void bindObjects() {
-        setDialogView(View.inflate(getSherlockActivity(), R.layout.dialog_confirm_create, null));
+        setDialogView(View.inflate(getContext(), R.layout.dialog_confirm_create, null));
 
         mCheckBox_isSave = (CheckBox) getDialogView().findViewById(
                 R.id.dialogConfirmCreate_checkbox_isSave);

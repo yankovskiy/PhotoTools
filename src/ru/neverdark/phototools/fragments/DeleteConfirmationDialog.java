@@ -19,18 +19,15 @@ import java.util.Locale;
 
 import ru.neverdark.phototools.R;
 import ru.neverdark.abs.CancelClickListener;
-import android.app.AlertDialog;
-import android.app.Dialog;
+import ru.neverdark.abs.UfoDialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.os.Bundle;
-import com.actionbarsherlock.app.SherlockDialogFragment;
 
 /**
  * Implements delete confirmation dialog
  */
-public class DeleteConfirmationDialog extends SherlockDialogFragment {
+public class DeleteConfirmationDialog extends UfoDialogFragment {
 
     /**
      * The interface for processing the delete record action
@@ -52,74 +49,62 @@ public class DeleteConfirmationDialog extends SherlockDialogFragment {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             dialog.dismiss();
-            if (mCallback != null) {
-                mCallback.onDeleteConfirmationHandler(mDeleteObject);
+            OnDeleteConfirmationListener callback = (OnDeleteConfirmationListener) getCallback();
+            if (callback != null) {
+                callback.onDeleteConfirmationHandler(mDeleteObject);
             }
         }
     }
-    
+
     /**
      * Creates new dialog
-     * @param context application context
+     * 
+     * @param context
+     *            application context
      * @return dialog
      */
     static public DeleteConfirmationDialog getInstance(Context context) {
         DeleteConfirmationDialog dialog = new DeleteConfirmationDialog();
-        dialog.mContext = context;
+        dialog.setContext(context);
         return dialog;
     }
-    
-    private Context mContext;
+
     private Object mDeleteObject;
-    private AlertDialog.Builder mAlertDialog;
     public static final String DIALOG_TAG = "deleteConfirmationDialog";
-    private OnDeleteConfirmationListener mCallback;
 
     /**
      * Creates alert dialog
      */
-    private void createDialog() {
-        String message = String.format(Locale.US,
-                getString(R.string.deleteConfirmation_dialog_message),
-                mDeleteObject.toString());
-
-        mAlertDialog = new AlertDialog.Builder(mContext);
-        mAlertDialog.setTitle(R.string.deleteConfirmation_dialog_title);
-        mAlertDialog.setMessage(message);
-    }
-
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        createDialog();
-        setClickListener();
+    protected void createDialog() {
+        super.createDialog();
+        String message = String.format(Locale.US,
+                getString(R.string.deleteConfirmation_dialog_message), mDeleteObject.toString());
 
-        return mAlertDialog.create();
-    }
-
-    /**
-     * Sets callback for handling delete record
-     * @param callback
-     */
-    public void setCallback(OnDeleteConfirmationListener callback) {
-        mCallback = callback;
-    }
-
-    /**
-     * Sets click listener for dialog buttons
-     */
-    private void setClickListener() {
-        mAlertDialog.setPositiveButton(R.string.dialog_button_ok,
-                new PositiveClickListener());
-        mAlertDialog.setNegativeButton(R.string.dialog_button_cancel,
-                new CancelClickListener());
+        getAlertDialog().setTitle(R.string.deleteConfirmation_dialog_title);
+        getAlertDialog().setMessage(message);
     }
 
     /**
      * Sets object for delete
+     * 
      * @param deleteObject
      */
     public void setObjectForDelete(Object deleteObject) {
         mDeleteObject = deleteObject;
+    }
+
+    @Override
+    public void bindObjects() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void setListeners() {
+        getAlertDialog().setPositiveButton(R.string.dialog_button_ok, new PositiveClickListener());
+        getAlertDialog()
+                .setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
     }
 
 }
