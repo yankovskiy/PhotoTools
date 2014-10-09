@@ -35,8 +35,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ru.neverdark.abs.OnCallback;
 import ru.neverdark.phototools.MapActivity;
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.fragments.DateDialog.OnDateChangeListener;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.GeoLocationService;
 import ru.neverdark.phototools.utils.LocationRecord;
@@ -74,6 +76,18 @@ import com.luckycatlabs.sunrisesunset.dto.Location;
  * Fragment contains sunrise / sunset UI
  */
 public class SunsetFragment extends SherlockFragment {
+    private class DateChangeHandler implements OnDateChangeListener, OnCallback {
+
+        @Override
+        public void dateChangeHandler(int year, int month, int day) {
+            mYear = year;
+            mMonth = month;
+            mDay = day;
+            updateDate();
+        }
+
+    }
+
     private class LocationNotDetermineException extends Exception {
 
         /**
@@ -198,27 +212,9 @@ public class SunsetFragment extends SherlockFragment {
     }
 
     /**
-     * Sets date and update EditText
-     * 
-     * @param year
-     *            year
-     * @param month
-     *            month of year
-     * @param day
-     *            day of month
-     */
-    public static void setDate(int year, int month, int day) {
-        Log.message("Enter");
-        mYear = year;
-        mMonth = month;
-        mDay = day;
-        updateDate();
-    }
-
-    /**
      * Updates dates into the mEditTextDate
      */
-    private static void updateDate() {
+    private void updateDate() {
         Log.message("Enter");
         Calendar localCalendar = Calendar.getInstance();
         localCalendar.set(mYear, mMonth, mDay);
@@ -869,13 +865,10 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void showDatePicker() {
         Log.message("Enter");
-        DateDialog dateFragment = new DateDialog();
-        Bundle bundle = new Bundle();
-        bundle.putInt(Constants.DATE_YEAR, mYear);
-        bundle.putInt(Constants.DATE_MONTH, mMonth);
-        bundle.putInt(Constants.DATE_DAY, mDay);
-        dateFragment.setArguments(bundle);
-        dateFragment.show(getFragmentManager(), Constants.DATE_PICKER_DIALOG);
+        DateDialog dateFragment = DateDialog.getInstance(mContext);
+        dateFragment.setDate(mYear, mMonth, mDay);
+        dateFragment.setCallback(new DateChangeHandler());
+        dateFragment.show(getFragmentManager(), DateDialog.DIALOG_ID);
     }
 
     /**
