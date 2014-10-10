@@ -879,10 +879,8 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void showInformationDialog(final int messageId) {
         Log.message("Enter");
-        InfoFragmentDialog infoFragment = new InfoFragmentDialog();
-        Bundle bundle = new Bundle();
-        bundle.putInt(Constants.INFORMATION_MESSAGE_ID, messageId);
-        infoFragment.setArguments(bundle);
+        InfoFragmentDialog infoFragment = InfoFragmentDialog.getInstance(mContext);
+        infoFragment.setMessageId(messageId);
         infoFragment.show(getFragmentManager(), InfoFragmentDialog.DIALOG_TAG);
     }
 

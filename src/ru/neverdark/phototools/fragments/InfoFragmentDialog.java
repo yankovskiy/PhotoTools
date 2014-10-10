@@ -17,29 +17,38 @@ package ru.neverdark.phototools.fragments;
 
 import ru.neverdark.phototools.R;
 import ru.neverdark.abs.CancelClickListener;
+import ru.neverdark.abs.UfoDialogFragment;
 import ru.neverdark.phototools.utils.Constants;
-import ru.neverdark.phototools.utils.Log;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.os.Bundle;
-
-import com.actionbarsherlock.app.SherlockDialogFragment;
+import android.content.Context;
 
 /**
  * Implements information dialog
  * 
  */
-public class InfoFragmentDialog extends SherlockDialogFragment {
+public class InfoFragmentDialog extends UfoDialogFragment {
     public static final String DIALOG_TAG = "infoFragmentDialog";
 
+    public static InfoFragmentDialog getInstance(Context context) {
+        InfoFragmentDialog dialog = new InfoFragmentDialog();
+        dialog.setContext(context);
+        return dialog;
+    }
+
+    private int mMessageId;
+
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.message("Enter");
+    public void bindObjects() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    protected void createDialog() {
+        super.createDialog();
         String title = "";
         String message = "";
-        int messageId = getArguments().getInt(Constants.INFORMATION_MESSAGE_ID);
 
-        switch (messageId) {
+        switch (mMessageId) {
         case Constants.INFORMATION_SUNRISE:
             title = getString(R.string.information_title_sunrise);
             message = getString(R.string.information_message_sunrise);
@@ -74,22 +83,16 @@ public class InfoFragmentDialog extends SherlockDialogFragment {
             break;
         }
 
-        Log.variable("title", title);
-        Log.variable("message", message);
+        getAlertDialog().setTitle(title);
+        getAlertDialog().setMessage(message);
+    }
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+    @Override
+    public void setListeners() {
+        getAlertDialog().setNegativeButton(R.string.dialog_button_close, new CancelClickListener());
+    }
 
-        // Setting Dialog Title
-        alertDialog.setTitle(title);
-
-        // Setting Dialog Message
-        alertDialog.setMessage(message);
-
-        // on pressing cancel button
-        alertDialog.setNegativeButton(R.string.dialog_button_close,
-                new CancelClickListener());
-
-        // Creating Alert Message
-        return alertDialog.create();
+    public void setMessageId(int messageId) {
+        mMessageId = messageId;
     }
 }
