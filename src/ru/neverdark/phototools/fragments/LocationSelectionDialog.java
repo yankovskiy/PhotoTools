@@ -23,29 +23,24 @@ import ru.neverdark.phototools.db.LocationsTable;
 import ru.neverdark.phototools.fragments.DeleteConfirmationDialog.OnDeleteConfirmationListener;
 import ru.neverdark.abs.CancelClickListener;
 import ru.neverdark.abs.OnCallback;
+import ru.neverdark.abs.UfoDialogFragment;
 import ru.neverdark.phototools.utils.LocationAdapter;
-import ru.neverdark.phototools.utils.LocationAdapter.LocationImageChangeListener;
+import ru.neverdark.phototools.utils.LocationAdapter.OnLocationChangeListener;
 import ru.neverdark.phototools.utils.LocationRecord;
 import ru.neverdark.phototools.utils.Log;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-
-public class LocationSelectionDialog extends SherlockDialogFragment implements
-        LocationImageChangeListener {
+public class LocationSelectionDialog extends UfoDialogFragment {
 
     /**
      * Implements listener for "ok" button on the delete confirmation dialog
      */
-    private class DeleteConfirmationListener implements
-            OnDeleteConfirmationListener, OnCallback {
+    private class DeleteConfirmationListener implements OnDeleteConfirmationListener, OnCallback {
         @Override
         public void onDeleteConfirmationHandler(Object deleteRecord) {
             LocationRecord record = (LocationRecord) deleteRecord;
@@ -56,37 +51,83 @@ public class LocationSelectionDialog extends SherlockDialogFragment implements
         }
     }
 
+    private class LocationChangeListener implements OnLocationChangeListener {
+
+        @Override
+        public void onLocationEditHandler(int position) {
+            Log.message("Enter");
+            Log.variable("position", String.valueOf(position));
+            getDialog().dismiss();
+
+            LocationRecord record = mAdapter.getItem(position);
+
+            OnLocationListener callback = (OnLocationListener) getCallback();
+            if (callback != null) {
+                callback.onEditLocationHandler(record);
+            }
+        }
+
+        @Override
+        public void onLocationRemoveHandler(int position) {
+            Log.message("Enter");
+
+            DeleteConfirmationDialog dialog = DeleteConfirmationDialog.getInstance(getContext());
+            dialog.setCallback(new DeleteConfirmationListener());
+            dialog.setObjectForDelete(mAdapter.getItem(position));
+            dialog.show(getFragmentManager(), DeleteConfirmationDialog.DIALOG_TAG);
+        }
+
+    }
+
+    private class LocationClickListener implements OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
+            Log.message("Enter");
+            getDialog().dismiss();
+
+            LocationRecord record = mAdapter.getItem(position);
+
+            mDbAdapter.getLocations().udateLastAccessTime(record._id);
+
+            OnLocationListener callback = (OnLocationListener) getCallback();
+            if (callback != null) {
+                callback.onSelectLocationHandler(record);
+            }
+        }
+
+    }
+
+    public interface OnLocationListener {
+        public void onEditLocationHandler(LocationRecord record);
+
+        public void onSelectLocationHandler(LocationRecord record);
+    }
+
     public static LocationSelectionDialog getInstance(Context context) {
         LocationSelectionDialog dialog = new LocationSelectionDialog();
-        dialog.mContext = context;
+        dialog.setContext(context);
         return dialog;
     }
-    private View mView;
-    private ListView mListView;
+
+    private ListView mLocationsList;
     private ArrayList<LocationRecord> mArrayList;
     private DbAdapter mDbAdapter;
     private Cursor mCursor;
     private LocationAdapter mAdapter;
 
-    private Context mContext;
-    
     public static final String DIALOG_TAG = "locationSelectionDialog";
-    
-    private AlertDialog.Builder mAlertDialog;
-    
-    /**
-     * Binds classes objects to resources
-     */
-    private void bindObjectsToResources() {
-        mView = View.inflate(mContext, R.layout.activity_location_selection, null);
-        mListView = (ListView) mView
-                .findViewById(R.id.locationSelection_listView);
+
+    @Override
+    public void bindObjects() {
+        setDialogView(View.inflate(getContext(), R.layout.activity_location_selection, null));
+        mLocationsList = (ListView) getDialogView().findViewById(R.id.locationSelection_listView);
     }
 
-    private void createDialog() {
-        mAlertDialog = new AlertDialog.Builder(mContext);
-        mAlertDialog.setView(mView);
-        mAlertDialog.setTitle(R.string.locationSelection_label_selectLocation);
+    @Override
+    protected void createDialog() {
+        super.createDialog();
+        getAlertDialog().setTitle(R.string.locationSelection_label_selectLocation);
     }
 
     /**
@@ -105,11 +146,11 @@ public class LocationSelectionDialog extends SherlockDialogFragment implements
         loadDynamicData();
 
         if (mAdapter == null) {
-            mAdapter = new LocationAdapter(mView.getContext(),
-                    R.layout.location_row, mArrayList, this);
+            mAdapter = new LocationAdapter(getContext(), R.layout.location_row, mArrayList,
+                    new LocationChangeListener());
         }
 
-        mListView.setAdapter(mAdapter);
+        mLocationsList.setAdapter(mAdapter);
     }
 
     /**
@@ -119,14 +160,10 @@ public class LocationSelectionDialog extends SherlockDialogFragment implements
         Log.message("Enter");
 
         mCursor = mDbAdapter.getLocations().fetchAllLocations();
-        final int KEY_ROWID = mCursor
-                .getColumnIndex(LocationsTable.KEY_ROWID);
-        final int KEY_LOCATION_NAME = mCursor
-                .getColumnIndex(LocationsTable.KEY_LOCATION_NAME);
-        final int KEY_LATITUDE = mCursor
-                .getColumnIndex(LocationsTable.KEY_LATITUDE);
-        final int KEY_LONGITUDE = mCursor
-                .getColumnIndex(LocationsTable.KEY_LONGITUDE);
+        final int KEY_ROWID = mCursor.getColumnIndex(LocationsTable.KEY_ROWID);
+        final int KEY_LOCATION_NAME = mCursor.getColumnIndex(LocationsTable.KEY_LOCATION_NAME);
+        final int KEY_LATITUDE = mCursor.getColumnIndex(LocationsTable.KEY_LATITUDE);
+        final int KEY_LONGITUDE = mCursor.getColumnIndex(LocationsTable.KEY_LONGITUDE);
 
         while (mCursor.moveToNext()) {
             LocationRecord dbRecord = new LocationRecord();
@@ -140,61 +177,16 @@ public class LocationSelectionDialog extends SherlockDialogFragment implements
 
         mCursor.close();
     }
-    
+
     /**
      * Loads static data to the ListView
      */
     private void loadStaticData() {
         Log.message("Enter");
         mArrayList.add(new LocationRecord(0,
-                getString(R.string.locationSelection_label_currentLocation), 0,
-                0));
+                getString(R.string.locationSelection_label_currentLocation), 0, 0));
         mArrayList.add(new LocationRecord(1,
                 getString(R.string.locationSelection_label_pointOnMap), 0, 0));
-    }
-
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.message("Enter");
-        bindObjectsToResources();
-        createDialog();
-        setClickListeners();
-        
-        return mAlertDialog.create();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * ru.neverdark.phototools.utils.LocationAdapter.LocationImageChangeListener
-     * #onLocationImageEdit(int)
-     */
-    @Override
-    public void onLocationImageEdit(int position) {
-        Log.message("Enter");
-        Log.variable("position", String.valueOf(position));
-        this.dismiss();
-
-        LocationRecord record = mAdapter.getItem(position);
-
-        ((SunsetFragment) getTargetFragment()).handleEditCustomLocation(record);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * ru.neverdark.phototools.utils.LocationAdapter.LocationImageChangeListener
-     * #onLocationImageRemove(int)
-     */
-    public void onLocationImageRemove(int position) {
-        Log.message("Enter");
-
-        DeleteConfirmationDialog dialog = DeleteConfirmationDialog.getInstance(mContext);
-        dialog.setCallback(new DeleteConfirmationListener());
-        dialog.setObjectForDelete(mAdapter.getItem(position));
-        dialog.show(getFragmentManager(), DeleteConfirmationDialog.DIALOG_TAG);
     }
 
     @Override
@@ -212,7 +204,7 @@ public class LocationSelectionDialog extends SherlockDialogFragment implements
         super.onResume();
         Log.message("Enter");
         if (mDbAdapter == null) {
-            mDbAdapter = new DbAdapter(mView.getContext());
+            mDbAdapter = new DbAdapter(getContext());
         }
 
         mDbAdapter.open();
@@ -221,34 +213,10 @@ public class LocationSelectionDialog extends SherlockDialogFragment implements
 
     }
 
-    private void setClickListeners() {
-        setOnItemClickListener(this);
-        mAlertDialog.setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
-    }
-
-    /**
-     * Sets on item click listener for ListView
-     * 
-     * @param dialog
-     *            dialog object for closing after handling event
-     */
-    public void setOnItemClickListener(final SherlockDialogFragment dialog) {
-        Log.message("Enter");
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View itemClicked,
-                    int position, long id) {
-                Log.message("Enter");
-                dialog.dismiss();
-
-                LocationRecord record = mAdapter.getItem(position);
-
-                mDbAdapter.getLocations().udateLastAccessTime(record._id);
-
-                ((SunsetFragment) getTargetFragment())
-                        .handleLocationSelection(record);
-
-            }
-        });
+    @Override
+    public void setListeners() {
+        mLocationsList.setOnItemClickListener(new LocationClickListener());
+        getAlertDialog()
+                .setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
     }
 }

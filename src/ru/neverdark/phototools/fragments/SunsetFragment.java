@@ -39,6 +39,7 @@ import ru.neverdark.abs.OnCallback;
 import ru.neverdark.phototools.MapActivity;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.fragments.DateDialog.OnDateChangeListener;
+import ru.neverdark.phototools.fragments.LocationSelectionDialog.OnLocationListener;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.GeoLocationService;
 import ru.neverdark.phototools.utils.LocationRecord;
@@ -84,6 +85,40 @@ public class SunsetFragment extends SherlockFragment {
             mMonth = month;
             mDay = day;
             updateDate();
+        }
+
+    }
+
+    private class LocationEditListener implements OnLocationListener, OnCallback {
+
+        @Override
+        public void onEditLocationHandler(LocationRecord record) {
+            Log.message("Enter");
+            if (isGoogleServiceAvailabe() == true) {
+                Intent mapIntent = new Intent(getActivity(), MapActivity.class);
+                mapIntent.putExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_EDIT);
+                mapIntent.putExtra(Constants.LOCATION_LATITUDE, record.latitude);
+                mapIntent.putExtra(Constants.LOCATION_LONGITUDE, record.longitude);
+                mapIntent.putExtra(Constants.LOCATION_RECORD_ID, record._id);
+                mapIntent.putExtra(Constants.LOCATION_NAME, record.locationName);
+
+                startActivityForResult(mapIntent, Constants.LOCATION_POINT_ON_MAP_CHOICE);
+            }
+        }
+
+        @Override
+        public void onSelectLocationHandler(LocationRecord record) {
+            Log.message("Enter");
+            mSelectionId = record._id;
+
+            if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
+                handleCurrentLocation();
+            } else if (mSelectionId == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
+                handlePointOnMap();
+            } else {
+                Log.variable("mSelectionId", String.valueOf(mSelectionId));
+                handleCustomLocation(record);
+            }
         }
 
     }
@@ -173,15 +208,13 @@ public class SunsetFragment extends SherlockFragment {
         private String readTimeZoneJson() {
             Log.message("Enter");
             StringBuilder builder = new StringBuilder();
-            Calendar calendar = Calendar.getInstance(TimeZone
-                    .getTimeZone("GMT"));
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
             calendar.set(mYear, mMonth, mDay);
             /* Gets desired time as seconds since midnight, January 1, 1970 UTC */
             Long timestamp = calendar.getTimeInMillis() / 1000;
 
             String url_format = "https://maps.googleapis.com/maps/api/timezone/json?location=%f,%f&timestamp=%d&sensor=false";
-            String url = String.format(Locale.US, url_format, mLatitude,
-                    mLongitude, timestamp);
+            String url = String.format(Locale.US, url_format, mLatitude, mLongitude, timestamp);
             Log.variable("url", url);
 
             HttpClient client = new DefaultHttpClient();
@@ -193,8 +226,7 @@ public class SunsetFragment extends SherlockFragment {
                 if (statusCode == HttpStatus.SC_OK) {
                     HttpEntity entity = response.getEntity();
                     InputStream content = entity.getContent();
-                    BufferedReader reader = new BufferedReader(
-                            new InputStreamReader(content));
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(content));
                     String line;
                     while ((line = reader.readLine()) != null) {
                         builder.append(line);
@@ -211,24 +243,12 @@ public class SunsetFragment extends SherlockFragment {
         }
     }
 
-    /**
-     * Updates dates into the mEditTextDate
-     */
-    private void updateDate() {
-        Log.message("Enter");
-        Calendar localCalendar = Calendar.getInstance();
-        localCalendar.set(mYear, mMonth, mDay);
-        /* formating date for system locale */
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy",
-                java.util.Locale.getDefault());
-        mEditTextDate.setText(sdf.format(localCalendar.getTime()));
-    }
-
     private Context mContext;
 
     private View mView;
 
     private static EditText mEditTextDate;
+
     private Button mButtonCalculate;
     private EditText mEditTextLocation;
     private static int mYear;
@@ -239,7 +259,6 @@ public class SunsetFragment extends SherlockFragment {
     private boolean mIsVisibleResult = false;
     private TimeZone mTimeZone;
     private long mSelectionId;
-
     private ServiceConnection mServiceConnection = new ServiceConnection() {
 
         @Override
@@ -256,14 +275,15 @@ public class SunsetFragment extends SherlockFragment {
             mBound = false;
         }
     };
+
     private Intent mSerivceIntent;
     private GeoLocationService mGeoLocationService;
-
     private boolean mBound = false;
 
     private String mOfficialSunrise;
 
     private TextView mOfficialSunriseResult;
+
     private TextView mLabelOfficialSunrise;
     private String mOfficialSunset;
     private TextView mOfficialSunsetResult;
@@ -289,64 +309,45 @@ public class SunsetFragment extends SherlockFragment {
     private LinearLayout mLinearLayoutCalculationResult;
     private TextView mSunsetTimeZoneResult;
     private String mLocationName;
-
     /**
      * Binds classes objects to resources
      */
     private void bindObjectsToResources() {
         Log.message("Enter");
-        mEditTextDate = (EditText) mView
-                .findViewById(R.id.sunset_editText_date);
-        mButtonCalculate = (Button) mView
-                .findViewById(R.id.sunset_button_calculate);
-        mEditTextLocation = (EditText) mView
-                .findViewById(R.id.sunset_editText_location);
+        mEditTextDate = (EditText) mView.findViewById(R.id.sunset_editText_date);
+        mButtonCalculate = (Button) mView.findViewById(R.id.sunset_button_calculate);
+        mEditTextLocation = (EditText) mView.findViewById(R.id.sunset_editText_location);
 
-        mOfficialSunriseResult = (TextView) mView
-                .findViewById(R.id.sunset_label_sunriseResult);
-        mOfficialSunsetResult = (TextView) mView
-                .findViewById(R.id.sunset_label_sunsetResult);
+        mOfficialSunriseResult = (TextView) mView.findViewById(R.id.sunset_label_sunriseResult);
+        mOfficialSunsetResult = (TextView) mView.findViewById(R.id.sunset_label_sunsetResult);
 
-        mAstroSunriseResult = (TextView) mView
-                .findViewById(R.id.sunset_label_astrolSunriseResult);
-        mAstroSunsetResult = (TextView) mView
-                .findViewById(R.id.sunset_label_astrolSunsetResult);
+        mAstroSunriseResult = (TextView) mView.findViewById(R.id.sunset_label_astrolSunriseResult);
+        mAstroSunsetResult = (TextView) mView.findViewById(R.id.sunset_label_astrolSunsetResult);
 
         mNauticalSunriseResult = (TextView) mView
                 .findViewById(R.id.sunset_label_nauticalSunriseResult);
         mNauticalSunsetResult = (TextView) mView
                 .findViewById(R.id.sunset_label_nauticalSunsetResult);
 
-        mCivilSunriseResult = (TextView) mView
-                .findViewById(R.id.sunset_label_civilSunriseResult);
-        mCivilSunsetResult = (TextView) mView
-                .findViewById(R.id.sunset_label_civilSunsetResult);
+        mCivilSunriseResult = (TextView) mView.findViewById(R.id.sunset_label_civilSunriseResult);
+        mCivilSunsetResult = (TextView) mView.findViewById(R.id.sunset_label_civilSunsetResult);
 
-        mLabelOfficialSunrise = (TextView) mView
-                .findViewById(R.id.sunset_label_sunrise);
-        mLabelOfficialSunset = (TextView) mView
-                .findViewById(R.id.sunset_label_sunset);
+        mLabelOfficialSunrise = (TextView) mView.findViewById(R.id.sunset_label_sunrise);
+        mLabelOfficialSunset = (TextView) mView.findViewById(R.id.sunset_label_sunset);
 
-        mLabelAstroSunrise = (TextView) mView
-                .findViewById(R.id.sunset_label_astrolSunrise);
-        mLabelAstroSunset = (TextView) mView
-                .findViewById(R.id.sunset_label_astrolSunset);
+        mLabelAstroSunrise = (TextView) mView.findViewById(R.id.sunset_label_astrolSunrise);
+        mLabelAstroSunset = (TextView) mView.findViewById(R.id.sunset_label_astrolSunset);
 
-        mLabelNauticalSunrise = (TextView) mView
-                .findViewById(R.id.sunset_label_nauticalSunrise);
-        mLabelNauticalSunset = (TextView) mView
-                .findViewById(R.id.sunset_label_nauticalSunset);
+        mLabelNauticalSunrise = (TextView) mView.findViewById(R.id.sunset_label_nauticalSunrise);
+        mLabelNauticalSunset = (TextView) mView.findViewById(R.id.sunset_label_nauticalSunset);
 
-        mLabelCivilSunrise = (TextView) mView
-                .findViewById(R.id.sunset_label_civilSunrise);
-        mLabelCivilSunset = (TextView) mView
-                .findViewById(R.id.sunset_label_civilSunset);
+        mLabelCivilSunrise = (TextView) mView.findViewById(R.id.sunset_label_civilSunrise);
+        mLabelCivilSunset = (TextView) mView.findViewById(R.id.sunset_label_civilSunset);
 
         mLinearLayoutCalculationResult = (LinearLayout) mView
                 .findViewById(R.id.sunsnet_LinearLayout_calculationResult);
 
-        mSunsetTimeZoneResult = (TextView) mView
-                .findViewById(R.id.sunset_label_timeZoneResult);
+        mSunsetTimeZoneResult = (TextView) mView.findViewById(R.id.sunset_label_timeZoneResult);
     }
 
     /**
@@ -355,8 +356,7 @@ public class SunsetFragment extends SherlockFragment {
     private void bindToGeoService() {
         Log.message("Enter");
         mSerivceIntent = new Intent(mContext, GeoLocationService.class);
-        mContext.bindService(mSerivceIntent, mServiceConnection,
-                Context.BIND_AUTO_CREATE);
+        mContext.bindService(mSerivceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     /**
@@ -379,8 +379,7 @@ public class SunsetFragment extends SherlockFragment {
             }
 
             Location location = new Location(mLatitude, mLongitude);
-            SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(
-                    location, mTimeZone);
+            SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(location, mTimeZone);
             Calendar calendar = Calendar.getInstance();
             calendar.set(mYear, mMonth, mDay);
 
@@ -462,50 +461,13 @@ public class SunsetFragment extends SherlockFragment {
     }
 
     /**
-     * Handles edit custom location. Opens map with marker and name from
-     * selected location
-     * 
-     * @param locationRecord
-     *            object contains row from database
-     */
-    public void handleEditCustomLocation(final LocationRecord locationRecord) {
-        Log.message("Enter");
-        if (isGoogleServiceAvailabe() == true) {
-            Intent mapIntent = new Intent(getActivity(), MapActivity.class);
-            mapIntent.putExtra(Constants.LOCATION_ACTION,
-                    Constants.LOCATION_ACTION_EDIT);
-            mapIntent.putExtra(Constants.LOCATION_LATITUDE,
-                    locationRecord.latitude);
-            mapIntent.putExtra(Constants.LOCATION_LONGITUDE,
-                    locationRecord.longitude);
-            mapIntent
-                    .putExtra(Constants.LOCATION_RECORD_ID, locationRecord._id);
-            mapIntent.putExtra(Constants.LOCATION_NAME,
-                    locationRecord.locationName);
-
-            startActivityForResult(mapIntent,
-                    Constants.LOCATION_POINT_ON_MAP_CHOICE);
-        }
-    }
-
-    /**
      * Handling location selection
      * 
      * @param locationRecord
      *            object contains row from database
      */
     public void handleLocationSelection(final LocationRecord locationRecord) {
-        Log.message("Enter");
-        mSelectionId = locationRecord._id;
 
-        if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
-            handleCurrentLocation();
-        } else if (mSelectionId == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
-            handlePointOnMap();
-        } else {
-            Log.variable("mSelectionId", String.valueOf(mSelectionId));
-            handleCustomLocation(locationRecord);
-        }
     }
 
     /**
@@ -517,13 +479,11 @@ public class SunsetFragment extends SherlockFragment {
             getCurrentLocation();
             Intent mapIntent = new Intent(getActivity(), MapActivity.class);
 
-            mapIntent.putExtra(Constants.LOCATION_ACTION,
-                    Constants.LOCATION_ACTION_ADD);
+            mapIntent.putExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_ADD);
             mapIntent.putExtra(Constants.LOCATION_LATITUDE, mLatitude);
             mapIntent.putExtra(Constants.LOCATION_LONGITUDE, mLongitude);
 
-            startActivityForResult(mapIntent,
-                    Constants.LOCATION_POINT_ON_MAP_CHOICE);
+            startActivityForResult(mapIntent, Constants.LOCATION_POINT_ON_MAP_CHOICE);
         }
     }
 
@@ -545,14 +505,12 @@ public class SunsetFragment extends SherlockFragment {
      * @return true if Google service is available
      */
     private boolean isGoogleServiceAvailabe() {
-        int status = GooglePlayServicesUtil
-                .isGooglePlayServicesAvailable(mContext);
+        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mContext);
         boolean isAvailable = false;
         if (status == ConnectionResult.SUCCESS) {
             isAvailable = true;
         } else {
-            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status,
-                    getSherlockActivity(), 1);
+            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, getSherlockActivity(), 1);
             dialog.show();
         }
 
@@ -579,10 +537,8 @@ public class SunsetFragment extends SherlockFragment {
         Log.message("Enter");
         if (requestCode == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
             if (resultCode == Activity.RESULT_OK) {
-                mLatitude = data.getDoubleExtra(Constants.LOCATION_LATITUDE,
-                        0.0);
-                mLongitude = data.getDoubleExtra(Constants.LOCATION_LONGITUDE,
-                        0.0);
+                mLatitude = data.getDoubleExtra(Constants.LOCATION_LATITUDE, 0.0);
+                mLongitude = data.getDoubleExtra(Constants.LOCATION_LONGITUDE, 0.0);
                 mLocationName = data.getStringExtra(Constants.LOCATION_NAME);
                 mSelectionId = data.getLongExtra(Constants.LOCATION_RECORD_ID,
                         Constants.LOCATION_POINT_ON_MAP_CHOICE);
@@ -595,8 +551,7 @@ public class SunsetFragment extends SherlockFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.message("Enter");
         super.onCreateView(inflater, container, savedInstanceState);
         mView = inflater.inflate(R.layout.activity_sunset, container, false);
@@ -620,23 +575,19 @@ public class SunsetFragment extends SherlockFragment {
         setEditTextLongClick(mEditTextLocation);
 
         if (savedInstanceState != null) {
-            mLatitude = savedInstanceState.getDouble(
-                    Constants.LOCATION_LATITUDE, 0.0);
-            mLongitude = savedInstanceState.getDouble(
-                    Constants.LOCATION_LONGITUDE, 0.0);
-            mSelectionId = savedInstanceState.getLong(
-                    Constants.LOCATION_SELECTION_ID,
+            mLatitude = savedInstanceState.getDouble(Constants.LOCATION_LATITUDE, 0.0);
+            mLongitude = savedInstanceState.getDouble(Constants.LOCATION_LONGITUDE, 0.0);
+            mSelectionId = savedInstanceState.getLong(Constants.LOCATION_SELECTION_ID,
                     Constants.LOCATION_CURRENT_POSITION_CHOICE);
             Log.variable("mSelectionId", String.valueOf(mSelectionId));
-            String timeZoneId = savedInstanceState
-                    .getString(Constants.LOCATION_TIMEZONE);
+            String timeZoneId = savedInstanceState.getString(Constants.LOCATION_TIMEZONE);
             if (timeZoneId == null) {
                 timeZoneId = TimeZone.getDefault().getID();
             }
             mTimeZone = TimeZone.getTimeZone(timeZoneId);
 
-            mIsVisibleResult = savedInstanceState.getBoolean(
-                    Constants.LOCATION_IS_VISIVLE_RESULT, false);
+            mIsVisibleResult = savedInstanceState.getBoolean(Constants.LOCATION_IS_VISIVLE_RESULT,
+                    false);
             mAstroSunrise = nullToEmpty(savedInstanceState
                     .getString(Constants.LOCATION_ASTRO_SUNRISE));
             mAstroSunset = nullToEmpty(savedInstanceState
@@ -653,8 +604,7 @@ public class SunsetFragment extends SherlockFragment {
                     .getString(Constants.LOCATION_OFFICIAL_SUNRISE));
             mOfficialSunset = nullToEmpty(savedInstanceState
                     .getString(Constants.LOCATION_OFFICIAL_SUNSET));
-            mLocationName = nullToEmpty(savedInstanceState
-                    .getString(Constants.LOCATION_NAME_DATA));
+            mLocationName = nullToEmpty(savedInstanceState.getString(Constants.LOCATION_NAME_DATA));
 
         } else {
             initDate();
@@ -686,17 +636,14 @@ public class SunsetFragment extends SherlockFragment {
             outState.putString(Constants.LOCATION_TIMEZONE, mTimeZone.getID());
         }
 
-        outState.putBoolean(Constants.LOCATION_IS_VISIVLE_RESULT,
-                mIsVisibleResult);
+        outState.putBoolean(Constants.LOCATION_IS_VISIVLE_RESULT, mIsVisibleResult);
         outState.putString(Constants.LOCATION_ASTRO_SUNRISE, mAstroSunrise);
         outState.putString(Constants.LOCATION_ASTRO_SUNSET, mAstroSunset);
         outState.putString(Constants.LOCATION_CIVIL_SUNRISE, mCivilSunrise);
         outState.putString(Constants.LOCATION_CIVIL_SUNSET, mCivilSunset);
-        outState.putString(Constants.LOCATION_NAUTICAL_SUNRISE,
-                mNauticalSunrise);
+        outState.putString(Constants.LOCATION_NAUTICAL_SUNRISE, mNauticalSunrise);
         outState.putString(Constants.LOCATION_NAUTICAL_SUNSET, mNauticalSunset);
-        outState.putString(Constants.LOCATION_OFFICIAL_SUNRISE,
-                mOfficialSunrise);
+        outState.putString(Constants.LOCATION_OFFICIAL_SUNRISE, mOfficialSunrise);
         outState.putString(Constants.LOCATION_OFFICIAL_SUNSET, mOfficialSunset);
         outState.putString(Constants.LOCATION_NAME_DATA, mLocationName);
     }
@@ -815,11 +762,9 @@ public class SunsetFragment extends SherlockFragment {
     private void setTextLocation() {
         Log.message("Enter");
         if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
-            mEditTextLocation
-                    .setText(R.string.locationSelection_label_currentLocation);
+            mEditTextLocation.setText(R.string.locationSelection_label_currentLocation);
         } else if (mSelectionId == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
-            mEditTextLocation
-                    .setText(R.string.locationSelection_label_pointOnMap);
+            mEditTextLocation.setText(R.string.locationSelection_label_pointOnMap);
         } else {
             mEditTextLocation.setText(mLocationName);
         }
@@ -900,9 +845,8 @@ public class SunsetFragment extends SherlockFragment {
     private void showLocationSelectionDialog() {
         Log.message("Enter");
         LocationSelectionDialog locationFragment = LocationSelectionDialog.getInstance(mContext);
-        locationFragment.setTargetFragment(this, Constants.DIALOG_FRAGMENT);
-        locationFragment.show(getFragmentManager(),
-                LocationSelectionDialog.DIALOG_TAG);
+        locationFragment.setCallback(new LocationEditListener());
+        locationFragment.show(getFragmentManager(), LocationSelectionDialog.DIALOG_TAG);
     }
 
     /**
@@ -934,5 +878,17 @@ public class SunsetFragment extends SherlockFragment {
             mContext.unbindService(mServiceConnection);
             mBound = false;
         }
+    }
+
+    /**
+     * Updates dates into the mEditTextDate
+     */
+    private void updateDate() {
+        Log.message("Enter");
+        Calendar localCalendar = Calendar.getInstance();
+        localCalendar.set(mYear, mMonth, mDay);
+        /* formating date for system locale */
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy", java.util.Locale.getDefault());
+        mEditTextDate.setText(sdf.format(localCalendar.getTime()));
     }
 }

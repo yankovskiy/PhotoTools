@@ -36,14 +36,14 @@ public class LocationAdapter extends ArrayAdapter<LocationRecord> {
     /**
      * Interface for LocationImageChangeListener
      */
-    public interface LocationImageChangeListener {
+    public interface OnLocationChangeListener {
         /**
          * Listener for handling Edit image clicked
          * 
          * @param position
          *            position in ListView
          */
-        public void onLocationImageEdit(int position);
+        public void onLocationEditHandler(int position);
 
         /**
          * Listener for handling Remove image clicked
@@ -51,10 +51,10 @@ public class LocationAdapter extends ArrayAdapter<LocationRecord> {
          * @param position
          *            position in ListView
          */
-        public void onLocationImageRemove(int position);
+        public void onLocationRemoveHandler(int position);
     }
 
-    private LocationImageChangeListener mCallback;
+    private OnLocationChangeListener mCallback;
 
     private Context mContext;
     private int mResource;
@@ -63,7 +63,7 @@ public class LocationAdapter extends ArrayAdapter<LocationRecord> {
 
     public LocationAdapter(Context context, int resource,
             ArrayList<LocationRecord> objects,
-            LocationImageChangeListener callback) {
+            OnLocationChangeListener callback) {
         super(context, resource, objects);
         Log.message("Enter");
         mContext = context;
@@ -113,7 +113,7 @@ public class LocationAdapter extends ArrayAdapter<LocationRecord> {
                         @Override
                         public void onClick(View v) {
                             Log.message("Enter");
-                            mCallback.onLocationImageEdit(position);
+                            mCallback.onLocationEditHandler(position);
                         }
                     });
 
@@ -123,7 +123,7 @@ public class LocationAdapter extends ArrayAdapter<LocationRecord> {
                         @Override
                         public void onClick(View v) {
                             Log.message("Enter");
-                            mCallback.onLocationImageRemove(position);
+                            mCallback.onLocationRemoveHandler(position);
                         }
                     });
 
