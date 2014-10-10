@@ -20,20 +20,18 @@ import java.util.List;
 import kankan.wheel.widget.WheelView;
 import ru.neverdark.phototools.R;
 import ru.neverdark.abs.CancelClickListener;
+import ru.neverdark.abs.UfoDialogFragment;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Limit;
 import ru.neverdark.phototools.utils.evcalculator.EvCalculator;
 import ru.neverdark.phototools.utils.evcalculator.EvData;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.os.Bundle;
+import android.content.DialogInterface;
 import android.view.View;
 import android.widget.Button;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-
-public class EvLimitationDialog extends SherlockDialogFragment {
+public class EvLimitationDialog extends UfoDialogFragment {
     /**
      * Interface provides callback method calls for OK button in the dialog
      */
@@ -54,18 +52,16 @@ public class EvLimitationDialog extends SherlockDialogFragment {
 
         @Override
         public void onClick(View v) {
-            if (mCallback != null) {
+            OnEvLimitationListener callback = (OnEvLimitationListener) getCallback();
+            if (callback != null) {
                 if (isDataValid()) {
                     storeWheelsData();
-                    mCallback.onEvLimitationHandler(mLimitData);
+                    callback.onEvLimitationHandler(mLimitData);
                     dismiss();
                 } else {
-                    ShowMessageDialog errorDialog = ShowMessageDialog
-                            .getInstance(mContext);
-                    errorDialog.setMessages(R.string.error,
-                            R.string.error_minMaxIncorrect);
-                    errorDialog.show(getFragmentManager(),
-                            ShowMessageDialog.DIALOG_TAG);
+                    ShowMessageDialog errorDialog = ShowMessageDialog.getInstance(getContext());
+                    errorDialog.setMessages(R.string.error, R.string.error_minMaxIncorrect);
+                    errorDialog.show(getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
                 }
             }
         }
@@ -82,8 +78,39 @@ public class EvLimitationDialog extends SherlockDialogFragment {
      */
     public static EvLimitationDialog getInstance(Context context) {
         EvLimitationDialog dialog = new EvLimitationDialog();
-        dialog.mContext = context;
+        dialog.setContext(context);
         return dialog;
+    }
+
+    private Limit mLimitData;
+
+    private WheelView mWheelMinAperture;
+
+    private WheelView mWheelMinIso;
+    private WheelView mWheelMinShutter;
+    private WheelView mWheelMaxAperture;
+    private WheelView mWheelMaxIso;
+    private WheelView mWheelMaxShutter;
+
+    @Override
+    public void bindObjects() {
+        setDialogView(View.inflate(getContext(), R.layout.ev_limitation_dialog, null));
+        mWheelMinAperture = (WheelView) getDialogView().findViewById(R.id.evLimitation_minAperture);
+        mWheelMaxAperture = (WheelView) getDialogView().findViewById(R.id.evLimitation_maxAperture);
+        mWheelMinIso = (WheelView) getDialogView().findViewById(R.id.evLimitation_minIso);
+        mWheelMaxIso = (WheelView) getDialogView().findViewById(R.id.evLimitation_maxIso);
+        mWheelMinShutter = (WheelView) getDialogView().findViewById(R.id.evLimitation_minShutter);
+        mWheelMaxShutter = (WheelView) getDialogView().findViewById(R.id.evLimitation_maxShutter);
+    }
+
+    /**
+     * Creates alert dialog
+     */
+    @Override
+    protected void createDialog() {
+        super.createDialog();
+        loadWheelsData();
+        getAlertDialog().setTitle(R.string.evLimitation);
     }
 
     public boolean isDataValid() {
@@ -95,49 +122,6 @@ public class EvLimitationDialog extends SherlockDialogFragment {
         int maxShutter = mWheelMaxShutter.getCurrentItem();
 
         return ((minAperture < maxAperture) && (minIso < maxIso) && (minShutter < maxShutter));
-    }
-
-    private Context mContext;
-
-    private OnEvLimitationListener mCallback;
-
-    private Limit mLimitData;
-
-    private WheelView mWheelMinAperture;
-    private WheelView mWheelMinIso;
-    private WheelView mWheelMinShutter;
-    private WheelView mWheelMaxAperture;
-    private WheelView mWheelMaxIso;
-    private WheelView mWheelMaxShutter;
-
-    private AlertDialog.Builder mAlertDialog;
-
-    private View mView;
-
-    /**
-     * Binds objects to resources
-     */
-    private void bindObjectToResource() {
-        mView = View.inflate(mContext, R.layout.ev_limitation_dialog, null);
-        mWheelMinAperture = (WheelView) mView
-                .findViewById(R.id.evLimitation_minAperture);
-        mWheelMaxAperture = (WheelView) mView
-                .findViewById(R.id.evLimitation_maxAperture);
-        mWheelMinIso = (WheelView) mView.findViewById(R.id.evLimitation_minIso);
-        mWheelMaxIso = (WheelView) mView.findViewById(R.id.evLimitation_maxIso);
-        mWheelMinShutter = (WheelView) mView
-                .findViewById(R.id.evLimitation_minShutter);
-        mWheelMaxShutter = (WheelView) mView
-                .findViewById(R.id.evLimitation_maxShutter);
-    }
-
-    /**
-     * Creates alert dialog
-     */
-    private void createDialog() {
-        mAlertDialog = new AlertDialog.Builder(mContext);
-        mAlertDialog.setView(mView);
-        mAlertDialog.setTitle(R.string.evLimitation);
     }
 
     /**
@@ -152,22 +136,16 @@ public class EvLimitationDialog extends SherlockDialogFragment {
         final List<String> isos = data.getIsoList();
         final List<String> shutters = data.getShutterList();
 
-        Common.setWheelAdapter(mContext, mWheelMaxAperture, apertures,
-                textSize, false);
-        Common.setWheelAdapter(mContext, mWheelMinAperture, apertures,
-                textSize, false);
-        Common.setWheelAdapter(mContext, mWheelMaxIso, isos, textSize, false);
-        Common.setWheelAdapter(mContext, mWheelMinIso, isos, textSize, false);
-        Common.setWheelAdapter(mContext, mWheelMaxShutter, shutters, textSize,
-                false);
-        Common.setWheelAdapter(mContext, mWheelMinShutter, shutters, textSize,
-                false);
+        Common.setWheelAdapter(getContext(), mWheelMaxAperture, apertures, textSize, false);
+        Common.setWheelAdapter(getContext(), mWheelMinAperture, apertures, textSize, false);
+        Common.setWheelAdapter(getContext(), mWheelMaxIso, isos, textSize, false);
+        Common.setWheelAdapter(getContext(), mWheelMinIso, isos, textSize, false);
+        Common.setWheelAdapter(getContext(), mWheelMaxShutter, shutters, textSize, false);
+        Common.setWheelAdapter(getContext(), mWheelMinShutter, shutters, textSize, false);
 
         if (mLimitData != null) {
-            mWheelMinAperture.setCurrentItem(mLimitData
-                    .getMinAperture());
-            mWheelMaxAperture.setCurrentItem(mLimitData
-                    .getMaxAperture());
+            mWheelMinAperture.setCurrentItem(mLimitData.getMinAperture());
+            mWheelMaxAperture.setCurrentItem(mLimitData.getMaxAperture());
             mWheelMinIso.setCurrentItem(mLimitData.getMinIso());
             mWheelMaxIso.setCurrentItem(mLimitData.getMaxIso());
             mWheelMinShutter.setCurrentItem(mLimitData.getMinShutter());
@@ -176,23 +154,14 @@ public class EvLimitationDialog extends SherlockDialogFragment {
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        bindObjectToResource();
-        loadWheelsData();
-        createDialog();
-        setListeners();
+    public void onStart() {
+        super.onStart();
 
-        return mAlertDialog.create();
-    }
-
-    /**
-     * Sets callback object for handling OK button on the dialog
-     * 
-     * @param callback
-     *            callback object
-     */
-    public void setCallback(OnEvLimitationListener callback) {
-        mCallback = callback;
+        AlertDialog d = (AlertDialog) getDialog();
+        if (d != null) {
+            Button positiveButton = d.getButton(DialogInterface.BUTTON_POSITIVE);
+            positiveButton.setOnClickListener(new PositiveClickListener());
+        }
     }
 
     /**
@@ -205,24 +174,11 @@ public class EvLimitationDialog extends SherlockDialogFragment {
         mLimitData = data;
     }
 
-    /**
-     * Sets listeners for objects
-     */
-    private void setListeners() {
-        mAlertDialog.setPositiveButton(R.string.dialog_button_ok, null);
-        mAlertDialog.setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
-    }
-
     @Override
-    public void onStart() {
-        super.onStart();
-
-        AlertDialog d = (AlertDialog) getDialog();
-        if (d != null) {
-            Button positiveButton = (Button) d
-                    .getButton(Dialog.BUTTON_POSITIVE);
-            positiveButton.setOnClickListener(new PositiveClickListener());
-        }
+    public void setListeners() {
+        getAlertDialog().setPositiveButton(R.string.dialog_button_ok, null);
+        getAlertDialog()
+                .setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
     }
 
     /**

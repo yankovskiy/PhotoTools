@@ -62,7 +62,7 @@ public class EvpairsFragment extends SherlockFragment {
     /**
      * Listener for OK button in the DofLimitationDialog
      */
-    private class EvLimitationListener implements OnEvLimitationListener {
+    private class EvLimitationListener implements OnEvLimitationListener, OnCallback {
 
         @Override
         public void onEvLimitationHandler(Limit data) {
