@@ -24,6 +24,7 @@ import kankan.wheel.widget.WheelView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
+import ru.neverdark.abs.OnCallback;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.fragments.EvCompensationDialog.OnEvCompensationListener;
 import ru.neverdark.phototools.fragments.EvLimitationDialog.OnEvLimitationListener;
@@ -48,7 +49,7 @@ import android.widget.TextView;
  * Fragment contains EV Pairs calculator UI
  */
 public class EvpairsFragment extends SherlockFragment {
-    private class EvCompensationListener implements OnEvCompensationListener {
+    private class EvCompensationListener implements OnEvCompensationListener, OnCallback {
 
         @Override
         public void onEvCompensationHandler(int compensationShift) {
