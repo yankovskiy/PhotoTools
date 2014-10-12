@@ -22,22 +22,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
+import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import ru.neverdark.abs.UfoDialogFragment;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.utils.Log;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-
-import com.actionbarsherlock.app.SherlockDialogFragment;
 
 /**
  * The class displaying a list of time zones that match a filter string such as
@@ -47,7 +44,29 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
  * 
  * The class based on the ZonePicker from Android 4.1.2_r2.1
  */
-public class ZonePickerDialog extends SherlockDialogFragment {
+public class ZonePickerDialog extends UfoDialogFragment {
+    private class TimeZoneClickListener implements OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+            HashMap<String, Object> obj = (HashMap<String, Object>) mListView
+                    .getItemAtPosition(position);
+            TimeZone tz = TimeZone.getTimeZone(obj.get(KEY_ID).toString());
+
+            getDialog().dismiss();
+            OnTimeZonePickerListener callback = (OnTimeZonePickerListener) getCallback();
+            if (callback != null) {
+                callback.onTimeZonePickerHandler(tz);
+            }
+
+        }
+
+    }
+    
+    public interface OnTimeZonePickerListener {
+        public void onTimeZonePickerHandler(TimeZone tz);
+    }
+
     public static final String DIALOG = "ZonePicker";
 
     private static final String KEY_ID = "id";
@@ -58,7 +77,12 @@ public class ZonePickerDialog extends SherlockDialogFragment {
 
     private static final int HOUR = 3600000;
 
-    private View mView;
+    public static ZonePickerDialog getInstance(Context context) {
+        ZonePickerDialog dialog = new ZonePickerDialog();
+        dialog.setContext(context);
+        return dialog;
+    }
+
     private ListView mListView;
 
     /**
@@ -73,8 +97,8 @@ public class ZonePickerDialog extends SherlockDialogFragment {
      * @param date
      *            current date
      */
-    private void addItem(List<HashMap<String, Object>> data, String id,
-            String displayName, long date) {
+    private void addItem(List<HashMap<String, Object>> data, String id, String displayName,
+            long date) {
         Log.enter();
         final HashMap<String, Object> map = new HashMap<String, Object>();
         map.put(KEY_ID, id);
@@ -109,13 +133,10 @@ public class ZonePickerDialog extends SherlockDialogFragment {
         data.add(map);
     }
 
-    /**
-     * Binds classes objects to resources
-     */
-    private void bindObjectToResource() {
-        mView = View.inflate(getSherlockActivity(),
-                R.layout.dialog_timezone_picker, null);
-        mListView = (ListView) mView.findViewById(R.id.timeZonePicker_listView);
+    @Override
+    public void bindObjects() {
+        setDialogView(View.inflate(getContext(), R.layout.dialog_timezone_picker, null));
+        mListView = (ListView) getDialogView().findViewById(R.id.timeZonePicker_listView);
     }
 
     /**
@@ -126,13 +147,20 @@ public class ZonePickerDialog extends SherlockDialogFragment {
      */
     private SimpleAdapter constructTimeZoneAdapter(Context context, int layoutId) {
         final String[] from = new String[] { KEY_DISPLAYNAME, KEY_GMT };
-        final int[] to = new int[] { R.id.timeZone_label_displayName,
-                R.id.timeZone_label_gmt };
+        final int[] to = new int[] { R.id.timeZone_label_displayName, R.id.timeZone_label_gmt };
         final List<HashMap<String, Object>> list = getZones(context);
-        final SimpleAdapter adapter = new SimpleAdapter(context, list,
-                layoutId, from, to);
+        final SimpleAdapter adapter = new SimpleAdapter(context, list, layoutId, from, to);
 
         return adapter;
+    }
+
+    @Override
+    protected void createDialog() {
+        super.createDialog();
+        getAlertDialog().setTitle(R.string.zonePicker_title);
+        SimpleAdapter adapter = constructTimeZoneAdapter(getSherlockActivity(),
+                R.layout.time_zone_row);
+        mListView.setAdapter(adapter);
     }
 
     /**
@@ -147,14 +175,13 @@ public class ZonePickerDialog extends SherlockDialogFragment {
         final long date = Calendar.getInstance().getTimeInMillis();
 
         try {
-            XmlResourceParser xrp = context.getResources().getXml(
-                    R.xml.timezones);
-            while (xrp.next() != XmlResourceParser.START_TAG)
+            XmlResourceParser xrp = context.getResources().getXml(R.xml.timezones);
+            while (xrp.next() != XmlPullParser.START_TAG)
                 continue;
             xrp.next();
-            while (xrp.getEventType() != XmlResourceParser.END_TAG) {
-                while (xrp.getEventType() != XmlResourceParser.START_TAG) {
-                    if (xrp.getEventType() == XmlResourceParser.END_DOCUMENT) {
+            while (xrp.getEventType() != XmlPullParser.END_TAG) {
+                while (xrp.getEventType() != XmlPullParser.START_TAG) {
+                    if (xrp.getEventType() == XmlPullParser.END_DOCUMENT) {
                         return data;
                     }
                     xrp.next();
@@ -164,7 +191,7 @@ public class ZonePickerDialog extends SherlockDialogFragment {
                     String displayName = xrp.nextText();
                     addItem(data, id, displayName, date);
                 }
-                while (xrp.getEventType() != XmlResourceParser.END_TAG) {
+                while (xrp.getEventType() != XmlPullParser.END_TAG) {
                     xrp.next();
                 }
                 xrp.next();
@@ -180,42 +207,7 @@ public class ZonePickerDialog extends SherlockDialogFragment {
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.enter();
-        bindObjectToResource();
-
-        AlertDialog.Builder dialog = new AlertDialog.Builder(
-                getSherlockActivity());
-        dialog.setView(mView);
-        dialog.setTitle(R.string.zonePicker_title);
-
-        SimpleAdapter adapter = constructTimeZoneAdapter(getSherlockActivity(),
-                R.layout.time_zone_row);
-        mListView.setAdapter(adapter);
-        setOnItemClickListener(this);
-
-        return dialog.create();
-    }
-
-    /**
-     * Sets on item click listener for ListView
-     * 
-     * @param dialog
-     *            dialog called this function
-     */
-    private void setOnItemClickListener(final SherlockDialogFragment dialog) {
-        mListView.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View itemClicked,
-                    int position, long id) {
-                HashMap<String, Object> obj = (HashMap<String, Object>) mListView
-                        .getItemAtPosition(position);
-                TimeZone tz = TimeZone.getTimeZone(obj.get(KEY_ID).toString());
-
-                dialog.dismiss();
-                ((SunsetFragment) getTargetFragment()).setZoneAndCalculate(tz);
-            }
-        });
+    public void setListeners() {
+        mListView.setOnItemClickListener(new TimeZoneClickListener());
     }
 }

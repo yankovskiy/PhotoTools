@@ -40,6 +40,7 @@ import ru.neverdark.phototools.MapActivity;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.fragments.DateDialog.OnDateChangeListener;
 import ru.neverdark.phototools.fragments.LocationSelectionDialog.OnLocationListener;
+import ru.neverdark.phototools.fragments.ZonePickerDialog.OnTimeZonePickerListener;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.GeoLocationService;
 import ru.neverdark.phototools.utils.LocationRecord;
@@ -77,6 +78,15 @@ import com.luckycatlabs.sunrisesunset.dto.Location;
  * Fragment contains sunrise / sunset UI
  */
 public class SunsetFragment extends SherlockFragment {
+    private class TimeZonePickerListener implements OnTimeZonePickerListener, OnCallback {
+
+        @Override
+        public void onTimeZonePickerHandler(TimeZone tz) {
+            mTimeZone = tz;
+            calculateSunset();
+        }
+    }
+
     private class DateChangeHandler implements OnDateChangeListener, OnCallback {
 
         @Override
@@ -796,16 +806,6 @@ public class SunsetFragment extends SherlockFragment {
     }
 
     /**
-     * Sets mTimeZone to tz and calculate
-     * 
-     * @param tz
-     */
-    public void setZoneAndCalculate(TimeZone tz) {
-        mTimeZone = tz;
-        calculateSunset();
-    }
-
-    /**
      * Shows date picker dialog
      */
     private void showDatePicker() {
@@ -864,8 +864,8 @@ public class SunsetFragment extends SherlockFragment {
      */
     private void showTimeZoneSelectionDialog() {
         Log.enter();
-        ZonePickerDialog dialog = new ZonePickerDialog();
-        dialog.setTargetFragment(this, Constants.DIALOG_FRAGMENT);
+        ZonePickerDialog dialog = ZonePickerDialog.getInstance(mContext);
+        dialog.setCallback(new TimeZonePickerListener());
         dialog.show(getFragmentManager(), ZonePickerDialog.DIALOG);
     }
 
