@@ -15,26 +15,15 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
+import ru.neverdark.abs.CancelClickListener;
+import ru.neverdark.abs.UfoDialogFragment;
 import ru.neverdark.phototools.R;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.os.Bundle;
-
-import com.actionbarsherlock.app.SherlockDialogFragment;
 
 /**
  * Class for showing dialog with specified message and specified title
  */
-public class ShowMessageDialog extends SherlockDialogFragment {
-    private class PositiveClickListener implements OnClickListener {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-        }
-    }
+public class ShowMessageDialog extends UfoDialogFragment {
 
     public static final String DIALOG_TAG = "showMessageDialog";
 
@@ -47,43 +36,37 @@ public class ShowMessageDialog extends SherlockDialogFragment {
      */
     public static ShowMessageDialog getInstance(Context context) {
         ShowMessageDialog dialog = new ShowMessageDialog();
-        dialog.mContext = context;
+        dialog.setContext(context);
         return dialog;
     }
 
     private int mTitleResourceId;
     private int mMessageResourceId;
-    private Context mContext;
-    private AlertDialog.Builder mAlertDialog;
     private String mMessage;
+
+    @Override
+    public void bindObjects() {
+        // TODO Auto-generated method stub
+
+    }
 
     /**
      * Creates alert dialog
      */
-    private void createDialog() {
-        mAlertDialog = new AlertDialog.Builder(mContext);
-        mAlertDialog.setTitle(mTitleResourceId);
+    @Override
+    protected void createDialog() {
+        super.createDialog();
+        getAlertDialog().setTitle(mTitleResourceId);
         if (mMessage == null) {
-            mAlertDialog.setMessage(mMessageResourceId);
+            getAlertDialog().setMessage(mMessageResourceId);
         } else {
-            mAlertDialog.setMessage(mMessage);
+            getAlertDialog().setMessage(mMessage);
         }
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        createDialog();
-        setClickListener();
-
-        return mAlertDialog.create();
-    }
-
-    /**
-     * Sets click listener for dialog buttons
-     */
-    private void setClickListener() {
-        mAlertDialog.setPositiveButton(R.string.dialog_button_ok,
-                new PositiveClickListener());
+    public void setListeners() {
+        getAlertDialog().setNegativeButton(R.string.dialog_button_ok, new CancelClickListener());
     }
 
     /**
@@ -98,7 +81,7 @@ public class ShowMessageDialog extends SherlockDialogFragment {
         mTitleResourceId = titleResourceId;
         mMessageResourceId = messageResourceId;
     }
-    
+
     public void setMessages(int titleResourceId, String message) {
         mTitleResourceId = titleResourceId;
         mMessage = message;
