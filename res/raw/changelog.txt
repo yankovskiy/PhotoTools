@@ -19,10 +19,10 @@
     </style>
   </head>
   <body>
-$ 0.11
-  % Version 0.11
-  _ 02.07.2014
-    * Added exposure compensation feature
+$ 0.12
+  % Version 0.12
+  _ 21.10.2014
+    * Code optimization
 $ END_OF_CHANGE_LOG
   </body>
 </html>
