@@ -101,6 +101,7 @@ public class CameraData {
         canonCameras.add(new CameraData(Vendor.CANON, "5D Mark II", new BigDecimal("36"), new BigDecimal("5616")));
         canonCameras.add(new CameraData(Vendor.CANON, "5D Mark III", new BigDecimal("36"), new BigDecimal("5760")));
         canonCameras.add(new CameraData(Vendor.CANON, "7D", new BigDecimal("22.3"), new BigDecimal("5184")));
+        canonCameras.add(new CameraData(Vendor.CANON, "7D Mark II", new BigDecimal("22.3"), new BigDecimal("5472")));
         canonCameras.add(new CameraData(Vendor.CANON, "6D", new BigDecimal("35.8"), new BigDecimal("5472")));
         canonCameras.add(new CameraData(Vendor.CANON, "D30", new BigDecimal("22.7"), new BigDecimal("2160")));
         canonCameras.add(new CameraData(Vendor.CANON, "D60", new BigDecimal("22.7"), new BigDecimal("3072")));
@@ -123,6 +124,7 @@ public class CameraData {
         canonCameras.add(new CameraData(Vendor.CANON, "100D / Rebel SL1 / Kiss X7", new BigDecimal("22.3"), new BigDecimal("5184")));
         canonCameras.add(new CameraData(Vendor.CANON, "1000D / Rebel XS / Kiss F", new BigDecimal("22.2"), new BigDecimal("3888")));
         canonCameras.add(new CameraData(Vendor.CANON, "1100D / Rebel T3 / Kiss X50", new BigDecimal("22.2"), new BigDecimal("4272")));
+        canonCameras.add(new CameraData(Vendor.CANON, "1200D/EOS Rebel T5/EOS Kiss X70", new BigDecimal("22.2"), new BigDecimal("5184")));
         DATABASE.put(Vendor.CANON, canonCameras);
         
         List<CameraData> fujiCameras = new ArrayList<CameraData>();
@@ -148,8 +150,12 @@ public class CameraData {
         nikonCameras.add(new CameraData(Vendor.NIKON, "D3", new BigDecimal("36"), new BigDecimal("4256")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D3S", new BigDecimal("36"), new BigDecimal("4256")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D4", new BigDecimal("36"), new BigDecimal("4928")));
+        nikonCameras.add(new CameraData(Vendor.NIKON, "D4S", new BigDecimal("36"), new BigDecimal("4928")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D700", new BigDecimal("36"), new BigDecimal("4256")));
+        nikonCameras.add(new CameraData(Vendor.NIKON, "D750", new BigDecimal("36"), new BigDecimal("6016")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D800 / D800E", new BigDecimal("35.9"), new BigDecimal("7360")));
+        nikonCameras.add(new CameraData(Vendor.NIKON, "D810", new BigDecimal("35.9"), new BigDecimal("7360")));
+        nikonCameras.add(new CameraData(Vendor.NIKON, "DF", new BigDecimal("36"), new BigDecimal("4928")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D100", new BigDecimal("23.7"), new BigDecimal("3008")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D200", new BigDecimal("23.7"), new BigDecimal("3872")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D300", new BigDecimal("23.6"), new BigDecimal("4288")));
@@ -168,6 +174,7 @@ public class CameraData {
         nikonCameras.add(new CameraData(Vendor.NIKON, "D5000", new BigDecimal("23.6"), new BigDecimal("4288")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D5100", new BigDecimal("23.6"), new BigDecimal("4928")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D5200", new BigDecimal("23.5"), new BigDecimal("6000")));
+        nikonCameras.add(new CameraData(Vendor.NIKON, "D5300", new BigDecimal("23.5"), new BigDecimal("6000")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D40", new BigDecimal("23.7"), new BigDecimal("3008")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D3000", new BigDecimal("23.6"), new BigDecimal("3872")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D3100", new BigDecimal("23.1"), new BigDecimal("4608")));
@@ -195,20 +202,30 @@ public class CameraData {
         DATABASE.put(Vendor.OLYMPUS, olympusCameras);
         
         List<CameraData> pentaxCameras = new ArrayList<CameraData>();
-        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K100D", new BigDecimal("23.5"), new BigDecimal("3008")));
-        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K110D", new BigDecimal("23.5"), new BigDecimal("3008")));
-        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K10D", new BigDecimal("23.5"), new BigDecimal("3872")));
-        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K200D", new BigDecimal("23.5"), new BigDecimal("3872")));
-        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K20D", new BigDecimal("23.4"), new BigDecimal("4672")));
-        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-m / K2000", new BigDecimal("23.5"), new BigDecimal("3872")));
-        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-7", new BigDecimal("23.4"), new BigDecimal("4672")));
-        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-x", new BigDecimal("23.6"), new BigDecimal("4288")));
-        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-r", new BigDecimal("23.6"), new BigDecimal("4288")));
-        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-5", new BigDecimal("23.7"), new BigDecimal("4928")));
-        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-01", new BigDecimal("23.7"), new BigDecimal("4928")));
-        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-30", new BigDecimal("23.7"), new BigDecimal("4928")));
-        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-5 II", new BigDecimal("23.7"), new BigDecimal("4928")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "645D", new BigDecimal("44"), new BigDecimal("7264")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "645Z", new BigDecimal("44"), new BigDecimal("8256")));
         pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-3", new BigDecimal("23.5"), new BigDecimal("6016")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-7", new BigDecimal("23.4"), new BigDecimal("4672")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-5", new BigDecimal("23.7"), new BigDecimal("4928")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-5 II", new BigDecimal("23.7"), new BigDecimal("4928")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "*ist D", new BigDecimal("23.7"), new BigDecimal("3008")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K10D", new BigDecimal("23.5"), new BigDecimal("3872")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K20D", new BigDecimal("23.4"), new BigDecimal("4672")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K100D", new BigDecimal("23.5"), new BigDecimal("3008")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K200D", new BigDecimal("23.5"), new BigDecimal("3872")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-30", new BigDecimal("23.7"), new BigDecimal("4928")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-50", new BigDecimal("23.7"), new BigDecimal("4928")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-S1", new BigDecimal("23.5"), new BigDecimal("5472")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "*ist DS", new BigDecimal("23.5"), new BigDecimal("3008")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "*ist DS2", new BigDecimal("23.5"), new BigDecimal("3008")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-r", new BigDecimal("23.6"), new BigDecimal("4288")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-500", new BigDecimal("23.7"), new BigDecimal("4928")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "*ist DL", new BigDecimal("23.5"), new BigDecimal("3008")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "DL2", new BigDecimal("23.5"), new BigDecimal("3008")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K110D", new BigDecimal("23.5"), new BigDecimal("3008")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-m / K2000", new BigDecimal("23.5"), new BigDecimal("3872")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-x", new BigDecimal("23.6"), new BigDecimal("4288")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-01", new BigDecimal("23.7"), new BigDecimal("4928")));
         DATABASE.put(Vendor.PENTAX, pentaxCameras);
         
         List<CameraData> sonyCameras = new ArrayList<CameraData>();
@@ -236,6 +253,7 @@ public class CameraData {
         sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A57", new BigDecimal("23.5"), new BigDecimal("5456")));
         sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A65", new BigDecimal("23.5"), new BigDecimal("6000")));
         sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A77", new BigDecimal("23.5"), new BigDecimal("6000")));
+        sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A77 II", new BigDecimal("23.5"), new BigDecimal("6000")));
         sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A99", new BigDecimal("35.8"), new BigDecimal("6000")));
         DATABASE.put(Vendor.SONY, sonyCameras);
         

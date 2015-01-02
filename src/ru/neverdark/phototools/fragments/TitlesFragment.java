@@ -17,9 +17,12 @@ package ru.neverdark.phototools.fragments;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import ru.neverdark.abs.OnCallback;
 import ru.neverdark.phototools.DetailsActivity;
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.fragments.PhotohuntDialog.OnHidePhotohuntMenu;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
@@ -28,9 +31,11 @@ import ru.neverdark.phototools.utils.MainMenuItem;
 import ru.neverdark.phototools.utils.PluginManager;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.AbsListView;
@@ -43,6 +48,17 @@ import com.actionbarsherlock.app.SherlockListFragment;
  * Fragment for navigation list
  */
 public class TitlesFragment extends SherlockListFragment {
+    private class HidePhotohuntMenuListener implements OnHidePhotohuntMenu, OnCallback {
+
+        @Override
+        public void hidePhotohuntMenu() {
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mActivity);
+            sp.edit().putBoolean(Constants.HIDE_PHOTOHUNT_MENU, true).commit();
+            rebuildList();
+        }
+
+    }
+
     private boolean mDualPane;
     private int mCurrentRecordId = 0;
     private SherlockFragmentActivity mActivity;
@@ -75,12 +91,9 @@ public class TitlesFragment extends SherlockListFragment {
         List<MainMenuItem> list = new ArrayList<MainMenuItem>();
 
         // first part of the menu
-        list.add(createMainMenuItem(getString(R.string.main_button_dofcalc),
-                Constants.DOF_CHOICE));
-        list.add(createMainMenuItem(getString(R.string.main_button_evpairs),
-                Constants.EV_CHOICE));
-        list.add(createMainMenuItem(getString(R.string.main_button_sunset),
-                Constants.SUNSET_CHOICE));
+        list.add(createMainMenuItem(getString(R.string.main_button_dofcalc), Constants.DOF_CHOICE));
+        list.add(createMainMenuItem(getString(R.string.main_button_evpairs), Constants.EV_CHOICE));
+        list.add(createMainMenuItem(getString(R.string.main_button_sunset), Constants.SUNSET_CHOICE));
 
         // second part of the menu
         // loads installed plugin list
@@ -90,21 +103,25 @@ public class TitlesFragment extends SherlockListFragment {
             list.add(item);
         }
 
+        if (Locale.getDefault().getLanguage().equals("ru") && isMenuHide() == false) {
+            list.add(createMainMenuItem(getString(R.string.photohunt_menu),
+                    Constants.PHOTOHUNT_CHOICE));
+        }
+
         // third part of the menu
         list.add(createMainMenuItem(getString(R.string.main_button_plugins),
                 Constants.PLUGIN_CHOICE));
-        list.add(createMainMenuItem(getString(R.string.main_button_rateMe),
-                Constants.RATE_CHOICE));
+        list.add(createMainMenuItem(getString(R.string.main_button_rateMe), Constants.RATE_CHOICE));
         list.add(createMainMenuItem(getString(R.string.main_button_feedback),
                 Constants.FEEDBACK_CHOICE));
+
         
         if (Constants.PAID == false) {
             list.add(createMainMenuItem(getString(R.string.main_button_donate),
                     Constants.DONATE_CHOICE));
         }
-        
-        list.add(createMainMenuItem(getString(R.string.main_button_about),
-                Constants.ABOUT_CHOICE));
+
+        list.add(createMainMenuItem(getString(R.string.main_button_about), Constants.ABOUT_CHOICE));
 
         return list;
     }
@@ -139,12 +156,10 @@ public class TitlesFragment extends SherlockListFragment {
         super.onActivityCreated(savedInstanceState);
         mActivity = getSherlockActivity();
         View detailsFrame = mActivity.findViewById(R.id.main_detailFragment);
-        mDualPane = detailsFrame != null
-                && detailsFrame.getVisibility() == View.VISIBLE;
+        mDualPane = detailsFrame != null && detailsFrame.getVisibility() == View.VISIBLE;
 
         if (savedInstanceState != null) {
-            mCurrentRecordId = savedInstanceState.getInt(
-                    Constants.CURRENT_CHOICE, 0);
+            mCurrentRecordId = savedInstanceState.getInt(Constants.CURRENT_CHOICE, 0);
         }
     }
 
@@ -174,12 +189,22 @@ public class TitlesFragment extends SherlockListFragment {
             mAdapter.clear();
         }
 
-        mAdapter = new MainMenuAdapter(mActivity, R.layout.menu_item,
-                R.id.menuItem_label_title, buildMainMenuList());
+        mAdapter = new MainMenuAdapter(mActivity, R.layout.menu_item, R.id.menuItem_label_title,
+                buildMainMenuList());
 
         setListAdapter(mAdapter);
     }
 
+    private void hideMenu() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        sp.edit().putBoolean(Constants.HIDE_PHOTOHUNT_MENU, true).commit();
+    }
+    
+    private boolean isMenuHide() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        return sp.getBoolean(Constants.HIDE_PHOTOHUNT_MENU, false);
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -194,7 +219,7 @@ public class TitlesFragment extends SherlockListFragment {
             mAdapter.clear();
             mAdapter = null;
         }
-        
+
     }
 
     /*
@@ -205,13 +230,11 @@ public class TitlesFragment extends SherlockListFragment {
      * , android.view.View, int, long)
      */
     @Override
-    public void onListItemClick(ListView listView, View view, int position,
-            long id) {
+    public void onListItemClick(ListView listView, View view, int position, long id) {
         Log.message("Enter");
         MainMenuItem menuItem = mAdapter.getItem(position);
         if (menuItem.isPlugin()) {
-            PluginManager.getInstance(mActivity).runPlugin(
-                    menuItem.getPluginPackage());
+            PluginManager.getInstance(mActivity).runPlugin(menuItem.getPluginPackage());
         } else {
             showDetails(position, menuItem.getRecordId());
         }
@@ -240,48 +263,42 @@ public class TitlesFragment extends SherlockListFragment {
     private void replaceFragment(int index) {
         Log.message("Enter");
         boolean isOperationNeed = false;
-        Fragment details = getFragmentManager().findFragmentById(
-                R.id.main_detailFragment);
+        Fragment details = getFragmentManager().findFragmentById(R.id.main_detailFragment);
 
         switch (index) {
         case Constants.DOF_CHOICE:
             if ((details instanceof DofFragment) == false) {
                 details = new DofFragment();
                 isOperationNeed = true;
-                mActivity
-                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }
             break;
         case Constants.EV_CHOICE:
             if ((details instanceof EvpairsFragment) == false) {
                 details = new EvpairsFragment();
                 isOperationNeed = true;
-                mActivity
-                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }
             break;
         case Constants.SUNSET_CHOICE:
             if ((details instanceof SunsetFragment) == false) {
                 details = new SunsetFragment();
                 isOperationNeed = true;
-                mActivity
-                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             }
             break;
         case Constants.ABOUT_CHOICE:
             if ((details instanceof AboutFragment) == false) {
                 details = new AboutFragment();
                 isOperationNeed = true;
-                mActivity
-                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             }
             break;
         case Constants.PLUGIN_CHOICE:
             if ((details instanceof PluginsFragment) == false) {
                 details = new PluginsFragment();
                 isOperationNeed = true;
-                mActivity
-                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             }
             break;
         }
@@ -348,6 +365,8 @@ public class TitlesFragment extends SherlockListFragment {
             Common.gotoDonate(mActivity);
         } else if (recordId == Constants.FEEDBACK_CHOICE) {
             sendEmail();
+        } else if (recordId == Constants.PHOTOHUNT_CHOICE) {
+            showPhotohuntDialog();
         } else {
             if (mDualPane == true) {
                 getListView().setItemChecked(index, true);
@@ -358,6 +377,15 @@ public class TitlesFragment extends SherlockListFragment {
 
             setCurentRecordId(recordId);
         }
+    }
+
+    /**
+     * Shows dialog for photohunt
+     */
+    private void showPhotohuntDialog() {
+        PhotohuntDialog dialog = PhotohuntDialog.getInstance(mActivity);
+        dialog.setCallback(new HidePhotohuntMenuListener());
+        dialog.show(getFragmentManager(), PhotohuntDialog.DIALOG_ID);
     }
 
     /**

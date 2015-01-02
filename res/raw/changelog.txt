@@ -19,10 +19,10 @@
     </style>
   </head>
   <body>
-$ 0.12.1
-  % Version 0.12.1
-  _ 27.10.2014
-    * Fixed problem with time zone (online)
+$ 0.12.2
+  % Version 0.12.2
+  _ 01.01.2015
+    * Added new cameras
 $ END_OF_CHANGE_LOG
   </body>
 </html>
