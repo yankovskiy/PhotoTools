@@ -29,6 +29,9 @@ import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.MainMenuAdapter;
 import ru.neverdark.phototools.utils.MainMenuItem;
 import ru.neverdark.phototools.utils.PluginManager;
+
+import android.app.ListActivity;
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,22 +40,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
-
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.app.SherlockListFragment;
 
 /**
  * Fragment for navigation list
  */
-public class TitlesFragment extends SherlockListFragment {
+public class TitlesFragment extends Fragment {
     private class HidePhotohuntMenuListener implements OnHidePhotohuntMenu, OnCallback {
 
         @Override
         public void hidePhotohuntMenu() {
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mActivity);
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
             sp.edit().putBoolean(Constants.HIDE_PHOTOHUNT_MENU, true).commit();
             rebuildList();
         }
@@ -61,8 +65,9 @@ public class TitlesFragment extends SherlockListFragment {
 
     private boolean mDualPane;
     private int mCurrentRecordId = 0;
-    private SherlockFragmentActivity mActivity;
+    private Context mContext;
     private MainMenuAdapter mAdapter;
+    private ListView mList;
 
     /**
      * Creates main menu item
@@ -97,7 +102,7 @@ public class TitlesFragment extends SherlockListFragment {
 
         // second part of the menu
         // loads installed plugin list
-        PluginManager.getInstance(mActivity).scan();
+        PluginManager.getInstance(mContext).scan();
 
         for (MainMenuItem item : getPluginsList()) {
             list.add(item);
@@ -132,35 +137,42 @@ public class TitlesFragment extends SherlockListFragment {
      * @return list of installed plug-in
      */
     private List<MainMenuItem> getPluginsList() {
-        return PluginManager.getInstance(mActivity).getMenuItems();
+        return PluginManager.getInstance(mContext).getMenuItems();
     }
 
     /**
      * Opens market detail application page
      */
     private void gotoMarket() {
-        String url = "market://details?id=".concat(mActivity.getPackageName());
+        String url = "market://details?id=".concat(mContext.getPackageName());
         Intent marketIntent = new Intent(Intent.ACTION_VIEW);
         marketIntent.setData(Uri.parse(url));
         startActivity(marketIntent);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)
-     */
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        Log.message("Enter");
-        super.onActivityCreated(savedInstanceState);
-        mActivity = getSherlockActivity();
-        View detailsFrame = mActivity.findViewById(R.id.main_detailFragment);
-        mDualPane = detailsFrame != null && detailsFrame.getVisibility() == View.VISIBLE;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.titles_fragment, container, false);
+        mList = (ListView) view.findViewById(R.id.titles_list);
+        mList.setOnItemClickListener(new TitleClickListener());
+
+        mContext = view.getContext();
 
         if (savedInstanceState != null) {
             mCurrentRecordId = savedInstanceState.getInt(Constants.CURRENT_CHOICE, 0);
         }
+
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        View detailsFrame = getActivity().findViewById(R.id.main_detailFragment);
+        mDualPane = detailsFrame != null && detailsFrame.getVisibility() == View.VISIBLE;
+        Log.variable("mDualPane", String.valueOf(detailsFrame == null));
     }
 
     /*
@@ -175,7 +187,7 @@ public class TitlesFragment extends SherlockListFragment {
 
         rebuildList();
         if (mDualPane) {
-            getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+            mList.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
             int position = findPositionById(mCurrentRecordId);
             showDetails(position, mCurrentRecordId);
         }
@@ -189,19 +201,19 @@ public class TitlesFragment extends SherlockListFragment {
             mAdapter.clear();
         }
 
-        mAdapter = new MainMenuAdapter(mActivity, R.layout.menu_item, R.id.menuItem_label_title,
+        mAdapter = new MainMenuAdapter(mContext, R.layout.menu_item, R.id.menuItem_label_title,
                 buildMainMenuList());
 
-        setListAdapter(mAdapter);
+        mList.setAdapter(mAdapter);
     }
 
     private void hideMenu() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         sp.edit().putBoolean(Constants.HIDE_PHOTOHUNT_MENU, true).commit();
     }
     
     private boolean isMenuHide() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         return sp.getBoolean(Constants.HIDE_PHOTOHUNT_MENU, false);
     }
     
@@ -220,24 +232,6 @@ public class TitlesFragment extends SherlockListFragment {
             mAdapter = null;
         }
 
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * android.support.v4.app.ListFragment#onListItemClick(android.widget.ListView
-     * , android.view.View, int, long)
-     */
-    @Override
-    public void onListItemClick(ListView listView, View view, int position, long id) {
-        Log.message("Enter");
-        MainMenuItem menuItem = mAdapter.getItem(position);
-        if (menuItem.isPlugin()) {
-            PluginManager.getInstance(mActivity).runPlugin(menuItem.getPluginPackage());
-        } else {
-            showDetails(position, menuItem.getRecordId());
-        }
     }
 
     /*
@@ -263,6 +257,7 @@ public class TitlesFragment extends SherlockListFragment {
     private void replaceFragment(int index) {
         Log.message("Enter");
         boolean isOperationNeed = false;
+
         Fragment details = getFragmentManager().findFragmentById(R.id.main_detailFragment);
 
         switch (index) {
@@ -270,35 +265,35 @@ public class TitlesFragment extends SherlockListFragment {
             if ((details instanceof DofFragment) == false) {
                 details = new DofFragment();
                 isOperationNeed = true;
-                mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }
             break;
         case Constants.EV_CHOICE:
             if ((details instanceof EvpairsFragment) == false) {
                 details = new EvpairsFragment();
                 isOperationNeed = true;
-                mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }
             break;
         case Constants.SUNSET_CHOICE:
             if ((details instanceof SunsetFragment) == false) {
                 details = new SunsetFragment();
                 isOperationNeed = true;
-                mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             }
             break;
         case Constants.ABOUT_CHOICE:
             if ((details instanceof AboutFragment) == false) {
                 details = new AboutFragment();
                 isOperationNeed = true;
-                mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             }
             break;
         case Constants.PLUGIN_CHOICE:
             if ((details instanceof PluginsFragment) == false) {
                 details = new PluginsFragment();
                 isOperationNeed = true;
-                mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             }
             break;
         }
@@ -306,7 +301,6 @@ public class TitlesFragment extends SherlockListFragment {
         if (isOperationNeed == true) {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.main_detailFragment, details);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commit();
         }
     }
@@ -342,7 +336,7 @@ public class TitlesFragment extends SherlockListFragment {
     private void showActivity(int index) {
         Log.message("Enter");
         Intent intent = new Intent();
-        intent.setClass(getActivity(), DetailsActivity.class);
+        intent.setClass(mContext, DetailsActivity.class);
         intent.putExtra(Constants.SHOWN_INDEX, index);
         startActivity(intent);
     }
@@ -362,14 +356,14 @@ public class TitlesFragment extends SherlockListFragment {
         if (recordId == Constants.RATE_CHOICE) {
             gotoMarket();
         } else if (recordId == Constants.DONATE_CHOICE) {
-            Common.gotoDonate(mActivity);
+            Common.gotoDonate(mContext);
         } else if (recordId == Constants.FEEDBACK_CHOICE) {
             sendEmail();
         } else if (recordId == Constants.PHOTOHUNT_CHOICE) {
             showPhotohuntDialog();
         } else {
             if (mDualPane == true) {
-                getListView().setItemChecked(index, true);
+                mList.setItemChecked(index, true);
                 replaceFragment(recordId);
             } else {
                 showActivity(recordId);
@@ -383,7 +377,7 @@ public class TitlesFragment extends SherlockListFragment {
      * Shows dialog for photohunt
      */
     private void showPhotohuntDialog() {
-        PhotohuntDialog dialog = PhotohuntDialog.getInstance(mActivity);
+        PhotohuntDialog dialog = PhotohuntDialog.getInstance(mContext);
         dialog.setCallback(new HidePhotohuntMenuListener());
         dialog.show(getFragmentManager(), PhotohuntDialog.DIALOG_ID);
     }
@@ -405,4 +399,16 @@ public class TitlesFragment extends SherlockListFragment {
         return 0;
     }
 
+
+    private class TitleClickListener implements android.widget.AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            MainMenuItem menuItem = mAdapter.getItem(i);
+            if (menuItem.isPlugin()) {
+                PluginManager.getInstance(mContext).runPlugin(menuItem.getPluginPackage());
+            } else {
+                showDetails(i, menuItem.getRecordId());
+            }
+        }
+    }
 }

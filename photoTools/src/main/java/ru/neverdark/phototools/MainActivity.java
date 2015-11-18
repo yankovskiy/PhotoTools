@@ -17,11 +17,10 @@ package ru.neverdark.phototools;
 
 import ru.neverdark.phototools.utils.Log;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-public class MainActivity extends SherlockFragmentActivity {
+public class MainActivity extends AppCompatActivity {
 
     /*
      * (non-Javadoc)
@@ -36,10 +35,11 @@ public class MainActivity extends SherlockFragmentActivity {
         if (savedInstanceState == null) {
             Log.saveLogcatToFile();
         }
-        
+
         ChangeLog cl = new ChangeLog(this);
         if (cl.firstRun())
             cl.getLogDialog().show();
+
     }
 
 }

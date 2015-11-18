@@ -1,19 +1,40 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- * 
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- * 
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- ******************************************************************************/
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * ****************************************************************************
+ */
 package ru.neverdark.phototools;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import ru.neverdark.abs.OnCallback;
 import ru.neverdark.phototools.db.DbAdapter;
@@ -25,27 +46,8 @@ import ru.neverdark.phototools.utils.AsyncGeoCoder.OnGeoCoderListener;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.SearchView;
-import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-public class MapActivity extends SherlockFragmentActivity implements OnMapLongClickListener {
+public class MapActivity extends AppCompatActivity implements OnMapLongClickListener {
 
     private class ConfirmCreateDialogHandler implements OnConfirmDialogHandler, OnCallback {
 
@@ -98,7 +100,7 @@ public class MapActivity extends SherlockFragmentActivity implements OnMapLongCl
 
     }
 
-    private class QueryTextListener implements OnQueryTextListener {
+    private class QueryTextListener implements SearchView.OnQueryTextListener {
 
         @Override
         public boolean onQueryTextSubmit(String query) {
@@ -117,7 +119,7 @@ public class MapActivity extends SherlockFragmentActivity implements OnMapLongCl
 
     /**
      * Inits process for searching coordinates by address
-     * 
+     *
      * @param query
      *            address for searching in GeoCoder
      */
@@ -195,11 +197,11 @@ public class MapActivity extends SherlockFragmentActivity implements OnMapLongCl
     protected void onCreate(Bundle savedInstanceState) {
         Log.message("Enter");
         super.onCreate(savedInstanceState);
-        setTheme(R.style.Theme_Sherlock);
+        setTheme(R.style.Theme_AppCompat);
         setContentView(R.layout.activity_map);
 
         initMap();
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mContext = this;
     }
 
@@ -207,17 +209,18 @@ public class MapActivity extends SherlockFragmentActivity implements OnMapLongCl
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.enter();
 
-        MenuInflater inflater = getSupportMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.map_actions, menu);
         mMenuItemSearch = menu.findItem(R.id.map_action_search);
         mMenuItemDone = menu.findItem(R.id.map_button_done);
         mMenuItemDone.setVisible(mIsVisible);
-        
+
         if (Constants.PAID) {
             SearchView mSearchView = new SearchView(mContext);
             mSearchView.setQueryHint(getString(R.string.search_hint));
             mSearchView.setOnQueryTextListener(new QueryTextListener());
             mMenuItemSearch.setActionView(mSearchView);
+
         } else {
             mMenuItemSearch.setActionView(null);
         }
@@ -235,34 +238,37 @@ public class MapActivity extends SherlockFragmentActivity implements OnMapLongCl
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case R.id.map_button_done:
-            showConfirmDialog();
-            return true;
-        case R.id.map_type_map:
-            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            return true;
+            case R.id.map_button_done:
+                showConfirmDialog();
+                return true;
+            case R.id.map_type_map:
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                return true;
 
-        case R.id.map_type_terrain:
-            mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-            return true;
-        case R.id.map_type_satellite:
-            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-            return true;
-        case R.id.map_type_hybrid:
-            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-            return true;
-        case R.id.map_action_search:
-            if (Constants.PAID == false) {
-                Common.gotoDonate(mContext);
-            }
-            break;
+            case R.id.map_type_terrain:
+                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                return true;
+            case R.id.map_type_satellite:
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                return true;
+            case R.id.map_type_hybrid:
+                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                return true;
+            case R.id.map_action_search:
+                if (Constants.PAID == false) {
+                    Common.gotoDonate(mContext);
+                }
+                break;
+            case android.R.id.home:
+                finish();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     /**
      * Saves data to the database
-     * 
+     *
      * @param locationName
      *            location name for save into database
      */
@@ -284,17 +290,17 @@ public class MapActivity extends SherlockFragmentActivity implements OnMapLongCl
 
     /**
      * Sets visible property for Done button
-     * 
+     *
      * @param isVisible
      *            true for Done button visible, false for invisible
      */
     private void setButtonVisible(final boolean isVisible) {
         Log.message("Enter");
-        if (mMenuItemDone != null) { 
+        if (mMenuItemDone != null) {
             mMenuItemDone.setVisible(isVisible);
-        } 
-            mIsVisible = isVisible;
-        
+        }
+        mIsVisible = isVisible;
+
     }
 
     /**

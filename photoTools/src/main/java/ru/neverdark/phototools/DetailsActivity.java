@@ -24,13 +24,12 @@ import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * Activity for showing fragments: DoF, EV Pairs, About
  */
-public class DetailsActivity extends SherlockFragmentActivity {
+public class DetailsActivity extends AppCompatActivity {
     /*
      * (non-Javadoc)
      * 

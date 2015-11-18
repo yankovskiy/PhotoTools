@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/camera_list_item_model"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:layout_toLeftOf="@+id/camera_list_edit_button"
+        android:text="test"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/camera_list_item_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:padding="6dp"/>
+
+    <ImageView
+        android:id="@+id/camera_list_edit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_toLeftOf="@+id/camera_list_item_button"
+        android:layout_marginRight="8dp"
+        android:src="@drawable/ic_mode_edit_white_24dp"
+        android:padding="6dp"
+        android:visibility="gone" />
+
+</RelativeLayout>

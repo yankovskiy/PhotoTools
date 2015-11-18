@@ -21,10 +21,8 @@ package ru.neverdark.phototools.fragments;
 import kankan.wheel.widget.OnWheelScrollListener;
 import kankan.wheel.widget.WheelView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-
 import ru.neverdark.abs.OnCallback;
+import ru.neverdark.abs.UfoFragment;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.fragments.EvCompensationDialog.OnEvCompensationListener;
 import ru.neverdark.phototools.fragments.EvLimitationDialog.OnEvLimitationListener;
@@ -48,7 +46,19 @@ import android.widget.TextView;
 /**
  * Fragment contains EV Pairs calculator UI
  */
-public class EvpairsFragment extends SherlockFragment {
+public class EvpairsFragment extends UfoFragment {
+    private Context mContext;
+
+    @Override
+    public void bindObjects() {
+
+    }
+
+    @Override
+    public void setListeners() {
+
+    }
+
     private class EvCompensationListener implements OnEvCompensationListener, OnCallback {
 
         @Override
@@ -121,8 +131,6 @@ public class EvpairsFragment extends SherlockFragment {
     private String CURRENT_APERTURE_INDEX = "ev1_currentAperture";
     private String CURRENT_ISO_INDEX = "ev1_currentIso";
     private String CURRENT_SHUTTER_INDEX = "ev1_currentShutter";
-
-    private SherlockFragmentActivity mActivity;
 
     private int mCalculateIndex;
 
@@ -217,8 +225,6 @@ public class EvpairsFragment extends SherlockFragment {
 
         mEvLimit = (ImageView) mView.findViewById(R.id.ev_limitation);
         mEvCompensation = (ImageView) mView.findViewById(R.id.ev_compensation);
-
-        mActivity = getSherlockActivity();
     }
 
     private void fillCalculatedWheel(final int index) {
@@ -377,6 +383,7 @@ public class EvpairsFragment extends SherlockFragment {
             Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mView = inflater.inflate(R.layout.activity_evpairs, container, false);
+        mContext = mView.getContext();
         bindObjectsToResources();
         setCyclicToWheels();
 
@@ -554,7 +561,7 @@ public class EvpairsFragment extends SherlockFragment {
     }
 
     private void showEvCompensationDialog() {
-        EvCompensationDialog dialog = EvCompensationDialog.getInstance(mActivity);
+        EvCompensationDialog dialog = EvCompensationDialog.getInstance(mContext);
         dialog.setCallback(new EvCompensationListener());
         dialog.setStep(getStepIndex());
         dialog.setShiftIndex(getEvCompensationShift());
@@ -631,12 +638,12 @@ public class EvpairsFragment extends SherlockFragment {
     private void showLimitationDialog() {
         if (Constants.PAID) {
             EvLimitationDialog dialog = EvLimitationDialog
-                    .getInstance(mActivity);
+                    .getInstance(mContext);
             dialog.setCallback(new EvLimitationListener());
             dialog.setLimitData(getLimit());
             dialog.show(getFragmentManager(), EvLimitationDialog.DIALOG_TAG);
         } else {
-            Common.gotoDonate(mActivity);
+            Common.gotoDonate(mContext);
         }
     }
 
@@ -672,19 +679,19 @@ public class EvpairsFragment extends SherlockFragment {
             mEvCalculator.initArrays(getStepIndex());
         }
 
-        Common.setWheelAdapter(mActivity, mWheel_currentAperture,
+        Common.setWheelAdapter(mContext, mWheel_currentAperture,
                 mEvCalculator.getApertureList(), textSize, false);
-        Common.setWheelAdapter(mActivity, mWheel_currentIso,
+        Common.setWheelAdapter(mContext, mWheel_currentIso,
                 mEvCalculator.getIsoList(), textSize, false);
-        Common.setWheelAdapter(mActivity, mWheel_currentShutter,
+        Common.setWheelAdapter(mContext, mWheel_currentShutter,
                 mEvCalculator.getShutterList(), R.dimen.wheelSutterTextSize,
                 false);
 
-        Common.setWheelAdapter(mActivity, mWheel_newAperture,
+        Common.setWheelAdapter(mContext, mWheel_newAperture,
                 mEvCalculator.getApertureList(), textSize, false);
-        Common.setWheelAdapter(mActivity, mWheel_newIso,
+        Common.setWheelAdapter(mContext, mWheel_newIso,
                 mEvCalculator.getIsoList(), textSize, false);
-        Common.setWheelAdapter(mActivity, mWheel_newShutter,
+        Common.setWheelAdapter(mContext, mWheel_newShutter,
                 mEvCalculator.getShutterList(), R.dimen.wheelSutterTextSize,
                 false);
     }

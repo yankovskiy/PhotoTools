@@ -148,6 +148,44 @@ public class UserCamerasTable {
     }
 
     /**
+     * Gets camera by name
+     * @param camera camera name
+     * @return object contains camera data
+     */
+    public UserCamerasRecord getCameraByName(String camera) {
+        UserCamerasRecord record = null;
+        String where = KEY_CAMERA_NAME.concat(" = ?");
+        String[] whereArgs = { camera };
+
+        Cursor cursor = mDatabase.query(TABLE_NAME, null, where, whereArgs, null, null, null);
+
+        if (cursor.getCount() > 0) {
+            record = new UserCamerasRecord();
+            int id = cursor.getColumnIndex(KEY_ROWID);
+            int cameraName = cursor.getColumnIndex(KEY_CAMERA_NAME);
+            int coc = cursor.getColumnIndex(KEY_COC);
+            int isCustomCoc = cursor.getColumnIndex(KEY_IS_CUSTOM_COC);
+            int resolutionWidth = cursor.getColumnIndex(KEY_RESOLUTION_WIDTH);
+            int resolutionHeight = cursor.getColumnIndex(KEY_RESOLUTION_HEIGHT);
+            int sensorWidth = cursor.getColumnIndex(KEY_SENSOR_WIDTH);
+            int sensorHeight = cursor.getColumnIndex(KEY_SENSOR_HEIGHT);
+
+            cursor.moveToFirst();
+            record.setRecordId(cursor.getLong(id));
+            record.setCameraName(cursor.getString(cameraName));
+            record.setCoc(cursor.getFloat(coc));
+            record.setIsCustomCoc(cursor.getInt(isCustomCoc) > 0);
+            record.setResolutionHeight(cursor.getInt(resolutionHeight));
+            record.setResolutionWidth(cursor.getInt(resolutionWidth));
+            record.setSensorHeight(cursor.getFloat(sensorHeight));
+            record.setSensorWidth(cursor.getFloat(sensorWidth));
+        }
+
+        cursor.close();
+        return record;
+    }
+
+    /**
      * Checks table for exist camera
      * 
      * @param cameraName
@@ -209,5 +247,35 @@ public class UserCamerasTable {
                 resolutionWidth, resolutionHeight, sensorWidth, sensorHeight,
                 coc, isCustomCoc);
         mDatabase.update(TABLE_NAME, updateValues, where, whereArgs);
+    }
+
+    /**
+     * Deletes camera from database by name
+     *
+     * @param camera
+     *            camera name
+     */
+    public void deleteCameraByName(String camera) {
+        String where = KEY_CAMERA_NAME.concat(" = ?");
+        String[] whereArgs = { String.valueOf(camera) };
+        mDatabase.delete(TABLE_NAME, where, whereArgs);
+    }
+
+    /**
+     * Creates camera in database
+     * @param cameraData object contains camera data
+     */
+    public void createCamera(UserCamerasRecord cameraData) {
+        createCamera(cameraData.getCameraName(), cameraData.getResolutionWidth(), cameraData.getResolutionHeight(),
+                cameraData.getSensorWidth(), cameraData.getSensorHeight(), cameraData.getCoc(), cameraData.isCustomCoc());
+    }
+
+    /**
+     * Updates camera in database
+     * @param cameraData object contains camera data
+     */
+    public void updateCamera(UserCamerasRecord cameraData) {
+        updateCamera(cameraData.getRecordId(), cameraData.getCameraName(), cameraData.getResolutionWidth(), cameraData.getResolutionHeight(),
+                cameraData.getSensorWidth(), cameraData.getSensorHeight(), cameraData.getCoc(), cameraData.isCustomCoc());
     }
 }

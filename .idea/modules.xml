@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PhotoTools2.iml" filepath="$PROJECT_DIR$/PhotoTools2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PhotoTools.iml" filepath="$PROJECT_DIR$/PhotoTools.iml" />
       <module fileurl="file://$PROJECT_DIR$/abslib/abslib.iml" filepath="$PROJECT_DIR$/abslib/abslib.iml" />
       <module fileurl="file://$PROJECT_DIR$/luckycatlabs/luckycatlabs.iml" filepath="$PROJECT_DIR$/luckycatlabs/luckycatlabs.iml" />
       <module fileurl="file://$PROJECT_DIR$/photoTools/photoTools.iml" filepath="$PROJECT_DIR$/photoTools/photoTools.iml" />
@@ -10,4 +10,3 @@
     </modules>
   </component>
 </project>
-

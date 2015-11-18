@@ -23,8 +23,6 @@ import kankan.wheel.widget.WheelView;
 import kankan.wheel.widget.adapters.AbstractWheelTextAdapter;
 import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;

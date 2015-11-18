@@ -141,9 +141,6 @@ public class ZonePickerDialog extends UfoDialogFragment {
 
     /**
      * Constructs an adapter with TimeZone list. Sorted by TimeZone in default.
-     * 
-     * @param sortedByName
-     *            use Name for sorting the list.
      */
     private SimpleAdapter constructTimeZoneAdapter(Context context, int layoutId) {
         final String[] from = new String[] { KEY_DISPLAYNAME, KEY_GMT };
@@ -158,7 +155,7 @@ public class ZonePickerDialog extends UfoDialogFragment {
     protected void createDialog() {
         super.createDialog();
         getAlertDialog().setTitle(R.string.zonePicker_title);
-        SimpleAdapter adapter = constructTimeZoneAdapter(getSherlockActivity(),
+        SimpleAdapter adapter = constructTimeZoneAdapter(getContext(),
                 R.layout.time_zone_row);
         mListView.setAdapter(adapter);
     }

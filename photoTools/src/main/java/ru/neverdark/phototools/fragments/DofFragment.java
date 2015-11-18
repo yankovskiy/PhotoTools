@@ -1,19 +1,38 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- * 
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- * 
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- ******************************************************************************/
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * ****************************************************************************
+ */
 package ru.neverdark.phototools.fragments;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -22,12 +41,10 @@ import java.util.List;
 
 import kankan.wheel.widget.OnWheelScrollListener;
 import kankan.wheel.widget.WheelView;
-import kankan.wheel.widget.adapters.ArrayWheelAdapter;
-
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-
 import ru.neverdark.abs.OnCallback;
+import ru.neverdark.abs.UfoFragment;
+import ru.neverdark.phototools.CameraManagementActivity;
+import ru.neverdark.phototools.DetailsActivity;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.fragments.CameraManagementDialog.OnCameraManagementListener;
 import ru.neverdark.phototools.fragments.DofLimitationDialog.OnDofLimitationListener;
@@ -39,22 +56,55 @@ import ru.neverdark.phototools.utils.Limit;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.dofcalculator.Array;
 import ru.neverdark.phototools.utils.dofcalculator.CameraData;
-import ru.neverdark.phototools.utils.dofcalculator.DofCalculator;
 import ru.neverdark.phototools.utils.dofcalculator.CameraData.Vendor;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import ru.neverdark.phototools.utils.dofcalculator.DofCalculator;
 
 /**
  * Fragment contains Depth of Field calculator UI
  */
-public class DofFragment extends SherlockFragment {
+public class DofFragment extends UfoFragment {
+
+    private boolean mFirst;
+
+    @Override
+    public void bindObjects() {
+        mWheelCamera = (WheelView) mView.findViewById(R.id.dof_wheel_camera);
+        mWheelAperture = (WheelView) mView
+                .findViewById(R.id.dof_wheel_aperture);
+        mWheelFocalLength = (WheelView) mView
+                .findViewById(R.id.dof_wheel_focalLength);
+        mWheelSubjectDistance = (WheelView) mView
+                .findViewById(R.id.dof_wheel_subjectDistance);
+        mWheelMeasureUnit = (WheelView) mView
+                .findViewById(R.id.dof_wheel_measureUnit);
+
+        mLabelM = (TextView) mView.findViewById(R.id.dof_label_m);
+        mLabelCm = (TextView) mView.findViewById(R.id.dof_label_cm);
+        mLabelFt = (TextView) mView.findViewById(R.id.dof_label_ft);
+        mLabelIn = (TextView) mView.findViewById(R.id.dof_label_in);
+
+        mLabelNearLimitResult = (TextView) mView
+                .findViewById(R.id.dof_label_nearLimitResult);
+        mLabelFarLimitResult = (TextView) mView
+                .findViewById(R.id.dof_label_farLimitResult);
+        mLabelHyperFocalResult = (TextView) mView
+                .findViewById(R.id.dof_label_hyperFocalResult);
+        mLabelTotalResutl = (TextView) mView
+                .findViewById(R.id.dof_label_totalResult);
+
+        mCameraManagement = (ImageView) mView
+                .findViewById(R.id.dof_cameraManagement);
+        mDofLimit = (ImageView) mView.findViewById(R.id.dof_limitation);
+    }
+
+    @Override
+    public void setListeners() {
+        mCameraManagement.setOnClickListener(new ButtonClickListener());
+        mCameraManagement.setOnTouchListener(new ImageOnTouchListener());
+
+        mDofLimit.setOnClickListener(new ButtonClickListener());
+        mDofLimit.setOnTouchListener(new ImageOnTouchListener());
+    }
 
     /**
      * Click listener for "Camera management" and "Limit" button
@@ -63,16 +113,21 @@ public class DofFragment extends SherlockFragment {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-            case R.id.dof_cameraManagement:
-                CameraManagementDialog cameraDialog = CameraManagementDialog
-                        .getInstance(mContext);
-                cameraDialog.setCallback(new CameraManagementListener());
-                cameraDialog.show(getFragmentManager(),
-                        CameraManagementDialog.DIALOG_TAG);
-                break;
-            case R.id.dof_limitation:
-                showLimitataionDialog();
-                break;
+                case R.id.dof_cameraManagement:
+                    /*
+                    CameraManagementDialog cameraDialog = CameraManagementDialog
+                            .getInstance(mContext);
+                    cameraDialog.setCallback(new CameraManagementListener());
+                    cameraDialog.show(getFragmentManager(),
+                            CameraManagementDialog.DIALOG_TAG);
+                            */
+                    Intent intent = new Intent();
+                    intent.setClass(mContext, CameraManagementActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.dof_limitation:
+                    showLimitataionDialog();
+                    break;
             }
         }
     }
@@ -84,12 +139,8 @@ public class DofFragment extends SherlockFragment {
             OnCameraManagementListener, OnCallback {
         @Override
         public void cameraManagementOnBack() {
-            CameraData.Vendor vendor = (CameraData.Vendor) mWheelVendor
-                    .getSelectedItem();
-            if (vendor.equals(Vendor.USER)) {
-                populateCameraByVendor();
-                recalculate();
-            }
+            populateCameraByVendor();
+            recalculate();
         }
     }
 
@@ -135,7 +186,7 @@ public class DofFragment extends SherlockFragment {
 
             if (minMaxSubjectDistance.getMinValue().equals(minSubjectDistance) == false
                     || minMaxSubjectDistance.getMaxValue().equals(
-                            maxSubjectDistance) == false) {
+                    maxSubjectDistance) == false) {
                 savedData.setSubjectDistancePosition(0);
             } else {
                 savedData.setSubjectDistancePosition(mWheelSubjectDistance
@@ -153,7 +204,7 @@ public class DofFragment extends SherlockFragment {
 
     private final static String APERTURE = "dof_aperture";
 
-    private final static String CAMERA = "dof_camera";
+    private final static String CAMERA = "dof_camera2";
     private final static String FAR_LIMIT = "dof_farLimit";
 
     private final static String FOCAL_LENGTH = "dof_focalLength";
@@ -172,8 +223,6 @@ public class DofFragment extends SherlockFragment {
     private static final String LIMIT_SUBJECT_DISTANCE_MAX = "dof_subject_distance_max_limit";
 
     private final static String TOTAL = "dof_total";
-    private final static String VENDOR = "dof_vendor";
-    private SherlockFragmentActivity mActivity;
     private int mCameraId;
 
     private ImageView mCameraManagement;
@@ -190,7 +239,6 @@ public class DofFragment extends SherlockFragment {
     private TextView mLabelNearLimitResult;
     private TextView mLabelTotalResutl;
     private int mMeasureResultUnit;
-    private int mVendorId;
     private View mView;
     private WheelView mWheelAperture;
     private WheelView mWheelCamera;
@@ -199,13 +247,11 @@ public class DofFragment extends SherlockFragment {
     private WheelView mWheelMeasureUnit;
     private WheelView mWheelSubjectDistance;
 
-    private WheelView mWheelVendor;
-
     private Limit mLimit;
 
     /**
      * Loads arrays to wheels
-     * 
+     *
      * @param savedData
      *            saved position for wheels
      */
@@ -236,16 +282,16 @@ public class DofFragment extends SherlockFragment {
                     Arrays.asList(Array.SUBJECT_DISTANCE));
         }
 
-        Common.setWheelAdapter(mActivity, mWheelAperture, apertureList,
+        Common.setWheelAdapter(mContext, mWheelAperture, apertureList,
                 commonWheelSize, false);
 
-        Common.setWheelAdapter(mActivity, mWheelFocalLength, focalLengthList,
+        Common.setWheelAdapter(mContext, mWheelFocalLength, focalLengthList,
                 commonWheelSize, false);
 
-        Common.setWheelAdapter(mActivity, mWheelMeasureUnit, measureUnits,
+        Common.setWheelAdapter(mContext, mWheelMeasureUnit, measureUnits,
                 measureWheelTextSize, false);
 
-        Common.setWheelAdapter(mActivity, mWheelSubjectDistance,
+        Common.setWheelAdapter(mContext, mWheelSubjectDistance,
                 subjectDistance, commonWheelSize, false);
 
         mWheelAperture.setCurrentItem(savedData.getAperturePosition());
@@ -253,42 +299,6 @@ public class DofFragment extends SherlockFragment {
         mWheelMeasureUnit.setCurrentItem(savedData.getMeasureUnitPosition());
         mWheelSubjectDistance.setCurrentItem(savedData
                 .getSubjectDistancePosition());
-    }
-
-    /**
-     * Binds classes objects to resources
-     */
-    private void bindObjectsToResources() {
-        mWheelVendor = (WheelView) mView.findViewById(R.id.dof_wheel_vendor);
-        mWheelCamera = (WheelView) mView.findViewById(R.id.dof_wheel_camera);
-        mWheelAperture = (WheelView) mView
-                .findViewById(R.id.dof_wheel_aperture);
-        mWheelFocalLength = (WheelView) mView
-                .findViewById(R.id.dof_wheel_focalLength);
-        mWheelSubjectDistance = (WheelView) mView
-                .findViewById(R.id.dof_wheel_subjectDistance);
-        mWheelMeasureUnit = (WheelView) mView
-                .findViewById(R.id.dof_wheel_measureUnit);
-
-        mLabelM = (TextView) mView.findViewById(R.id.dof_label_m);
-        mLabelCm = (TextView) mView.findViewById(R.id.dof_label_cm);
-        mLabelFt = (TextView) mView.findViewById(R.id.dof_label_ft);
-        mLabelIn = (TextView) mView.findViewById(R.id.dof_label_in);
-
-        mLabelNearLimitResult = (TextView) mView
-                .findViewById(R.id.dof_label_nearLimitResult);
-        mLabelFarLimitResult = (TextView) mView
-                .findViewById(R.id.dof_label_farLimitResult);
-        mLabelHyperFocalResult = (TextView) mView
-                .findViewById(R.id.dof_label_hyperFocalResult);
-        mLabelTotalResutl = (TextView) mView
-                .findViewById(R.id.dof_label_totalResult);
-
-        mCameraManagement = (ImageView) mView
-                .findViewById(R.id.dof_cameraManagement);
-        mDofLimit = (ImageView) mView.findViewById(R.id.dof_limitation);
-
-        mActivity = getSherlockActivity();
     }
 
     /**
@@ -307,12 +317,9 @@ public class DofFragment extends SherlockFragment {
      * @ return cirle of confusion for selected camera
      */
     private BigDecimal getCoc() {
-        CameraData.Vendor vendor = (CameraData.Vendor) mWheelVendor
-                .getSelectedItem();
         String camera = (String) mWheelCamera.getSelectedItem();
-        BigDecimal coc = CameraData.getCocForCamera(vendor, camera);
+        BigDecimal coc = CameraData.getCocForCamera(Vendor.USER, camera);
         Log.variable("camera", camera);
-        Log.variable("vendor", vendor.toString());
 
         if (Log.DEBUG) {
             if (coc != null) {
@@ -351,26 +358,6 @@ public class DofFragment extends SherlockFragment {
         String distance = (String) mWheelSubjectDistance.getSelectedItem();
         Log.variable("distance", distance);
         return new BigDecimal(distance);
-    }
-
-    /**
-     * Loads cameras data to wheels
-     */
-    private void loadCamerasDataToWheel() {
-        Log.enter();
-
-        final CameraData.Vendor vendors[] = CameraData.getVendors();
-        final int textSize = (int) (getResources().getDimension(
-                R.dimen.wheelTextSize) / getResources().getDisplayMetrics().density);
-
-        ArrayWheelAdapter<CameraData.Vendor> adapter = new ArrayWheelAdapter<CameraData.Vendor>(
-                getSherlockActivity(), vendors);
-        mWheelVendor.setViewAdapter(adapter);
-        adapter.setTextSize(textSize);
-
-        mWheelVendor.setCurrentItem(mVendorId);
-
-        populateCameraByVendor();
     }
 
     private class SavedData {
@@ -414,7 +401,7 @@ public class DofFragment extends SherlockFragment {
 
     /**
      * Loads data from shared preferences
-     * 
+     *
      * @return saved position for wheels
      */
     private SavedData loadSavedData() {
@@ -423,7 +410,6 @@ public class DofFragment extends SherlockFragment {
 
         SharedPreferences prefs = getActivity().getPreferences(
                 Context.MODE_PRIVATE);
-        mVendorId = prefs.getInt(VENDOR, 0);
         mCameraId = prefs.getInt(CAMERA, 0);
 
         savedData.setAperturePosition(prefs.getInt(APERTURE, 0));
@@ -458,21 +444,21 @@ public class DofFragment extends SherlockFragment {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                case R.id.dof_label_m:
-                    mMeasureResultUnit = Constants.METER;
-                    break;
+                    case R.id.dof_label_m:
+                        mMeasureResultUnit = Constants.METER;
+                        break;
 
-                case R.id.dof_label_cm:
-                    mMeasureResultUnit = Constants.CM;
-                    break;
+                    case R.id.dof_label_cm:
+                        mMeasureResultUnit = Constants.CM;
+                        break;
 
-                case R.id.dof_label_ft:
-                    mMeasureResultUnit = Constants.FOOT;
-                    break;
+                    case R.id.dof_label_ft:
+                        mMeasureResultUnit = Constants.FOOT;
+                        break;
 
-                case R.id.dof_label_in:
-                    mMeasureResultUnit = Constants.INCH;
-                    break;
+                    case R.id.dof_label_in:
+                        mMeasureResultUnit = Constants.INCH;
+                        break;
                 }
 
                 updateMeasureButtons();
@@ -495,26 +481,26 @@ public class DofFragment extends SherlockFragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         long start = Log.enter();
         super.onCreateView(inflater, container, savedInstanceState);
         mView = inflater.inflate(R.layout.activity_dof, container, false);
         mContext = mView.getContext();
 
-        bindObjectsToResources();
+        bindObjects();
 
         setCyclicToWheels();
         SavedData savedData = loadSavedData();
         arrayToWheels(savedData);
-        loadCamerasDataToWheel();
-        vendorSelectionHandler();
+        populateCameraByVendor();
         measureButtonsHandler();
         wheelsHandler();
         updateMeasureButtons();
         recalculate();
-        setClickListeners();
-
+        setListeners();
+        mFirst = true;
         Log.exit(start);
+
         return mView;
     }
 
@@ -530,18 +516,48 @@ public class DofFragment extends SherlockFragment {
     public void onResume() {
         super.onResume();
         Log.enter();
+        // populate and recalc only if resume from camera management
+        if (mFirst) {
+            mFirst = false;
+        } else {
+            populateCameraByVendor();
+            recalculate();
+        }
+
+        ViewTarget target = new ViewTarget(R.id.dof_cameraManagement, getActivity());
+        ShowcaseView view = new ShowcaseView.Builder(getActivity(), true)
+                .setTarget(target)
+                .setContentTitle(R.string.dof_sc_title)
+                .setContentText(R.string.dof_sc_message)
+                .hideOnTouchOutside()
+                        .singleShot(1213)
+                .setStyle(R.style.SVCustom)
+                .build();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int height = getNavigationBarHeight(mContext);
+            Log.variable("height", String.valueOf(height));
+            view.setPadding(0, 0, 0, height);
+        }
+    }
+
+    private int getNavigationBarHeight(Context context) {
+        Resources resources = context.getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return resources.getDimensionPixelSize(resourceId);
+        }
+        return 0;
     }
 
     /**
      * Populates camera models by selected vendor
      */
     private void populateCameraByVendor() {
-        CameraData.Vendor vendor = (CameraData.Vendor) mWheelVendor
-                .getSelectedItem();
-        String cameras[] = CameraData.getCameraByVendor(vendor, mContext);
+        String cameras[] = CameraData.getCameraByVendor(Vendor.USER, mContext);
         final int textSize = R.dimen.wheelCameraTextSize;
 
-        Common.setWheelAdapter(mActivity, mWheelCamera, cameras, textSize,
+        Common.setWheelAdapter(mContext, mWheelCamera, cameras, textSize,
                 false);
         mWheelCamera.setCurrentItem(mCameraId);
     }
@@ -592,7 +608,6 @@ public class DofFragment extends SherlockFragment {
 
         SharedPreferences.Editor editor = preferenced.edit();
 
-        editor.putInt(VENDOR, mWheelVendor.getCurrentItem());
         editor.putInt(CAMERA, mWheelCamera.getCurrentItem());
         editor.putInt(APERTURE, mWheelAperture.getCurrentItem());
         editor.putInt(FOCAL_LENGTH, mWheelFocalLength.getCurrentItem());
@@ -621,24 +636,13 @@ public class DofFragment extends SherlockFragment {
         editor.commit();
     }
 
-    private void setClickListeners() {
-        mCameraManagement.setOnClickListener(new ButtonClickListener());
-        mCameraManagement.setOnTouchListener(new ImageOnTouchListener());
-
-        mDofLimit.setOnClickListener(new ButtonClickListener());
-        mDofLimit.setOnTouchListener(new ImageOnTouchListener());
-    }
-
     /**
      * Sets wheels to cyclic
      */
     private void setCyclicToWheels() {
         mWheelAperture.setCyclic(true);
-        mWheelCamera.setCyclic(true);
         mWheelFocalLength.setCyclic(true);
-        mWheelMeasureUnit.setCyclic(true);
         mWheelSubjectDistance.setCyclic(true);
-        mWheelVendor.setCyclic(true);
     }
 
     private void showLimitataionDialog() {
@@ -664,48 +668,22 @@ public class DofFragment extends SherlockFragment {
         Common.setBg(mLabelIn, R.drawable.right_stroke);
 
         switch (mMeasureResultUnit) {
-        case Constants.METER:
-            Common.setBg(mLabelM, R.drawable.left_blue_button);
-            break;
+            case Constants.METER:
+                Common.setBg(mLabelM, R.drawable.left_blue_button);
+                break;
 
-        case Constants.CM:
-            Common.setBg(mLabelCm, R.drawable.middle_blue_button);
-            break;
+            case Constants.CM:
+                Common.setBg(mLabelCm, R.drawable.middle_blue_button);
+                break;
 
-        case Constants.FOOT:
-            Common.setBg(mLabelFt, R.drawable.middle_blue_button);
-            break;
+            case Constants.FOOT:
+                Common.setBg(mLabelFt, R.drawable.middle_blue_button);
+                break;
 
-        case Constants.INCH:
-            Common.setBg(mLabelIn, R.drawable.right_blue_button);
-            break;
+            case Constants.INCH:
+                Common.setBg(mLabelIn, R.drawable.right_blue_button);
+                break;
         }
-    }
-
-    /**
-     * Handler for changing vendor.
-     * 
-     * When user change vendor in the wheel - we reload cameras wheel
-     */
-    private void vendorSelectionHandler() {
-        Log.enter();
-        OnWheelScrollListener listener = new OnWheelScrollListener() {
-
-            @Override
-            public void onScrollingFinished(WheelView wheel) {
-                mCameraId = 0;
-                populateCameraByVendor();
-                recalculate();
-            }
-
-            @Override
-            public void onScrollingStarted(WheelView wheel) {
-                // nothing
-
-            }
-        };
-
-        mWheelVendor.addScrollingListener(listener);
     }
 
     /**

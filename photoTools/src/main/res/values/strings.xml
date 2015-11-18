@@ -44,7 +44,7 @@
     
     <string name="dof_label_aperture">Aperture</string>
     <string name="dof_label_calculationResult">Result of calculations</string>
-    <string name="dof_label_camera">Camera model</string>
+    <string name="dof_label_myCameras">My cameras</string>
     <string name="dof_label_farLimit">Far limit:</string>
     <string name="dof_label_focalLength">Focal length</string>
     <string name="dof_label_hyperFocal">Hyperfocal:</string>
@@ -52,6 +52,8 @@
     <string name="dof_label_shootingOptions">Shooting options</string>
     <string name="dof_label_subjectDistance">Focus distance</string>
     <string name="dof_label_total">Total:</string>
+    <string name="dof_sc_title">Manage cameras</string>
+    <string name="dof_sc_message">Select existing model or create your camera</string>
     
     <string name="evpairs_button_calculate">Calculate</string>
     <string name="evpairs_button_clear">Clear</string>
@@ -226,4 +228,9 @@
     <string name="error_notFound">No results found for address \"%s\"</string>
     
     <string name="evCompensation_title">Exposure compensation</string>
+    <string name="confirm_action_copy_title">Copy camera</string>
+    <string formatted="false" name="confirm_action_copy_message">Do you want copy %s to user cameras?</string>
+    <string name="confirm_action_remove_title">Delete camera</string>
+    <string formatted="false" name="confirm_action_remove_message">Delete camera %s?</string>
+    <string name="camera_copied">Camera copied</string>
 </resources>

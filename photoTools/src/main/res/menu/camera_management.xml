@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:visible="false"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/camera_management_add"
+        android:icon="@drawable/ic_add_white_24dp"
+        app:showAsAction="always"
+        android:title="@string/userCamera_addCamera">
+    </item>
+
+</menu>

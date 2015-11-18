@@ -1,28 +1,31 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
-
+    compileSdkVersion 23
+    buildToolsVersion '23.0.1'
     defaultConfig {
         applicationId "ru.neverdark.phototools"
-        minSdkVersion 9
-        targetSdkVersion 21
+        minSdkVersion 11
+        targetSdkVersion 23
+        versionCode 66
+        versionName '0.12.2'
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+    productFlavors {
+    }
+
 }
 
 dependencies {
     compile project(':wheel')
     compile project(':abslib')
     compile project(':luckycatlabs')
-    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
-    compile 'com.android.support:support-v4:19.1.0'
-    compile 'com.google.android.gms:play-services:+'
+    compile 'com.github.amlcurran.showcaseview:library:5.0.0'
+    compile 'com.google.android.gms:play-services:8.3.0'
+    compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
 }

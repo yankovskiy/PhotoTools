@@ -48,7 +48,7 @@
     
     <string name="dof_label_aperture">Диафрагма</string>
     <string name="dof_label_calculationResult">Результаты расчетов</string>
-    <string name="dof_label_camera">Модель камеры</string>
+    <string name="dof_label_myCameras">Мои камеры</string>
     <string name="dof_label_farLimit">Дальняя граница:</string>
     <string name="dof_label_focalLength">Фокусное расстояние</string>
     <string name="dof_label_hyperFocal">Гиперфокал:</string>
@@ -203,7 +203,7 @@
     
     <string name="cameraManagementTitle">Управление камерами</string>
     
-    <string name="userCamera_addCamera">Добавление камеры</string>
+    <string name="userCamera_addCamera">Добавить камеру</string>
     <string name="userCamera_editCamera">Редактирование камеры</string>
     <string name="userCamera_cameraName">Название камеры</string>
     <string name="userCamera_autoCalc">Автоматическое вычисление</string>
@@ -235,4 +235,11 @@
     <string name="photohunt_title">Перейти в Google Play?</string>
     <string name="photohunt_message">Присоединяйся к «Фотокроссу» - опубликуй своё фото, заработай бонусные баллы, стань победителем и автором следующей темы фотоохоты!</string>
     <string name="photohunt_hide">Больше не показывать этот пункт меню</string>
+    <string name="dof_sc_message">Выберите существующую модель или создайте свою камеру</string>
+    <string name="dof_sc_title">Управляйте камерами</string>
+    <string formatted="false" name="confirm_action_copy_message">Скопировать %s в пользовательские камеры?</string>
+    <string name="confirm_action_copy_title">Копировать камеру</string>
+    <string formatted="false" name="confirm_action_remove_message">Удалить камеру %s?</string>
+    <string name="confirm_action_remove_title">Удаление камеры</string>
+    <string name="camera_copied">Камера скопирована</string>
 </resources>

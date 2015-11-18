@@ -36,7 +36,7 @@
                 style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/dof_label_camera"
+                android:text="@string/dof_label_myCameras"
                 android:textColor="@color/headear" />
 
             <ImageView
@@ -47,24 +47,10 @@
                 android:src="@drawable/ic_action_camera" />
         </RelativeLayout>
 
-        <LinearLayout
+        <kankan.wheel.widget.WheelView
+            android:id="@+id/dof_wheel_camera"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal" >
-
-            <kankan.wheel.widget.WheelView
-                android:id="@+id/dof_wheel_vendor"
-                android:layout_width="0dp"
-                android:layout_height="80dp"
-                android:layout_weight="1" />
-
-            <kankan.wheel.widget.WheelView
-                android:id="@+id/dof_wheel_camera"
-                android:layout_width="0dp"
-                android:layout_height="80dp"
-                android:layout_weight="2" />
-        </LinearLayout>
+            android:layout_height="80dp" />
 
         <TextView
             android:id="@+id/dof_label_calculationResult"

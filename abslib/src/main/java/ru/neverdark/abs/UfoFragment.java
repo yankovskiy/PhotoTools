@@ -16,8 +16,8 @@
 
 package ru.neverdark.abs;
 
-import com.actionbarsherlock.app.SherlockFragment;
+import android.support.v4.app.Fragment;
 
-public abstract class UfoFragment extends SherlockFragment implements CommonApi{
+public abstract class UfoFragment extends Fragment implements CommonApi{
 
 }

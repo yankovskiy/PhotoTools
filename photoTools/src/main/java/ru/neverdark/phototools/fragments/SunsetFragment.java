@@ -36,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import ru.neverdark.abs.OnCallback;
+import ru.neverdark.abs.UfoFragment;
 import ru.neverdark.phototools.MapActivity;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.fragments.DateDialog.OnDateChangeListener;
@@ -68,7 +69,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
@@ -77,7 +77,17 @@ import com.luckycatlabs.sunrisesunset.dto.Location;
 /**
  * Fragment contains sunrise / sunset UI
  */
-public class SunsetFragment extends SherlockFragment {
+public class SunsetFragment extends UfoFragment {
+    @Override
+    public void bindObjects() {
+
+    }
+
+    @Override
+    public void setListeners() {
+
+    }
+
     private class TimeZonePickerListener implements OnTimeZonePickerListener, OnCallback {
 
         @Override
@@ -523,7 +533,7 @@ public class SunsetFragment extends SherlockFragment {
         if (status == ConnectionResult.SUCCESS) {
             isAvailable = true;
         } else {
-            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, getSherlockActivity(), 1);
+            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, getActivity(), 1);
             dialog.show();
         }
 

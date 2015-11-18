@@ -19,11 +19,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.View;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-
-public abstract class UfoDialogFragment extends SherlockDialogFragment implements CommonApi {
+public abstract class UfoDialogFragment extends DialogFragment implements CommonApi {
     private AlertDialog.Builder mAlertDialog;
     private View mView;
     private OnCallback mCallback;
@@ -57,7 +56,7 @@ public abstract class UfoDialogFragment extends SherlockDialogFragment implement
         return mView;
     }
     
-    protected Context getContext() {
+    public Context getContext() {
         return mContext;
     }
     

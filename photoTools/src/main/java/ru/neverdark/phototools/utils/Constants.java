@@ -105,4 +105,8 @@ public class Constants {
     public final static int TABLET_SW = 600;
     
     public final static String HIDE_PHOTOHUNT_MENU = "hide_photohunt_menu";
+
+    public static final int COPY_CAMERA = 0;
+    public static final int EDIT_CAMERA = 1;
+    public static final int REMOVE_CAMERA = 2;
 }

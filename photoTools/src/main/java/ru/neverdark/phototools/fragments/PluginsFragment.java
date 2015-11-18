@@ -18,6 +18,7 @@ package ru.neverdark.phototools.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.neverdark.abs.UfoFragment;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.utils.MainMenuItem;
 import ru.neverdark.phototools.utils.PluginAdapter;
@@ -35,9 +36,17 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TabHost;
 
-import com.actionbarsherlock.app.SherlockFragment;
+public class PluginsFragment extends UfoFragment {
 
-public class PluginsFragment extends SherlockFragment {
+    @Override
+    public void bindObjects() {
+
+    }
+
+    @Override
+    public void setListeners() {
+
+    }
 
     private class AvailableItemClickListener implements OnItemClickListener {
         @Override
@@ -70,7 +79,7 @@ public class PluginsFragment extends SherlockFragment {
             Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mView = inflater.inflate(R.layout.activity_plugins, container, false);
-        mContext = getSherlockActivity();
+        mContext = mView.getContext();
 
         bindObjectsToResources();
 
