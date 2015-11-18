@@ -15,38 +15,6 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.TimeZone;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import ru.neverdark.abs.OnCallback;
-import ru.neverdark.abs.UfoFragment;
-import ru.neverdark.phototools.MapActivity;
-import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.fragments.DateDialog.OnDateChangeListener;
-import ru.neverdark.phototools.fragments.LocationSelectionDialog.OnLocationListener;
-import ru.neverdark.phototools.fragments.ZonePickerDialog.OnTimeZonePickerListener;
-import ru.neverdark.phototools.utils.Constants;
-import ru.neverdark.phototools.utils.GeoLocationService;
-import ru.neverdark.phototools.utils.LocationRecord;
-import ru.neverdark.phototools.utils.Log;
-import ru.neverdark.phototools.utils.GeoLocationService.GeoLocationBinder;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ComponentName;
@@ -74,214 +42,59 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.luckycatlabs.sunrisesunset.dto.Location;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import ru.neverdark.abs.OnCallback;
+import ru.neverdark.abs.UfoFragment;
+import ru.neverdark.phototools.MapActivity;
+import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.fragments.DateDialog.OnDateChangeListener;
+import ru.neverdark.phototools.fragments.LocationSelectionDialog.OnLocationListener;
+import ru.neverdark.phototools.fragments.ZonePickerDialog.OnTimeZonePickerListener;
+import ru.neverdark.phototools.utils.Constants;
+import ru.neverdark.phototools.utils.GeoLocationService;
+import ru.neverdark.phototools.utils.GeoLocationService.GeoLocationBinder;
+import ru.neverdark.phototools.utils.LocationRecord;
+import ru.neverdark.phototools.utils.Log;
+
 /**
  * Fragment contains sunrise / sunset UI
  */
 public class SunsetFragment extends UfoFragment {
-    @Override
-    public void bindObjects() {
-
-    }
-
-    @Override
-    public void setListeners() {
-
-    }
-
-    private class TimeZonePickerListener implements OnTimeZonePickerListener, OnCallback {
-
-        @Override
-        public void onTimeZonePickerHandler(TimeZone tz) {
-            mTimeZone = tz;
-            calculateSunset();
-        }
-    }
-
-    private class DateChangeHandler implements OnDateChangeListener, OnCallback {
-
-        @Override
-        public void dateChangeHandler(int year, int month, int day) {
-            mYear = year;
-            mMonth = month;
-            mDay = day;
-            updateDate();
-        }
-
-    }
-
-    private class LocationEditListener implements OnLocationListener, OnCallback {
-
-        @Override
-        public void onEditLocationHandler(LocationRecord record) {
-            Log.message("Enter");
-            if (isGoogleServiceAvailabe() == true) {
-                Intent mapIntent = new Intent(getActivity(), MapActivity.class);
-                mapIntent.putExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_EDIT);
-                mapIntent.putExtra(Constants.LOCATION_LATITUDE, record.latitude);
-                mapIntent.putExtra(Constants.LOCATION_LONGITUDE, record.longitude);
-                mapIntent.putExtra(Constants.LOCATION_RECORD_ID, record._id);
-                mapIntent.putExtra(Constants.LOCATION_NAME, record.locationName);
-
-                startActivityForResult(mapIntent, Constants.LOCATION_POINT_ON_MAP_CHOICE);
-            }
-        }
-
-        @Override
-        public void onSelectLocationHandler(LocationRecord record) {
-            Log.message("Enter");
-            mSelectionId = record._id;
-
-            if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
-                handleCurrentLocation();
-            } else if (mSelectionId == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
-                handlePointOnMap();
-            } else {
-                Log.variable("mSelectionId", String.valueOf(mSelectionId));
-                handleCustomLocation(record);
-            }
-        }
-
-    }
-
-    private class LocationNotDetermineException extends Exception {
-
-        /**
-         * 
-         */
-        private static final long serialVersionUID = 5446852956370468838L;
-
-    }
-
-    /**
-     * Thread for getting timeZone from Google Online Map If Internet connection
-     * does not available we have use devices TimeZone
-     */
-    private class TimeZoneFromGoogle extends AsyncTask<Void, Void, Integer> {
-        private final int STATUS_SUCCESS = 0;
-        private final int STATUS_FAIL = 1;
-
-        @Override
-        protected Integer doInBackground(Void... arg0) {
-            Log.message("Enter");
-            int status = STATUS_FAIL;
-
-            /* we have internet, download json from timeZone google service */
-            if (isOnline()) {
-                Log.message("Get Time Zone from Google");
-                String json = readTimeZoneJson();
-                Log.variable("json", json);
-
-                /* JSON data not empty, parse it */
-                if (json.length() != 0) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(json);
-                        String timeZoneId = jsonObject.getString("timeZoneId");
-                        String rawOffset = jsonObject.getString("rawOffset");
-                        Log.variable("timeZoneId", timeZoneId);
-                        Log.variable("rawOffset", rawOffset);
-                        mTimeZone = TimeZone.getTimeZone(timeZoneId);
-                        mTimeZone.setRawOffset(Integer.valueOf(rawOffset) * 1000);
-                        status = STATUS_SUCCESS;
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            } else {
-                Log.message("Device offline.");
-            }
-
-            return status;
-        }
-
-        /**
-         * Checks connection status
-         * 
-         * @return true if device online, false in other case
-         */
-        private boolean isOnline() {
-            Log.message("Enter");
-            ConnectivityManager cm = (ConnectivityManager) mContext
-                    .getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo netInfo = cm.getActiveNetworkInfo();
-            if (netInfo != null && netInfo.isConnected()) {
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        protected void onPostExecute(Integer result) {
-            switch (result) {
-            case STATUS_SUCCESS:
-                showInformationMesssage(R.string.sunset_information_timeZoneSuccess);
-                break;
-            case STATUS_FAIL:
-                mTimeZone = null;
-                // showInformationMesssage(R.string.sunset_information_timeZoneFail);
-                break;
-            }
-        }
-
-        /**
-         * Reads TimeZone from Google Json
-         * 
-         * @return TimeZone JSON from Google Json or empty if cannot determine
-         */
-        private String readTimeZoneJson() {
-            Log.message("Enter");
-            StringBuilder builder = new StringBuilder();
-            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-            calendar.set(mYear, mMonth, mDay);
-            /* Gets desired time as seconds since midnight, January 1, 1970 UTC */
-            Long timestamp = calendar.getTimeInMillis() / 1000;
-
-            String url_format = "https://maps.googleapis.com/maps/api/timezone/json?location=%f,%f&timestamp=%d";
-            String url = String.format(Locale.US, url_format, mLatitude, mLongitude, timestamp);
-            Log.variable("url", url);
-
-            HttpClient client = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet(url);
-            try {
-                HttpResponse response = client.execute(httpGet);
-                StatusLine statusLine = response.getStatusLine();
-                int statusCode = statusLine.getStatusCode();
-                if (statusCode == HttpStatus.SC_OK) {
-                    HttpEntity entity = response.getEntity();
-                    InputStream content = entity.getContent();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        builder.append(line);
-                    }
-                } else {
-                    Log.message("Download fail");
-                }
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return builder.toString();
-        }
-    }
-
-    private Context mContext;
-
-    private View mView;
-
     private static EditText mEditTextDate;
-
-    private Button mButtonCalculate;
-    private EditText mEditTextLocation;
     private static int mYear;
     private static int mMonth;
     private static int mDay;
+    private Context mContext;
+    private View mView;
+    private Button mButtonCalculate;
+    private EditText mEditTextLocation;
     private double mLatitude;
     private double mLongitude;
     private boolean mIsVisibleResult = false;
     private TimeZone mTimeZone;
     private long mSelectionId;
+    private Intent mSerivceIntent;
+    private GeoLocationService mGeoLocationService;
+    private boolean mBound = false;
     private ServiceConnection mServiceConnection = new ServiceConnection() {
 
         @Override
@@ -298,15 +111,8 @@ public class SunsetFragment extends UfoFragment {
             mBound = false;
         }
     };
-
-    private Intent mSerivceIntent;
-    private GeoLocationService mGeoLocationService;
-    private boolean mBound = false;
-
     private String mOfficialSunrise;
-
     private TextView mOfficialSunriseResult;
-
     private TextView mLabelOfficialSunrise;
     private String mOfficialSunset;
     private TextView mOfficialSunsetResult;
@@ -332,6 +138,17 @@ public class SunsetFragment extends UfoFragment {
     private LinearLayout mLinearLayoutCalculationResult;
     private TextView mSunsetTimeZoneResult;
     private String mLocationName;
+
+    @Override
+    public void bindObjects() {
+
+    }
+
+    @Override
+    public void setListeners() {
+
+    }
+
     /**
      * Binds classes objects to resources
      */
@@ -429,7 +246,7 @@ public class SunsetFragment extends UfoFragment {
 
     /**
      * Gets current location
-     * 
+     *
      * @return true of location gets successful
      */
     private boolean getCurrentLocation() {
@@ -468,7 +285,7 @@ public class SunsetFragment extends UfoFragment {
 
     /**
      * Handles custom location on the map
-     * 
+     *
      * @param locationRecord
      *            object contains row from database
      */
@@ -485,7 +302,7 @@ public class SunsetFragment extends UfoFragment {
 
     /**
      * Handling location selection
-     * 
+     *
      * @param locationRecord
      *            object contains row from database
      */
@@ -524,7 +341,7 @@ public class SunsetFragment extends UfoFragment {
     /**
      * Checks for availabe Google Service If service is not available, or
      * service is not up to date
-     * 
+     *
      * @return true if Google service is available
      */
     private boolean isGoogleServiceAvailabe() {
@@ -542,7 +359,7 @@ public class SunsetFragment extends UfoFragment {
 
     /**
      * Set "" (empty string) for null string object
-     * 
+     *
      * @param str
      *            string
      * @return empty string if null, or return string in other case
@@ -577,7 +394,7 @@ public class SunsetFragment extends UfoFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.message("Enter");
         super.onCreateView(inflater, container, savedInstanceState);
-        mView = inflater.inflate(R.layout.activity_sunset, container, false);
+        mView = inflater.inflate(R.layout.sunset_fragment, container, false);
         mContext = mView.getContext();
 
         bindObjectsToResources();
@@ -687,7 +504,7 @@ public class SunsetFragment extends UfoFragment {
 
     /**
      * Sets long click listener for one EditText
-     * 
+     *
      * @param editText
      *            EditText for sets long click listener
      */
@@ -699,13 +516,13 @@ public class SunsetFragment extends UfoFragment {
             public boolean onLongClick(View arg0) {
                 Log.message("Enter");
                 switch (arg0.getId()) {
-                case R.id.sunset_editText_date:
-                    initDate();
-                    updateDate();
-                    break;
-                case R.id.sunset_editText_location:
-                    handleCurrentLocation();
-                    break;
+                    case R.id.sunset_editText_date:
+                        initDate();
+                        updateDate();
+                        break;
+                    case R.id.sunset_editText_location:
+                        handleCurrentLocation();
+                        break;
                 }
                 return true;
             }
@@ -714,7 +531,7 @@ public class SunsetFragment extends UfoFragment {
 
     /**
      * Sets onClickListeners for views
-     * 
+     *
      * @param view
      *            view for set onClickListener
      */
@@ -831,7 +648,7 @@ public class SunsetFragment extends UfoFragment {
 
     /**
      * Shows information dialog with description for sunset/sunrise type
-     * 
+     *
      * @param messageId
      *            Id message for displaying
      */
@@ -844,7 +661,7 @@ public class SunsetFragment extends UfoFragment {
 
     /**
      * Shows information message
-     * 
+     *
      * @param resourceId
      *            string Id contains information message
      */
@@ -903,5 +720,183 @@ public class SunsetFragment extends UfoFragment {
         /* formating date for system locale */
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy", java.util.Locale.getDefault());
         mEditTextDate.setText(sdf.format(localCalendar.getTime()));
+    }
+
+    private class TimeZonePickerListener implements OnTimeZonePickerListener, OnCallback {
+
+        @Override
+        public void onTimeZonePickerHandler(TimeZone tz) {
+            mTimeZone = tz;
+            calculateSunset();
+        }
+    }
+
+    private class DateChangeHandler implements OnDateChangeListener, OnCallback {
+
+        @Override
+        public void dateChangeHandler(int year, int month, int day) {
+            mYear = year;
+            mMonth = month;
+            mDay = day;
+            updateDate();
+        }
+
+    }
+
+    private class LocationEditListener implements OnLocationListener, OnCallback {
+
+        @Override
+        public void onEditLocationHandler(LocationRecord record) {
+            Log.message("Enter");
+            if (isGoogleServiceAvailabe() == true) {
+                Intent mapIntent = new Intent(getActivity(), MapActivity.class);
+                mapIntent.putExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_EDIT);
+                mapIntent.putExtra(Constants.LOCATION_LATITUDE, record.latitude);
+                mapIntent.putExtra(Constants.LOCATION_LONGITUDE, record.longitude);
+                mapIntent.putExtra(Constants.LOCATION_RECORD_ID, record._id);
+                mapIntent.putExtra(Constants.LOCATION_NAME, record.locationName);
+
+                startActivityForResult(mapIntent, Constants.LOCATION_POINT_ON_MAP_CHOICE);
+            }
+        }
+
+        @Override
+        public void onSelectLocationHandler(LocationRecord record) {
+            Log.message("Enter");
+            mSelectionId = record._id;
+
+            if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
+                handleCurrentLocation();
+            } else if (mSelectionId == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
+                handlePointOnMap();
+            } else {
+                Log.variable("mSelectionId", String.valueOf(mSelectionId));
+                handleCustomLocation(record);
+            }
+        }
+
+    }
+
+    private class LocationNotDetermineException extends Exception {
+
+        /**
+         *
+         */
+        private static final long serialVersionUID = 5446852956370468838L;
+
+    }
+
+    /**
+     * Thread for getting timeZone from Google Online Map If Internet connection
+     * does not available we have use devices TimeZone
+     */
+    private class TimeZoneFromGoogle extends AsyncTask<Void, Void, Integer> {
+        private final int STATUS_SUCCESS = 0;
+        private final int STATUS_FAIL = 1;
+
+        @Override
+        protected Integer doInBackground(Void... arg0) {
+            Log.message("Enter");
+            int status = STATUS_FAIL;
+
+            /* we have internet, download json from timeZone google service */
+            if (isOnline()) {
+                Log.message("Get Time Zone from Google");
+                String json = readTimeZoneJson();
+                Log.variable("json", json);
+
+                /* JSON data not empty, parse it */
+                if (json.length() != 0) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(json);
+                        String timeZoneId = jsonObject.getString("timeZoneId");
+                        String rawOffset = jsonObject.getString("rawOffset");
+                        Log.variable("timeZoneId", timeZoneId);
+                        Log.variable("rawOffset", rawOffset);
+                        mTimeZone = TimeZone.getTimeZone(timeZoneId);
+                        mTimeZone.setRawOffset(Integer.valueOf(rawOffset) * 1000);
+                        status = STATUS_SUCCESS;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            } else {
+                Log.message("Device offline.");
+            }
+
+            return status;
+        }
+
+        /**
+         * Checks connection status
+         *
+         * @return true if device online, false in other case
+         */
+        private boolean isOnline() {
+            Log.message("Enter");
+            ConnectivityManager cm = (ConnectivityManager) mContext
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getActiveNetworkInfo();
+            if (netInfo != null && netInfo.isConnected()) {
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            switch (result) {
+                case STATUS_SUCCESS:
+                    showInformationMesssage(R.string.sunset_information_timeZoneSuccess);
+                    break;
+                case STATUS_FAIL:
+                    mTimeZone = null;
+                    // showInformationMesssage(R.string.sunset_information_timeZoneFail);
+                    break;
+            }
+        }
+
+        /**
+         * Reads TimeZone from Google Json
+         *
+         * @return TimeZone JSON from Google Json or empty if cannot determine
+         */
+        private String readTimeZoneJson() {
+            Log.message("Enter");
+            StringBuilder builder = new StringBuilder();
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+            calendar.set(mYear, mMonth, mDay);
+            /* Gets desired time as seconds since midnight, January 1, 1970 UTC */
+            Long timestamp = calendar.getTimeInMillis() / 1000;
+
+            String url_format = "https://maps.googleapis.com/maps/api/timezone/json?location=%f,%f&timestamp=%d";
+            String url = String.format(Locale.US, url_format, mLatitude, mLongitude, timestamp);
+            Log.variable("url", url);
+
+            HttpClient client = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(url);
+            try {
+                HttpResponse response = client.execute(httpGet);
+                StatusLine statusLine = response.getStatusLine();
+                int statusCode = statusLine.getStatusCode();
+                if (statusCode == HttpStatus.SC_OK) {
+                    HttpEntity entity = response.getEntity();
+                    InputStream content = entity.getContent();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        builder.append(line);
+                    }
+                } else {
+                    Log.message("Download fail");
+                }
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return builder.toString();
+        }
     }
 }

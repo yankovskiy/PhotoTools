@@ -15,14 +15,6 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import ru.neverdark.abs.UfoFragment;
-import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.utils.MainMenuItem;
-import ru.neverdark.phototools.utils.PluginAdapter;
-import ru.neverdark.phototools.utils.PluginManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -36,7 +28,24 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TabHost;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ru.neverdark.abs.UfoFragment;
+import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.utils.MainMenuItem;
+import ru.neverdark.phototools.utils.PluginAdapter;
+import ru.neverdark.phototools.utils.PluginManager;
+
 public class PluginsFragment extends UfoFragment {
+
+    private static final String ACTIVE_TAB = "activeTabs";
+    private View mView;
+    private ListView mAvailableListView;
+    private ListView mInstalledListView;
+    private Context mContext;
+    private PluginAdapter mAvailablePlugins;
+    private TabHost mTabHost;
 
     @Override
     public void bindObjects() {
@@ -48,28 +57,9 @@ public class PluginsFragment extends UfoFragment {
 
     }
 
-    private class AvailableItemClickListener implements OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                long id) {
-            MainMenuItem item = mAvailablePlugins.getItem(position);
-            Intent marketIntent = new Intent(Intent.ACTION_VIEW);
-            marketIntent.setData(Uri.parse("market://details?id=".concat(item
-                    .getPluginPackage())));
-            startActivity(marketIntent);
-        }
-    }
-
-    private View mView;
-    private ListView mAvailableListView;
-    private ListView mInstalledListView;
-    private Context mContext;
-    private PluginAdapter mAvailablePlugins;
-    private static final String ACTIVE_TAB = "activeTabs";
-    private TabHost mTabHost;
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater,
      * android.view.ViewGroup, android.os.Bundle)
@@ -78,7 +68,7 @@ public class PluginsFragment extends UfoFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        mView = inflater.inflate(R.layout.activity_plugins, container, false);
+        mView = inflater.inflate(R.layout.plugins_fragment, container, false);
         mContext = mView.getContext();
 
         bindObjectsToResources();
@@ -89,7 +79,7 @@ public class PluginsFragment extends UfoFragment {
         } else {
             activeTab = 0;
         }
-        
+
         buildTabs(activeTab);
 
         mAvailableListView
@@ -107,7 +97,7 @@ public class PluginsFragment extends UfoFragment {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putInt(ACTIVE_TAB, mTabHost.getCurrentTab());
     }
-    
+
     /**
      * Builds tabs
      */
@@ -126,7 +116,7 @@ public class PluginsFragment extends UfoFragment {
         spec.setContent(R.id.plugins_tab_installed);
         spec.setIndicator(getString(R.string.plugins_installed));
         mTabHost.addTab(spec);
-        
+
         mTabHost.setCurrentTab(activeTab);
     }
 
@@ -157,7 +147,7 @@ public class PluginsFragment extends UfoFragment {
 
     /**
      * Builds list of available plug-ins
-     * 
+     *
      * @return list of available plug-ins
      */
     private List<MainMenuItem> buildAvailableList() {
@@ -181,5 +171,17 @@ public class PluginsFragment extends UfoFragment {
         item.setAppName(pluginName);
         item.setIcon(pluginIcon);
         return item;
+    }
+
+    private class AvailableItemClickListener implements OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position,
+                                long id) {
+            MainMenuItem item = mAvailablePlugins.getItem(position);
+            Intent marketIntent = new Intent(Intent.ACTION_VIEW);
+            marketIntent.setData(Uri.parse("market://details?id=".concat(item
+                    .getPluginPackage())));
+            startActivity(marketIntent);
+        }
     }
 }

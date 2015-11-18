@@ -30,9 +30,9 @@
         android:orientation="vertical" >
 
         <LinearLayout
-            android:baselineAligned="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:baselineAligned="false"
             android:orientation="horizontal" >
 
             <LinearLayout
@@ -84,10 +84,10 @@
         </LinearLayout>
 
         <Button
-            android:layout_gravity="right"
             android:id="@+id/sunset_button_calculate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
             android:text="@string/sunset_button_calculate" >
         </Button>
 
@@ -129,6 +129,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
+                </TableRow>
+
+                <TableRow android:background="#cecece" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp" >
 
                     <TextView
                         android:id="@+id/sunset_label_sunset"
@@ -172,6 +185,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
+                </TableRow>
+
+                <TableRow android:background="#cecece" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp" >
 
                     <TextView
                         android:id="@+id/sunset_label_civilSunset"
@@ -215,6 +241,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
+                </TableRow>
+
+                <TableRow android:background="#cecece" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp" >
 
                     <TextView
                         android:id="@+id/sunset_label_nauticalSunset"
@@ -258,6 +297,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
+                </TableRow>
+
+                <TableRow android:background="#cecece" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp" >
 
                     <TextView
                         android:id="@+id/sunset_label_astrolSunset"
@@ -312,5 +364,6 @@
             </TableLayout>
         </LinearLayout>
     </LinearLayout>
+
 
 </ScrollView>

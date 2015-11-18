@@ -23,7 +23,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,9 +43,7 @@ import kankan.wheel.widget.WheelView;
 import ru.neverdark.abs.OnCallback;
 import ru.neverdark.abs.UfoFragment;
 import ru.neverdark.phototools.CameraManagementActivity;
-import ru.neverdark.phototools.DetailsActivity;
 import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.fragments.CameraManagementDialog.OnCameraManagementListener;
 import ru.neverdark.phototools.fragments.DofLimitationDialog.OnDofLimitationListener;
 import ru.neverdark.phototools.ui.ImageOnTouchListener;
 import ru.neverdark.phototools.utils.Common;
@@ -64,7 +61,44 @@ import ru.neverdark.phototools.utils.dofcalculator.DofCalculator;
  */
 public class DofFragment extends UfoFragment {
 
+    private final static String APERTURE = "dof_aperture";
+    private final static String CAMERA = "dof_camera2";
+    private final static String FAR_LIMIT = "dof_farLimit";
+    private final static String FOCAL_LENGTH = "dof_focalLength";
+    private final static String HYPERFOCAL = "dof_hyperfocal";
+    private final static String MEASURE_RESULT_UNIT = "dof_measureResultUnit";
+    private final static String MEASURE_UNIT = "dof_measureUnit";
+    private final static String NEAR_LIMIT = "dof_nearLimit";
+    private final static String SUBJECT_DISTANCE = "dof_subjectDistance";
+    private static final String IS_LIMIT_PRESENT = "dof_is_limit_present";
+    private static final String LIMIT_APERTURE_MIN = "dof_aperture_min_limit";
+    private static final String LIMIT_APERTURE_MAX = "dof_aperture_max_limit";
+    private static final String LIMIT_FOCAL_LENGTH_MIN = "dof_focal_length_min_limit";
+    private static final String LIMIT_FOCAL_LENGTH_MAX = "dof_focal_length_max_limit";
+    private static final String LIMIT_SUBJECT_DISTANCE_MIN = "dof_subject_distance_min_limit";
+    private static final String LIMIT_SUBJECT_DISTANCE_MAX = "dof_subject_distance_max_limit";
+    private final static String TOTAL = "dof_total";
     private boolean mFirst;
+    private int mCameraId;
+    private ImageView mCameraManagement;
+    private ImageView mDofLimit;
+    private Context mContext;
+    private TextView mLabelCm;
+    private TextView mLabelFarLimitResult;
+    private TextView mLabelFt;
+    private TextView mLabelHyperFocalResult;
+    private TextView mLabelIn;
+    private TextView mLabelM;
+    private TextView mLabelNearLimitResult;
+    private TextView mLabelTotalResutl;
+    private int mMeasureResultUnit;
+    private View mView;
+    private WheelView mWheelAperture;
+    private WheelView mWheelCamera;
+    private WheelView mWheelFocalLength;
+    private WheelView mWheelMeasureUnit;
+    private WheelView mWheelSubjectDistance;
+    private Limit mLimit;
 
     @Override
     public void bindObjects() {
@@ -105,149 +139,6 @@ public class DofFragment extends UfoFragment {
         mDofLimit.setOnClickListener(new ButtonClickListener());
         mDofLimit.setOnTouchListener(new ImageOnTouchListener());
     }
-
-    /**
-     * Click listener for "Camera management" and "Limit" button
-     */
-    private class ButtonClickListener implements OnClickListener {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.dof_cameraManagement:
-                    /*
-                    CameraManagementDialog cameraDialog = CameraManagementDialog
-                            .getInstance(mContext);
-                    cameraDialog.setCallback(new CameraManagementListener());
-                    cameraDialog.show(getFragmentManager(),
-                            CameraManagementDialog.DIALOG_TAG);
-                            */
-                    Intent intent = new Intent();
-                    intent.setClass(mContext, CameraManagementActivity.class);
-                    startActivity(intent);
-                    break;
-                case R.id.dof_limitation:
-                    showLimitataionDialog();
-                    break;
-            }
-        }
-    }
-
-    /**
-     * Listener for handling "Back" button in the CameraManagementDialog
-     */
-    private class CameraManagementListener implements
-            OnCameraManagementListener, OnCallback {
-        @Override
-        public void cameraManagementOnBack() {
-            populateCameraByVendor();
-            recalculate();
-        }
-    }
-
-    /**
-     * Listener for handling OK button in the DofLimitationDialog
-     */
-    private class DofLimitationListener implements OnDofLimitationListener, OnCallback {
-        @Override
-        public void onDofLimitationHandler(Limit data) {
-            mLimit = data;
-            MinMaxValues minMaxAperture = MinMaxValues
-                    .getMinMax(mWheelAperture);
-            MinMaxValues minMaxFocalLength = MinMaxValues
-                    .getMinMax(mWheelFocalLength);
-            MinMaxValues minMaxSubjectDistance = MinMaxValues
-                    .getMinMax(mWheelSubjectDistance);
-
-            SavedData savedData = new SavedData();
-
-            String minAperture = Array.APERTURE_LIST[data.getMinAperture()];
-            String maxAperture = Array.APERTURE_LIST[data.getMaxAperture()];
-            String minFocal = Array.FOCAL_LENGTH[data.getMinFocalLength()];
-            String maxFocal = Array.FOCAL_LENGTH[data.getMaxFocalLength()];
-            String minSubjectDistance = Array.SUBJECT_DISTANCE[data
-                    .getMinSubjectDistance()];
-            String maxSubjectDistance = Array.SUBJECT_DISTANCE[data
-                    .getMaxSubjectDistance()];
-
-            if (minMaxAperture.getMinValue().equals(minAperture) == false
-                    || minMaxAperture.getMaxValue().equals(maxAperture) == false) {
-                savedData.setAperturePosition(0);
-            } else {
-                savedData.setAperturePosition(mWheelAperture.getCurrentItem());
-            }
-
-            if (minMaxFocalLength.getMinValue().equals(minFocal) == false
-                    || minMaxFocalLength.getMaxValue().equals(maxFocal) == false) {
-                savedData.setFocalLengthPosition(0);
-            } else {
-                savedData.setFocalLengthPosition(mWheelFocalLength
-                        .getCurrentItem());
-            }
-
-            if (minMaxSubjectDistance.getMinValue().equals(minSubjectDistance) == false
-                    || minMaxSubjectDistance.getMaxValue().equals(
-                    maxSubjectDistance) == false) {
-                savedData.setSubjectDistancePosition(0);
-            } else {
-                savedData.setSubjectDistancePosition(mWheelSubjectDistance
-                        .getCurrentItem());
-            }
-
-            savedData
-                    .setMeasureUnitPosition(mWheelMeasureUnit.getCurrentItem());
-
-            arrayToWheels(savedData);
-
-            recalculate();
-        }
-    }
-
-    private final static String APERTURE = "dof_aperture";
-
-    private final static String CAMERA = "dof_camera2";
-    private final static String FAR_LIMIT = "dof_farLimit";
-
-    private final static String FOCAL_LENGTH = "dof_focalLength";
-    private final static String HYPERFOCAL = "dof_hyperfocal";
-    private final static String MEASURE_RESULT_UNIT = "dof_measureResultUnit";
-    private final static String MEASURE_UNIT = "dof_measureUnit";
-    private final static String NEAR_LIMIT = "dof_nearLimit";
-    private final static String SUBJECT_DISTANCE = "dof_subjectDistance";
-
-    private static final String IS_LIMIT_PRESENT = "dof_is_limit_present";
-    private static final String LIMIT_APERTURE_MIN = "dof_aperture_min_limit";
-    private static final String LIMIT_APERTURE_MAX = "dof_aperture_max_limit";
-    private static final String LIMIT_FOCAL_LENGTH_MIN = "dof_focal_length_min_limit";
-    private static final String LIMIT_FOCAL_LENGTH_MAX = "dof_focal_length_max_limit";
-    private static final String LIMIT_SUBJECT_DISTANCE_MIN = "dof_subject_distance_min_limit";
-    private static final String LIMIT_SUBJECT_DISTANCE_MAX = "dof_subject_distance_max_limit";
-
-    private final static String TOTAL = "dof_total";
-    private int mCameraId;
-
-    private ImageView mCameraManagement;
-    private ImageView mDofLimit;
-    private Context mContext;
-    private TextView mLabelCm;
-    private TextView mLabelFarLimitResult;
-
-    private TextView mLabelFt;
-
-    private TextView mLabelHyperFocalResult;
-    private TextView mLabelIn;
-    private TextView mLabelM;
-    private TextView mLabelNearLimitResult;
-    private TextView mLabelTotalResutl;
-    private int mMeasureResultUnit;
-    private View mView;
-    private WheelView mWheelAperture;
-    private WheelView mWheelCamera;
-    private WheelView mWheelFocalLength;
-
-    private WheelView mWheelMeasureUnit;
-    private WheelView mWheelSubjectDistance;
-
-    private Limit mLimit;
 
     /**
      * Loads arrays to wheels
@@ -360,45 +251,6 @@ public class DofFragment extends UfoFragment {
         return new BigDecimal(distance);
     }
 
-    private class SavedData {
-        private int mAperturePosition;
-        private int mFocalLengthPosition;
-        private int mMeasureUnitPosition;
-        private int mSubjectDistancePosition;
-
-        public int getAperturePosition() {
-            return mAperturePosition;
-        }
-
-        public void setAperturePosition(int aperturePosition) {
-            this.mAperturePosition = aperturePosition;
-        }
-
-        public int getFocalLengthPosition() {
-            return mFocalLengthPosition;
-        }
-
-        public void setFocalLengthPosition(int focalLengthPosition) {
-            this.mFocalLengthPosition = focalLengthPosition;
-        }
-
-        public int getMeasureUnitPosition() {
-            return mMeasureUnitPosition;
-        }
-
-        public void setMeasureUnitPosition(int measureUnitPosition) {
-            this.mMeasureUnitPosition = measureUnitPosition;
-        }
-
-        public int getSubjectDistancePosition() {
-            return mSubjectDistancePosition;
-        }
-
-        public void setSubjectDistancePosition(int subjectDistancePosition) {
-            this.mSubjectDistancePosition = subjectDistancePosition;
-        }
-    }
-
     /**
      * Loads data from shared preferences
      *
@@ -474,7 +326,7 @@ public class DofFragment extends UfoFragment {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater,
      * android.view.ViewGroup, android.os.Bundle)
@@ -484,7 +336,7 @@ public class DofFragment extends UfoFragment {
                              Bundle savedInstanceState) {
         long start = Log.enter();
         super.onCreateView(inflater, container, savedInstanceState);
-        mView = inflater.inflate(R.layout.activity_dof, container, false);
+        mView = inflater.inflate(R.layout.dof_fragment, container, false);
         mContext = mView.getContext();
 
         bindObjects();
@@ -709,5 +561,128 @@ public class DofFragment extends UfoFragment {
         mWheelMeasureUnit.addScrollingListener(listener);
         mWheelSubjectDistance.addScrollingListener(listener);
         mWheelCamera.addScrollingListener(listener);
+    }
+
+    /**
+     * Click listener for "Camera management" and "Limit" button
+     */
+    private class ButtonClickListener implements OnClickListener {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.dof_cameraManagement:
+                    /*
+                    CameraManagementDialog cameraDialog = CameraManagementDialog
+                            .getInstance(mContext);
+                    cameraDialog.setCallback(new CameraManagementListener());
+                    cameraDialog.show(getFragmentManager(),
+                            CameraManagementDialog.DIALOG_TAG);
+                            */
+                    Intent intent = new Intent();
+                    intent.setClass(mContext, CameraManagementActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.dof_limitation:
+                    showLimitataionDialog();
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Listener for handling OK button in the DofLimitationDialog
+     */
+    private class DofLimitationListener implements OnDofLimitationListener, OnCallback {
+        @Override
+        public void onDofLimitationHandler(Limit data) {
+            mLimit = data;
+            MinMaxValues minMaxAperture = MinMaxValues
+                    .getMinMax(mWheelAperture);
+            MinMaxValues minMaxFocalLength = MinMaxValues
+                    .getMinMax(mWheelFocalLength);
+            MinMaxValues minMaxSubjectDistance = MinMaxValues
+                    .getMinMax(mWheelSubjectDistance);
+
+            SavedData savedData = new SavedData();
+
+            String minAperture = Array.APERTURE_LIST[data.getMinAperture()];
+            String maxAperture = Array.APERTURE_LIST[data.getMaxAperture()];
+            String minFocal = Array.FOCAL_LENGTH[data.getMinFocalLength()];
+            String maxFocal = Array.FOCAL_LENGTH[data.getMaxFocalLength()];
+            String minSubjectDistance = Array.SUBJECT_DISTANCE[data
+                    .getMinSubjectDistance()];
+            String maxSubjectDistance = Array.SUBJECT_DISTANCE[data
+                    .getMaxSubjectDistance()];
+
+            if (minMaxAperture.getMinValue().equals(minAperture) == false
+                    || minMaxAperture.getMaxValue().equals(maxAperture) == false) {
+                savedData.setAperturePosition(0);
+            } else {
+                savedData.setAperturePosition(mWheelAperture.getCurrentItem());
+            }
+
+            if (minMaxFocalLength.getMinValue().equals(minFocal) == false
+                    || minMaxFocalLength.getMaxValue().equals(maxFocal) == false) {
+                savedData.setFocalLengthPosition(0);
+            } else {
+                savedData.setFocalLengthPosition(mWheelFocalLength
+                        .getCurrentItem());
+            }
+
+            if (minMaxSubjectDistance.getMinValue().equals(minSubjectDistance) == false
+                    || minMaxSubjectDistance.getMaxValue().equals(
+                    maxSubjectDistance) == false) {
+                savedData.setSubjectDistancePosition(0);
+            } else {
+                savedData.setSubjectDistancePosition(mWheelSubjectDistance
+                        .getCurrentItem());
+            }
+
+            savedData
+                    .setMeasureUnitPosition(mWheelMeasureUnit.getCurrentItem());
+
+            arrayToWheels(savedData);
+
+            recalculate();
+        }
+    }
+
+    private class SavedData {
+        private int mAperturePosition;
+        private int mFocalLengthPosition;
+        private int mMeasureUnitPosition;
+        private int mSubjectDistancePosition;
+
+        public int getAperturePosition() {
+            return mAperturePosition;
+        }
+
+        public void setAperturePosition(int aperturePosition) {
+            this.mAperturePosition = aperturePosition;
+        }
+
+        public int getFocalLengthPosition() {
+            return mFocalLengthPosition;
+        }
+
+        public void setFocalLengthPosition(int focalLengthPosition) {
+            this.mFocalLengthPosition = focalLengthPosition;
+        }
+
+        public int getMeasureUnitPosition() {
+            return mMeasureUnitPosition;
+        }
+
+        public void setMeasureUnitPosition(int measureUnitPosition) {
+            this.mMeasureUnitPosition = measureUnitPosition;
+        }
+
+        public int getSubjectDistancePosition() {
+            return mSubjectDistancePosition;
+        }
+
+        public void setSubjectDistancePosition(int subjectDistancePosition) {
+            this.mSubjectDistancePosition = subjectDistancePosition;
+        }
     }
 }

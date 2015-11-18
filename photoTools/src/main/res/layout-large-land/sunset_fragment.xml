@@ -29,45 +29,67 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/sunset_label_date"
-            style="?android:attr/listSeparatorTextViewStyle"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/sunset_label_date"
-            android:textColor="@color/headear" />
+            android:baselineAligned="false"
+            android:orientation="horizontal" >
 
-        <EditText
-            android:id="@+id/sunset_editText_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:focusable="false"
-            android:inputType="date" >
-        </EditText>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/sunset_label_location"
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/sunset_label_location"
-            android:textColor="@color/headear" />
+                <TextView
+                    android:id="@+id/sunset_label_date"
+                    style="?android:attr/listSeparatorTextViewStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sunset_label_date"
+                    android:textColor="@color/headear" />
 
-        <EditText
-            android:id="@+id/sunset_editText_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:focusable="false"
-            android:inputType="date" />
+                <EditText
+                    android:id="@+id/sunset_editText_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:inputType="date" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/sunset_label_location"
+                    style="?android:attr/listSeparatorTextViewStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sunset_label_location"
+                    android:textColor="@color/headear" />
+
+                <EditText
+                    android:id="@+id/sunset_editText_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:inputType="date" />
+            </LinearLayout>
+        </LinearLayout>
 
         <Button
             android:id="@+id/sunset_button_calculate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sunset_button_calculate" 
-            android:layout_gravity="right"/>
+            android:layout_gravity="right"
+            android:text="@string/sunset_button_calculate" >
+        </Button>
 
         <LinearLayout
             android:id="@+id/sunsnet_LinearLayout_calculationResult"
@@ -107,19 +129,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
-                </TableRow>
-
-                <TableRow android:background="#cecece" >
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="3dp" >
 
                     <TextView
                         android:id="@+id/sunset_label_sunset"
@@ -163,19 +172,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
-                </TableRow>
-
-                <TableRow android:background="#cecece" >
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="3dp" >
 
                     <TextView
                         android:id="@+id/sunset_label_civilSunset"
@@ -219,19 +215,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
-                </TableRow>
-
-                <TableRow android:background="#cecece" >
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="3dp" >
 
                     <TextView
                         android:id="@+id/sunset_label_nauticalSunset"
@@ -275,19 +258,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
-                </TableRow>
-
-                <TableRow android:background="#cecece" >
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="3dp" >
 
                     <TextView
                         android:id="@+id/sunset_label_astrolSunset"

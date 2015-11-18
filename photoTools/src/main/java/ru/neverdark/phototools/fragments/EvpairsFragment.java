@@ -18,9 +18,18 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import kankan.wheel.widget.OnWheelScrollListener;
 import kankan.wheel.widget.WheelView;
-
 import ru.neverdark.abs.OnCallback;
 import ru.neverdark.abs.UfoFragment;
 import ru.neverdark.phototools.R;
@@ -33,21 +42,49 @@ import ru.neverdark.phototools.utils.Limit;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.evcalculator.EvCalculator;
 import ru.neverdark.phototools.utils.evcalculator.EvData;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 /**
  * Fragment contains EV Pairs calculator UI
  */
 public class EvpairsFragment extends UfoFragment {
+    private static final String LIMIT_APERTURE_MIN = "ev_aperture_min_limit";
+    private static final String LIMIT_APERTURE_MAX = "ev_aperture_max_limit";
+    private static final String LIMIT_ISO_MIN = "ev_iso_min_limit";
+    private static final String LIMIT_ISO_MAX = "ev_iso_max_limit";
+    private static final String LIMIT_SHUTTER_MIN = "ev_shutter_min_limit";
+    private static final String LIMIT_SHUTTER_MAX = "ev_shutter_max_limit";
+    private static final String IS_LIMIT_PRESENT = "ev_is_limit_present";
+    private static final String CALCULATE_INDEX = "ev1_calculateIndex";
+    private static final String NEW_APERTURE_INDEX = "ev1_newAperture";
+    private static final String NEW_ISO_INDEX = "ev1_newIso";
+    private static final String NEW_SHUTTER_INDEX = "ev1_newShutter";
+    private static final String STEP_INDEX = "ev1_stepIndex";
+    private static final String EV_COMPENSATION_SHIFT = "ev_compensation_shift";
     private Context mContext;
+    private boolean mIsLimit = false;
+    private String CURRENT_APERTURE_INDEX = "ev1_currentAperture";
+    private String CURRENT_ISO_INDEX = "ev1_currentIso";
+    private String CURRENT_SHUTTER_INDEX = "ev1_currentShutter";
+    private int mCalculateIndex;
+    private EvCalculator mEvCalculator;
+    private TextView mLabelAperture;
+    private TextView mLabelIso;
+    private TextView mLabelShutter;
+    private TextView mLabelStepFull;
+    private TextView mLabelStepHalf;
+    private TextView mLabelStepThird;
+    private ImageView mEvLimit;
+    private ImageView mEvCompensation;
+    private int mStepIndex;
+    private View mView;
+    private WheelView mWheel_currentAperture;
+    private WheelView mWheel_currentIso;
+    private WheelView mWheel_currentShutter;
+    private WheelView mWheel_newAperture;
+    private WheelView mWheel_newIso;
+    private WheelView mWheel_newShutter;
+    private Limit mLimit;
+    private int mEvCompensationShift;
 
     @Override
     public void bindObjects() {
@@ -59,84 +96,9 @@ public class EvpairsFragment extends UfoFragment {
 
     }
 
-    private class EvCompensationListener implements OnEvCompensationListener, OnCallback {
-
-        @Override
-        public void onEvCompensationHandler(int compensationShift) {
-            setEvCompensationShift(compensationShift);
-            recalculate();
-        }
-
-    }
-
-    /**
-     * Listener for OK button in the DofLimitationDialog
-     */
-    private class EvLimitationListener implements OnEvLimitationListener, OnCallback {
-
-        @Override
-        public void onEvLimitationHandler(Limit data) {
-            setLimit(data);
-            
-            SavedData savedData = new SavedData();
-            savedData.setCurrentAperturePosition(0);
-            savedData.setNewAperturePosition(0);
-            savedData.setCurrentIsoPosition(0);
-            savedData.setNewIsoPosition(0);
-            savedData.setCurrentShutterPosition(0);
-            savedData.setNewShutterPosition(0);
-            
-            mIsLimit = true;
-    
-            updateStep();
-            setOldWheelPositions(savedData);
-            recalculate();
-        }
-    }
-
-    private class WheelScrollListener implements OnWheelScrollListener {
-
-        @Override
-        public void onScrollingFinished(WheelView wheel) {
-            recalculate();
-        }
-
-        @Override
-        public void onScrollingStarted(WheelView wheel) {
-
-        }
-
-    }
-
-    private boolean mIsLimit = false;
-
-    private static final String LIMIT_APERTURE_MIN = "ev_aperture_min_limit";
-    private static final String LIMIT_APERTURE_MAX = "ev_aperture_max_limit";
-    private static final String LIMIT_ISO_MIN = "ev_iso_min_limit";
-    private static final String LIMIT_ISO_MAX = "ev_iso_max_limit";
-    private static final String LIMIT_SHUTTER_MIN = "ev_shutter_min_limit";
-    private static final String LIMIT_SHUTTER_MAX = "ev_shutter_max_limit";
-    private static final String IS_LIMIT_PRESENT = "ev_is_limit_present";
-
-    private static final String CALCULATE_INDEX = "ev1_calculateIndex";
-
-    private static final String NEW_APERTURE_INDEX = "ev1_newAperture";
-    private static final String NEW_ISO_INDEX = "ev1_newIso";
-    private static final String NEW_SHUTTER_INDEX = "ev1_newShutter";
-
-    private static final String STEP_INDEX = "ev1_stepIndex";
-    
-    private static final String EV_COMPENSATION_SHIFT = "ev_compensation_shift";
-
-    private String CURRENT_APERTURE_INDEX = "ev1_currentAperture";
-    private String CURRENT_ISO_INDEX = "ev1_currentIso";
-    private String CURRENT_SHUTTER_INDEX = "ev1_currentShutter";
-
-    private int mCalculateIndex;
-
     /**
      * Gets wheels index for calculates
-     * 
+     *
      * @return
      */
     private int getCalculateIndex() {
@@ -145,7 +107,7 @@ public class EvpairsFragment extends UfoFragment {
 
     /**
      * Sets wheels by index for calculation
-     * 
+     *
      * @param calculateIndex
      *            index of wheels
      */
@@ -153,48 +115,20 @@ public class EvpairsFragment extends UfoFragment {
         mCalculateIndex = calculateIndex;
     }
 
-    private EvCalculator mEvCalculator;
-
-    private TextView mLabelAperture;
-    private TextView mLabelIso;
-    private TextView mLabelShutter;
-    private TextView mLabelStepFull;
-    private TextView mLabelStepHalf;
-    private TextView mLabelStepThird;
-
-    private ImageView mEvLimit;
-    private ImageView mEvCompensation;
-
-    private int mStepIndex;
+    private int getStepIndex() {
+        return mStepIndex;
+    }
 
     private void setStepIndex(int stepIndex) {
         mStepIndex = stepIndex;
     }
 
-    private int getStepIndex() {
-        return mStepIndex;
+    private Limit getLimit() {
+        return mLimit;
     }
-
-    private View mView;
-
-    private WheelView mWheel_currentAperture;
-    private WheelView mWheel_currentIso;
-    private WheelView mWheel_currentShutter;
-
-    private WheelView mWheel_newAperture;
-    private WheelView mWheel_newIso;
-    private WheelView mWheel_newShutter;
-
-    private Limit mLimit;
-
-    private int mEvCompensationShift;
 
     private void setLimit(Limit limit) {
         mLimit = limit;
-    }
-
-    private Limit getLimit() {
-        return mLimit;
     }
 
     /**
@@ -257,67 +191,9 @@ public class EvpairsFragment extends UfoFragment {
         return savedData;
     }
 
-    private class SavedData {
-        private int mCurrentAperturePosition;
-        private int mCurrentIsoPosition;
-        private int mCurrentShutterPosition;
-
-        private int mNewAperturePosition;
-        private int mNewIsoPosition;
-        private int mNewShutterPosition;
-
-        public int getCurrentAperturePosition() {
-            return mCurrentAperturePosition;
-        }
-
-        public void setCurrentAperturePosition(int currentAperturePosition) {
-            this.mCurrentAperturePosition = currentAperturePosition;
-        }
-
-        public int getCurrentIsoPosition() {
-            return mCurrentIsoPosition;
-        }
-
-        public void setCurrentIsoPosition(int currentIsoPosition) {
-            this.mCurrentIsoPosition = currentIsoPosition;
-        }
-
-        public int getCurrentShutterPosition() {
-            return mCurrentShutterPosition;
-        }
-
-        public void setCurrentShutterPosition(int currentShutterPosition) {
-            this.mCurrentShutterPosition = currentShutterPosition;
-        }
-
-        public int getNewAperturePosition() {
-            return mNewAperturePosition;
-        }
-
-        public void setNewAperturePosition(int newAperturePosition) {
-            this.mNewAperturePosition = newAperturePosition;
-        }
-
-        public int getNewIsoPosition() {
-            return mNewIsoPosition;
-        }
-
-        public void setNewIsoPosition(int newIsoPosition) {
-            this.mNewIsoPosition = newIsoPosition;
-        }
-
-        public int getNewShutterPosition() {
-            return mNewShutterPosition;
-        }
-
-        public void setNewShutterPosition(int newShutterPosition) {
-            this.mNewShutterPosition = newShutterPosition;
-        }
-    }
-
     /**
      * Load saved values from shared prefs
-     * 
+     *
      * @return saved positions for wheels
      */
     private SavedData loadSavedData() {
@@ -355,11 +231,6 @@ public class EvpairsFragment extends UfoFragment {
 
         return savedData;
     }
-    
-    private void setEvCompensationShift(int shift) {
-        mEvCompensationShift = shift;
-        Log.variable("mEvCompensationShift", String.valueOf(mEvCompensationShift));
-    }
 
     private void lockCalculateWheel() {
         int calculateIndex = getCalculateIndex();
@@ -373,7 +244,7 @@ public class EvpairsFragment extends UfoFragment {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater,
      * android.view.ViewGroup, android.os.Bundle)
@@ -382,7 +253,7 @@ public class EvpairsFragment extends UfoFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        mView = inflater.inflate(R.layout.activity_evpairs, container, false);
+        mView = inflater.inflate(R.layout.evpairs_fragment, container, false);
         mContext = mView.getContext();
         bindObjectsToResources();
         setCyclicToWheels();
@@ -477,6 +348,11 @@ public class EvpairsFragment extends UfoFragment {
         return mEvCompensationShift;
     }
 
+    private void setEvCompensationShift(int shift) {
+        mEvCompensationShift = shift;
+        Log.variable("mEvCompensationShift", String.valueOf(mEvCompensationShift));
+    }
+
     /**
      * Sets position to first for all wheels
      */
@@ -555,7 +431,7 @@ public class EvpairsFragment extends UfoFragment {
 
         mEvLimit.setOnClickListener(clickListener);
         mEvLimit.setOnTouchListener(new ImageOnTouchListener());
-        
+
         mEvCompensation.setOnClickListener(clickListener);
         mEvCompensation.setOnTouchListener(new ImageOnTouchListener());
     }
@@ -583,7 +459,7 @@ public class EvpairsFragment extends UfoFragment {
 
     /**
      * Sets red highlights for current item in calculated wheel
-     * 
+     *
      * @param isError
      *            true for highlights red or false for back to normal
      */
@@ -627,7 +503,7 @@ public class EvpairsFragment extends UfoFragment {
 
     /**
      * Sets position to first
-     * 
+     *
      * @param wheel
      *            wheel for setting first position
      */
@@ -667,7 +543,7 @@ public class EvpairsFragment extends UfoFragment {
 
     /**
      * Update steps
-     * 
+     *
      */
     private void updateStep() {
         Log.enter();
@@ -723,5 +599,112 @@ public class EvpairsFragment extends UfoFragment {
         mWheel_newAperture.addScrollingListener(new WheelScrollListener());
         mWheel_newIso.addScrollingListener(new WheelScrollListener());
         mWheel_newShutter.addScrollingListener(new WheelScrollListener());
+    }
+
+    private class EvCompensationListener implements OnEvCompensationListener, OnCallback {
+
+        @Override
+        public void onEvCompensationHandler(int compensationShift) {
+            setEvCompensationShift(compensationShift);
+            recalculate();
+        }
+
+    }
+
+    /**
+     * Listener for OK button in the DofLimitationDialog
+     */
+    private class EvLimitationListener implements OnEvLimitationListener, OnCallback {
+
+        @Override
+        public void onEvLimitationHandler(Limit data) {
+            setLimit(data);
+
+            SavedData savedData = new SavedData();
+            savedData.setCurrentAperturePosition(0);
+            savedData.setNewAperturePosition(0);
+            savedData.setCurrentIsoPosition(0);
+            savedData.setNewIsoPosition(0);
+            savedData.setCurrentShutterPosition(0);
+            savedData.setNewShutterPosition(0);
+
+            mIsLimit = true;
+
+            updateStep();
+            setOldWheelPositions(savedData);
+            recalculate();
+        }
+    }
+
+    private class WheelScrollListener implements OnWheelScrollListener {
+
+        @Override
+        public void onScrollingFinished(WheelView wheel) {
+            recalculate();
+        }
+
+        @Override
+        public void onScrollingStarted(WheelView wheel) {
+
+        }
+
+    }
+
+    private class SavedData {
+        private int mCurrentAperturePosition;
+        private int mCurrentIsoPosition;
+        private int mCurrentShutterPosition;
+
+        private int mNewAperturePosition;
+        private int mNewIsoPosition;
+        private int mNewShutterPosition;
+
+        public int getCurrentAperturePosition() {
+            return mCurrentAperturePosition;
+        }
+
+        public void setCurrentAperturePosition(int currentAperturePosition) {
+            this.mCurrentAperturePosition = currentAperturePosition;
+        }
+
+        public int getCurrentIsoPosition() {
+            return mCurrentIsoPosition;
+        }
+
+        public void setCurrentIsoPosition(int currentIsoPosition) {
+            this.mCurrentIsoPosition = currentIsoPosition;
+        }
+
+        public int getCurrentShutterPosition() {
+            return mCurrentShutterPosition;
+        }
+
+        public void setCurrentShutterPosition(int currentShutterPosition) {
+            this.mCurrentShutterPosition = currentShutterPosition;
+        }
+
+        public int getNewAperturePosition() {
+            return mNewAperturePosition;
+        }
+
+        public void setNewAperturePosition(int newAperturePosition) {
+            this.mNewAperturePosition = newAperturePosition;
+        }
+
+        public int getNewIsoPosition() {
+            return mNewIsoPosition;
+        }
+
+        public void setNewIsoPosition(int newIsoPosition) {
+            this.mNewIsoPosition = newIsoPosition;
+        }
+
+        public int getNewShutterPosition() {
+            return mNewShutterPosition;
+        }
+
+        public void setNewShutterPosition(int newShutterPosition) {
+            this.mNewShutterPosition = newShutterPosition;
+        }
     }
 }

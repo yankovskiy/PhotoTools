@@ -15,19 +15,6 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
-import java.util.ArrayList;
-
-import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.db.DbAdapter;
-import ru.neverdark.phototools.db.LocationsTable;
-import ru.neverdark.phototools.fragments.DeleteConfirmationDialog.OnDeleteConfirmationListener;
-import ru.neverdark.abs.CancelClickListener;
-import ru.neverdark.abs.OnCallback;
-import ru.neverdark.abs.UfoDialogFragment;
-import ru.neverdark.phototools.utils.LocationAdapter;
-import ru.neverdark.phototools.utils.LocationAdapter.OnLocationChangeListener;
-import ru.neverdark.phototools.utils.LocationRecord;
-import ru.neverdark.phototools.utils.Log;
 import android.content.Context;
 import android.database.Cursor;
 import android.view.View;
@@ -35,74 +22,28 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
+import ru.neverdark.abs.CancelClickListener;
+import ru.neverdark.abs.OnCallback;
+import ru.neverdark.abs.UfoDialogFragment;
+import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.db.DbAdapter;
+import ru.neverdark.phototools.db.LocationsTable;
+import ru.neverdark.phototools.fragments.DeleteConfirmationDialog.OnDeleteConfirmationListener;
+import ru.neverdark.phototools.utils.LocationAdapter;
+import ru.neverdark.phototools.utils.LocationAdapter.OnLocationChangeListener;
+import ru.neverdark.phototools.utils.LocationRecord;
+import ru.neverdark.phototools.utils.Log;
+
 public class LocationSelectionDialog extends UfoDialogFragment {
 
-    /**
-     * Implements listener for "ok" button on the delete confirmation dialog
-     */
-    private class DeleteConfirmationListener implements OnDeleteConfirmationListener, OnCallback {
-        @Override
-        public void onDeleteConfirmationHandler(Object deleteRecord) {
-            LocationRecord record = (LocationRecord) deleteRecord;
-
-            mDbAdapter.getLocations().deleteLocation(record._id);
-            mAdapter.remove(record);
-            mAdapter.notifyDataSetChanged();
-        }
-    }
-
-    private class LocationChangeListener implements OnLocationChangeListener {
-
-        @Override
-        public void onLocationEditHandler(int position) {
-            Log.message("Enter");
-            Log.variable("position", String.valueOf(position));
-            getDialog().dismiss();
-
-            LocationRecord record = mAdapter.getItem(position);
-
-            OnLocationListener callback = (OnLocationListener) getCallback();
-            if (callback != null) {
-                callback.onEditLocationHandler(record);
-            }
-        }
-
-        @Override
-        public void onLocationRemoveHandler(int position) {
-            Log.message("Enter");
-
-            DeleteConfirmationDialog dialog = DeleteConfirmationDialog.getInstance(getContext());
-            dialog.setCallback(new DeleteConfirmationListener());
-            dialog.setObjectForDelete(mAdapter.getItem(position));
-            dialog.show(getFragmentManager(), DeleteConfirmationDialog.DIALOG_TAG);
-        }
-
-    }
-
-    private class LocationClickListener implements OnItemClickListener {
-
-        @Override
-        public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
-            Log.message("Enter");
-            getDialog().dismiss();
-
-            LocationRecord record = mAdapter.getItem(position);
-
-            mDbAdapter.getLocations().udateLastAccessTime(record._id);
-
-            OnLocationListener callback = (OnLocationListener) getCallback();
-            if (callback != null) {
-                callback.onSelectLocationHandler(record);
-            }
-        }
-
-    }
-
-    public interface OnLocationListener {
-        public void onEditLocationHandler(LocationRecord record);
-
-        public void onSelectLocationHandler(LocationRecord record);
-    }
+    public static final String DIALOG_TAG = "locationSelectionDialog";
+    private ListView mLocationsList;
+    private ArrayList<LocationRecord> mArrayList;
+    private DbAdapter mDbAdapter;
+    private Cursor mCursor;
+    private LocationAdapter mAdapter;
 
     public static LocationSelectionDialog getInstance(Context context) {
         LocationSelectionDialog dialog = new LocationSelectionDialog();
@@ -110,17 +51,9 @@ public class LocationSelectionDialog extends UfoDialogFragment {
         return dialog;
     }
 
-    private ListView mLocationsList;
-    private ArrayList<LocationRecord> mArrayList;
-    private DbAdapter mDbAdapter;
-    private Cursor mCursor;
-    private LocationAdapter mAdapter;
-
-    public static final String DIALOG_TAG = "locationSelectionDialog";
-
     @Override
     public void bindObjects() {
-        setDialogView(View.inflate(getContext(), R.layout.activity_location_selection, null));
+        setDialogView(View.inflate(getContext(), R.layout.location_selection_dialog, null));
         mLocationsList = (ListView) getDialogView().findViewById(R.id.locationSelection_listView);
     }
 
@@ -218,5 +151,72 @@ public class LocationSelectionDialog extends UfoDialogFragment {
         mLocationsList.setOnItemClickListener(new LocationClickListener());
         getAlertDialog()
                 .setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
+    }
+
+    public interface OnLocationListener {
+        public void onEditLocationHandler(LocationRecord record);
+
+        public void onSelectLocationHandler(LocationRecord record);
+    }
+
+    /**
+     * Implements listener for "ok" button on the delete confirmation dialog
+     */
+    private class DeleteConfirmationListener implements OnDeleteConfirmationListener, OnCallback {
+        @Override
+        public void onDeleteConfirmationHandler(Object deleteRecord) {
+            LocationRecord record = (LocationRecord) deleteRecord;
+
+            mDbAdapter.getLocations().deleteLocation(record._id);
+            mAdapter.remove(record);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private class LocationChangeListener implements OnLocationChangeListener {
+
+        @Override
+        public void onLocationEditHandler(int position) {
+            Log.message("Enter");
+            Log.variable("position", String.valueOf(position));
+            getDialog().dismiss();
+
+            LocationRecord record = mAdapter.getItem(position);
+
+            OnLocationListener callback = (OnLocationListener) getCallback();
+            if (callback != null) {
+                callback.onEditLocationHandler(record);
+            }
+        }
+
+        @Override
+        public void onLocationRemoveHandler(int position) {
+            Log.message("Enter");
+
+            DeleteConfirmationDialog dialog = DeleteConfirmationDialog.getInstance(getContext());
+            dialog.setCallback(new DeleteConfirmationListener());
+            dialog.setObjectForDelete(mAdapter.getItem(position));
+            dialog.show(getFragmentManager(), DeleteConfirmationDialog.DIALOG_TAG);
+        }
+
+    }
+
+    private class LocationClickListener implements OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
+            Log.message("Enter");
+            getDialog().dismiss();
+
+            LocationRecord record = mAdapter.getItem(position);
+
+            mDbAdapter.getLocations().udateLastAccessTime(record._id);
+
+            OnLocationListener callback = (OnLocationListener) getCallback();
+            if (callback != null) {
+                callback.onSelectLocationHandler(record);
+            }
+        }
+
     }
 }

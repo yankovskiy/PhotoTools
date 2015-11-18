@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
@@ -17,39 +16,37 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/dialogConfirmCreate_linearLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:padding="4dp" >
+    android:layout_height="72dp"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/locationRow_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium" 
-        android:layout_marginLeft="5dp"
         android:layout_alignParentLeft="true"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="5dp"
+        android:textSize="16sp" />
 
     <ImageView
         android:id="@+id/locationRow_image_remove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-
         android:layout_centerInParent="true"
-        android:layout_marginRight="5dp"
-        android:src="@drawable/ic_action_remove"
+        android:padding="6dp"
+        android:src="@drawable/ic_delete_white_24dp"
         android:visibility="gone" />
 
     <ImageView
         android:id="@+id/locationRow_image_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:layout_marginRight="5dp"
         android:layout_centerInParent="true"
+        android:layout_marginRight="8dp"
         android:layout_toLeftOf="@+id/locationRow_image_remove"
-        android:src="@drawable/ic_action_edit" 
-        android:visibility="gone"/>
+        android:padding="6dp"
+        android:src="@drawable/ic_mode_edit_white_24dp"
+        android:visibility="gone" />
 
 </RelativeLayout>

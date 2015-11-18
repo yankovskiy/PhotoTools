@@ -46,9 +46,9 @@
             android:id="@+id/ev_compensation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_ev_compensation"
+                           android:layout_toLeftOf="@id/ev_limitation"
             android:paddingRight="10dp"
-            android:layout_toLeftOf="@id/ev_limitation"/>
+                           android:src="@drawable/ic_action_ev_compensation" />
 
             <ImageView
                 android:id="@+id/ev_limitation"

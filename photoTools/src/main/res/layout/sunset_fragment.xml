@@ -29,67 +29,45 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <LinearLayout
-            android:baselineAligned="false"
+        <TextView
+            android:id="@+id/sunset_label_date"
+            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:text="@string/sunset_label_date"
+            android:textColor="@color/headear" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:orientation="vertical" >
+        <EditText
+            android:id="@+id/sunset_editText_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="date" >
+        </EditText>
 
-                <TextView
-                    android:id="@+id/sunset_label_date"
-                    style="?android:attr/listSeparatorTextViewStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sunset_label_date"
-                    android:textColor="@color/headear" />
+        <TextView
+            android:id="@+id/sunset_label_location"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sunset_label_location"
+            android:textColor="@color/headear" />
 
-                <EditText
-                    android:id="@+id/sunset_editText_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:focusable="false"
-                    android:inputType="date" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/sunset_label_location"
-                    style="?android:attr/listSeparatorTextViewStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sunset_label_location"
-                    android:textColor="@color/headear" />
-
-                <EditText
-                    android:id="@+id/sunset_editText_location"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:focusable="false"
-                    android:inputType="date" />
-            </LinearLayout>
-        </LinearLayout>
+        <EditText
+            android:id="@+id/sunset_editText_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="date" />
 
         <Button
-            android:layout_gravity="right"
             android:id="@+id/sunset_button_calculate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sunset_button_calculate" >
-        </Button>
+            android:layout_gravity="right"
+            android:text="@string/sunset_button_calculate" />
 
         <LinearLayout
             android:id="@+id/sunsnet_LinearLayout_calculationResult"
@@ -364,6 +342,5 @@
             </TableLayout>
         </LinearLayout>
     </LinearLayout>
-
 
 </ScrollView>

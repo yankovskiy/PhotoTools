@@ -15,10 +15,10 @@
  ******************************************************************************/
 package ru.neverdark.phototools;
 
-import ru.neverdark.phototools.utils.Log;
-
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import ru.neverdark.phototools.utils.Log;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.message("Enter");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
         if (savedInstanceState == null) {
             Log.saveLogcatToFile();
         }

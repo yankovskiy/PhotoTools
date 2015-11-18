@@ -15,9 +15,8 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
-import ru.neverdark.abs.UfoFragment;
-import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.utils.Log;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -25,8 +24,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
+
+import ru.neverdark.abs.UfoFragment;
+import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.utils.Log;
 
 /**
  * Contains About application fragment
@@ -47,7 +48,7 @@ public class AboutFragment extends UfoFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        mView = inflater.inflate(R.layout.activity_about, container, false);
+        mView = inflater.inflate(R.layout.about_fragment, container, false);
 
         /* For clickable links */
         bindObjects();

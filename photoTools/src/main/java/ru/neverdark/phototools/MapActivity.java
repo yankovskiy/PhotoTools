@@ -49,73 +49,16 @@ import ru.neverdark.phototools.utils.Log;
 
 public class MapActivity extends AppCompatActivity implements OnMapLongClickListener {
 
-    private class ConfirmCreateDialogHandler implements OnConfirmDialogHandler, OnCallback {
-
-        @Override
-        public void handleConfirmDialog(String locationName) {
-            Log.message("Enter");
-
-            Intent intent = new Intent();
-            intent.putExtra(Constants.LOCATION_LATITUDE, mMarkerPosition.latitude);
-            intent.putExtra(Constants.LOCATION_LONGITUDE, mMarkerPosition.longitude);
-
-            if (locationName != null) {
-                saveDataToDatabase(locationName);
-                intent.putExtra(Constants.LOCATION_NAME, locationName);
-            } else {
-                mRecordId = Constants.LOCATION_POINT_ON_MAP_CHOICE;
-            }
-
-            intent.putExtra(Constants.LOCATION_RECORD_ID, mRecordId);
-
-            setResult(RESULT_OK, intent);
-            finish();
-        }
-
-    }
-
-    private class GeoCoderListener implements OnGeoCoderListener {
-
-        @Override
-        public void onGetResultFail() {
-            showErrorDialog(R.string.error_geoCoderNotAvailable);
-        }
-
-        @Override
-        public void onGetResultSuccess(LatLng coordinates, String searchString) {
-            if (coordinates != null) {
-
-                float zoom = mMap.getCameraPosition().zoom;
-
-                // move camera to saved position
-                CameraPosition currentPosition = new CameraPosition.Builder().target(coordinates)
-                        .zoom(zoom).build();
-                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(currentPosition));
-            } else {
-                String errorMessage = String.format(getString(R.string.error_notFound),
-                        searchString);
-                showErrorDialog(errorMessage);
-            }
-        }
-
-    }
-
-    private class QueryTextListener implements SearchView.OnQueryTextListener {
-
-        @Override
-        public boolean onQueryTextSubmit(String query) {
-            mMenuItemSearch.collapseActionView();
-            initSearchProcess(query);
-            return true;
-        }
-
-        @Override
-        public boolean onQueryTextChange(String newText) {
-            // TODO Auto-generated method stub
-            return false;
-        }
-
-    }
+    private GoogleMap mMap;
+    private MenuItem mMenuItemDone;
+    private Marker mMarker;
+    private LatLng mMarkerPosition;
+    private int mAction;
+    private long mRecordId;
+    private String mLocationName;
+    private Context mContext;
+    private MenuItem mMenuItemSearch;
+    private boolean mIsVisible = false;
 
     /**
      * Inits process for searching coordinates by address
@@ -141,17 +84,6 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
         dialog.setMessages(R.string.error, resourceId);
         dialog.show(getSupportFragmentManager(), ShowMessageDialog.DIALOG_TAG);
     }
-
-    private GoogleMap mMap;
-    private MenuItem mMenuItemDone;
-    private Marker mMarker;
-    private LatLng mMarkerPosition;
-    private int mAction;
-    private long mRecordId;
-    private String mLocationName;
-    private Context mContext;
-    private MenuItem mMenuItemSearch;
-    private boolean mIsVisible = false;
 
     /**
      * Inits Google Map
@@ -198,7 +130,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
         Log.message("Enter");
         super.onCreate(savedInstanceState);
         setTheme(R.style.Theme_AppCompat);
-        setContentView(R.layout.activity_map);
+        setContentView(R.layout.map_activity);
 
         initMap();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -328,6 +260,74 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
         confirmDialog.setAction(mAction);
         confirmDialog.setLocationName(mLocationName);
         confirmDialog.show(getSupportFragmentManager(), ConfirmCreateDialog.DIALOG_ID);
+    }
+
+    private class ConfirmCreateDialogHandler implements OnConfirmDialogHandler, OnCallback {
+
+        @Override
+        public void handleConfirmDialog(String locationName) {
+            Log.message("Enter");
+
+            Intent intent = new Intent();
+            intent.putExtra(Constants.LOCATION_LATITUDE, mMarkerPosition.latitude);
+            intent.putExtra(Constants.LOCATION_LONGITUDE, mMarkerPosition.longitude);
+
+            if (locationName != null) {
+                saveDataToDatabase(locationName);
+                intent.putExtra(Constants.LOCATION_NAME, locationName);
+            } else {
+                mRecordId = Constants.LOCATION_POINT_ON_MAP_CHOICE;
+            }
+
+            intent.putExtra(Constants.LOCATION_RECORD_ID, mRecordId);
+
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+
+    }
+
+    private class GeoCoderListener implements OnGeoCoderListener {
+
+        @Override
+        public void onGetResultFail() {
+            showErrorDialog(R.string.error_geoCoderNotAvailable);
+        }
+
+        @Override
+        public void onGetResultSuccess(LatLng coordinates, String searchString) {
+            if (coordinates != null) {
+
+                float zoom = mMap.getCameraPosition().zoom;
+
+                // move camera to saved position
+                CameraPosition currentPosition = new CameraPosition.Builder().target(coordinates)
+                        .zoom(zoom).build();
+                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(currentPosition));
+            } else {
+                String errorMessage = String.format(getString(R.string.error_notFound),
+                        searchString);
+                showErrorDialog(errorMessage);
+            }
+        }
+
+    }
+
+    private class QueryTextListener implements SearchView.OnQueryTextListener {
+
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            mMenuItemSearch.collapseActionView();
+            initSearchProcess(query);
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
     }
 
 }
