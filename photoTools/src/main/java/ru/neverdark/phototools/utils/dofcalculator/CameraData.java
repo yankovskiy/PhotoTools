@@ -1,19 +1,21 @@
 /*******************************************************************************
  * Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- * 
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- * 
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package ru.neverdark.phototools.utils.dofcalculator;
+
+import android.content.Context;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -21,8 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import android.content.Context;
 
 import ru.neverdark.phototools.db.DbAdapter;
 import ru.neverdark.phototools.db.UserCamerasRecord;
@@ -34,73 +34,8 @@ import ru.neverdark.phototools.utils.Log;
  */
 public class CameraData {
     /**
-     * Camera vendors enum
+     * DATABASE contains all cameras
      */
-    public static enum Vendor {
-        CANON("Canon"),
-        FUJIFILM("Fujifilm"),
-        NIKON("Nikon"),
-        OLYMPUS("Olympus"),
-        PENTAX("Pentax"),
-        SONY("Sony"),
-        USER("My cameras"),
-        PENTAX_MILC("Pentax MILC");
-
-        private final String text;
-
-        /**
-         * @param text
-         */
-        private Vendor(final String text) {
-            this.text = text;
-        }
-
-        /* (non-Javadoc)
-         * @see java.lang.Enum#toString()
-         */
-        @Override
-        public String toString() {
-            return text;
-        }
-    }
-    /**
-     * Function get circle of confusion for special camera
-     * 
-     * @param vendor
-     *            camera vendor
-     * @param camera
-     *            camera model
-     * @return circle of confusion or null if camera not found
-     */
-    public static BigDecimal getCocForCamera(Vendor vendor, String camera) {
-        List<CameraData> camerasForVendor = DATABASE.get(vendor);
-        for (CameraData cameraData : camerasForVendor) {
-            if (cameraData.getModel().equals(camera)) {
-                return cameraData.getCoc();
-            }
-        }
-        return null;
-    }
-    /**
-     * Function get vendors array
-     * 
-     * @return vendor array
-     */
-    public static Vendor[] getVendors() {
-        return Vendor.values();
-    }
-    /** Multiply factor for CoC calculation */
-    private final BigDecimal MULTIPLY_FACTOR = new BigDecimal("3.065333276");
-    /** camera model */
-    private String mModel;
-
-    /** circle of confusion = pixel size multiply to MULTIPLY_FACTOR */
-    private BigDecimal mCoc;
-
-    /** camera vendor */
-    private Vendor mVendor;
-    
-    /** DATABASE contains all cameras */
     private static final Map<Vendor, List<CameraData>> DATABASE = new HashMap<Vendor, List<CameraData>>();
 
     static {
@@ -147,7 +82,14 @@ public class CameraData {
         canonCameras.add(new CameraData(Vendor.CANON, "1100D / Rebel T3 / Kiss X50", new BigDecimal("22.2"), new BigDecimal("4272")));
         canonCameras.add(new CameraData(Vendor.CANON, "1200D/EOS Rebel T5/EOS Kiss X70", new BigDecimal("22.2"), new BigDecimal("5184")));
         DATABASE.put(Vendor.CANON, canonCameras);
-        
+
+        List<CameraData> canonMilcCameras = new ArrayList<>();
+        canonMilcCameras.add(new CameraData(Vendor.CANON_MILC, "M", new BigDecimal("22.3"), new BigDecimal("5184")));
+        canonMilcCameras.add(new CameraData(Vendor.CANON_MILC, "M2", new BigDecimal("22.3"), new BigDecimal("5184")));
+        canonMilcCameras.add(new CameraData(Vendor.CANON_MILC, "M3", new BigDecimal("22.3"), new BigDecimal("6000")));
+        canonMilcCameras.add(new CameraData(Vendor.CANON_MILC, "M10", new BigDecimal("22.3"), new BigDecimal("5184")));
+        DATABASE.put(Vendor.CANON_MILC, canonMilcCameras);
+
         List<CameraData> fujiCameras = new ArrayList<>();
         fujiCameras.add(new CameraData(Vendor.FUJIFILM, "Fujix DS-560", new BigDecimal("11"), new BigDecimal("1280")));
         fujiCameras.add(new CameraData(Vendor.FUJIFILM, "Fujix DS-565", new BigDecimal("11"), new BigDecimal("1280")));
@@ -158,7 +100,18 @@ public class CameraData {
         fujiCameras.add(new CameraData(Vendor.FUJIFILM, "FinePix S3 Pro UVIR", new BigDecimal("23"), new BigDecimal("4256")));
         fujiCameras.add(new CameraData(Vendor.FUJIFILM, "FinePix S5 Pro", new BigDecimal("23"), new BigDecimal("4256")));
         DATABASE.put(Vendor.FUJIFILM, fujiCameras);
-        
+
+        List<CameraData> fujifilmMilc = new ArrayList<>();
+        fujifilmMilc.add(new CameraData(Vendor.FUJIFILM_MILC, "X-T1", new BigDecimal("23.6"), new BigDecimal("4896")));
+        fujifilmMilc.add(new CameraData(Vendor.FUJIFILM_MILC, "X-T10", new BigDecimal("23.6"), new BigDecimal("4896")));
+        fujifilmMilc.add(new CameraData(Vendor.FUJIFILM_MILC, "X-Pro1", new BigDecimal("23.6"), new BigDecimal("4896")));
+        fujifilmMilc.add(new CameraData(Vendor.FUJIFILM_MILC, "X-E1", new BigDecimal("23.6"), new BigDecimal("4896")));
+        fujifilmMilc.add(new CameraData(Vendor.FUJIFILM_MILC, "X-E2", new BigDecimal("23.6"), new BigDecimal("4896")));
+        fujifilmMilc.add(new CameraData(Vendor.FUJIFILM_MILC, "X-M1", new BigDecimal("23.6"), new BigDecimal("4896")));
+        fujifilmMilc.add(new CameraData(Vendor.FUJIFILM_MILC, "X-A1", new BigDecimal("23.6"), new BigDecimal("4896")));
+        fujifilmMilc.add(new CameraData(Vendor.FUJIFILM_MILC, "X-A2", new BigDecimal("23.6"), new BigDecimal("4896")));
+        DATABASE.put(Vendor.FUJIFILM_MILC, fujifilmMilc);
+
         List<CameraData> nikonCameras = new ArrayList<>();
         nikonCameras.add(new CameraData(Vendor.NIKON, "D1", new BigDecimal("23.7"), new BigDecimal("2000")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D1X", new BigDecimal("23.7"), new BigDecimal("3008")));
@@ -205,6 +158,20 @@ public class CameraData {
         nikonCameras.add(new CameraData(Vendor.NIKON, "D3300", new BigDecimal("23.2"), new BigDecimal("6000")));
         DATABASE.put(Vendor.NIKON, nikonCameras);
 
+        List<CameraData> nikonMilc = new ArrayList<>();
+        nikonMilc.add(new CameraData(Vendor.NIKON_MILC, "1 AW1", new BigDecimal("13.2"), new BigDecimal("4608")));
+        nikonMilc.add(new CameraData(Vendor.NIKON_MILC, "1 V1", new BigDecimal("13.2"), new BigDecimal("3906")));
+        nikonMilc.add(new CameraData(Vendor.NIKON_MILC, "1 V2", new BigDecimal("13.2"), new BigDecimal("4608")));
+        nikonMilc.add(new CameraData(Vendor.NIKON_MILC, "1 V3", new BigDecimal("13.2"), new BigDecimal("5232")));
+        nikonMilc.add(new CameraData(Vendor.NIKON_MILC, "1 J1", new BigDecimal("13.2"), new BigDecimal("3872")));
+        nikonMilc.add(new CameraData(Vendor.NIKON_MILC, "1 J2", new BigDecimal("13.2"), new BigDecimal("3872")));
+        nikonMilc.add(new CameraData(Vendor.NIKON_MILC, "1 J3", new BigDecimal("13.2"), new BigDecimal("4608")));
+        nikonMilc.add(new CameraData(Vendor.NIKON_MILC, "1 J4", new BigDecimal("13.2"), new BigDecimal("5232")));
+        nikonMilc.add(new CameraData(Vendor.NIKON_MILC, "1 J5", new BigDecimal("13.2"), new BigDecimal("5568")));
+        nikonMilc.add(new CameraData(Vendor.NIKON_MILC, "1 S1", new BigDecimal("13.2"), new BigDecimal("3872")));
+        nikonMilc.add(new CameraData(Vendor.NIKON_MILC, "1 S2", new BigDecimal("13.2"), new BigDecimal("4592")));
+        DATABASE.put(Vendor.NIKON_MILC, nikonMilc);
+
         List<CameraData> olympusCameras = new ArrayList<>();
         olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-1", new BigDecimal("17.3"), new BigDecimal("2560")));
         olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-10", new BigDecimal("11"), new BigDecimal("2240")));
@@ -223,7 +190,7 @@ public class CameraData {
         olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-520", new BigDecimal("17.3"), new BigDecimal("3648")));
         olympusCameras.add(new CameraData(Vendor.OLYMPUS, "E-620", new BigDecimal("17.3"), new BigDecimal("4032")));
         DATABASE.put(Vendor.OLYMPUS, olympusCameras);
-        
+
         List<CameraData> pentaxCameras = new ArrayList<>();
         pentaxCameras.add(new CameraData(Vendor.PENTAX, "645D", new BigDecimal("44"), new BigDecimal("7264")));
         pentaxCameras.add(new CameraData(Vendor.PENTAX, "645Z", new BigDecimal("44"), new BigDecimal("8256")));
@@ -251,7 +218,37 @@ public class CameraData {
         pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-x", new BigDecimal("23.6"), new BigDecimal("4288")));
         pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-01", new BigDecimal("23.7"), new BigDecimal("4928")));
         DATABASE.put(Vendor.PENTAX, pentaxCameras);
-        
+
+        List<CameraData> pentaxMilcCameras = new ArrayList<>();
+        pentaxMilcCameras.add(new CameraData(Vendor.PENTAX_MILC, "Q", new BigDecimal("6.17"), new BigDecimal("4000")));
+        pentaxMilcCameras.add(new CameraData(Vendor.PENTAX_MILC, "Q10", new BigDecimal("6.17"), new BigDecimal("4000")));
+        pentaxMilcCameras.add(new CameraData(Vendor.PENTAX_MILC, "Q7", new BigDecimal("7.44"), new BigDecimal("4000")));
+        pentaxMilcCameras.add(new CameraData(Vendor.PENTAX_MILC, "Q-S1", new BigDecimal("7.44"), new BigDecimal("4000")));
+        DATABASE.put(Vendor.PENTAX_MILC, pentaxMilcCameras);
+
+        List<CameraData> samsungMilc = new ArrayList<>();
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX1", new BigDecimal("23.5"), new BigDecimal("6480")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX10", new BigDecimal("23.4"), new BigDecimal("4592")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX11", new BigDecimal("23.4"), new BigDecimal("4592")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX20", new BigDecimal("23.4"), new BigDecimal("5472")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX30", new BigDecimal("23.5"), new BigDecimal("5472")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX100", new BigDecimal("23.4"), new BigDecimal("4592")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX200", new BigDecimal("23.4"), new BigDecimal("5472")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX210", new BigDecimal("23.5"), new BigDecimal("5472")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX300", new BigDecimal("23.5"), new BigDecimal("5472")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX300M", new BigDecimal("23.5"), new BigDecimal("5472")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX500", new BigDecimal("23.5"), new BigDecimal("6480")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "Galaxy NX", new BigDecimal("23.5"), new BigDecimal("5472")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX2000", new BigDecimal("23.5"), new BigDecimal("5472")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX3000", new BigDecimal("23.5"), new BigDecimal("5472")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX3300", new BigDecimal("23.5"), new BigDecimal("5472")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX5", new BigDecimal("23.5"), new BigDecimal("4592")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX1000", new BigDecimal("23.5"), new BigDecimal("5472")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX1100", new BigDecimal("23.5"), new BigDecimal("5472")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX mini", new BigDecimal("13.2"), new BigDecimal("5472")));
+        samsungMilc.add(new CameraData(Vendor.SAMSUNG_MILC, "NX mini2", new BigDecimal("13.2"), new BigDecimal("5472")));
+        DATABASE.put(Vendor.SAMSUNG_MILC, samsungMilc);
+
         List<CameraData> sonyCameras = new ArrayList<>();
         sonyCameras.add(new CameraData(Vendor.SONY, "DSLR-A900", new BigDecimal("35.9"), new BigDecimal("6048")));
         sonyCameras.add(new CameraData(Vendor.SONY, "DSLR-A850", new BigDecimal("35.9"), new BigDecimal("6048")));
@@ -281,21 +278,109 @@ public class CameraData {
         sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A77 II", new BigDecimal("23.5"), new BigDecimal("6000")));
         sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A99", new BigDecimal("35.8"), new BigDecimal("6000")));
         DATABASE.put(Vendor.SONY, sonyCameras);
-        
+
+        List<CameraData> sonyMilcCameras = new ArrayList<>();
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "α7S", new BigDecimal("35.8"), new BigDecimal("6000")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "α7S II", new BigDecimal("35.6"), new BigDecimal("4240")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "α7R", new BigDecimal("35.8"), new BigDecimal("6000")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "α7R II", new BigDecimal("35.9"), new BigDecimal("7974")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "α7", new BigDecimal("35.8"), new BigDecimal("6000")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "α7 II", new BigDecimal("35.8"), new BigDecimal("6000")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "NEX-7", new BigDecimal("23.4"), new BigDecimal("6000")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "NEX-6", new BigDecimal("23.4"), new BigDecimal("4912")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "α6000", new BigDecimal("23.5"), new BigDecimal("6000")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "NEX-5 / NEX-5C", new BigDecimal("23.4"), new BigDecimal("4592")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "NEX-5N", new BigDecimal("23.4"), new BigDecimal("4592")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "NEX-5R", new BigDecimal("23.4"), new BigDecimal("4912")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "NEX-5T", new BigDecimal("23.4"), new BigDecimal("4912")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "NEX-3 / NEX-3C", new BigDecimal("23.4"), new BigDecimal("4592")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "NEX-C3", new BigDecimal("23.4"), new BigDecimal("4912")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "NEX-F3", new BigDecimal("23.4"), new BigDecimal("4912")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "NEX-3N", new BigDecimal("23.5"), new BigDecimal("4912")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "α5000", new BigDecimal("23.2"), new BigDecimal("5456")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "α5100", new BigDecimal("23.5"), new BigDecimal("6000")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "α3000", new BigDecimal("23.5"), new BigDecimal("5456")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "QX1", new BigDecimal("23.2"), new BigDecimal("5456")));
+        DATABASE.put(Vendor.SONY_MILC, sonyMilcCameras);
+
         List<CameraData> userCameras = new ArrayList<>();
         DATABASE.put(Vendor.USER, userCameras);
+    }
 
-        List<CameraData> pentaxMilcCameras = new ArrayList<>();
-        pentaxMilcCameras.add(new CameraData(Vendor.PENTAX_MILC, "Q", new BigDecimal("6.17"), new BigDecimal("4000")));
-        pentaxMilcCameras.add(new CameraData(Vendor.PENTAX_MILC, "Q10", new BigDecimal("6.17"), new BigDecimal("4000")));
-        pentaxMilcCameras.add(new CameraData(Vendor.PENTAX_MILC, "Q7", new BigDecimal("7.44"), new BigDecimal("4000")));
-        pentaxMilcCameras.add(new CameraData(Vendor.PENTAX_MILC, "Q-S1", new BigDecimal("7.44"), new BigDecimal("4000")));
-        DATABASE.put(Vendor.PENTAX_MILC, pentaxMilcCameras);
+    /** Multiply factor for CoC calculation */
+    private final BigDecimal MULTIPLY_FACTOR = new BigDecimal("3.065333276");
+    /** camera model */
+    private String mModel;
+    /** circle of confusion = pixel size multiply to MULTIPLY_FACTOR */
+    private BigDecimal mCoc;
+    /** camera vendor */
+    private Vendor mVendor;
+
+    /**
+     * Class constructor
+     *
+     * @param vendor camera vendor
+     * @param model  camera model
+     * @param coc    custom circle of confusion
+     */
+    public CameraData(Vendor vendor, String model, BigDecimal coc) {
+        mModel = model;
+        mVendor = vendor;
+        mCoc = coc;
+    }
+
+    /**
+     * Class constructor
+     *
+     * @param vendor
+     *            - camera vendor
+     * @param model
+     *            - camera model
+     * @param sensorWidth
+     *            - sensor width
+     * @param maxWidthResolution
+     *            - maximum width resolution in pixel
+     */
+    public CameraData(Vendor vendor, String model, BigDecimal sensorWidth,
+                      BigDecimal maxWidthResolution) {
+        BigDecimal pixelSize = sensorWidth.divide(maxWidthResolution, 10,
+                RoundingMode.HALF_UP);
+        mCoc = pixelSize.multiply(MULTIPLY_FACTOR);
+        mModel = model;
+        mVendor = vendor;
+    }
+
+    /**
+     * Function get circle of confusion for special camera
+     *
+     * @param vendor
+     *            camera vendor
+     * @param camera
+     *            camera model
+     * @return circle of confusion or null if camera not found
+     */
+    public static BigDecimal getCocForCamera(Vendor vendor, String camera) {
+        List<CameraData> camerasForVendor = DATABASE.get(vendor);
+        for (CameraData cameraData : camerasForVendor) {
+            if (cameraData.getModel().equals(camera)) {
+                return cameraData.getCoc();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Function get vendors array
+     *
+     * @return vendor array
+     */
+    public static Vendor[] getVendors() {
+        return Vendor.values();
     }
 
     /**
      * Function get cameras array by vendor
-     * 
+     *
      * @param vendor
      *            camera vendor
      * @param context
@@ -349,45 +434,8 @@ public class CameraData {
     }
 
     /**
-     * Class constructor
-     * 
-     * @param vendor
-     *            camera vendor
-     * @param model
-     *            camera model
-     * @param coc
-     *            custom circle of confusion
-     */
-    public CameraData(Vendor vendor, String model, BigDecimal coc) {
-        mModel = model;
-        mVendor = vendor;
-        mCoc = coc;
-    }
-
-    /**
-     * Class constructor
-     * 
-     * @param vendor
-     *            - camera vendor
-     * @param model
-     *            - camera model
-     * @param sensorWidth
-     *            - sensor width
-     * @param maxWidthResolution
-     *            - maximum width resolution in pixel
-     */
-    public CameraData(Vendor vendor, String model, BigDecimal sensorWidth,
-            BigDecimal maxWidthResolution) {
-        BigDecimal pixelSize = sensorWidth.divide(maxWidthResolution, 10,
-                RoundingMode.HALF_UP);
-        mCoc = pixelSize.multiply(MULTIPLY_FACTOR);
-        mModel = model;
-        mVendor = vendor;
-    }
-
-    /**
      * Function get circle of confusion
-     * 
+     *
      * @return circle of confusion
      */
     public BigDecimal getCoc() {
@@ -396,7 +444,7 @@ public class CameraData {
 
     /**
      * Function get camera model
-     * 
+     *
      * @return camera model
      */
     public String getModel() {
@@ -405,10 +453,46 @@ public class CameraData {
 
     /**
      * Function get camera vendor
-     * 
+     *
      * @return camera vendor
      */
     public Vendor getVendor() {
         return mVendor;
+    }
+
+    /**
+     * Camera vendors enum
+     */
+    public static enum Vendor {
+        CANON("Canon DSLR"),
+        CANON_MILC("Canon MILC"),
+        FUJIFILM("Fujifilm DSLR"),
+        FUJIFILM_MILC("Fujifilm MILC"),
+        NIKON("Nikon DSLR"),
+        NIKON_MILC("Nikon MILC"),
+        OLYMPUS("Olympus DSLR"),
+        PENTAX("Pentax DSLR"),
+        PENTAX_MILC("Pentax MILC"),
+        SAMSUNG_MILC("Samsung MILC"),
+        SONY("Sony DSLR/SLT"),
+        SONY_MILC("Sony MILC"),
+        USER("My cameras");
+
+        private final String text;
+
+        /**
+         * @param text
+         */
+        private Vendor(final String text) {
+            this.text = text;
+        }
+
+        /* (non-Javadoc)
+         * @see java.lang.Enum#toString()
+         */
+        @Override
+        public String toString() {
+            return text;
+        }
     }
 }
