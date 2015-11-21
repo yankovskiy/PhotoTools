@@ -62,7 +62,10 @@ public class CameraManagementActivity extends UfoFragmentActivity {
     }
 
     private void loadData() {
-        ArrayAdapter<CameraData.Vendor> vendors = new ArrayAdapter<CameraData.Vendor>(mContext, android.R.layout.simple_spinner_item, CameraData.Vendor.values());
+        ArrayAdapter<CameraData.Vendor> vendors = new ArrayAdapter<CameraData.Vendor>(mContext,
+                android.R.layout.simple_spinner_item,
+                CameraData.Vendor.values());
+        vendors.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mVendors.setAdapter(vendors);
     }
 
