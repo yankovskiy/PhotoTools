@@ -19,9 +19,10 @@
     </style>
   </head>
   <body>
-$ 0.12.2
-  % Version 0.12.2
-  _ 01.01.2015
+$ 0.13
+  % Version 0.13
+  _ 22.11.2015
+    * New camera management system
     * Added new cameras
 $ END_OF_CHANGE_LOG
   </body>

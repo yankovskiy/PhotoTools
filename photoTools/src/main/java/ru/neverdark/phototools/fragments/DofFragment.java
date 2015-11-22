@@ -365,6 +365,21 @@ public class DofFragment extends UfoFragment {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceData) {
+        super.onActivityCreated(savedInstanceData);
+        ViewTarget target = new ViewTarget(R.id.dof_cameraManagement, getActivity());
+        ShowcaseView view = new ShowcaseView.Builder(getActivity())
+                .setTarget(target)
+                .setContentTitle(R.string.dof_sc_title)
+                .setContentText(R.string.dof_sc_message)
+                .hideOnTouchOutside()
+                .singleShot(Constants.DOF_CHOICE)
+                .setStyle(R.style.SVCustom)
+                .withMaterialShowcase()
+                .build();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         Log.enter();
@@ -375,31 +390,6 @@ public class DofFragment extends UfoFragment {
             populateCameraByVendor();
             recalculate();
         }
-
-        ViewTarget target = new ViewTarget(R.id.dof_cameraManagement, getActivity());
-        ShowcaseView view = new ShowcaseView.Builder(getActivity(), true)
-                .setTarget(target)
-                .setContentTitle(R.string.dof_sc_title)
-                .setContentText(R.string.dof_sc_message)
-                .hideOnTouchOutside()
-                        .singleShot(1213)
-                .setStyle(R.style.SVCustom)
-                .build();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            int height = getNavigationBarHeight(mContext);
-            Log.variable("height", String.valueOf(height));
-            view.setPadding(0, 0, 0, height);
-        }
-    }
-
-    private int getNavigationBarHeight(Context context) {
-        Resources resources = context.getResources();
-        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            return resources.getDimensionPixelSize(resourceId);
-        }
-        return 0;
     }
 
     /**

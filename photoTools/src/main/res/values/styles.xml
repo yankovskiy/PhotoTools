@@ -34,6 +34,6 @@
     <color name="headear">#ff33b5e5</color>
 
     <style name="SVCustom" parent="ShowcaseView">
-        <item name="sv_backgroundColor">#bb000000</item>
+        <item name="sv_backgroundColor">#cc000000</item>
     </style>
 </resources>
