@@ -343,8 +343,13 @@ public class CameraData {
      */
     public CameraData(Vendor vendor, String model, BigDecimal sensorWidth,
                       BigDecimal maxWidthResolution) {
-        BigDecimal pixelSize = sensorWidth.divide(maxWidthResolution, 10,
-                RoundingMode.HALF_UP);
+        BigDecimal pixelSize = null;
+        if (maxWidthResolution.signum() == 1) {
+            pixelSize = sensorWidth.divide(maxWidthResolution, 10,
+                    RoundingMode.HALF_UP);
+        } else {
+            pixelSize = new BigDecimal("0.0");
+        }
         mCoc = pixelSize.multiply(MULTIPLY_FACTOR);
         mModel = model;
         mVendor = vendor;
@@ -363,7 +368,8 @@ public class CameraData {
         List<CameraData> camerasForVendor = DATABASE.get(vendor);
         for (CameraData cameraData : camerasForVendor) {
             if (cameraData.getModel().equals(camera)) {
-                return cameraData.getCoc();
+                BigDecimal coc = cameraData.getCoc();
+                return coc.signum() != 0 ? coc: null;
             }
         }
         return null;
