@@ -35,7 +35,6 @@ public class Constants {
     public static final byte DONATE_CHOICE = 5;
     public static final byte ABOUT_CHOICE = 6;
     public static final byte PLUGIN_CHOICE = 7;
-    public static final byte PHOTOHUNT_CHOICE = 8;
     
     public static final String DATE_YEAR = "year";
     public static final String DATE_MONTH = "month";
@@ -103,8 +102,6 @@ public class Constants {
     public final static int INCH = 3;
     
     public final static int TABLET_SW = 600;
-    
-    public final static String HIDE_PHOTOHUNT_MENU = "hide_photohunt_menu";
 
     public static final int COPY_CAMERA = 0;
     public static final int EDIT_CAMERA = 1;

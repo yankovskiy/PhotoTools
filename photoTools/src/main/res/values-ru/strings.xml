@@ -231,10 +231,6 @@
     
     <string name="evCompensation_title">Компенсация экспозиции</string>
     
-    <string name="photohunt_menu">Фотокросс</string>
-    <string name="photohunt_title">Перейти в Google Play?</string>
-    <string name="photohunt_message">Присоединяйся к «Фотокроссу» - опубликуй своё фото, заработай бонусные баллы, стань победителем и автором следующей темы фотоохоты!</string>
-    <string name="photohunt_hide">Больше не показывать этот пункт меню</string>
     <string name="dof_sc_message">Выберите существующую модель или создайте свою камеру</string>
     <string name="dof_sc_title">Управляйте камерами</string>
     <string formatted="false" name="confirm_action_copy_message">Скопировать %s в пользовательские камеры?</string>

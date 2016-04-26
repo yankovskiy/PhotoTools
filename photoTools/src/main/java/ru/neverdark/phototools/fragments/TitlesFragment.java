@@ -15,32 +15,13 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import ru.neverdark.abs.OnCallback;
-import ru.neverdark.phototools.DetailsActivity;
-import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.fragments.PhotohuntDialog.OnHidePhotohuntMenu;
-import ru.neverdark.phototools.utils.Common;
-import ru.neverdark.phototools.utils.Constants;
-import ru.neverdark.phototools.utils.Log;
-import ru.neverdark.phototools.utils.MainMenuAdapter;
-import ru.neverdark.phototools.utils.MainMenuItem;
-import ru.neverdark.phototools.utils.PluginManager;
-
-import android.app.ListActivity;
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,21 +29,22 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ru.neverdark.phototools.DetailsActivity;
+import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.utils.Common;
+import ru.neverdark.phototools.utils.Constants;
+import ru.neverdark.phototools.utils.Log;
+import ru.neverdark.phototools.utils.MainMenuAdapter;
+import ru.neverdark.phototools.utils.MainMenuItem;
+import ru.neverdark.phototools.utils.PluginManager;
+
 /**
  * Fragment for navigation list
  */
 public class TitlesFragment extends Fragment {
-    private class HidePhotohuntMenuListener implements OnHidePhotohuntMenu, OnCallback {
-
-        @Override
-        public void hidePhotohuntMenu() {
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
-            sp.edit().putBoolean(Constants.HIDE_PHOTOHUNT_MENU, true).commit();
-            rebuildList();
-        }
-
-    }
-
     private boolean mDualPane;
     private int mCurrentRecordId = 0;
     private Context mContext;
@@ -106,11 +88,6 @@ public class TitlesFragment extends Fragment {
 
         for (MainMenuItem item : getPluginsList()) {
             list.add(item);
-        }
-
-        if (Locale.getDefault().getLanguage().equals("ru") && isMenuHide() == false) {
-            list.add(createMainMenuItem(getString(R.string.photohunt_menu),
-                    Constants.PHOTOHUNT_CHOICE));
         }
 
         // third part of the menu
@@ -207,16 +184,6 @@ public class TitlesFragment extends Fragment {
         mList.setAdapter(mAdapter);
     }
 
-    private void hideMenu() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
-        sp.edit().putBoolean(Constants.HIDE_PHOTOHUNT_MENU, true).commit();
-    }
-    
-    private boolean isMenuHide() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return sp.getBoolean(Constants.HIDE_PHOTOHUNT_MENU, false);
-    }
-    
     /*
      * (non-Javadoc)
      * 
@@ -359,8 +326,6 @@ public class TitlesFragment extends Fragment {
             Common.gotoDonate(mContext);
         } else if (recordId == Constants.FEEDBACK_CHOICE) {
             sendEmail();
-        } else if (recordId == Constants.PHOTOHUNT_CHOICE) {
-            showPhotohuntDialog();
         } else {
             if (mDualPane == true) {
                 mList.setItemChecked(index, true);
@@ -371,15 +336,6 @@ public class TitlesFragment extends Fragment {
 
             setCurentRecordId(recordId);
         }
-    }
-
-    /**
-     * Shows dialog for photohunt
-     */
-    private void showPhotohuntDialog() {
-        PhotohuntDialog dialog = PhotohuntDialog.getInstance(mContext);
-        dialog.setCallback(new HidePhotohuntMenuListener());
-        dialog.show(getFragmentManager(), PhotohuntDialog.DIALOG_ID);
     }
 
     /**
