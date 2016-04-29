@@ -45,6 +45,7 @@ public class CameraData {
         canonCameras.add(new CameraData(Vendor.CANON, "1Ds Mark III", new BigDecimal("36"), new BigDecimal("5616")));
         canonCameras.add(new CameraData(Vendor.CANON, "1D X", new BigDecimal("36"), new BigDecimal("5184")));
         canonCameras.add(new CameraData(Vendor.CANON, "1D C", new BigDecimal("36"), new BigDecimal("5184")));
+        canonCameras.add(new CameraData(Vendor.CANON, "1D X Mark II", new BigDecimal("35.9"), new BigDecimal("5472")));
         canonCameras.add(new CameraData(Vendor.CANON, "1D", new BigDecimal("28.7"), new BigDecimal("2464")));
         canonCameras.add(new CameraData(Vendor.CANON, "1D Mark II", new BigDecimal("28.7"), new BigDecimal("3504")));
         canonCameras.add(new CameraData(Vendor.CANON, "1D Mark II N", new BigDecimal("28.7"), new BigDecimal("3504")));
@@ -66,6 +67,7 @@ public class CameraData {
         canonCameras.add(new CameraData(Vendor.CANON, "50D", new BigDecimal("22.3"), new BigDecimal("4752")));
         canonCameras.add(new CameraData(Vendor.CANON, "60D", new BigDecimal("22.3"), new BigDecimal("5184")));
         canonCameras.add(new CameraData(Vendor.CANON, "70D", new BigDecimal("22.5"), new BigDecimal("5472")));
+        canonCameras.add(new CameraData(Vendor.CANON, "80D", new BigDecimal("22.5"), new BigDecimal("6000")));
         canonCameras.add(new CameraData(Vendor.CANON, "300D / Rebel / Kiss", new BigDecimal("22.7"), new BigDecimal("3072")));
         canonCameras.add(new CameraData(Vendor.CANON, "350D / Rebel XT / Kiss N", new BigDecimal("22.2"), new BigDecimal("3456")));
         canonCameras.add(new CameraData(Vendor.CANON, "400D / Rebel XTi / Kiss X", new BigDecimal("22.2"), new BigDecimal("3888")));
@@ -81,6 +83,7 @@ public class CameraData {
         canonCameras.add(new CameraData(Vendor.CANON, "1000D / Rebel XS / Kiss F", new BigDecimal("22.2"), new BigDecimal("3888")));
         canonCameras.add(new CameraData(Vendor.CANON, "1100D / Rebel T3 / Kiss X50", new BigDecimal("22.2"), new BigDecimal("4272")));
         canonCameras.add(new CameraData(Vendor.CANON, "1200D/EOS Rebel T5/EOS Kiss X70", new BigDecimal("22.2"), new BigDecimal("5184")));
+        canonCameras.add(new CameraData(Vendor.CANON, "1300D/EOS Rebel T6/EOS Kiss X80", new BigDecimal("22.2"), new BigDecimal("5184")));
         DATABASE.put(Vendor.CANON, canonCameras);
 
         List<CameraData> canonMilcCameras = new ArrayList<>();
@@ -105,6 +108,7 @@ public class CameraData {
         fujifilmMilc.add(new CameraData(Vendor.FUJIFILM_MILC, "X-T1", new BigDecimal("23.6"), new BigDecimal("4896")));
         fujifilmMilc.add(new CameraData(Vendor.FUJIFILM_MILC, "X-T10", new BigDecimal("23.6"), new BigDecimal("4896")));
         fujifilmMilc.add(new CameraData(Vendor.FUJIFILM_MILC, "X-Pro1", new BigDecimal("23.6"), new BigDecimal("4896")));
+        fujifilmMilc.add(new CameraData(Vendor.FUJIFILM_MILC, "X-Pro2", new BigDecimal("23.6"), new BigDecimal("6000")));
         fujifilmMilc.add(new CameraData(Vendor.FUJIFILM_MILC, "X-E1", new BigDecimal("23.6"), new BigDecimal("4896")));
         fujifilmMilc.add(new CameraData(Vendor.FUJIFILM_MILC, "X-E2", new BigDecimal("23.6"), new BigDecimal("4896")));
         fujifilmMilc.add(new CameraData(Vendor.FUJIFILM_MILC, "X-M1", new BigDecimal("23.6"), new BigDecimal("4896")));
@@ -125,6 +129,7 @@ public class CameraData {
         nikonCameras.add(new CameraData(Vendor.NIKON, "D3S", new BigDecimal("36"), new BigDecimal("4256")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D4", new BigDecimal("36"), new BigDecimal("4928")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D4S", new BigDecimal("36"), new BigDecimal("4928")));
+        nikonCameras.add(new CameraData(Vendor.NIKON, "D5", new BigDecimal("36"), new BigDecimal("5568")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D700", new BigDecimal("36"), new BigDecimal("4256")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D750", new BigDecimal("36"), new BigDecimal("6016")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D800 / D800E", new BigDecimal("35.9"), new BigDecimal("7360")));
@@ -134,6 +139,7 @@ public class CameraData {
         nikonCameras.add(new CameraData(Vendor.NIKON, "D200", new BigDecimal("23.7"), new BigDecimal("3872")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D300", new BigDecimal("23.6"), new BigDecimal("4288")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D300S", new BigDecimal("23.6"), new BigDecimal("4288")));
+        nikonCameras.add(new CameraData(Vendor.NIKON, "D500", new BigDecimal("23.6"), new BigDecimal("5568")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D600", new BigDecimal("35.9"), new BigDecimal("6016")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D610", new BigDecimal("35.9"), new BigDecimal("6016")));
         nikonCameras.add(new CameraData(Vendor.NIKON, "D70", new BigDecimal("23.7"), new BigDecimal("3008")));
@@ -194,6 +200,7 @@ public class CameraData {
         List<CameraData> pentaxCameras = new ArrayList<>();
         pentaxCameras.add(new CameraData(Vendor.PENTAX, "645D", new BigDecimal("44"), new BigDecimal("7264")));
         pentaxCameras.add(new CameraData(Vendor.PENTAX, "645Z", new BigDecimal("44"), new BigDecimal("8256")));
+        pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-1", new BigDecimal("35.9"), new BigDecimal("7360")));
         pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-3", new BigDecimal("23.5"), new BigDecimal("6016")));
         pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-3 II", new BigDecimal("23.5"), new BigDecimal("6016")));
         pentaxCameras.add(new CameraData(Vendor.PENTAX, "K-7", new BigDecimal("23.4"), new BigDecimal("4672")));
@@ -274,6 +281,7 @@ public class CameraData {
         sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A57", new BigDecimal("23.5"), new BigDecimal("5456")));
         sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A58", new BigDecimal("23.5"), new BigDecimal("5456")));
         sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A65", new BigDecimal("23.5"), new BigDecimal("6000")));
+        sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A68", new BigDecimal("23.5"), new BigDecimal("6000")));
         sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A77", new BigDecimal("23.5"), new BigDecimal("6000")));
         sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A77 II", new BigDecimal("23.5"), new BigDecimal("6000")));
         sonyCameras.add(new CameraData(Vendor.SONY, "SLT-A99", new BigDecimal("35.8"), new BigDecimal("6000")));
@@ -289,6 +297,7 @@ public class CameraData {
         sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "NEX-7", new BigDecimal("23.4"), new BigDecimal("6000")));
         sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "NEX-6", new BigDecimal("23.4"), new BigDecimal("4912")));
         sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "α6000", new BigDecimal("23.5"), new BigDecimal("6000")));
+        sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "α6300", new BigDecimal("23.5"), new BigDecimal("6000")));
         sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "NEX-5 / NEX-5C", new BigDecimal("23.4"), new BigDecimal("4592")));
         sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "NEX-5N", new BigDecimal("23.4"), new BigDecimal("4592")));
         sonyMilcCameras.add(new CameraData(Vendor.SONY_MILC, "NEX-5R", new BigDecimal("23.4"), new BigDecimal("4912")));
