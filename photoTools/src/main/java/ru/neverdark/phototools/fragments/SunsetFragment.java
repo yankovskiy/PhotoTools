@@ -1,17 +1,17 @@
 /*******************************************************************************
- * Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- * 
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- * 
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2013-2016 Artem Yankovskiy (artemyankovskiy@gmail.com).
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
@@ -87,6 +87,7 @@ public class SunsetFragment extends UfoFragment {
     private View mView;
     private Button mButtonCalculate;
     private EditText mEditTextLocation;
+    private EditText mEditTextTimeZone;
     private double mLatitude;
     private double mLongitude;
     private boolean mIsVisibleResult = false;
@@ -136,8 +137,8 @@ public class SunsetFragment extends UfoFragment {
     private TextView mCivilSunsetResult;
     private TextView mLabelCivilSunset;
     private LinearLayout mLinearLayoutCalculationResult;
-    private TextView mSunsetTimeZoneResult;
     private String mLocationName;
+    private int mTimeZoneMethod;
 
     @Override
     public void bindObjects() {
@@ -157,6 +158,7 @@ public class SunsetFragment extends UfoFragment {
         mEditTextDate = (EditText) mView.findViewById(R.id.sunset_editText_date);
         mButtonCalculate = (Button) mView.findViewById(R.id.sunset_button_calculate);
         mEditTextLocation = (EditText) mView.findViewById(R.id.sunset_editText_location);
+        mEditTextTimeZone = (EditText) mView.findViewById(R.id.sunset_editText_timeZone);
 
         mOfficialSunriseResult = (TextView) mView.findViewById(R.id.sunset_label_sunriseResult);
         mOfficialSunsetResult = (TextView) mView.findViewById(R.id.sunset_label_sunsetResult);
@@ -186,8 +188,6 @@ public class SunsetFragment extends UfoFragment {
 
         mLinearLayoutCalculationResult = (LinearLayout) mView
                 .findViewById(R.id.sunsnet_LinearLayout_calculationResult);
-
-        mSunsetTimeZoneResult = (TextView) mView.findViewById(R.id.sunset_label_timeZoneResult);
     }
 
     /**
@@ -199,6 +199,13 @@ public class SunsetFragment extends UfoFragment {
         mContext.bindService(mSerivceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
+    private String generateTzLabel() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(mYear, mMonth, mDay);
+        ZonePickerDialog.GMT gmt = ZonePickerDialog.getGMTOffset(mTimeZone, calendar.getTimeInMillis());
+        return String.format("%s (%s)", mTimeZone.getID(), gmt.getGMT());
+    }
+
     /**
      * Calculates sunset and sunrise
      */
@@ -207,9 +214,16 @@ public class SunsetFragment extends UfoFragment {
 
         try {
             if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
-                setDefaultTimeZone();
                 if (getCurrentLocation() == false) {
                     throw new LocationNotDetermineException();
+                }
+
+                String timeZone;
+
+                if (mTimeZoneMethod == Constants.AUTO_TIMEZONE_METHOD) {
+                    setDeviceTimeZone();
+                    timeZone = String.format("%s: %s", getString(R.string.sunset_label_auto), generateTzLabel());
+                    mEditTextTimeZone.setText(timeZone);
                 }
             }
 
@@ -280,6 +294,10 @@ public class SunsetFragment extends UfoFragment {
     private void handleCurrentLocation() {
         Log.message("Enter");
         // mSelectionId = Constants.LOCATION_CURRENT_POSITION_CHOICE;
+        if (mTimeZoneMethod == Constants.AUTO_TIMEZONE_METHOD) {
+            setDeviceTimeZone();
+            mEditTextTimeZone.setText(String.format("%s: %s", getString(R.string.sunset_label_auto), generateTzLabel()));
+        }
         setTextLocation();
     }
 
@@ -296,7 +314,10 @@ public class SunsetFragment extends UfoFragment {
         mLongitude = locationRecord.longitude;
         mLocationName = locationRecord.locationName;
         mSelectionId = locationRecord._id;
-        getTimeZoneFromGoogle();
+
+        if (mTimeZoneMethod == Constants.AUTO_TIMEZONE_METHOD) {
+            getTimeZoneFromGoogle();
+        }
         setTextLocation();
     }
 
@@ -383,7 +404,9 @@ public class SunsetFragment extends UfoFragment {
                 mSelectionId = data.getLongExtra(Constants.LOCATION_RECORD_ID,
                         Constants.LOCATION_POINT_ON_MAP_CHOICE);
 
-                getTimeZoneFromGoogle();
+                if (mTimeZoneMethod == Constants.AUTO_TIMEZONE_METHOD) {
+                    getTimeZoneFromGoogle();
+                }
 
                 setTextLocation();
             }
@@ -410,9 +433,11 @@ public class SunsetFragment extends UfoFragment {
         setOnClickListeners(mLabelNauticalSunset);
         setOnClickListeners(mLabelOfficialSunrise);
         setOnClickListeners(mLabelOfficialSunset);
+        setOnClickListeners(mEditTextTimeZone);
 
         setEditTextLongClick(mEditTextDate);
         setEditTextLongClick(mEditTextLocation);
+        setEditTextLongClick(mEditTextTimeZone);
 
         if (savedInstanceState != null) {
             mLatitude = savedInstanceState.getDouble(Constants.LOCATION_LATITUDE, 0.0);
@@ -498,7 +523,7 @@ public class SunsetFragment extends UfoFragment {
     /**
      * Sets default timezone
      */
-    private void setDefaultTimeZone() {
+    private void setDeviceTimeZone() {
         mTimeZone = TimeZone.getDefault();
     }
 
@@ -543,57 +568,69 @@ public class SunsetFragment extends UfoFragment {
             public void onClick(View arg0) {
                 Log.message("Enter");
                 switch (arg0.getId()) {
-                case R.id.sunset_editText_date:
-                    showDatePicker();
-                    break;
-                case R.id.sunset_label_astrolSunrise:
-                    showInformationDialog(Constants.INFORMATION_ASTRO_SUNRISE);
-                    break;
-                case R.id.sunset_label_astrolSunset:
-                    showInformationDialog(Constants.INFORMATION_ASTRO_SUNSET);
-                    break;
-                case R.id.sunset_label_civilSunrise:
-                    showInformationDialog(Constants.INFORMATION_CIVIL_SUNRISE);
-                    break;
-                case R.id.sunset_label_civilSunset:
-                    showInformationDialog(Constants.INFORMATION_CIVIL_SUNSET);
-                    break;
-                case R.id.sunset_label_nauticalSunrise:
-                    showInformationDialog(Constants.INFORMATION_NAUTICAL_SUNRISE);
-                    break;
-                case R.id.sunset_label_nauticalSunset:
-                    showInformationDialog(Constants.INFORMATION_NAUTICAL_SUNSET);
-                    break;
-                case R.id.sunset_label_sunrise:
-                    showInformationDialog(Constants.INFORMATION_SUNRISE);
-                    break;
-                case R.id.sunset_label_sunset:
-                    showInformationDialog(Constants.INFORMATION_SUNSET);
-                    break;
+                    case R.id.sunset_editText_date:
+                        showDatePicker();
+                        break;
+                    case R.id.sunset_label_astrolSunrise:
+                        showInformationDialog(Constants.INFORMATION_ASTRO_SUNRISE);
+                        break;
+                    case R.id.sunset_label_astrolSunset:
+                        showInformationDialog(Constants.INFORMATION_ASTRO_SUNSET);
+                        break;
+                    case R.id.sunset_label_civilSunrise:
+                        showInformationDialog(Constants.INFORMATION_CIVIL_SUNRISE);
+                        break;
+                    case R.id.sunset_label_civilSunset:
+                        showInformationDialog(Constants.INFORMATION_CIVIL_SUNSET);
+                        break;
+                    case R.id.sunset_label_nauticalSunrise:
+                        showInformationDialog(Constants.INFORMATION_NAUTICAL_SUNRISE);
+                        break;
+                    case R.id.sunset_label_nauticalSunset:
+                        showInformationDialog(Constants.INFORMATION_NAUTICAL_SUNSET);
+                        break;
+                    case R.id.sunset_label_sunrise:
+                        showInformationDialog(Constants.INFORMATION_SUNRISE);
+                        break;
+                    case R.id.sunset_label_sunset:
+                        showInformationDialog(Constants.INFORMATION_SUNSET);
+                        break;
+                    case R.id.sunset_editText_timeZone:
+                        showTimeZoneMethodDialog();
+                        break;
 
-                case R.id.sunset_button_calculate:
+                    case R.id.sunset_button_calculate:
 
-                    if (mSelectionId > Constants.LOCATION_CURRENT_POSITION_CHOICE) {
-                        calculateSunset();
-                    } else {
-                        /* if we have coordinates, calculation sunset / sunrise */
-                        if (mGeoLocationService.canGetLocation()) {
+                        if (mSelectionId > Constants.LOCATION_CURRENT_POSITION_CHOICE) {
                             calculateSunset();
+                        } else {
+                        /* if we have coordinates, calculation sunset / sunrise */
+                            if (mGeoLocationService.canGetLocation()) {
+                                calculateSunset();
                             /*
                              * we dont't have coordinates and we try getting
                              * current location, show alert dialog
                              */
-                        } else {
-                            showSettingsAlert();
+                            } else {
+                                showSettingsAlert();
+                            }
                         }
-                    }
-                    break;
-                case R.id.sunset_editText_location:
-                    showLocationSelectionDialog();
-                    break;
+                        break;
+                    case R.id.sunset_editText_location:
+                        showLocationSelectionDialog();
+                        break;
                 }
             }
         });
+    }
+
+    /**
+     * Shows dialog for choosing time zone picker method
+     */
+    private void showTimeZoneMethodDialog() {
+        TimeZonePickerMethodDialog dialog = TimeZonePickerMethodDialog.getInstance(mContext);
+        dialog.setCallback(new TimeZonePickerMethodListener());
+        dialog.show(getFragmentManager(), TimeZonePickerMethodDialog.DIALOG_ID);
     }
 
     /**
@@ -626,8 +663,6 @@ public class SunsetFragment extends UfoFragment {
 
             mAstroSunriseResult.setText(mAstroSunrise);
             mAstroSunsetResult.setText(mAstroSunset);
-
-            mSunsetTimeZoneResult.setText(mTimeZone.getID());
 
             mLinearLayoutCalculationResult.setVisibility(View.VISIBLE);
         } else {
@@ -727,7 +762,9 @@ public class SunsetFragment extends UfoFragment {
         @Override
         public void onTimeZonePickerHandler(TimeZone tz) {
             mTimeZone = tz;
-            calculateSunset();
+            //calculateSunset();
+            mEditTextTimeZone.setText(generateTzLabel());
+            mTimeZoneMethod = Constants.MANUAL_TIMEZONE_METHOD;
         }
     }
 
@@ -849,10 +886,12 @@ public class SunsetFragment extends UfoFragment {
             switch (result) {
                 case STATUS_SUCCESS:
                     showInformationMesssage(R.string.sunset_information_timeZoneSuccess);
+                    String timeZone = String.format("%s: %s", getString(R.string.sunset_label_auto), generateTzLabel());
+                    mEditTextTimeZone.setText(timeZone);
                     break;
                 case STATUS_FAIL:
                     mTimeZone = null;
-                    // showInformationMesssage(R.string.sunset_information_timeZoneFail);
+                    showInformationMesssage(R.string.sunset_information_timeZoneFail);
                     break;
             }
         }
@@ -899,4 +938,23 @@ public class SunsetFragment extends UfoFragment {
             return builder.toString();
         }
     }
+
+    private class TimeZonePickerMethodListener implements TimeZonePickerMethodDialog.OnTimeZonePickerMethodListener, OnCallback {
+        @Override
+        public void onMethodClick(int position) {
+            if (position != mTimeZoneMethod && position == Constants.AUTO_TIMEZONE_METHOD) {
+                mTimeZoneMethod = position;
+                if (mSelectionId != Constants.LOCATION_CURRENT_POSITION_CHOICE) {
+                    mEditTextTimeZone.setText(getString(R.string.sunset_label_auto));
+                    getTimeZoneFromGoogle();
+                } else {
+                    setDeviceTimeZone();
+                    mEditTextTimeZone.setText(String.format("%s: %s", getString(R.string.sunset_label_auto), generateTzLabel()));
+                }
+            } else if (position == Constants.MANUAL_TIMEZONE_METHOD) {
+                showTimeZoneSelectionDialog();
+            }
+        }
+    }
+
 }

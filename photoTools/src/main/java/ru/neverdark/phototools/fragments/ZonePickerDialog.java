@@ -45,6 +45,28 @@ import android.widget.SimpleAdapter;
  * The class based on the ZonePicker from Android 4.1.2_r2.1
  */
 public class ZonePickerDialog extends UfoDialogFragment {
+
+    public static class GMT {
+        private int mOffset;
+        private String mGMT;
+
+        public void setOffset(int offset) {
+            mOffset = offset;
+        }
+
+        public void setGMT(String GMT) {
+            mGMT = GMT;
+        }
+
+        public String getGMT() {
+            return mGMT;
+        }
+
+        public int getOffset() {
+            return mOffset;
+        }
+    }
+
     private class TimeZoneClickListener implements OnItemClickListener {
 
         @Override
@@ -105,6 +127,15 @@ public class ZonePickerDialog extends UfoDialogFragment {
         map.put(KEY_DISPLAYNAME, displayName);
 
         final TimeZone tz = TimeZone.getTimeZone(id);
+
+        GMT gmt = getGMTOffset(tz, date);
+        map.put(KEY_GMT, gmt.getGMT());
+        map.put(KEY_OFFSET, gmt.getOffset());
+
+        data.add(map);
+    }
+
+    public static GMT getGMTOffset(TimeZone tz, long date) {
         final int offset = tz.getOffset(date);
         final int p = Math.abs(offset);
         final StringBuilder name = new StringBuilder();
@@ -127,10 +158,10 @@ public class ZonePickerDialog extends UfoDialogFragment {
         }
         name.append(min);
 
-        map.put(KEY_GMT, name.toString());
-        map.put(KEY_OFFSET, offset);
-
-        data.add(map);
+        GMT gmt = new GMT();
+        gmt.setGMT(name.toString());
+        gmt.setOffset(offset);
+        return gmt;
     }
 
     @Override

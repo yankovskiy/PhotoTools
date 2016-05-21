@@ -1,5 +1,5 @@
 <!--
-  Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
+  Copyright (C) 2013-2016 Artem Yankovskiy (artemyankovskiy@gmail.com).
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
       the Free Software Foundation, either version 3 of the License, or
@@ -33,6 +33,10 @@
         <item>@string/dof_label_cm</item>
         <item>@string/dof_label_ft</item>
         <item>@string/dof_label_in</item>
+    </string-array>
+    <string-array name="sunset_timeZonePickerMethods">
+        <item>@string/sunset_label_auto</item>
+        <item>@string/sunset_label_manual</item>
     </string-array>
 
 </resources>

@@ -103,7 +103,9 @@
     <string name="sunset_label_nauticalSunset">Навигационные сумерки:</string>
     <string name="sunset_label_civilSunrise">Гражданский рассвет:</string>
     <string name="sunset_label_civilSunset">Гражданские сумерки:</string>
-    <string name="sunset_label_timeZone">Временная зона:</string>
+    <string name="sunset_label_timeZone">Часовой пояс</string>
+    <string name="sunset_label_auto">Авто</string>
+    <string name="sunset_label_manual">Выбрать из списка</string>
 
     <string name="titles_emailAuthor">artemyankovskiy@gmail.com</string>
     <string name="title_activity_map">Выберите место</string>
@@ -238,4 +240,6 @@
     <string formatted="false" name="confirm_action_remove_message">Удалить камеру %s?</string>
     <string name="confirm_action_remove_title">Удаление камеры</string>
     <string name="camera_copied">Камера скопирована</string>
+    <string name="sunset_timezone_detection_method">Метод определения часового пояса</string>
+    <string name="sunset_information_timeZoneFail">Невозможно определить часовой пояс</string>
 </resources>

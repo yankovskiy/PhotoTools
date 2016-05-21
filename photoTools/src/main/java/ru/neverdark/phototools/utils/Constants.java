@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
+ * Copyright (C) 2013-2016 Artem Yankovskiy (artemyankovskiy@gmail.com).
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
  *     the Free Software Foundation, either version 3 of the License, or
@@ -19,7 +19,7 @@ package ru.neverdark.phototools.utils;
  * Constants for PhotoTools application
  */
 public class Constants {
-    public static final boolean PAID = false;
+    public static final boolean PAID = true;
     
     public static final int STATUS_SUCCESS = 0;
     public static final int STATUS_FAIL = 1;
@@ -106,4 +106,7 @@ public class Constants {
     public static final int COPY_CAMERA = 0;
     public static final int EDIT_CAMERA = 1;
     public static final int REMOVE_CAMERA = 2;
+
+    public static final int AUTO_TIMEZONE_METHOD = 0;
+    public static final int MANUAL_TIMEZONE_METHOD = 1;
 }

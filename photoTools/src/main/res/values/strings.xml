@@ -101,7 +101,9 @@
     <string name="sunset_label_nauticalSunset">Nautical twilight:</string>
     <string name="sunset_label_civilSunrise">Civil sunrise:</string>
     <string name="sunset_label_civilSunset">Civil twilight:</string>
-    <string name="sunset_label_timeZone">Time zone:</string>
+    <string name="sunset_label_timeZone">Time zone</string>
+    <string name="sunset_label_auto">Auto</string>
+    <string name="sunset_label_manual">Select from list</string>
 
     <string name="titles_emailAuthor">artemyankovskiy@gmail.com</string>
     <string name="title_activity_map">Choose a location</string>
@@ -233,4 +235,6 @@
     <string name="confirm_action_remove_title">Delete camera</string>
     <string formatted="false" name="confirm_action_remove_message">Delete camera %s?</string>
     <string name="camera_copied">Camera copied</string>
+    <string name="sunset_timezone_detection_method">Time zone detection method</string>
+    <string name="sunset_information_timeZoneFail">Time zone detection problem</string>
 </resources>
