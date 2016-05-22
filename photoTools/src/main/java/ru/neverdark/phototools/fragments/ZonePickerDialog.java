@@ -25,6 +25,7 @@ import java.util.TimeZone;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import ru.neverdark.abs.CancelClickListener;
 import ru.neverdark.abs.UfoDialogFragment;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.utils.Log;
@@ -166,7 +167,7 @@ public class ZonePickerDialog extends UfoDialogFragment {
 
     @Override
     public void bindObjects() {
-        setDialogView(View.inflate(getContext(), R.layout.dialog_timezone_picker, null));
+        setDialogView(View.inflate(getContext(), R.layout.timezone_picker_dialog, null));
         mListView = (ListView) getDialogView().findViewById(R.id.timeZonePicker_listView);
     }
 
@@ -237,5 +238,7 @@ public class ZonePickerDialog extends UfoDialogFragment {
     @Override
     public void setListeners() {
         mListView.setOnItemClickListener(new TimeZoneClickListener());
+        getAlertDialog()
+                .setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
     }
 }
