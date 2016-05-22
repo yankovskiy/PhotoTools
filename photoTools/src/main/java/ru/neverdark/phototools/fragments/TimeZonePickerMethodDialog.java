@@ -43,7 +43,7 @@ public class TimeZonePickerMethodDialog extends UfoDialogFragment {
     protected void createDialog() {
         super.createDialog();
         getAlertDialog().setTitle(R.string.sunset_timezone_detection_method);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, getContext().getResources().getStringArray(R.array.sunset_timeZonePickerMethods));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.common_list_item, getContext().getResources().getStringArray(R.array.sunset_timeZonePickerMethods));
         mPickerMethods.setAdapter(adapter);
     }
 
