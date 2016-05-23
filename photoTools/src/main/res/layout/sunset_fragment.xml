@@ -109,7 +109,6 @@
                         android:id="@+id/sunset_label_sunrise"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:text="@string/sunset_label_sunrise"
                         android:textStyle="bold" />
@@ -118,6 +117,7 @@
                         android:id="@+id/sunset_label_sunriseResult"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="right"
                         android:layout_weight="1" />
                 </TableRow>
 
@@ -138,7 +138,6 @@
                         android:id="@+id/sunset_label_sunset"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:text="@string/sunset_label_sunset"
                         android:textStyle="bold" />
@@ -147,6 +146,7 @@
                         android:id="@+id/sunset_label_sunsetResult"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="right"
                         android:layout_weight="1" />
                 </TableRow>
 
@@ -167,7 +167,6 @@
                         android:id="@+id/sunset_label_civilSunrise"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:text="@string/sunset_label_civilSunrise"
                         android:textStyle="bold" />
@@ -176,6 +175,7 @@
                         android:id="@+id/sunset_label_civilSunriseResult"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="right"
                         android:layout_weight="1" />
                 </TableRow>
 
@@ -196,7 +196,6 @@
                         android:id="@+id/sunset_label_civilSunset"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:text="@string/sunset_label_civilSunset"
                         android:textStyle="bold" />
@@ -205,6 +204,7 @@
                         android:id="@+id/sunset_label_civilSunsetResult"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="right"
                         android:layout_weight="1" />
                 </TableRow>
 
@@ -225,7 +225,6 @@
                         android:id="@+id/sunset_label_nauticalSunrise"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:text="@string/sunset_label_nauticalSunrise"
                         android:textStyle="bold" />
@@ -234,6 +233,7 @@
                         android:id="@+id/sunset_label_nauticalSunriseResult"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="right"
                         android:layout_weight="1" />
                 </TableRow>
 
@@ -254,7 +254,6 @@
                         android:id="@+id/sunset_label_nauticalSunset"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:text="@string/sunset_label_nauticalSunset"
                         android:textStyle="bold" />
@@ -263,6 +262,7 @@
                         android:id="@+id/sunset_label_nauticalSunsetResult"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="right"
                         android:layout_weight="1" />
                 </TableRow>
 
@@ -283,7 +283,6 @@
                         android:id="@+id/sunset_label_astrolSunrise"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:text="@string/sunset_label_astroSunrise"
                         android:textStyle="bold" />
@@ -292,6 +291,7 @@
                         android:id="@+id/sunset_label_astrolSunriseResult"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="right"
                         android:layout_weight="1" />
                 </TableRow>
 
@@ -312,7 +312,6 @@
                         android:id="@+id/sunset_label_astrolSunset"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:text="@string/sunset_label_astroSunset"
                         android:textStyle="bold" />
@@ -321,6 +320,7 @@
                         android:id="@+id/sunset_label_astrolSunsetResult"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="right"
                         android:layout_weight="1" />
                 </TableRow>
 

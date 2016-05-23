@@ -652,6 +652,15 @@ public class SunsetFragment extends UfoFragment {
      */
     private void setVisibleCalculculationResult() {
         if (mIsVisibleResult) {
+            setVisibleForResultLine(mRowOfficialSunrise, !mOfficialSunrise.equals("99:99"));
+            setVisibleForResultLine(mRowOfficialSunset, !mOfficialSunset.equals("99:99"));
+            setVisibleForResultLine(mRowCivilSunrise, !mCivilSunrise.equals("99:99"));
+            setVisibleForResultLine(mRowCivilSunset, !mCivilSunset.equals("99:99"));
+            setVisibleForResultLine(mRowNauticalSunrise, !mNauticalSunrise.equals("99:99"));
+            setVisibleForResultLine(mRowNauticalSunset, !mNauticalSunset.equals("99:99"));
+            setVisibleForResultLine(mRowAstroSunrise, !mAstroSunrise.equals("99:99"));
+            setVisibleForResultLine(mRowAstroSunset, !mAstroSunset.equals("99:99"));
+
             mOfficialSunriseResult.setText(mOfficialSunrise);
             mOfficialSunsetResult.setText(mOfficialSunset);
 
@@ -668,6 +677,10 @@ public class SunsetFragment extends UfoFragment {
         } else {
             mLinearLayoutCalculationResult.setVisibility(View.GONE);
         }
+    }
+
+    private void setVisibleForResultLine(View resultLine, boolean isVisible) {
+        resultLine.setVisibility(isVisible? View.VISIBLE : View.GONE);
     }
 
     /**
