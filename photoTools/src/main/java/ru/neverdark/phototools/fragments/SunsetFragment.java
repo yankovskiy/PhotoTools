@@ -79,10 +79,10 @@ import ru.neverdark.phototools.utils.Log;
  * Fragment contains sunrise / sunset UI
  */
 public class SunsetFragment extends UfoFragment {
-    private static EditText mEditTextDate;
-    private static int mYear;
-    private static int mMonth;
-    private static int mDay;
+    private EditText mEditTextDate;
+    private int mYear;
+    private int mMonth;
+    private int mDay;
     private Context mContext;
     private View mView;
     private Button mButtonCalculate;
