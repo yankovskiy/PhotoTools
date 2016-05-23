@@ -114,31 +114,31 @@ public class SunsetFragment extends UfoFragment {
     };
     private String mOfficialSunrise;
     private TextView mOfficialSunriseResult;
-    private TextView mLabelOfficialSunrise;
     private String mOfficialSunset;
-    private TextView mOfficialSunsetResult;
-    private TextView mLabelOfficialSunset;
+    private TextView mOfficialSunsetResult;;
     private String mAstroSunrise;
     private TextView mAstroSunriseResult;
-    private TextView mLabelAstroSunrise;
     private String mAstroSunset;
     private TextView mAstroSunsetResult;
-    private TextView mLabelAstroSunset;
     private String mNauticalSunrise;
     private TextView mNauticalSunriseResult;
-    private TextView mLabelNauticalSunrise;
     private String mNauticalSunset;
     private TextView mNauticalSunsetResult;
-    private TextView mLabelNauticalSunset;
     private String mCivilSunrise;
     private TextView mCivilSunriseResult;
-    private TextView mLabelCivilSunrise;
     private String mCivilSunset;
     private TextView mCivilSunsetResult;
-    private TextView mLabelCivilSunset;
     private LinearLayout mLinearLayoutCalculationResult;
     private String mLocationName;
     private int mTimeZoneMethod;
+    private View mRowOfficialSunrise;
+    private View mRowOfficialSunset;
+    private View mRowAstroSunrise;
+    private View mRowAstroSunset;
+    private View mRowNauticalSunrise;
+    private View mRowNauticalSunset;
+    private View mRowCivilSunrise;
+    private View mRowCivilSunset;
 
     @Override
     public void bindObjects() {
@@ -174,17 +174,17 @@ public class SunsetFragment extends UfoFragment {
         mCivilSunriseResult = (TextView) mView.findViewById(R.id.sunset_label_civilSunriseResult);
         mCivilSunsetResult = (TextView) mView.findViewById(R.id.sunset_label_civilSunsetResult);
 
-        mLabelOfficialSunrise = (TextView) mView.findViewById(R.id.sunset_label_sunrise);
-        mLabelOfficialSunset = (TextView) mView.findViewById(R.id.sunset_label_sunset);
+        mRowOfficialSunrise = mView.findViewById(R.id.sunset_row_sunrise);
+        mRowOfficialSunset = mView.findViewById(R.id.sunset_row_sunset);
 
-        mLabelAstroSunrise = (TextView) mView.findViewById(R.id.sunset_label_astrolSunrise);
-        mLabelAstroSunset = (TextView) mView.findViewById(R.id.sunset_label_astrolSunset);
+        mRowAstroSunrise = mView.findViewById(R.id.sunset_row_astrolSunrise);
+        mRowAstroSunset = mView.findViewById(R.id.sunset_row_astrolSunset);
 
-        mLabelNauticalSunrise = (TextView) mView.findViewById(R.id.sunset_label_nauticalSunrise);
-        mLabelNauticalSunset = (TextView) mView.findViewById(R.id.sunset_label_nauticalSunset);
+        mRowNauticalSunrise = mView.findViewById(R.id.sunset_row_nauticalSunrise);
+        mRowNauticalSunset = mView.findViewById(R.id.sunset_row_nauticalSunset);
 
-        mLabelCivilSunrise = (TextView) mView.findViewById(R.id.sunset_label_civilSunrise);
-        mLabelCivilSunset = (TextView) mView.findViewById(R.id.sunset_label_civilSunset);
+        mRowCivilSunrise = mView.findViewById(R.id.sunset_row_civilSunrise);
+        mRowCivilSunset = mView.findViewById(R.id.sunset_row_civilSunset);
 
         mLinearLayoutCalculationResult = (LinearLayout) mView
                 .findViewById(R.id.sunsnet_LinearLayout_calculationResult);
@@ -425,14 +425,14 @@ public class SunsetFragment extends UfoFragment {
         setOnClickListeners(mEditTextDate);
         setOnClickListeners(mButtonCalculate);
         setOnClickListeners(mEditTextLocation);
-        setOnClickListeners(mLabelAstroSunrise);
-        setOnClickListeners(mLabelAstroSunset);
-        setOnClickListeners(mLabelCivilSunrise);
-        setOnClickListeners(mLabelCivilSunset);
-        setOnClickListeners(mLabelNauticalSunrise);
-        setOnClickListeners(mLabelNauticalSunset);
-        setOnClickListeners(mLabelOfficialSunrise);
-        setOnClickListeners(mLabelOfficialSunset);
+        setOnClickListeners(mRowAstroSunrise);
+        setOnClickListeners(mRowAstroSunset);
+        setOnClickListeners(mRowCivilSunrise);
+        setOnClickListeners(mRowCivilSunset);
+        setOnClickListeners(mRowNauticalSunrise);
+        setOnClickListeners(mRowNauticalSunset);
+        setOnClickListeners(mRowOfficialSunrise);
+        setOnClickListeners(mRowOfficialSunset);
         setOnClickListeners(mEditTextTimeZone);
 
         setEditTextLongClick(mEditTextDate);
@@ -571,28 +571,28 @@ public class SunsetFragment extends UfoFragment {
                     case R.id.sunset_editText_date:
                         showDatePicker();
                         break;
-                    case R.id.sunset_label_astrolSunrise:
+                    case R.id.sunset_row_astrolSunrise:
                         showInformationDialog(Constants.INFORMATION_ASTRO_SUNRISE);
                         break;
-                    case R.id.sunset_label_astrolSunset:
+                    case R.id.sunset_row_astrolSunset:
                         showInformationDialog(Constants.INFORMATION_ASTRO_SUNSET);
                         break;
-                    case R.id.sunset_label_civilSunrise:
+                    case R.id.sunset_row_civilSunrise:
                         showInformationDialog(Constants.INFORMATION_CIVIL_SUNRISE);
                         break;
-                    case R.id.sunset_label_civilSunset:
+                    case R.id.sunset_row_civilSunset:
                         showInformationDialog(Constants.INFORMATION_CIVIL_SUNSET);
                         break;
-                    case R.id.sunset_label_nauticalSunrise:
+                    case R.id.sunset_row_nauticalSunrise:
                         showInformationDialog(Constants.INFORMATION_NAUTICAL_SUNRISE);
                         break;
-                    case R.id.sunset_label_nauticalSunset:
+                    case R.id.sunset_row_nauticalSunset:
                         showInformationDialog(Constants.INFORMATION_NAUTICAL_SUNSET);
                         break;
-                    case R.id.sunset_label_sunrise:
+                    case R.id.sunset_row_sunrise:
                         showInformationDialog(Constants.INFORMATION_SUNRISE);
                         break;
-                    case R.id.sunset_label_sunset:
+                    case R.id.sunset_row_sunset:
                         showInformationDialog(Constants.INFORMATION_SUNSET);
                         break;
                     case R.id.sunset_editText_timeZone:

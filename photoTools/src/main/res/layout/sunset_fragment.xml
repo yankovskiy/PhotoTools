@@ -100,7 +100,8 @@
                 android:layout_height="match_parent">
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:id="@+id/sunset_row_sunrise"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="3dp">
 
@@ -128,7 +129,8 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:id="@+id/sunset_row_sunset"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="3dp">
 
@@ -156,7 +158,8 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:id="@+id/sunset_row_civilSunrise"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="3dp">
 
@@ -184,7 +187,8 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:id="@+id/sunset_row_civilSunset"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="3dp">
 
@@ -212,7 +216,8 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:id="@+id/sunset_row_nauticalSunrise"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="3dp">
 
@@ -240,7 +245,8 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:id="@+id/sunset_row_nauticalSunset"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="3dp">
 
@@ -268,7 +274,8 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:id="@+id/sunset_row_astrolSunrise"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="3dp">
 
@@ -296,7 +303,8 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:id="@+id/sunset_row_astrolSunset"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="3dp">
 
