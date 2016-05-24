@@ -165,8 +165,8 @@
     <string name="dialog_button_cancel">Отмена</string>
     <string name="dialog_button_close">Закрыть</string>
     
-    <string name="sunset_information_timeZoneStart">Определение временной зоны. Подождите</string>
-    <string name="sunset_information_timeZoneSuccess">Временная зона успешно определена</string>
+    <string name="sunset_information_timeZoneStart">Определение часового пояса. Подождите</string>
+    <string name="sunset_information_timeZoneSuccess">Часовой пояс успешно определен</string>
 
     <string name="dof_label_measureUnit">Единицы измерения:</string>
     <string name="dof_label_m">м</string>
@@ -183,8 +183,8 @@
     <string name="evpairs_label_stepHalf">&#189; стопа</string>
     <string name="evpairs_label_stepThird">&#8531; стопа</string>
     
-    <string name="zonePicker_title">Выбор временной зоны</string>
-    <string name="zonePicker_message">Не удалось определить временную зону. Выберите из списка:</string>
+    <string name="zonePicker_title">Выбор часового пояса</string>
+    <string name="zonePicker_message">Не удалось определить часовой пояс. Выберите из списка:</string>
 
     <string name="plugins_available">Доступные</string>
     <string name="plugins_installed">Установленные</string>
