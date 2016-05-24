@@ -1,19 +1,29 @@
 /*******************************************************************************
  * Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- * 
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- * 
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import ru.neverdark.abs.CancelClickListener;
 import ru.neverdark.abs.UfoDialogFragment;
@@ -21,13 +31,6 @@ import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.db.DbAdapter;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.Toast;
 
 /**
  * Implements confirm creation dialog
@@ -55,14 +58,14 @@ public class ConfirmCreateDialog extends UfoDialogFragment {
     }
 
     public interface OnConfirmDialogHandler {
-        public void handleConfirmDialog(String locationName);
+        void handleConfirmDialog(String locationName);
     }
 
-    private class PositiveClickListener implements android.content.DialogInterface.OnClickListener {
+    private class PositiveClickListener implements OnClickListener {
 
         @Override
-        public void onClick(DialogInterface dialog, int which) {
-            String locationName = null;
+        public void onClick(View view) {
+            String locationName;
 
             try {
                 if (isSaveChecked()) {
@@ -73,7 +76,7 @@ public class ConfirmCreateDialog extends UfoDialogFragment {
                         throw new ConfirmCreateError(
                                 R.string.dialogConfirmCreate_error_emptyLocationName);
                         /* if not edit mode - check for location exist */
-                    } else if (mIsEdit == false) {
+                    } else if (!mIsEdit || !mLocationName.equals(locationName)) {
 
                         DbAdapter dbAdapter = new DbAdapter(getContext());
                         dbAdapter.open();
@@ -81,7 +84,7 @@ public class ConfirmCreateDialog extends UfoDialogFragment {
 
                         dbAdapter.close();
 
-                        if (isExists == true) {
+                        if (isExists) {
                             throw new ConfirmCreateError(
                                     R.string.dialogConfirmCreate_error_alreayExist);
                         }
@@ -94,11 +97,11 @@ public class ConfirmCreateDialog extends UfoDialogFragment {
                 if (callback != null) {
                     callback.handleConfirmDialog(locationName);
                 }
+
+                dismiss();
             } catch (ConfirmCreateError error) {
                 error.showErrorMessage();
             }
-
-            dialog.dismiss();
         }
     }
 
@@ -106,7 +109,7 @@ public class ConfirmCreateDialog extends UfoDialogFragment {
 
     /**
      * Creates and return new ConfirmCreateFragment object
-     * 
+     *
      * @param context
      *            application context
      * @return ConfirmCreateFragment object
@@ -117,21 +120,14 @@ public class ConfirmCreateDialog extends UfoDialogFragment {
         dialog.setContext(context);
         return dialog;
     }
-    
+
     private CheckBox mCheckBox_isSave;
-    
+
     private EditText mEditText_locationName;
 
     private String mLocationName;
     private int mAction;
     private boolean mIsEdit;
-
-    /**
-     * Shows error message by resourceId
-     * 
-     * @param resourceId
-     *            string resource id contains error message
-     */
 
     @Override
     public void bindObjects() {
@@ -142,6 +138,7 @@ public class ConfirmCreateDialog extends UfoDialogFragment {
         mEditText_locationName = (EditText) getDialogView().findViewById(
                 R.id.dialogConfirmCreate_editText);
     }
+
     @Override
     protected void createDialog() {
         super.createDialog();
@@ -166,7 +163,7 @@ public class ConfirmCreateDialog extends UfoDialogFragment {
 
     /**
      * Returns true if "Is Save" checkbox checked
-     * 
+     *
      * @return true if "Is Save" checkbox checked, false in other case
      */
     private boolean isSaveChecked() {
@@ -182,7 +179,7 @@ public class ConfirmCreateDialog extends UfoDialogFragment {
     public void setListeners() {
         mCheckBox_isSave.setOnClickListener(new IsSaveClickListener());
         getAlertDialog().setPositiveButton(R.string.dialogConfirmCreate_positive,
-                new PositiveClickListener());
+                null);
         getAlertDialog().setNegativeButton(R.string.dialogConfirmCreate_negative,
                 new CancelClickListener());
     }
@@ -193,7 +190,7 @@ public class ConfirmCreateDialog extends UfoDialogFragment {
 
     /**
      * Sets visible or invisible state for Location Name field
-     * 
+     *
      * @param isVisible
      *            - true for Location Name visible
      */
@@ -202,6 +199,17 @@ public class ConfirmCreateDialog extends UfoDialogFragment {
             mEditText_locationName.setVisibility(View.VISIBLE);
         } else {
             mEditText_locationName.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        AlertDialog d = (AlertDialog) getDialog();
+        if (d != null) {
+            Button positiveButton = d.getButton(DialogInterface.BUTTON_POSITIVE);
+            positiveButton.setOnClickListener(new PositiveClickListener());
         }
     }
 }
