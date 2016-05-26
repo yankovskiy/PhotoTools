@@ -52,37 +52,32 @@ public class DetailsActivity extends AppCompatActivity {
         Log.message("Enter");
         int index = getIntent().getIntExtra(Constants.SHOWN_INDEX, 0);
         Log.variable("index", String.valueOf(index));
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         switch (index) {
         case Constants.DOF_CHOICE:
             DofFragment dofFragment = new DofFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, dofFragment).commit();
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             break;
         case Constants.EV_CHOICE:
             EvpairsFragment evFragment = new EvpairsFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, evFragment).commit();
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             break;
         case Constants.SUNSET_CHOICE:
             SunsetFragment sunsetFragment = new SunsetFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, sunsetFragment).commit();
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             break;
         case Constants.ABOUT_CHOICE:
             AboutFragment aboutFragment = new AboutFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, aboutFragment).commit();
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             break;
         case Constants.PLUGIN_CHOICE:
             PluginsFragment pluginFragment = new PluginsFragment();
             getSupportFragmentManager().beginTransaction().add(android.R.id.content, pluginFragment).commit();
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             break;
         }
-
     }
 }

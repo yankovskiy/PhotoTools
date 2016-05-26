@@ -21,6 +21,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -413,7 +414,7 @@ public class SunsetFragment extends UfoFragment {
         }
     }
 
-    @Override
+        @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.message("Enter");
         super.onCreateView(inflater, container, savedInstanceState);
@@ -439,42 +440,9 @@ public class SunsetFragment extends UfoFragment {
         setEditTextLongClick(mEditTextLocation);
         setEditTextLongClick(mEditTextTimeZone);
 
-        if (savedInstanceState != null) {
-            mLatitude = savedInstanceState.getDouble(Constants.LOCATION_LATITUDE, 0.0);
-            mLongitude = savedInstanceState.getDouble(Constants.LOCATION_LONGITUDE, 0.0);
-            mSelectionId = savedInstanceState.getLong(Constants.LOCATION_SELECTION_ID,
-                    Constants.LOCATION_CURRENT_POSITION_CHOICE);
-            Log.variable("mSelectionId", String.valueOf(mSelectionId));
-            String timeZoneId = savedInstanceState.getString(Constants.LOCATION_TIMEZONE);
-            if (timeZoneId == null) {
-                timeZoneId = TimeZone.getDefault().getID();
-            }
-            mTimeZone = TimeZone.getTimeZone(timeZoneId);
+        initDate();
+        setTextLocation();
 
-            mIsVisibleResult = savedInstanceState.getBoolean(Constants.LOCATION_IS_VISIVLE_RESULT,
-                    false);
-            mAstroSunrise = nullToEmpty(savedInstanceState
-                    .getString(Constants.LOCATION_ASTRO_SUNRISE));
-            mAstroSunset = nullToEmpty(savedInstanceState
-                    .getString(Constants.LOCATION_ASTRO_SUNSET));
-            mCivilSunrise = nullToEmpty(savedInstanceState
-                    .getString(Constants.LOCATION_CIVIL_SUNRISE));
-            mCivilSunset = nullToEmpty(savedInstanceState
-                    .getString(Constants.LOCATION_CIVIL_SUNSET));
-            mNauticalSunrise = nullToEmpty(savedInstanceState
-                    .getString(Constants.LOCATION_NAUTICAL_SUNRISE));
-            mNauticalSunset = nullToEmpty(savedInstanceState
-                    .getString(Constants.LOCATION_NAUTICAL_SUNSET));
-            mOfficialSunrise = nullToEmpty(savedInstanceState
-                    .getString(Constants.LOCATION_OFFICIAL_SUNRISE));
-            mOfficialSunset = nullToEmpty(savedInstanceState
-                    .getString(Constants.LOCATION_OFFICIAL_SUNSET));
-            mLocationName = nullToEmpty(savedInstanceState.getString(Constants.LOCATION_NAME_DATA));
-
-        } else {
-            initDate();
-            setTextLocation();
-        }
         updateDate();
         setVisibleCalculculationResult();
 
@@ -486,31 +454,6 @@ public class SunsetFragment extends UfoFragment {
         Log.message("Enter");
         super.onPause();
         unbindFromGeoService();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        Log.message("Enter");
-        super.onSaveInstanceState(outState);
-        outState.putDouble(Constants.LOCATION_LATITUDE, mLatitude);
-        outState.putDouble(Constants.LOCATION_LONGITUDE, mLongitude);
-        outState.putLong(Constants.LOCATION_SELECTION_ID, mSelectionId);
-        Log.variable("mSelectionId", String.valueOf(mSelectionId));
-
-        if (mTimeZone != null) {
-            outState.putString(Constants.LOCATION_TIMEZONE, mTimeZone.getID());
-        }
-
-        outState.putBoolean(Constants.LOCATION_IS_VISIVLE_RESULT, mIsVisibleResult);
-        outState.putString(Constants.LOCATION_ASTRO_SUNRISE, mAstroSunrise);
-        outState.putString(Constants.LOCATION_ASTRO_SUNSET, mAstroSunset);
-        outState.putString(Constants.LOCATION_CIVIL_SUNRISE, mCivilSunrise);
-        outState.putString(Constants.LOCATION_CIVIL_SUNSET, mCivilSunset);
-        outState.putString(Constants.LOCATION_NAUTICAL_SUNRISE, mNauticalSunrise);
-        outState.putString(Constants.LOCATION_NAUTICAL_SUNSET, mNauticalSunset);
-        outState.putString(Constants.LOCATION_OFFICIAL_SUNRISE, mOfficialSunrise);
-        outState.putString(Constants.LOCATION_OFFICIAL_SUNSET, mOfficialSunset);
-        outState.putString(Constants.LOCATION_NAME_DATA, mLocationName);
     }
 
     @Override

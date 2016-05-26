@@ -225,6 +225,7 @@ public class TitlesFragment extends Fragment {
         Log.message("Enter");
         boolean isOperationNeed = false;
 
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         Fragment details = getFragmentManager().findFragmentById(R.id.main_detailFragment);
 
         switch (index) {
@@ -232,35 +233,30 @@ public class TitlesFragment extends Fragment {
             if ((details instanceof DofFragment) == false) {
                 details = new DofFragment();
                 isOperationNeed = true;
-                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }
             break;
         case Constants.EV_CHOICE:
             if ((details instanceof EvpairsFragment) == false) {
                 details = new EvpairsFragment();
                 isOperationNeed = true;
-                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }
             break;
         case Constants.SUNSET_CHOICE:
             if ((details instanceof SunsetFragment) == false) {
                 details = new SunsetFragment();
                 isOperationNeed = true;
-                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             }
             break;
         case Constants.ABOUT_CHOICE:
             if ((details instanceof AboutFragment) == false) {
                 details = new AboutFragment();
                 isOperationNeed = true;
-                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             }
             break;
         case Constants.PLUGIN_CHOICE:
             if ((details instanceof PluginsFragment) == false) {
                 details = new PluginsFragment();
                 isOperationNeed = true;
-                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             }
             break;
         }

@@ -28,71 +28,61 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+
+        <TextView
+            android:id="@+id/sunset_label_date"
+            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:text="@string/sunset_label_date"
+            android:textColor="@color/headear" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/sunset_label_date"
-                    style="?android:attr/listSeparatorTextViewStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sunset_label_date"
-                    android:textColor="@color/headear" />
-
-                <EditText
-                    android:id="@+id/sunset_editText_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:focusable="false"
-                    android:inputType="date" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/sunset_label_location"
-                    style="?android:attr/listSeparatorTextViewStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sunset_label_location"
-                    android:textColor="@color/headear" />
-
-                <EditText
-                    android:id="@+id/sunset_editText_location"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:focusable="false"
-                    android:inputType="date" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/sunset_button_calculate"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/sunset_editText_date"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="@string/sunset_button_calculate"></Button>
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="date" />
+
+
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sunset_label_timeZone"
+            android:textColor="@color/headear" />
+
+        <EditText
+            android:id="@+id/sunset_editText_timeZone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:focusable="false"
+            android:text="@string/sunset_label_auto" />
+
+        <TextView
+            android:id="@+id/sunset_label_location"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sunset_label_location"
+            android:textColor="@color/headear" />
+
+        <EditText
+            android:id="@+id/sunset_editText_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="date" />
+
 
         <LinearLayout
             android:id="@+id/sunsnet_LinearLayout_calculationResult"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -109,7 +99,8 @@
                 android:layout_height="match_parent">
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:id="@+id/sunset_row_sunrise"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="3dp">
 
@@ -117,7 +108,6 @@
                         android:id="@+id/sunset_label_sunrise"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:text="@string/sunset_label_sunrise"
                         android:textStyle="bold" />
@@ -126,7 +116,8 @@
                         android:id="@+id/sunset_label_sunriseResult"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:gravity="right" />
                 </TableRow>
 
                 <TableRow android:background="#cecece">
@@ -137,7 +128,8 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:id="@+id/sunset_row_sunset"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="3dp">
 
@@ -145,7 +137,6 @@
                         android:id="@+id/sunset_label_sunset"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:text="@string/sunset_label_sunset"
                         android:textStyle="bold" />
@@ -154,7 +145,8 @@
                         android:id="@+id/sunset_label_sunsetResult"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:gravity="right" />
                 </TableRow>
 
                 <TableRow android:background="#cecece">
@@ -165,7 +157,8 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:id="@+id/sunset_row_civilSunrise"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="3dp">
 
@@ -173,7 +166,6 @@
                         android:id="@+id/sunset_label_civilSunrise"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:text="@string/sunset_label_civilSunrise"
                         android:textStyle="bold" />
@@ -182,7 +174,8 @@
                         android:id="@+id/sunset_label_civilSunriseResult"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:gravity="right" />
                 </TableRow>
 
                 <TableRow android:background="#cecece">
@@ -193,7 +186,8 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:id="@+id/sunset_row_civilSunset"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="3dp">
 
@@ -201,7 +195,6 @@
                         android:id="@+id/sunset_label_civilSunset"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:text="@string/sunset_label_civilSunset"
                         android:textStyle="bold" />
@@ -210,7 +203,8 @@
                         android:id="@+id/sunset_label_civilSunsetResult"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:gravity="right" />
                 </TableRow>
 
                 <TableRow android:background="#cecece">
@@ -221,7 +215,8 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:id="@+id/sunset_row_nauticalSunrise"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="3dp">
 
@@ -229,7 +224,6 @@
                         android:id="@+id/sunset_label_nauticalSunrise"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:text="@string/sunset_label_nauticalSunrise"
                         android:textStyle="bold" />
@@ -238,7 +232,8 @@
                         android:id="@+id/sunset_label_nauticalSunriseResult"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:gravity="right" />
                 </TableRow>
 
                 <TableRow android:background="#cecece">
@@ -249,7 +244,8 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:id="@+id/sunset_row_nauticalSunset"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="3dp">
 
@@ -257,7 +253,6 @@
                         android:id="@+id/sunset_label_nauticalSunset"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:text="@string/sunset_label_nauticalSunset"
                         android:textStyle="bold" />
@@ -266,7 +261,8 @@
                         android:id="@+id/sunset_label_nauticalSunsetResult"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:gravity="right" />
                 </TableRow>
 
                 <TableRow android:background="#cecece">
@@ -277,7 +273,8 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:id="@+id/sunset_row_astrolSunrise"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="3dp">
 
@@ -285,7 +282,6 @@
                         android:id="@+id/sunset_label_astrolSunrise"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:text="@string/sunset_label_astroSunrise"
                         android:textStyle="bold" />
@@ -294,7 +290,8 @@
                         android:id="@+id/sunset_label_astrolSunriseResult"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:gravity="right" />
                 </TableRow>
 
                 <TableRow android:background="#cecece">
@@ -305,7 +302,8 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:id="@+id/sunset_row_astrolSunset"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="3dp">
 
@@ -313,7 +311,6 @@
                         android:id="@+id/sunset_label_astrolSunset"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:text="@string/sunset_label_astroSunset"
                         android:textStyle="bold" />
@@ -322,7 +319,8 @@
                         android:id="@+id/sunset_label_astrolSunsetResult"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:gravity="right" />
                 </TableRow>
 
                 <TableRow android:background="#cecece">
@@ -331,9 +329,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp" />
                 </TableRow>
-
             </TableLayout>
         </LinearLayout>
+
+        <Button
+            android:id="@+id/sunset_button_calculate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="16dp"
+            android:text="@string/sunset_button_calculate" />
+
     </LinearLayout>
 
 
