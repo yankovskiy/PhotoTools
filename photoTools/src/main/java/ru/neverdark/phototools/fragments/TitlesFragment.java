@@ -28,10 +28,12 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.neverdark.phototools.BuildConfig;
 import ru.neverdark.phototools.DetailsActivity;
 import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.utils.Common;
@@ -121,10 +123,14 @@ public class TitlesFragment extends Fragment {
      * Opens market detail application page
      */
     private void gotoMarket() {
-        String url = "market://details?id=".concat(mContext.getPackageName());
-        Intent marketIntent = new Intent(Intent.ACTION_VIEW);
-        marketIntent.setData(Uri.parse(url));
-        startActivity(marketIntent);
+        if (BuildConfig.DEBUG) {
+            Toast.makeText(mContext, "Goto market", Toast.LENGTH_LONG).show();
+        } else {
+            String url = "market://details?id=".concat(mContext.getPackageName());
+            Intent marketIntent = new Intent(Intent.ACTION_VIEW);
+            marketIntent.setData(Uri.parse(url));
+            startActivity(marketIntent);
+        }
     }
 
     @Override
