@@ -47,93 +47,19 @@ import android.widget.SimpleAdapter;
  */
 public class ZonePickerDialog extends UfoDialogFragment {
 
-    public static class GMT {
-        private int mOffset;
-        private String mGMT;
-
-        public void setOffset(int offset) {
-            mOffset = offset;
-        }
-
-        public void setGMT(String GMT) {
-            mGMT = GMT;
-        }
-
-        public String getGMT() {
-            return mGMT;
-        }
-
-        public int getOffset() {
-            return mOffset;
-        }
-    }
-
-    private class TimeZoneClickListener implements OnItemClickListener {
-
-        @Override
-        public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-            HashMap<String, Object> obj = (HashMap<String, Object>) mListView
-                    .getItemAtPosition(position);
-            TimeZone tz = TimeZone.getTimeZone(obj.get(KEY_ID).toString());
-
-            getDialog().dismiss();
-            OnTimeZonePickerListener callback = (OnTimeZonePickerListener) getCallback();
-            if (callback != null) {
-                callback.onTimeZonePickerHandler(tz);
-            }
-
-        }
-
-    }
-    
-    public interface OnTimeZonePickerListener {
-        public void onTimeZonePickerHandler(TimeZone tz);
-    }
-
     public static final String DIALOG = "ZonePicker";
-
     private static final String KEY_ID = "id";
     private static final String KEY_DISPLAYNAME = "name";
     private static final String KEY_GMT = "gmt";
     private static final String KEY_OFFSET = "offset";
     private static final String XMLTAG_TIMEZONE = "timezone";
-
     private static final int HOUR = 3600000;
+    private ListView mListView;
 
     public static ZonePickerDialog getInstance(Context context) {
         ZonePickerDialog dialog = new ZonePickerDialog();
         dialog.setContext(context);
         return dialog;
-    }
-
-    private ListView mListView;
-
-    /**
-     * Adds timezone to time zone list
-     * 
-     * @param data
-     *            time zone list
-     * @param id
-     *            time zone id
-     * @param displayName
-     *            time zone name
-     * @param date
-     *            current date
-     */
-    private void addItem(List<HashMap<String, Object>> data, String id, String displayName,
-            long date) {
-        Log.enter();
-        final HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put(KEY_ID, id);
-        map.put(KEY_DISPLAYNAME, displayName);
-
-        final TimeZone tz = TimeZone.getTimeZone(id);
-
-        GMT gmt = getGMTOffset(tz, date);
-        map.put(KEY_GMT, gmt.getGMT());
-        map.put(KEY_OFFSET, gmt.getOffset());
-
-        data.add(map);
     }
 
     public static GMT getGMTOffset(TimeZone tz, long date) {
@@ -165,6 +91,30 @@ public class ZonePickerDialog extends UfoDialogFragment {
         return gmt;
     }
 
+    /**
+     * Adds timezone to time zone list
+     *
+     * @param data        time zone list
+     * @param id          time zone id
+     * @param displayName time zone name
+     * @param date        current date
+     */
+    private void addItem(List<HashMap<String, Object>> data, String id, String displayName,
+                         long date) {
+        Log.enter();
+        final HashMap<String, Object> map = new HashMap<>();
+        map.put(KEY_ID, id);
+        map.put(KEY_DISPLAYNAME, displayName);
+
+        final TimeZone tz = TimeZone.getTimeZone(id);
+
+        GMT gmt = getGMTOffset(tz, date);
+        map.put(KEY_GMT, gmt.getGMT());
+        map.put(KEY_OFFSET, gmt.getOffset());
+
+        data.add(map);
+    }
+
     @Override
     public void bindObjects() {
         setDialogView(View.inflate(getContext(), R.layout.timezone_picker_dialog, null));
@@ -178,9 +128,8 @@ public class ZonePickerDialog extends UfoDialogFragment {
         final String[] from = new String[] { KEY_DISPLAYNAME, KEY_GMT };
         final int[] to = new int[] { R.id.timeZone_label_displayName, R.id.timeZone_label_gmt };
         final List<HashMap<String, Object>> list = getZones(context);
-        final SimpleAdapter adapter = new SimpleAdapter(context, list, layoutId, from, to);
 
-        return adapter;
+        return new SimpleAdapter(context, list, layoutId, from, to);
     }
 
     @Override
@@ -194,19 +143,19 @@ public class ZonePickerDialog extends UfoDialogFragment {
 
     /**
      * Gets time zone list from xml
-     * 
+     *
      * @param context
      *            application context
      * @return time zone list
      */
     private List<HashMap<String, Object>> getZones(Context context) {
-        final List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
+        final List<HashMap<String, Object>> data = new ArrayList<>();
         final long date = Calendar.getInstance().getTimeInMillis();
 
         try {
             XmlResourceParser xrp = context.getResources().getXml(R.xml.timezones);
-            while (xrp.next() != XmlPullParser.START_TAG)
-                continue;
+            while (xrp.next() != XmlPullParser.START_TAG) ;
+
             xrp.next();
             while (xrp.getEventType() != XmlPullParser.END_TAG) {
                 while (xrp.getEventType() != XmlPullParser.START_TAG) {
@@ -240,5 +189,48 @@ public class ZonePickerDialog extends UfoDialogFragment {
         mListView.setOnItemClickListener(new TimeZoneClickListener());
         getAlertDialog()
                 .setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
+    }
+
+    public interface OnTimeZonePickerListener {
+        void onTimeZonePickerHandler(TimeZone tz);
+    }
+
+    public static class GMT {
+        private int mOffset;
+        private String mGMT;
+
+        public String getGMT() {
+            return mGMT;
+        }
+
+        public void setGMT(String GMT) {
+            mGMT = GMT;
+        }
+
+        public int getOffset() {
+            return mOffset;
+        }
+
+        public void setOffset(int offset) {
+            mOffset = offset;
+        }
+    }
+
+    private class TimeZoneClickListener implements OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+            HashMap<String, Object> obj = (HashMap<String, Object>) mListView
+                    .getItemAtPosition(position);
+            TimeZone tz = TimeZone.getTimeZone(obj.get(KEY_ID).toString());
+
+            getDialog().dismiss();
+            OnTimeZonePickerListener callback = (OnTimeZonePickerListener) getCallback();
+            if (callback != null) {
+                callback.onTimeZonePickerHandler(tz);
+            }
+
+        }
+
     }
 }

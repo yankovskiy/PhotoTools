@@ -15,11 +15,6 @@
  ******************************************************************************/
 package ru.neverdark.phototools.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import ru.neverdark.phototools.R;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -27,15 +22,28 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Singleton class for plug-in management
  */
 public class PluginManager {
-    private static PluginManager mPluginManager;
     private static final String PLUGINS_LIST = "ru.neverdark.phototools.PLUGINS";
+    private static PluginManager mPluginManager;
+    private final List<MainMenuItem> mList;
+    private Context mContext;
+
+    /**
+     * Constructor
+     */
+    private PluginManager() {
+        mList = new ArrayList<>();
+    }
+
     /**
      * Creates new class object or gets old object if exists
-     * 
+     *
      * @param context
      *            application context
      * @return class object
@@ -47,16 +55,6 @@ public class PluginManager {
         }
 
         return mPluginManager;
-    }
-    private Context mContext;
-
-    private final List<MainMenuItem> mList;
-
-    /**
-     * Constructor
-     */
-    private PluginManager() {
-        mList = new ArrayList<MainMenuItem>();
     }
 
     /**
@@ -81,8 +79,8 @@ public class PluginManager {
 
     /**
      * Gets main menu items contains plugins record
-     * 
-     * @return
+     *
+     * @return main menu items
      */
     public List<MainMenuItem> getMenuItems() {
         return mList;

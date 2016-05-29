@@ -187,7 +187,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
                 mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 return true;
             case R.id.map_action_search:
-                if (Constants.PAID == false) {
+                if (!Constants.PAID) {
                     Common.gotoDonate(mContext);
                 }
                 break;

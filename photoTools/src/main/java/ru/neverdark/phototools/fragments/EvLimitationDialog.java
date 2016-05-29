@@ -32,46 +32,18 @@ import android.view.View;
 import android.widget.Button;
 
 public class EvLimitationDialog extends UfoDialogFragment {
-    /**
-     * Interface provides callback method calls for OK button in the dialog
-     */
-    public interface OnEvLimitationListener {
-        /**
-         * Calls when user tap OK button
-         * 
-         * @param data
-         *            for limit values in the wheels
-         */
-        public void onEvLimitationHandler(Limit data);
-    }
-
-    /**
-     * Listener for handle OK dialog button
-     */
-    private class PositiveClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            OnEvLimitationListener callback = (OnEvLimitationListener) getCallback();
-            if (callback != null) {
-                if (isDataValid()) {
-                    storeWheelsData();
-                    callback.onEvLimitationHandler(mLimitData);
-                    dismiss();
-                } else {
-                    ShowMessageDialog errorDialog = ShowMessageDialog.getInstance(getContext());
-                    errorDialog.setMessages(R.string.error, R.string.error_minMaxIncorrect);
-                    errorDialog.show(getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
-                }
-            }
-        }
-    }
-
     public static final String DIALOG_TAG = "evLimitationDialog";
+    private Limit mLimitData;
+    private WheelView mWheelMinAperture;
+    private WheelView mWheelMinIso;
+    private WheelView mWheelMinShutter;
+    private WheelView mWheelMaxAperture;
+    private WheelView mWheelMaxIso;
+    private WheelView mWheelMaxShutter;
 
     /**
      * Creates dialog
-     * 
+     *
      * @param context
      *            application context
      * @return dialog
@@ -81,16 +53,6 @@ public class EvLimitationDialog extends UfoDialogFragment {
         dialog.setContext(context);
         return dialog;
     }
-
-    private Limit mLimitData;
-
-    private WheelView mWheelMinAperture;
-
-    private WheelView mWheelMinIso;
-    private WheelView mWheelMinShutter;
-    private WheelView mWheelMaxAperture;
-    private WheelView mWheelMaxIso;
-    private WheelView mWheelMaxShutter;
 
     @Override
     public void bindObjects() {
@@ -166,7 +128,7 @@ public class EvLimitationDialog extends UfoDialogFragment {
 
     /**
      * Sets limitation data for loading
-     * 
+     *
      * @param data
      *            data for loading or null for default value
      */
@@ -195,5 +157,39 @@ public class EvLimitationDialog extends UfoDialogFragment {
         mLimitData.setMaxIso(mWheelMaxIso.getCurrentItem());
         mLimitData.setMinShutter(mWheelMinShutter.getCurrentItem());
         mLimitData.setMaxShutter(mWheelMaxShutter.getCurrentItem());
+    }
+
+    /**
+     * Interface provides callback method calls for OK button in the dialog
+     */
+    public interface OnEvLimitationListener {
+        /**
+         * Calls when user tap OK button
+         *
+         * @param data for limit values in the wheels
+         */
+        void onEvLimitationHandler(Limit data);
+    }
+
+    /**
+     * Listener for handle OK dialog button
+     */
+    private class PositiveClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            OnEvLimitationListener callback = (OnEvLimitationListener) getCallback();
+            if (callback != null) {
+                if (isDataValid()) {
+                    storeWheelsData();
+                    callback.onEvLimitationHandler(mLimitData);
+                    dismiss();
+                } else {
+                    ShowMessageDialog errorDialog = ShowMessageDialog.getInstance(getContext());
+                    errorDialog.setMessages(R.string.error, R.string.error_minMaxIncorrect);
+                    errorDialog.show(getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
+                }
+            }
+        }
     }
 }

@@ -33,46 +33,18 @@ import android.widget.Button;
 
 public class DofLimitationDialog extends UfoDialogFragment {
 
-    /**
-     * Interface provides callback method calls for OK button in the dialog
-     */
-    public interface OnDofLimitationListener {
-        /**
-         * Calls when user tap OK button
-         * 
-         * @param data
-         *            for limit values in the wheels
-         */
-        public void onDofLimitationHandler(Limit data);
-    }
-
-    /**
-     * Listener for handle OK dialog button
-     */
-    private class PositiveClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            OnDofLimitationListener callback = (OnDofLimitationListener) getCallback();
-            if (callback != null) {
-                if (isDataValid()) {
-                    storeWheelsData();
-                    callback.onDofLimitationHandler(mLimitData);
-                    dismiss();
-                } else {
-                    ShowMessageDialog errorDialog = ShowMessageDialog.getInstance(getContext());
-                    errorDialog.setMessages(R.string.error, R.string.error_minMaxIncorrect);
-                    errorDialog.show(getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
-                }
-            }
-        }
-    }
-
     public static final String DIALOG_TAG = "dofLimitationDialog";
+    private Limit mLimitData;
+    private WheelView mWheelMinAperture;
+    private WheelView mWheelMaxAperture;
+    private WheelView mWheelMinFocalLength;
+    private WheelView mWheelMaxFocalLength;
+    private WheelView mWheelMinSubjectDistance;
+    private WheelView mWheelMaxSubjectDistance;
 
     /**
      * Creates dialog
-     * 
+     *
      * @param context
      *            application context
      * @return dialog
@@ -82,16 +54,6 @@ public class DofLimitationDialog extends UfoDialogFragment {
         dialog.setContext(context);
         return dialog;
     }
-
-    private Limit mLimitData;
-
-    private WheelView mWheelMinAperture;
-
-    private WheelView mWheelMaxAperture;
-    private WheelView mWheelMinFocalLength;
-    private WheelView mWheelMaxFocalLength;
-    private WheelView mWheelMinSubjectDistance;
-    private WheelView mWheelMaxSubjectDistance;
 
     @Override
     public void bindObjects() {
@@ -122,12 +84,10 @@ public class DofLimitationDialog extends UfoDialogFragment {
 
     /**
      * Checks input data for valid values
-     * 
+     *
      * @return true if input data is valid
      */
     private boolean isDataValid() {
-        boolean isValid = false;
-
         int minAperture = mWheelMinAperture.getCurrentItem();
         int maxAperture = mWheelMaxAperture.getCurrentItem();
         int minFocalLength = mWheelMinFocalLength.getCurrentItem();
@@ -135,9 +95,7 @@ public class DofLimitationDialog extends UfoDialogFragment {
         int minSubjectDistance = mWheelMinSubjectDistance.getCurrentItem();
         int maxSubjectDistance = mWheelMaxSubjectDistance.getCurrentItem();
 
-        isValid = ((minAperture < maxAperture) && (minFocalLength < maxFocalLength) && (minSubjectDistance < maxSubjectDistance));
-
-        return isValid;
+        return ((minAperture < maxAperture) && (minFocalLength < maxFocalLength) && (minSubjectDistance < maxSubjectDistance));
     }
 
     /**
@@ -181,7 +139,7 @@ public class DofLimitationDialog extends UfoDialogFragment {
 
     /**
      * Sets limitation data for loading
-     * 
+     *
      * @param data
      *            data for loading or null for default value
      */
@@ -210,5 +168,39 @@ public class DofLimitationDialog extends UfoDialogFragment {
         mLimitData.setMaxFocalLength(mWheelMaxFocalLength.getCurrentItem());
         mLimitData.setMinSubjectDistance(mWheelMinSubjectDistance.getCurrentItem());
         mLimitData.setMaxSubjectDistance(mWheelMaxSubjectDistance.getCurrentItem());
+    }
+
+    /**
+     * Interface provides callback method calls for OK button in the dialog
+     */
+    public interface OnDofLimitationListener {
+        /**
+         * Calls when user tap OK button
+         *
+         * @param data for limit values in the wheels
+         */
+        void onDofLimitationHandler(Limit data);
+    }
+
+    /**
+     * Listener for handle OK dialog button
+     */
+    private class PositiveClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            OnDofLimitationListener callback = (OnDofLimitationListener) getCallback();
+            if (callback != null) {
+                if (isDataValid()) {
+                    storeWheelsData();
+                    callback.onDofLimitationHandler(mLimitData);
+                    dismiss();
+                } else {
+                    ShowMessageDialog errorDialog = ShowMessageDialog.getInstance(getContext());
+                    errorDialog.setMessages(R.string.error, R.string.error_minMaxIncorrect);
+                    errorDialog.show(getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
+                }
+            }
+        }
     }
 }

@@ -111,8 +111,8 @@ public class EvCalculator {
      * @return list contains possible ISO values
      */
     public List<String> getIsoList() {
-        List<String> isos = new ArrayList<String>();
-        int index = 0;
+        List<String> isos = new ArrayList<>();
+        int index;
 
         for (index = 0; index < ISO_VALUE_LIST.length; index++) {
             isos.add(cleanNumberToString(ISO_VALUE_LIST[index]));
@@ -127,11 +127,11 @@ public class EvCalculator {
      * @return list contains possible aperture values
      */
     public List<String> getApertureList() {
-        List<String> apertures = new ArrayList<String>();
-        int index = 0;
+        List<String> apertures = new ArrayList<>();
+        int index;
 
         for (index = 0; index < APERTURE_VALUE_LIST.length; index++) {
-            apertures.add(new String("f/")
+            apertures.add("f/"
                     .concat(cleanNumberToString(APERTURE_VALUE_LIST[index])));
         }
 
@@ -144,13 +144,13 @@ public class EvCalculator {
      * @return list contains possible shutter speed values
      */
     public List<String> getShutterList() {
-        List<String> shutters = new ArrayList<String>();
-        int index = 0;
+        List<String> shutters = new ArrayList<>();
+        int index;
         String element = "";
 
         for (index = 0; index < SHUTTER_VALUE_LIST.length; index++) {
             if (SHUTTER_VALUE_LIST[index] < 1.0) {
-                element = new String("1/").concat(
+                element = "1/".concat(
                         cleanNumberToString(1 / SHUTTER_VALUE_LIST[index]))
                         .concat(" sec");
             } else if (SHUTTER_VALUE_LIST[index] >= 1
@@ -159,7 +159,7 @@ public class EvCalculator {
                         .concat(" sec");
             } else if (SHUTTER_VALUE_LIST[index] >= 60.0) {
                 element = cleanNumberToString(
-                        (Double) (SHUTTER_VALUE_LIST[index] / 60)).concat(
+                        SHUTTER_VALUE_LIST[index] / 60).concat(
                         " min");
             }
 
@@ -171,13 +171,13 @@ public class EvCalculator {
 
     /**
      * Formats numbers to be properly displayed.
-     * 
-     * @param number
+     *
+     * @param number number for format
      * @return Formated String
      */
     private String cleanNumberToString(Double number) {
         Double cleanerNumber = Math.round(number * 100) / 100.0;
-        String numberToReturn = "";
+        String numberToReturn;
 
         if (cleanerNumber % 1 == 0) {
             numberToReturn = String.format("%d", cleanerNumber.intValue());
@@ -205,7 +205,7 @@ public class EvCalculator {
                     + shutterStopDifference;
 
             wIndex += (int) Math
-                    .round(((double) (expectedApertureStopDifference * mStopDistribution)));
+                    .round(expectedApertureStopDifference * mStopDistribution);
             mIndex += mCurrentAperturePosition + wIndex;
 
             if (mIndex >= APERTURE_VALUE_LIST.length) {
@@ -218,7 +218,7 @@ public class EvCalculator {
                     + shutterStopDifference;
 
             wIndex += (int) Math
-                    .round(((double) (expectedIsoStopDifference * mStopDistribution)));
+                    .round(expectedIsoStopDifference * mStopDistribution);
             mIndex += mCurrentIsoPosition + wIndex;
 
             if (mIndex >= ISO_VALUE_LIST.length) {
@@ -232,7 +232,7 @@ public class EvCalculator {
                     + isoStopDifference;
 
             wIndex += (int) Math
-                    .round(((double) (expectedShutterStopDifference * mStopDistribution)));
+                    .round(expectedShutterStopDifference * mStopDistribution);
             mIndex += mCurrentShutterSpeedPosition + wIndex;
 
             Log.variable("mIndex", String.valueOf(mIndex));
@@ -288,16 +288,16 @@ public class EvCalculator {
 
     /**
      * Calculate the stop difference between two parameters.
-     * 
-     * @param currentValue
-     * @param newValue
-     * @param base
+     *
+     * @param currentValue for calculate difference
+     * @param newValue new value for calculate difference
+     * @param base base for log
      * @return Stop difference between the two parameters according to the base
      *         for calculation.
      */
     private double calculateDifference(double currentValue, double newValue,
             double base) {
-        double difference = 0;
+        double difference;
 
         if (currentValue < newValue) {
             difference = (Math.log(newValue / currentValue) / Math.log(base));

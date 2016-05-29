@@ -33,33 +33,10 @@ import android.widget.TextView;
  * A class provide adapter for locations
  */
 public class LocationAdapter extends ArrayAdapter<LocationRecord> {
-    /**
-     * Interface for LocationImageChangeListener
-     */
-    public interface OnLocationChangeListener {
-        /**
-         * Listener for handling Edit image clicked
-         * 
-         * @param position
-         *            position in ListView
-         */
-        public void onLocationEditHandler(int position);
-
-        /**
-         * Listener for handling Remove image clicked
-         * 
-         * @param position
-         *            position in ListView
-         */
-        public void onLocationRemoveHandler(int position);
-    }
-
     private OnLocationChangeListener mCallback;
-
     private Context mContext;
     private int mResource;
-
-    private ArrayList<LocationRecord> mObjects = new ArrayList<LocationRecord>();
+    private ArrayList<LocationRecord> mObjects = new ArrayList<>();
 
     public LocationAdapter(Context context, int resource,
             ArrayList<LocationRecord> objects,
@@ -76,7 +53,7 @@ public class LocationAdapter extends ArrayAdapter<LocationRecord> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         Log.message("Enter");
         View row = convertView;
-        LocationHolder holder = null;
+        LocationHolder holder;
 
         if (row == null) {
             LayoutInflater inflater = (LayoutInflater) mContext
@@ -133,6 +110,25 @@ public class LocationAdapter extends ArrayAdapter<LocationRecord> {
         }
 
         return row;
+    }
+
+    /**
+     * Interface for LocationImageChangeListener
+     */
+    public interface OnLocationChangeListener {
+        /**
+         * Listener for handling Edit image clicked
+         *
+         * @param position position in ListView
+         */
+        void onLocationEditHandler(int position);
+
+        /**
+         * Listener for handling Remove image clicked
+         *
+         * @param position position in ListView
+         */
+        void onLocationRemoveHandler(int position);
     }
 
     static class LocationHolder {

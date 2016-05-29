@@ -77,7 +77,7 @@ public class TitlesFragment extends Fragment {
      */
     private List<MainMenuItem> buildMainMenuList() {
 
-        List<MainMenuItem> list = new ArrayList<MainMenuItem>();
+        List<MainMenuItem> list = new ArrayList<>();
 
         // first part of the menu
         list.add(createMainMenuItem(getString(R.string.main_button_dofcalc), Constants.DOF_CHOICE));
@@ -99,8 +99,8 @@ public class TitlesFragment extends Fragment {
         list.add(createMainMenuItem(getString(R.string.main_button_feedback),
                 Constants.FEEDBACK_CHOICE));
 
-        
-        if (Constants.PAID == false) {
+
+        if (!Constants.PAID) {
             list.add(createMainMenuItem(getString(R.string.main_button_donate),
                     Constants.DONATE_CHOICE));
         }
@@ -236,38 +236,38 @@ public class TitlesFragment extends Fragment {
 
         switch (index) {
         case Constants.DOF_CHOICE:
-            if ((details instanceof DofFragment) == false) {
+            if (!(details instanceof DofFragment)) {
                 details = new DofFragment();
                 isOperationNeed = true;
             }
             break;
         case Constants.EV_CHOICE:
-            if ((details instanceof EvpairsFragment) == false) {
+            if (!(details instanceof EvpairsFragment)) {
                 details = new EvpairsFragment();
                 isOperationNeed = true;
             }
             break;
         case Constants.SUNSET_CHOICE:
-            if ((details instanceof SunsetFragment) == false) {
+            if (!(details instanceof SunsetFragment)) {
                 details = new SunsetFragment();
                 isOperationNeed = true;
             }
             break;
         case Constants.ABOUT_CHOICE:
-            if ((details instanceof AboutFragment) == false) {
+            if (!(details instanceof AboutFragment)) {
                 details = new AboutFragment();
                 isOperationNeed = true;
             }
             break;
         case Constants.PLUGIN_CHOICE:
-            if ((details instanceof PluginsFragment) == false) {
+            if (!(details instanceof PluginsFragment)) {
                 details = new PluginsFragment();
                 isOperationNeed = true;
             }
             break;
         }
 
-        if (isOperationNeed == true) {
+        if (isOperationNeed) {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.main_detailFragment, details);
             ft.commit();
@@ -289,8 +289,8 @@ public class TitlesFragment extends Fragment {
 
     /**
      * Sets current record id for menu list
-     * 
-     * @param recordId
+     *
+     * @param recordId current record id
      */
     private void setCurentRecordId(int recordId) {
         mCurrentRecordId = recordId;
@@ -329,7 +329,7 @@ public class TitlesFragment extends Fragment {
         } else if (recordId == Constants.FEEDBACK_CHOICE) {
             sendEmail();
         } else {
-            if (mDualPane == true) {
+            if (mDualPane) {
                 mList.setItemChecked(index, true);
                 replaceFragment(recordId);
             } else {

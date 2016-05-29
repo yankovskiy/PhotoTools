@@ -2,14 +2,11 @@ package ru.neverdark.phototools;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -19,7 +16,6 @@ import android.widget.Toast;
 import java.math.BigDecimal;
 
 import ru.neverdark.abs.OnCallback;
-import ru.neverdark.abs.UfoFragment;
 import ru.neverdark.abs.UfoFragmentActivity;
 import ru.neverdark.phototools.db.DbAdapter;
 import ru.neverdark.phototools.db.UserCamerasRecord;
@@ -37,6 +33,7 @@ public class CameraManagementActivity extends UfoFragmentActivity {
     private Spinner mVendors;
     private MenuItem mMenuAddCamera;
     private ListView mCamerasList;
+    private CamerasAdapter mAdapter;
 
     @Override
     public void bindObjects() {
@@ -86,20 +83,6 @@ public class CameraManagementActivity extends UfoFragmentActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    private CamerasAdapter mAdapter;
-
-    private class CamerasSelectedListener implements android.widget.AdapterView.OnItemSelectedListener {
-
-        @Override
-        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-            updateCameraList();
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> adapterView) {
-
-        }
-    }
 
     private void updateCameraList() {
         CameraData.Vendor vendor = (CameraData.Vendor) mVendors.getSelectedItem();
@@ -121,6 +104,19 @@ public class CameraManagementActivity extends UfoFragmentActivity {
         mMenuAddCamera = menu.findItem(R.id.camera_management_add);
 
         return true;
+    }
+
+    private class CamerasSelectedListener implements android.widget.AdapterView.OnItemSelectedListener {
+
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            updateCameraList();
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+
+        }
     }
 
     private class ButtonsClickListener implements CamerasAdapter.OnButtonsClickListener {

@@ -17,7 +17,7 @@
 package ru.neverdark.abs;
 
 public interface CommonApi {
-    public void bindObjects();
+    void bindObjects();
 
-    public void setListeners();
+    void setListeners();
 }

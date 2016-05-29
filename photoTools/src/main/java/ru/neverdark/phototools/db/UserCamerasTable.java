@@ -98,18 +98,6 @@ public class UserCamerasTable {
     }
 
     /**
-     * Deletes camera from database
-     * 
-     * @param recordId
-     *            record id for delete
-     */
-    public void deleteCamera(long recordId) {
-        String where = KEY_ROWID.concat(" = ?");
-        String[] whereArgs = { String.valueOf(recordId) };
-        mDatabase.delete(TABLE_NAME, where, whereArgs);
-    }
-
-    /**
      * Fetches all record from user_cameras table
      * 
      * @param list

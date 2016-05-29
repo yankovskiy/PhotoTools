@@ -48,26 +48,15 @@ import android.webkit.WebView;
 
 public class ChangeLog {
 
-    /** modes for HTML-Lists (bullet, numbered) */
-    private enum Listmode {
-        NONE, ORDERED, UNORDERED,
-    }
-    private final Context context;
-
-    private String lastVersion, thisVersion;
-
     // this is the key for storing the version name in SharedPreferences
     private static final String VERSION_KEY = "PREFS_VERSION_KEY";
-
     private static final String NO_VERSION = "";
-
-    private Listmode listMode = Listmode.NONE;
-
-    private StringBuffer sb = null;
-
     private static final String EOCL = "END_OF_CHANGE_LOG";
-
     private static final String TAG = "ChangeLog";
+    private final Context context;
+    private String lastVersion, thisVersion;
+    private Listmode listMode = Listmode.NONE;
+    private StringBuffer sb = null;
 
     /**
      * Constructor
@@ -75,7 +64,7 @@ public class ChangeLog {
      * Retrieves the version names and stores the new version name in
      * SharedPreferences
      *
-     * @param context
+     * @param context app context
      */
     public ChangeLog(Context context) {
         this(context, PreferenceManager.getDefaultSharedPreferences(context));
@@ -87,7 +76,7 @@ public class ChangeLog {
      * Retrieves the version names and stores the new version name in
      * SharedPreferences
      *
-     * @param context
+     * @param context app context
      * @param sp
      *            the shared preferences to store the last version name into
      */
@@ -115,15 +104,6 @@ public class ChangeLog {
             sb.append("</ul></div>\n");
         }
         this.listMode = Listmode.NONE;
-    }
-
-    /**
-     * manually set the last version name - for testing purposes only
-     *
-     * @param lastVersion
-     */
-    public void dontuseSetLastVersion(String lastVersion) {
-        this.lastVersion = lastVersion;
     }
 
     /**
@@ -182,29 +162,12 @@ public class ChangeLog {
     }
 
     /**
-     * @return HTML which displays full change log
-     */
-    public String getFullLog() {
-        return this.getLog(true);
-    };
-
-    /**
      * @return an AlertDialog with a full change log displayed
      */
     public AlertDialog getFullLogDialog() {
         return this.getDialog(true);
     }
-    /**
-     * @return The version name of the last installation of this app (as
-     *         described in the former manifest). This will be the same as
-     *         returned by <code>getThisVersion()</code> the second time this
-     *         version of the app is launched (more precisely: the second time
-     *         ChangeLog is instantiated).
-     * @see AndroidManifest.xml#android:versionName
-     */
-    public String getLastVersion() {
-        return this.lastVersion;
-    }
+
     /**
      * @return HTML displaying the changes since the previous installed version
      *         of your app (what's new)
@@ -221,7 +184,7 @@ public class ChangeLog {
                     R.raw.changelog);
             BufferedReader br = new BufferedReader(new InputStreamReader(ins));
 
-            String line = null;
+            String line;
             boolean advanceToEOVS = false; // if true: ignore further version
                                             // sections
             while ((line = br.readLine()) != null) {
@@ -244,35 +207,32 @@ public class ChangeLog {
                     case '%':
                         // line contains version title
                         this.closeList();
-                        sb.append("<div class='title'>"
-                                + line.substring(1).trim() + "</div>\n");
+                        sb.append("<div class='title'>").append(line.substring(1).trim()).append("</div>\n");
                         break;
                     case '_':
                         // line contains version title
                         this.closeList();
-                        sb.append("<div class='subtitle'>"
-                                + line.substring(1).trim() + "</div>\n");
+                        sb.append("<div class='subtitle'>").append(line.substring(1).trim()).append("</div>\n");
                         break;
                     case '!':
                         // line contains free text
                         this.closeList();
-                        sb.append("<div class='freetext'>"
-                                + line.substring(1).trim() + "</div>\n");
+                        sb.append("<div class='freetext'>").append(line.substring(1).trim()).append("</div>\n");
                         break;
                     case '#':
                         // line contains numbered list item
                         this.openList(Listmode.ORDERED);
-                        sb.append("<li>" + line.substring(1).trim() + "</li>\n");
+                        sb.append("<li>").append(line.substring(1).trim()).append("</li>\n");
                         break;
                     case '*':
                         // line contains bullet list item
                         this.openList(Listmode.UNORDERED);
-                        sb.append("<li>" + line.substring(1).trim() + "</li>\n");
+                        sb.append("<li>").append(line.substring(1).trim()).append("</li>\n");
                         break;
                     default:
                         // no special character: just use line as is
                         this.closeList();
-                        sb.append(line + "\n");
+                        sb.append(line).append("\n");
                     }
                 }
             }
@@ -295,14 +255,6 @@ public class ChangeLog {
         return this.getDialog(this.firstRunEver());
     }
 
-    /**
-     * @return The version name of this app as described in the manifest.
-     * @see AndroidManifest.xml#android:versionName
-     */
-    public String getThisVersion() {
-        return this.thisVersion;
-    }
-
     private void openList(Listmode listMode) {
         if (this.listMode != listMode) {
             closeList();
@@ -321,12 +273,13 @@ public class ChangeLog {
                 .getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(VERSION_KEY, thisVersion);
-        // // on SDK-Versions > 9 you should use this:
-        // if(Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
-        // editor.commit();
-        // } else {
-        // editor.apply();
-        // }
-        editor.commit();
+        editor.apply();
+    }
+
+    /**
+     * modes for HTML-Lists (bullet, numbered)
+     */
+    private enum Listmode {
+        NONE, ORDERED, UNORDERED,
     }
 }

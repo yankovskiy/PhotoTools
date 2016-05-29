@@ -56,11 +56,7 @@
     <string name="dof_label_shootingOptions">Параметры съемки</string>
     <string name="dof_label_subjectDistance">Дистанция фокусировки</string>
     <string name="dof_label_total">Всего:</string>
-    
-    <string name="evpairs_button_calculate">Расчет</string>
-    <string name="evpairs_button_clear">Очистить</string>
-    <string name="evpairs_error_calculationProblem">Проблемы с расчетом</string>
-    <string name="evpairs_error_onlyOneFieldMustBeEpmty">Должно быть только одно пустое поле</string>
+
     <string name="evpairs_label_apperture">Диафрагма</string>
     <string name="evpairs_label_currentValues">Текущие значения</string>
     <string name="evpairs_label_iso">ISO</string>
@@ -89,7 +85,6 @@
     <string name="sunset_alert_message">Не удается определить местоположение. Перейти в настройки?</string>
     <string name="sunset_alert_title">Определение местоположения</string>
     <string name="sunset_alert_positive">Настройки</string>
-    <string name="sunset_alert_negative">Отмена</string>
     
     <string name="sunset_button_calculate">Расчет</string>
     <string name="sunset_label_date">Дата</string>
@@ -173,18 +168,13 @@
     <string name="dof_label_cm">см</string>
     <string name="dof_label_ft">футы</string>
     <string name="dof_label_in">дюймы</string>
-    
-    <string name="dof_tab_parameters">Параметры</string>
-    <string name="dof_tab_result">Результаты</string>
-    <string name="dof_tab_camera">Камера</string>
-    
+
     <string name="evpairs_label_step">Шаг изменения</string>
     <string name="evpairs_label_stepFull">1 стоп</string>
     <string name="evpairs_label_stepHalf">&#189; стопа</string>
     <string name="evpairs_label_stepThird">&#8531; стопа</string>
     
     <string name="zonePicker_title">Выбор часового пояса</string>
-    <string name="zonePicker_message">Не удалось определить часовой пояс. Выберите из списка:</string>
 
     <string name="plugins_available">Доступные</string>
     <string name="plugins_installed">Установленные</string>
@@ -194,17 +184,13 @@
     <string name="error_cameraNameEmpty">Не задано название камеры</string>
     <string name="error_notAllValuesFilled">Размеры сенсора и максимального разрешения должны быть указаны</string>
     <string name="error_cocNotFilled">Кружок нерезкости должен быть задан</string>
-    <string name="error_availableOnlyInPaid">Эта функция доступна только в полной версии</string>
     <string name="error_locationNotDetermine">Местоположение не определено. Пожалуйста, проверьте статус gps или выберите местоположение на карте</string>
     <string name="error_minMaxIncorrect">Максимальные значения должны быть больше минимальных</string>
-    
-    <string name="userCameraModel">Модель камеры</string>
+
     <string name="userCamera_label_coc">Кружок нерезкости</string>
     <string name="userCamera_label_resolution">Максимальное разрешение</string>
     <string name="userCamera_label_sensor">Размер сенсора</string>
-    
-    <string name="cameraManagementTitle">Управление камерами</string>
-    
+
     <string name="userCamera_addCamera">Добавить камеру</string>
     <string name="userCamera_editCamera">Редактирование камеры</string>
     <string name="userCamera_cameraName">Название камеры</string>
@@ -212,10 +198,7 @@
     
     <string name="width">Ширина</string>
     <string name="height">Высота</string>
-    
-    <string name="userCameraRow_resolution">Разрешение</string>
-    <string name="userCameraRow_sensor">Сенсор</string>
-    
+
     <string name="limitation_minimum">Минимальные значения:</string>
     <string name="limitation_maximum">Максимальные значения:</string>
     
@@ -235,9 +218,9 @@
     
     <string name="dof_sc_message">Выберите существующую модель или создайте свою камеру</string>
     <string name="dof_sc_title">Управляйте камерами</string>
-    <string formatted="false" name="confirm_action_copy_message">Скопировать %s в пользовательские камеры?</string>
+    <string name="confirm_action_copy_message" formatted="false">Скопировать %s в пользовательские камеры?</string>
     <string name="confirm_action_copy_title">Копировать камеру</string>
-    <string formatted="false" name="confirm_action_remove_message">Удалить камеру %s?</string>
+    <string name="confirm_action_remove_message" formatted="false">Удалить камеру %s?</string>
     <string name="confirm_action_remove_title">Удаление камеры</string>
     <string name="camera_copied">Камера скопирована</string>
     <string name="sunset_timezone_detection_method">Метод определения часового пояса</string>

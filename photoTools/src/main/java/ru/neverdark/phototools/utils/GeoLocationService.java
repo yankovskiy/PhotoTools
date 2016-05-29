@@ -29,36 +29,16 @@ import android.os.IBinder;
  */
 public class GeoLocationService extends Service implements LocationListener {
 
-    /**
-     * Class for local service binding
-     */
-    public class GeoLocationBinder extends Binder {
-        /**
-         * Gets GeoLocationService object for manipulate from our program
-         * 
-         * @return GeoLocationService object
-         */
-        public GeoLocationService getService() {
-            Log.message("Enter");
-            return GeoLocationService.this;
-        }
-    }
-
+    // The minimum distance to change Updates in meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+    // The minimum time between updates in milliseconds
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60;
     private final IBinder mBinder = new GeoLocationBinder();
     private boolean mIsGpsEnabled;
     private boolean mIsNetworkEnabled;
-
     private boolean mCanGetLocation;
     private double mLatitude;
-
     private double mLongitude;
-
-    // The minimum distance to change Updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
-
-    // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
-
     private LocationManager mLocationManager;
 
     public GeoLocationService() {
@@ -72,7 +52,7 @@ public class GeoLocationService extends Service implements LocationListener {
 
     /**
      * Checks WIFI / GPS enabled
-     * 
+     *
      * @return true if WIFI / GPS enabled or false in other case
      */
     public boolean canGetLocation() {
@@ -81,7 +61,7 @@ public class GeoLocationService extends Service implements LocationListener {
 
     /**
      * Gets current latitude
-     * 
+     *
      * @return current latitude or zero (0) if not determine
      */
     public double getLatitude() {
@@ -91,7 +71,7 @@ public class GeoLocationService extends Service implements LocationListener {
 
     /**
      * Gets location from specified provider
-     * 
+     *
      * @param provider
      *            Must be GPS_PROVIDER or NETWORK_PROVIDER
      */
@@ -104,7 +84,7 @@ public class GeoLocationService extends Service implements LocationListener {
         if (mLocationManager != null) {
             Location location;
 
-            if (provider == LocationManager.GPS_PROVIDER && mIsNetworkEnabled) {
+            if (provider.equals(LocationManager.GPS_PROVIDER) && mIsNetworkEnabled) {
                 /*
                  * we sets coordinates from network until getting coordinates
                  * from GPS
@@ -125,7 +105,7 @@ public class GeoLocationService extends Service implements LocationListener {
 
     /**
      * Gets current longitude
-     * 
+     *
      * @return current longitude or zero (0) if not determine
      */
     public double getLongitude() {
@@ -150,9 +130,9 @@ public class GeoLocationService extends Service implements LocationListener {
 
             mCanGetLocation = (mIsGpsEnabled || mIsNetworkEnabled);
 
-            if (mCanGetLocation == true) {
+            if (mCanGetLocation) {
                 /* First. Get location from GPS if possible */
-                if (mIsGpsEnabled == true) {
+                if (mIsGpsEnabled) {
                     getLocationFromProvider(LocationManager.GPS_PROVIDER);
                 } else { /* GPS disabled. Get location from network */
                     getLocationFromProvider(LocationManager.NETWORK_PROVIDER);
@@ -212,6 +192,21 @@ public class GeoLocationService extends Service implements LocationListener {
     private void stopGeoLocationService() {
         if (mLocationManager != null) {
             mLocationManager.removeUpdates(this);
+        }
+    }
+
+    /**
+     * Class for local service binding
+     */
+    public class GeoLocationBinder extends Binder {
+        /**
+         * Gets GeoLocationService object for manipulate from our program
+         *
+         * @return GeoLocationService object
+         */
+        public GeoLocationService getService() {
+            Log.message("Enter");
+            return GeoLocationService.this;
         }
     }
 

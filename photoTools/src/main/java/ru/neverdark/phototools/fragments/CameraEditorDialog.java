@@ -36,21 +36,199 @@ import android.widget.EditText;
  */
 public class CameraEditorDialog extends UfoDialogFragment {
     /**
+     * Action for add new camera
+     */
+    public static final int ACTION_ADD = 0;
+    /**
+     * Action for edit exist camera
+     */
+    public static final int ACTION_EDIT = 1;
+    /**
+     * Dialog tag for fragment manager
+     */
+    public static final String DIALOG_TAG = "cameraEditorDialog";
+    private int mActionType;
+    private CheckBox mAutoCalcCoc;
+    private EditText mCameraModel;
+    private EditText mCoc;
+    private EditText mResolutionHeight;
+    private EditText mResolutionWidth;
+    private EditText mSensorHeight;
+    private EditText mSensorWidth;
+    private UserCamerasRecord mUserCamerasRecord;
+
+    /**
+     * Creates new dialog
+     *
+     * @param context
+     *            application context
+     * @return dialog
+     */
+    public static CameraEditorDialog getInstance(Context context) {
+        CameraEditorDialog dialog = new CameraEditorDialog();
+        dialog.setContext(context);
+        return dialog;
+    }
+
+    @Override
+    protected void createDialog() {
+        super.createDialog();
+
+        if (mActionType == ACTION_ADD) {
+            getAlertDialog().setTitle(R.string.userCamera_addCamera);
+            disableCustomCoc(true);
+            mAutoCalcCoc.setChecked(true);
+            mUserCamerasRecord = new UserCamerasRecord();
+        } else if (mActionType == ACTION_EDIT) {
+            getAlertDialog().setTitle(R.string.userCamera_editCamera);
+
+            boolean disableCoc = !mUserCamerasRecord.isCustomCoc();
+            String cameraName = mUserCamerasRecord.getCameraName();
+            String resolutionWidth = String.valueOf(mUserCamerasRecord.getResolutionWidth());
+            String resolutionHeight = String.valueOf(mUserCamerasRecord.getResolutionHeight());
+            String sensorWidth = String.valueOf(mUserCamerasRecord.getSensorWidth());
+            String sensorHeight = String.valueOf(mUserCamerasRecord.getSensorHeight());
+            String coc = String.valueOf(mUserCamerasRecord.getCoc());
+
+            disableCustomCoc(disableCoc);
+            mCameraModel.setText(cameraName);
+            mResolutionWidth.setText(resolutionWidth);
+            mResolutionHeight.setText(resolutionHeight);
+            mSensorWidth.setText(sensorWidth);
+            mSensorHeight.setText(sensorHeight);
+            mCoc.setText(coc);
+            mAutoCalcCoc.setChecked(disableCoc);
+        }
+    }
+
+    /**
+     * Disable EditText field for custom circle of confusion
+     *
+     * @param isDisable
+     *            true for disable
+     */
+    private void disableCustomCoc(boolean isDisable) {
+        mCoc.setEnabled(!isDisable);
+    }
+
+    /**
+     * Fills record for future processing
+     *
+     * @param record
+     *            record for filled
+     */
+    private void fillUserCamerasRecord(UserCamerasRecord record) {
+        String cameraName = mCameraModel.getText().toString().trim();
+        boolean isCustomCoc = !mAutoCalcCoc.isChecked();
+        int resolutionWidth = Integer.valueOf(mResolutionWidth.getText().toString().trim());
+        int resolutionHeight = Integer.valueOf(mResolutionHeight.getText().toString().trim());
+        float sensorWidth = Float.valueOf(mSensorWidth.getText().toString().trim());
+        float sensorHeight = Float.valueOf(mSensorHeight.getText().toString().trim());
+
+        if (!mAutoCalcCoc.isChecked()) {
+            float coc = Float.valueOf(mCoc.getText().toString().trim());
+            record.setCoc(coc);
+        }
+
+        record.setCameraName(cameraName);
+        record.setIsCustomCoc(isCustomCoc);
+        record.setResolutionHeight(resolutionHeight);
+        record.setResolutionWidth(resolutionWidth);
+        record.setSensorHeight(sensorHeight);
+        record.setSensorWidth(sensorWidth);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        AlertDialog d = (AlertDialog) getDialog();
+        if (d != null) {
+            Button positiveButton = d.getButton(DialogInterface.BUTTON_POSITIVE);
+            positiveButton.setOnClickListener(new PositiveClickListener());
+        }
+    }
+
+    /**
+     * Sets action type
+     *
+     * @param actionType
+     *            must be ACTION_ADD or ACTION_EDIT
+     */
+    public void setActionType(int actionType) {
+        mActionType = actionType;
+    }
+
+    /**
+     * Sets data for edit
+     *
+     * @param record
+     *            contains data for editing
+     */
+    public void setDataForEdit(UserCamerasRecord record) {
+        mUserCamerasRecord = record;
+    }
+
+    @Override
+    public void bindObjects() {
+        setDialogView(View.inflate(getContext(), R.layout.camera_editor_dialog, null));
+        mResolutionWidth = (EditText) getDialogView().findViewById(
+                R.id.cameraEditor_resolutionWidth);
+        mResolutionHeight = (EditText) getDialogView().findViewById(
+                R.id.cameraEditor_resolutionHeight);
+        mSensorWidth = (EditText) getDialogView().findViewById(R.id.cameraEditor_sensorWidth);
+        mSensorHeight = (EditText) getDialogView().findViewById(R.id.cameraEditor_sensorHeight);
+        mCameraModel = (EditText) getDialogView().findViewById(R.id.cameraEditor_cameraName);
+        mCoc = (EditText) getDialogView().findViewById(R.id.cameraEditor_coc);
+        mAutoCalcCoc = (CheckBox) getDialogView().findViewById(R.id.cameraEditor_autoCalc);
+    }
+
+    @Override
+    public void setListeners() {
+        getAlertDialog().setPositiveButton(R.string.dialog_button_ok, null);
+        getAlertDialog()
+                .setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
+        mAutoCalcCoc.setOnCheckedChangeListener(new CheckedChangeListener());
+    }
+
+    /**
+     * Interface provides callback methods call for add or edit camera
+     */
+    public interface OnCameraEditorListener {
+        /**
+         * Called for add camera
+         *
+         * @param record record contains data for add camera
+         */
+        void onAddCamera(UserCamerasRecord record);
+
+        /**
+         * Called for edit camera
+         *
+         * @param record record contains data for edit camera
+         */
+        void onEditCamera(UserCamerasRecord record);
+    }
+
+    /**
      * Custom exception for showing dialog with error message
      */
     private class CameraEditorDialogException extends Exception {
         private static final long serialVersionUID = -3433785378864484422L;
+        private ShowMessageDialog mDialog;
 
         /**
          * Constructor
-         * 
-         * @param resourceId
-         *            string Id contains error message
+         *
+         * @param resourceId string Id contains error message
          */
         public CameraEditorDialogException(int resourceId) {
-            ShowMessageDialog dialog = ShowMessageDialog.getInstance(getContext());
-            dialog.setMessages(R.string.error, resourceId);
-            dialog.show(getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
+            mDialog = ShowMessageDialog.getInstance(getContext());
+            mDialog.setMessages(R.string.error, resourceId);
+        }
+
+        public void showDialog() {
+            mDialog.show(getFragmentManager(), ShowMessageDialog.DIALOG_TAG);
         }
     }
 
@@ -65,34 +243,13 @@ public class CameraEditorDialog extends UfoDialogFragment {
     }
 
     /**
-     * Interface provides callback methods call for add or edit camera
-     */
-    public interface OnCameraEditorListener {
-        /**
-         * Called for add camera
-         * 
-         * @param record
-         *            record contains data for add camera
-         */
-        public void onAddCamera(UserCamerasRecord record);
-
-        /**
-         * Called for edit camera
-         * 
-         * @param record
-         *            record contains data for edit camera
-         */
-        public void onEditCamera(UserCamerasRecord record);
-    }
-
-    /**
      * Listener for "Ok" button
      */
     private class PositiveClickListener implements View.OnClickListener {
 
         /**
          * Checks for all data is filled
-         * 
+         *
          * @return true if all data is fileld
          */
         private boolean isDataFilled() {
@@ -124,20 +281,19 @@ public class CameraEditorDialog extends UfoDialogFragment {
                     throw new CameraEditorDialogException(R.string.error_cameraNameEmpty);
                 }
 
-                if (isDataFilled() == false) {
+                if (!isDataFilled()) {
                     throw new CameraEditorDialogException(R.string.error_notAllValuesFilled);
                 }
 
-                if (mAutoCalcCoc.isChecked() == false
-                        && mCoc.getText().toString().trim().length() == 0) {
+                if (!mAutoCalcCoc.isChecked() && mCoc.getText().toString().trim().length() == 0) {
                     throw new CameraEditorDialogException(R.string.error_cocNotFilled);
                 }
 
                 boolean exist = false;
 
                 if ((mActionType == ACTION_ADD)
-                        || (mActionType == ACTION_EDIT && cameraName.equals(mUserCamerasRecord
-                                .getCameraName()) == false)) {
+                        || (mActionType == ACTION_EDIT && !cameraName.equals(mUserCamerasRecord
+                        .getCameraName()))) {
                     DbAdapter dbAdapter = new DbAdapter(getContext()).open();
                     exist = dbAdapter.getUserCameras().isCameraExist(cameraName);
                     dbAdapter.close();
@@ -160,177 +316,8 @@ public class CameraEditorDialog extends UfoDialogFragment {
                     }
                 }
             } catch (CameraEditorDialogException e) {
-
+                e.showDialog();
             }
         }
-    }
-
-    /**
-     * Action for add new camera
-     */
-    public static final int ACTION_ADD = 0;
-    /**
-     * Action for edit exist camera
-     */
-    public static final int ACTION_EDIT = 1;
-    /**
-     * Dialog tag for fragment manager
-     */
-    public static final String DIALOG_TAG = "cameraEditorDialog";
-
-    /**
-     * Creates new dialog
-     * 
-     * @param context
-     *            application context
-     * @return dialog
-     */
-    public static CameraEditorDialog getInstance(Context context) {
-        CameraEditorDialog dialog = new CameraEditorDialog();
-        dialog.setContext(context);
-        return dialog;
-    }
-
-    private int mActionType;
-    private CheckBox mAutoCalcCoc;
-    private EditText mCameraModel;
-    private String mCameraName;
-    private EditText mCoc;
-    private EditText mResolutionHeight;
-    private EditText mResolutionWidth;
-    private EditText mSensorHeight;
-    private EditText mSensorWidth;
-    private UserCamerasRecord mUserCamerasRecord;
-
-    @Override
-    protected void createDialog() {
-        super.createDialog();
-
-        if (mActionType == ACTION_ADD) {
-            getAlertDialog().setTitle(R.string.userCamera_addCamera);
-            disableCustomCoc(true);
-            mCameraModel.setText(mCameraName);
-            mAutoCalcCoc.setChecked(true);
-            mUserCamerasRecord = new UserCamerasRecord();
-        } else if (mActionType == ACTION_EDIT) {
-            getAlertDialog().setTitle(R.string.userCamera_editCamera);
-
-            boolean disableCoc = !mUserCamerasRecord.isCustomCoc();
-            String cameraName = mUserCamerasRecord.getCameraName();
-            String resolutionWidth = String.valueOf(mUserCamerasRecord.getResolutionWidth());
-            String resolutionHeight = String.valueOf(mUserCamerasRecord.getResolutionHeight());
-            String sensorWidth = String.valueOf(mUserCamerasRecord.getSensorWidth());
-            String sensorHeight = String.valueOf(mUserCamerasRecord.getSensorHeight());
-            String coc = String.valueOf(mUserCamerasRecord.getCoc());
-
-            disableCustomCoc(disableCoc);
-            mCameraModel.setText(cameraName);
-            mResolutionWidth.setText(resolutionWidth);
-            mResolutionHeight.setText(resolutionHeight);
-            mSensorWidth.setText(sensorWidth);
-            mSensorHeight.setText(sensorHeight);
-            mCoc.setText(coc);
-            mAutoCalcCoc.setChecked(disableCoc);
-        }
-    }
-
-    /**
-     * Disable EditText field for custom circle of confusion
-     * 
-     * @param isDisable
-     *            true for disable
-     */
-    private void disableCustomCoc(boolean isDisable) {
-        mCoc.setEnabled(!isDisable);
-    }
-
-    /**
-     * Fills record for future processing
-     * 
-     * @param record
-     *            record for filled
-     */
-    private void fillUserCamerasRecord(UserCamerasRecord record) {
-        String cameraName = mCameraModel.getText().toString().trim();
-        boolean isCustomCoc = !mAutoCalcCoc.isChecked();
-        int resolutionWidth = Integer.valueOf(mResolutionWidth.getText().toString().trim());
-        int resolutionHeight = Integer.valueOf(mResolutionHeight.getText().toString().trim());
-        float sensorWidth = Float.valueOf(mSensorWidth.getText().toString().trim());
-        float sensorHeight = Float.valueOf(mSensorHeight.getText().toString().trim());
-
-        if (mAutoCalcCoc.isChecked() == false) {
-            float coc = Float.valueOf(mCoc.getText().toString().trim());
-            record.setCoc(coc);
-        }
-
-        record.setCameraName(cameraName);
-        record.setIsCustomCoc(isCustomCoc);
-        record.setResolutionHeight(resolutionHeight);
-        record.setResolutionWidth(resolutionWidth);
-        record.setSensorHeight(sensorHeight);
-        record.setSensorWidth(sensorWidth);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        AlertDialog d = (AlertDialog) getDialog();
-        if (d != null) {
-            Button positiveButton = (Button) d.getButton(DialogInterface.BUTTON_POSITIVE);
-            positiveButton.setOnClickListener(new PositiveClickListener());
-        }
-    }
-
-    /**
-     * Sets action type
-     * 
-     * @param actionType
-     *            must be ACTION_ADD or ACTION_EDIT
-     */
-    public void setActionType(int actionType) {
-        mActionType = actionType;
-    }
-
-    /**
-     * Sets camera name. Function called only for Add new camera
-     * 
-     * @param cameraName
-     *            name of camera
-     */
-    public void setCameraName(String cameraName) {
-        mCameraName = cameraName;
-    }
-
-    /**
-     * Sets data for edit
-     * 
-     * @param record
-     *            contains data for editing
-     */
-    public void setDataForEdit(UserCamerasRecord record) {
-        mUserCamerasRecord = record;
-    }
-
-    @Override
-    public void bindObjects() {
-        setDialogView(View.inflate(getContext(), R.layout.camera_editor_dialog, null));
-        mResolutionWidth = (EditText) getDialogView().findViewById(
-                R.id.cameraEditor_resolutionWidth);
-        mResolutionHeight = (EditText) getDialogView().findViewById(
-                R.id.cameraEditor_resolutionHeight);
-        mSensorWidth = (EditText) getDialogView().findViewById(R.id.cameraEditor_sensorWidth);
-        mSensorHeight = (EditText) getDialogView().findViewById(R.id.cameraEditor_sensorHeight);
-        mCameraModel = (EditText) getDialogView().findViewById(R.id.cameraEditor_cameraName);
-        mCoc = (EditText) getDialogView().findViewById(R.id.cameraEditor_coc);
-        mAutoCalcCoc = (CheckBox) getDialogView().findViewById(R.id.cameraEditor_autoCalc);
-    }
-
-    @Override
-    public void setListeners() {
-        getAlertDialog().setPositiveButton(R.string.dialog_button_ok, null);
-        getAlertDialog()
-                .setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
-        mAutoCalcCoc.setOnCheckedChangeListener(new CheckedChangeListener());
     }
 }

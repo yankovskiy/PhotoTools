@@ -28,33 +28,14 @@ import android.os.AsyncTask;
  */
 public class AsyncGeoCoder extends AsyncTask<Void, Void, Integer> {
 
-    /**
-     * The interface provides callback methods for handle finishing Geocoder
-     * process
-     */
-    public interface OnGeoCoderListener {
-        /**
-         * Called when result from Geocoder is not success
-         */
-        public void onGetResultFail();
-
-        /**
-         * Called when result from Geocoder is success
-         * @param coordinates coordinates for founded location
-         * @param searchString string for search
-         */
-        public void onGetResultSuccess(LatLng coordinates, String searchString);
-    }
-
     private OnGeoCoderListener mCallback;
     private Context mContext;
     private ProgressDialog mDialog;
     private String mSearchString;
     private LatLng mCoordinates;
-
     /**
      * Constructor
-     * 
+     *
      * @param context
      *            application context
      */
@@ -78,14 +59,14 @@ public class AsyncGeoCoder extends AsyncTask<Void, Void, Integer> {
     protected Integer doInBackground(Void... params) {
         Log.enter();
         int result = Constants.STATUS_FAIL;
-        
+
         Geocoder geocoder = new Geocoder(mContext);
-        
+
         if (geocoder.isOnline()) {
             mCoordinates = geocoder.getFromLocation(mSearchString);
             result = Constants.STATUS_SUCCESS;
         }
-        
+
         return result;
     }
 
@@ -112,8 +93,8 @@ public class AsyncGeoCoder extends AsyncTask<Void, Void, Integer> {
     /**
      * Sets object for calling callback function after completing Geocoder
      * process
-     * 
-     * @param callback
+     *
+     * @param callback callback object for run when geocoder finished
      */
     public void setCallback(OnGeoCoderListener callback) {
         mCallback = callback;
@@ -121,12 +102,31 @@ public class AsyncGeoCoder extends AsyncTask<Void, Void, Integer> {
 
     /**
      * Sets strings for searching in Geocoder by address
-     * 
+     *
      * @param searchString
      *            string for search
      */
     public void setSearchString(String searchString) {
         mSearchString = searchString;
+    }
+
+    /**
+     * The interface provides callback methods for handle finishing Geocoder
+     * process
+     */
+    public interface OnGeoCoderListener {
+        /**
+         * Called when result from Geocoder is not success
+         */
+        void onGetResultFail();
+
+        /**
+         * Called when result from Geocoder is success
+         *
+         * @param coordinates  coordinates for founded location
+         * @param searchString string for search
+         */
+        void onGetResultSuccess(LatLng coordinates, String searchString);
     }
 
 }

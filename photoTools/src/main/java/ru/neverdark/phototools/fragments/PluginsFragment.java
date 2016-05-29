@@ -151,7 +151,7 @@ public class PluginsFragment extends UfoFragment {
      * @return list of available plug-ins
      */
     private List<MainMenuItem> buildAvailableList() {
-        List<MainMenuItem> list = new ArrayList<MainMenuItem>();
+        List<MainMenuItem> list = new ArrayList<>();
 
         list.add(createAvailableItem("ru.neverdark.phototools.azimuth",
                 "Azimuth plugin",

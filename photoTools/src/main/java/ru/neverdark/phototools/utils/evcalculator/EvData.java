@@ -21,6 +21,7 @@
 package ru.neverdark.phototools.utils.evcalculator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import ru.neverdark.phototools.utils.Log;
 
@@ -88,8 +89,8 @@ public class EvData {
 
     /**
      * Extract Aperture values belonging to the given stop distribution.
-     * 
-     * @param stopDistribution
+     *
+     * @param stopDistribution stop value for gets aperture list
      * @return Aperture values matching the chosen distribution.
      */
     public static Double[] getApertureValues(int stopDistribution) {
@@ -114,8 +115,8 @@ public class EvData {
 
     /**
      * Extract ISO values belonging to the given stop distribution.
-     * 
-     * @param stopDistribution
+     *
+     * @param stopDistribution stop value for get iso list
      * @return Iso values matching the chosen distribution.
      */
     public static Double[] getISOValues(int stopDistribution) {
@@ -124,8 +125,8 @@ public class EvData {
 
     /**
      * Extract Shutter speed values belonging to the given stop distribution.
-     * 
-     * @param stopDistribution
+     *
+     * @param stopDistribution stop value for get iso list
      * @return Shutter speed values matching the chosen distribution.
      */
     public static Double[] getShutterValues(int stopDistribution) {
@@ -141,15 +142,15 @@ public class EvData {
     /**
      * Extracts from a full list of values the ones which belong to the given
      * stop distribution.
-     * 
-     * @param listOfValues
-     * @param stopDistribution
+     *
+     * @param listOfValues full list of value
+     * @param stopDistribution stop value for get part of full list
      * @return the subset of values contained in listOfValues which belong to
      *         the chosen distribution.
      */
     private static Double[] getValues(double[] listOfValues,
             int stopDistribution) {
-        ArrayList<Double> fullValues = new ArrayList<Double>();
+        ArrayList<Double> fullValues = new ArrayList<>();
         int index;
         int limit = listOfValues.length;
 
@@ -164,7 +165,7 @@ public class EvData {
 
     private static String[] getValues(String[] listOfValues,
             int stopDistribution) {
-        ArrayList<String> fullValues = new ArrayList<String>();
+        ArrayList<String> fullValues = new ArrayList<>();
         int index;
         int limit = listOfValues.length;
 
@@ -181,25 +182,23 @@ public class EvData {
             int stopDistribution, int minIndex, int maxIndex, boolean isAperture) {
         Double[] values = getValues(listOfValues, stopDistribution);
 
-        ArrayList<Double> fullValues = new ArrayList<Double>();
+        ArrayList<Double> fullValues = new ArrayList<>();
 
         if (stopDistribution == THIRD_STOP) {
-            for (int index = minIndex; index <= maxIndex; index++) {
-                fullValues.add(values[index]);
-            }
+            fullValues.addAll(Arrays.asList(values).subList(minIndex, maxIndex + 1));
         } else {
             Double[] thirdValues = getValues(listOfValues, THIRD_STOP);
 
-            for (int index = 0; index < values.length; index++) {
+            for (Double value : values) {
                 if (isAperture) {
-                    if (values[index] >= thirdValues[minIndex]
-                            && values[index] <= thirdValues[maxIndex]) {
-                        fullValues.add(values[index]);
+                    if (value >= thirdValues[minIndex]
+                            && value <= thirdValues[maxIndex]) {
+                        fullValues.add(value);
                     }
                 } else {
-                    if (values[index] <= thirdValues[minIndex]
-                            && values[index] >= thirdValues[maxIndex]) {
-                        fullValues.add(values[index]);
+                    if (value <= thirdValues[minIndex]
+                            && value >= thirdValues[maxIndex]) {
+                        fullValues.add(value);
                     }
                 }
             }
@@ -212,13 +211,13 @@ public class EvData {
     /**
      * Defines whether or not the given index belongs to the chosen
      * distribution.
-     * 
-     * @param index
-     * @param stopDistribution
-     * @return boolean
+     *
+     * @param index element index in full list
+     * @param stopDistribution stop value for given index
+     * @return boolean true if we need choose item
      */
     private static boolean selectValues(int index, int stopDistribution) {
-        boolean selection = false;
+        boolean selection;
         switch (stopDistribution) {
         case FULL_STOP:
             selection = (index % 4 == 0);

@@ -99,7 +99,7 @@ public class EvpairsFragment extends UfoFragment {
     /**
      * Gets wheels index for calculates
      *
-     * @return
+     * @return wheels index for calculates
      */
     private int getCalculateIndex() {
         return mCalculateIndex;
@@ -341,7 +341,7 @@ public class EvpairsFragment extends UfoFragment {
             editor.putInt(LIMIT_SHUTTER_MAX, mLimit.getMaxShutter());
         }
 
-        editor.commit();
+        editor.apply();
     }
 
     private int getEvCompensationShift() {

@@ -107,29 +107,6 @@ public class LocationsTable {
     }
 
     /**
-     * Fetches single location from database
-     * 
-     * @param recordId
-     *            record Id for selection
-     * @return Cursor contains record from Locations table
-     */
-    public Cursor fetchSingleLocation(long recordId) {
-        Log.message("Enter");
-        String[] columns = { KEY_ROWID, KEY_LOCATION_NAME, KEY_LATITUDE,
-                KEY_LONGITUDE };
-        String where = KEY_ROWID + " = ?";
-        String[] whereArgs = { String.valueOf(recordId) };
-        Cursor cursor = mDatabase.query(TABLE_NAME, columns, where, whereArgs,
-                null, null, null);
-
-        if (cursor != null) {
-            cursor.moveToFirst();
-        }
-
-        return cursor;
-    }
-
-    /**
      * Gets current unix time
      * 
      * @return current unix time
@@ -203,7 +180,7 @@ public class LocationsTable {
 
     /**
      * Sets database object for management
-     * @param database
+     * @param database database object for management
      */
     public void setDatabase(SQLiteDatabase database) {
         mDatabase = database;

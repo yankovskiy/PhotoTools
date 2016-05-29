@@ -48,8 +48,8 @@ public class DbAdapter {
 
     /**
      * Gets object for locations table
-     * 
-     * @return
+     *
+     * @return object for locations table
      */
     public LocationsTable getLocations() {
         return mLocations;
@@ -57,7 +57,7 @@ public class DbAdapter {
 
     /**
      * Gets object for user_cameras table
-     * @return
+     * @return object for user_cameras table
      */
     public UserCamerasTable getUserCameras() {
         return mUserCameras;
@@ -69,11 +69,7 @@ public class DbAdapter {
      * @return true if the database is currently open.
      */
     public boolean isOpen() {
-        if (mDatabase == null) {
-            return false;
-        } else {
-            return mDatabase.isOpen();
-        }
+        return mDatabase != null && mDatabase.isOpen();
     }
 
     /**

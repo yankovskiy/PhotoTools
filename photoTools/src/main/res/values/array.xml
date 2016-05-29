@@ -14,20 +14,6 @@
       along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-
-    <string-array name="locationSelection_titles">
-        <item>@string/locationSelection_label_currentLocation</item> <!-- 0 -->
-        <item>@string/locationSelection_label_pointOnMap</item> <!-- 1 -->
-    </string-array>
-    <string-array name="main_menuTitles">
-        <item>@string/main_button_dofcalc</item> <!-- 0 -->
-        <item>@string/main_button_evpairs</item> <!-- 1 -->
-        <item>@string/main_button_sunset</item> <!-- 2 -->
-        <item>@string/main_button_rateMe</item> <!-- 3 -->
-        <item>@string/main_button_feedback</item> <!-- 4 -->
-        <item>@string/main_button_donate</item> <!-- 5 -->
-        <item>@string/main_button_about</item> <!-- 6 -->
-    </string-array>
     <string-array name="dof_measureUnits">
         <item>@string/dof_label_m</item>
         <item>@string/dof_label_cm</item>

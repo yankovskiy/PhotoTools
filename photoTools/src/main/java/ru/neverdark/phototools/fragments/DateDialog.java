@@ -32,10 +32,6 @@ public class DateDialog extends UfoDialogFragment implements DatePickerDialog.On
     private int mMonth;
     private int mDay;
     
-    public interface OnDateChangeListener {
-        public void dateChangeHandler (int year, int month, int day);
-    }
-    
     public static DateDialog getInstance(Context context) {
         DateDialog dialog = new DateDialog();
         dialog.setContext(context);
@@ -67,12 +63,16 @@ public class DateDialog extends UfoDialogFragment implements DatePickerDialog.On
     @Override
     public void bindObjects() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setListeners() {
         // TODO Auto-generated method stub
-        
+
+    }
+
+    public interface OnDateChangeListener {
+        void dateChangeHandler(int year, int month, int day);
     }
 }

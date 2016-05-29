@@ -31,56 +31,18 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 public class EvCompensationDialog extends UfoDialogFragment {
-    public interface OnEvCompensationListener {
-        public void onEvCompensationHandler(int compensationShift);
-    }
-
-    private class PositiveClickListener implements OnClickListener {
-
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            OnEvCompensationListener callback = (OnEvCompensationListener) getCallback();
-            if (callback != null) {
-                callback.onEvCompensationHandler(getShiftIndex());
-            }
-        }
-    }
-
-    private class SeekBarChangeListener implements OnSeekBarChangeListener {
-
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            mLabelValue.setText(mCompensationList[progress]);
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-
-        }
-
-    }
-
     public static final String DIALOG_TAG = "evCompensationDialog";
+    private SeekBar mSeekBar;
+    private TextView mLabelValue;
+    private int mShiftIndex = EvData.INVALID_INDEX;
+    private String[] mCompensationList;
+    private int mZeroPosition;
 
     public static EvCompensationDialog getInstance(Context context) {
         EvCompensationDialog dialog = new EvCompensationDialog();
         dialog.setContext(context);
         return dialog;
     }
-    private SeekBar mSeekBar;
-
-    private TextView mLabelValue;
-    private int mStep;
-    private int mShiftIndex = EvData.INVALID_INDEX;
-
-    private String[] mCompensationList;
-
-    private int mZeroPosition;
 
     @Override
     public void bindObjects() {
@@ -96,7 +58,7 @@ public class EvCompensationDialog extends UfoDialogFragment {
     }
 
     private int getPositionFromShift(int shift) {
-        int position = 0;
+        int position;
 
         if (shift == 0) {
             position = mZeroPosition;
@@ -121,6 +83,10 @@ public class EvCompensationDialog extends UfoDialogFragment {
 
     private int getShiftIndex() {
         return getShiftFromPosition(mSeekBar.getProgress());
+    }
+
+    public void setShiftIndex(int shiftIndex) {
+        mShiftIndex = shiftIndex;
     }
 
     private void initCompensation() {
@@ -151,12 +117,41 @@ public class EvCompensationDialog extends UfoDialogFragment {
         mSeekBar.setOnSeekBarChangeListener(new SeekBarChangeListener());
     }
 
-    public void setShiftIndex(int shiftIndex) {
-        mShiftIndex = shiftIndex;
+    public void setStep(int step) {
+        mCompensationList = EvData.getEvCompensationValues(step);
     }
 
-    public void setStep(int step) {
-        mStep = step;
-        mCompensationList = EvData.getEvCompensationValues(mStep);
+    public interface OnEvCompensationListener {
+        void onEvCompensationHandler(int compensationShift);
+    }
+
+    private class PositiveClickListener implements OnClickListener {
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            OnEvCompensationListener callback = (OnEvCompensationListener) getCallback();
+            if (callback != null) {
+                callback.onEvCompensationHandler(getShiftIndex());
+            }
+        }
+    }
+
+    private class SeekBarChangeListener implements OnSeekBarChangeListener {
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            mLabelValue.setText(mCompensationList[progress]);
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
+
     }
 }

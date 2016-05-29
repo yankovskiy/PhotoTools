@@ -42,7 +42,6 @@ public class LocationSelectionDialog extends UfoDialogFragment {
     private ListView mLocationsList;
     private ArrayList<LocationRecord> mArrayList;
     private DbAdapter mDbAdapter;
-    private Cursor mCursor;
     private LocationAdapter mAdapter;
 
     public static LocationSelectionDialog getInstance(Context context) {
@@ -70,7 +69,7 @@ public class LocationSelectionDialog extends UfoDialogFragment {
         Log.message("Enter");
 
         if (mArrayList == null) {
-            mArrayList = new ArrayList<LocationRecord>();
+            mArrayList = new ArrayList<>();
         } else {
             mArrayList.clear();
         }
@@ -92,23 +91,22 @@ public class LocationSelectionDialog extends UfoDialogFragment {
     private void loadDynamicData() {
         Log.message("Enter");
 
-        mCursor = mDbAdapter.getLocations().fetchAllLocations();
-        final int KEY_ROWID = mCursor.getColumnIndex(LocationsTable.KEY_ROWID);
-        final int KEY_LOCATION_NAME = mCursor.getColumnIndex(LocationsTable.KEY_LOCATION_NAME);
-        final int KEY_LATITUDE = mCursor.getColumnIndex(LocationsTable.KEY_LATITUDE);
-        final int KEY_LONGITUDE = mCursor.getColumnIndex(LocationsTable.KEY_LONGITUDE);
+        Cursor cursor = mDbAdapter.getLocations().fetchAllLocations();
+        final int KEY_ROWID = cursor.getColumnIndex(LocationsTable.KEY_ROWID);
+        final int KEY_LOCATION_NAME = cursor.getColumnIndex(LocationsTable.KEY_LOCATION_NAME);
+        final int KEY_LATITUDE = cursor.getColumnIndex(LocationsTable.KEY_LATITUDE);
+        final int KEY_LONGITUDE = cursor.getColumnIndex(LocationsTable.KEY_LONGITUDE);
 
-        while (mCursor.moveToNext()) {
+        while (cursor.moveToNext()) {
             LocationRecord dbRecord = new LocationRecord();
-            dbRecord._id = mCursor.getLong(KEY_ROWID);
-            dbRecord.locationName = mCursor.getString(KEY_LOCATION_NAME);
-            dbRecord.latitude = mCursor.getDouble(KEY_LATITUDE);
-            dbRecord.longitude = mCursor.getDouble(KEY_LONGITUDE);
+            dbRecord._id = cursor.getLong(KEY_ROWID);
+            dbRecord.locationName = cursor.getString(KEY_LOCATION_NAME);
+            dbRecord.latitude = cursor.getDouble(KEY_LATITUDE);
+            dbRecord.longitude = cursor.getDouble(KEY_LONGITUDE);
             mArrayList.add(dbRecord);
-            dbRecord = null;
         }
 
-        mCursor.close();
+        cursor.close();
     }
 
     /**
@@ -154,9 +152,9 @@ public class LocationSelectionDialog extends UfoDialogFragment {
     }
 
     public interface OnLocationListener {
-        public void onEditLocationHandler(LocationRecord record);
+        void onEditLocationHandler(LocationRecord record);
 
-        public void onSelectLocationHandler(LocationRecord record);
+        void onSelectLocationHandler(LocationRecord record);
     }
 
     /**

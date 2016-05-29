@@ -16,6 +16,7 @@
 package ru.neverdark.phototools.utils.dofcalculator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Array {
@@ -78,18 +79,16 @@ public class Array {
             "810", "820", "830", "840", "850", "860", "870", "880", "890",
             "900", "910", "920", "930", "940", "950", "960", "970", "980",
             "990", "1000" };
-    
-    public static final List<String> getValues(String array[], int minIndex, int maxIndex) {
-        List<String> list = new ArrayList<String>();
-        
-        for (int index = minIndex; index <= maxIndex; index++) {
-            list.add(array[index]);
-        }
+
+    public static List<String> getValues(String array[], int minIndex, int maxIndex) {
+        List<String> list = new ArrayList<>();
+
+        list.addAll(Arrays.asList(array).subList(minIndex, maxIndex + 1));
         
         return list;
     }
-    
-    public static final int getApertureIndex(String aperture) {
+
+    public static int getApertureIndex(String aperture) {
         for (int index = 0; index < APERTURE_LIST.length; index++) {
             if (APERTURE_LIST[index].equals(aperture)) {
                 return index;

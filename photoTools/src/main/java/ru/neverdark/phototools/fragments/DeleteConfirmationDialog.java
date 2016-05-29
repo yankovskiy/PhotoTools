@@ -29,32 +29,8 @@ import android.content.DialogInterface.OnClickListener;
  */
 public class DeleteConfirmationDialog extends UfoDialogFragment {
 
-    /**
-     * The interface for processing the delete record action
-     */
-    public interface OnDeleteConfirmationListener {
-        /**
-         * Handler for processing delete record action
-         * 
-         * @param deleteRecord
-         *            the record for deletion
-         */
-        public void onDeleteConfirmationHandler(Object deleteRecord);
-    }
-
-    /**
-     * Click listener for "Ok" button
-     */
-    private class PositiveClickListener implements OnClickListener {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-            OnDeleteConfirmationListener callback = (OnDeleteConfirmationListener) getCallback();
-            if (callback != null) {
-                callback.onDeleteConfirmationHandler(mDeleteObject);
-            }
-        }
-    }
+    public static final String DIALOG_TAG = "deleteConfirmationDialog";
+    private Object mDeleteObject;
 
     /**
      * Creates new dialog
@@ -68,9 +44,6 @@ public class DeleteConfirmationDialog extends UfoDialogFragment {
         dialog.setContext(context);
         return dialog;
     }
-
-    private Object mDeleteObject;
-    public static final String DIALOG_TAG = "deleteConfirmationDialog";
 
     /**
      * Creates alert dialog
@@ -87,8 +60,8 @@ public class DeleteConfirmationDialog extends UfoDialogFragment {
 
     /**
      * Sets object for delete
-     * 
-     * @param deleteObject
+     *
+     * @param deleteObject object for delete
      */
     public void setObjectForDelete(Object deleteObject) {
         mDeleteObject = deleteObject;
@@ -105,6 +78,32 @@ public class DeleteConfirmationDialog extends UfoDialogFragment {
         getAlertDialog().setPositiveButton(R.string.dialog_button_ok, new PositiveClickListener());
         getAlertDialog()
                 .setNegativeButton(R.string.dialog_button_cancel, new CancelClickListener());
+    }
+
+    /**
+     * The interface for processing the delete record action
+     */
+    public interface OnDeleteConfirmationListener {
+        /**
+         * Handler for processing delete record action
+         *
+         * @param deleteRecord the record for deletion
+         */
+        void onDeleteConfirmationHandler(Object deleteRecord);
+    }
+
+    /**
+     * Click listener for "Ok" button
+     */
+    private class PositiveClickListener implements OnClickListener {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+            OnDeleteConfirmationListener callback = (OnDeleteConfirmationListener) getCallback();
+            if (callback != null) {
+                callback.onDeleteConfirmationHandler(mDeleteObject);
+            }
+        }
     }
 
 }

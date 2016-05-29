@@ -21,7 +21,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -47,7 +46,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -94,7 +92,6 @@ public class SunsetFragment extends UfoFragment {
     private boolean mIsVisibleResult = false;
     private TimeZone mTimeZone;
     private long mSelectionId;
-    private Intent mSerivceIntent;
     private GeoLocationService mGeoLocationService;
     private boolean mBound = false;
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -116,7 +113,7 @@ public class SunsetFragment extends UfoFragment {
     private String mOfficialSunrise;
     private TextView mOfficialSunriseResult;
     private String mOfficialSunset;
-    private TextView mOfficialSunsetResult;;
+    private TextView mOfficialSunsetResult;
     private String mAstroSunrise;
     private TextView mAstroSunriseResult;
     private String mAstroSunset;
@@ -196,8 +193,8 @@ public class SunsetFragment extends UfoFragment {
      */
     private void bindToGeoService() {
         Log.message("Enter");
-        mSerivceIntent = new Intent(mContext, GeoLocationService.class);
-        mContext.bindService(mSerivceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        Intent serivceIntent = new Intent(mContext, GeoLocationService.class);
+        mContext.bindService(serivceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     private String generateTzLabel() {
@@ -215,7 +212,7 @@ public class SunsetFragment extends UfoFragment {
 
         try {
             if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
-                if (getCurrentLocation() == false) {
+                if (!getCurrentLocation()) {
                     throw new LocationNotDetermineException();
                 }
 
@@ -323,21 +320,11 @@ public class SunsetFragment extends UfoFragment {
     }
 
     /**
-     * Handling location selection
-     *
-     * @param locationRecord
-     *            object contains row from database
-     */
-    public void handleLocationSelection(final LocationRecord locationRecord) {
-
-    }
-
-    /**
      * Handles point of map selection
      */
     private void handlePointOnMap() {
         Log.message("Enter");
-        if (isGoogleServiceAvailabe() == true) {
+        if (isGoogleServiceAvailabe()) {
             getCurrentLocation();
             Intent mapIntent = new Intent(getActivity(), MapActivity.class);
 
@@ -377,21 +364,6 @@ public class SunsetFragment extends UfoFragment {
         }
 
         return isAvailable;
-    }
-
-    /**
-     * Set "" (empty string) for null string object
-     *
-     * @param str
-     *            string
-     * @return empty string if null, or return string in other case
-     */
-    private String nullToEmpty(final String str) {
-        if (str == null) {
-            return "";
-        } else {
-            return str;
-        }
     }
 
     @Override
@@ -695,7 +667,7 @@ public class SunsetFragment extends UfoFragment {
      */
     private void unbindFromGeoService() {
         Log.message("Enter");
-        if (mBound == true) {
+        if (mBound) {
             mContext.unbindService(mServiceConnection);
             mBound = false;
         }
@@ -741,7 +713,7 @@ public class SunsetFragment extends UfoFragment {
         @Override
         public void onEditLocationHandler(LocationRecord record) {
             Log.message("Enter");
-            if (isGoogleServiceAvailabe() == true) {
+            if (isGoogleServiceAvailabe()) {
                 Intent mapIntent = new Intent(getActivity(), MapActivity.class);
                 mapIntent.putExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_EDIT);
                 mapIntent.putExtra(Constants.LOCATION_LATITUDE, record.latitude);
@@ -831,10 +803,7 @@ public class SunsetFragment extends UfoFragment {
             ConnectivityManager cm = (ConnectivityManager) mContext
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo netInfo = cm.getActiveNetworkInfo();
-            if (netInfo != null && netInfo.isConnected()) {
-                return true;
-            }
-            return false;
+            return netInfo != null && netInfo.isConnected();
         }
 
         @Override
@@ -886,8 +855,6 @@ public class SunsetFragment extends UfoFragment {
                 } else {
                     Log.message("Download fail");
                 }
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }

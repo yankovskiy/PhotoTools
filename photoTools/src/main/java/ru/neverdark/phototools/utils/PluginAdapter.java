@@ -40,15 +40,9 @@ public class PluginAdapter extends ArrayAdapter<MainMenuItem> {
     private final Context mContext;
     private final boolean mIsInstalled;
 
-    private static class RowHolder {
-        private ImageView mPluginIcon;
-        private TextView mPluginLabel;
-        private ImageView mPluginRemove;
-    }
-
     /**
      * Constructor
-     * 
+     *
      * @param context
      *            application context
      * @param resource
@@ -71,7 +65,7 @@ public class PluginAdapter extends ArrayAdapter<MainMenuItem> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         View row = convertView;
 
-        RowHolder holder = null;
+        RowHolder holder;
 
         if (row == null) {
             LayoutInflater inflater = (LayoutInflater) mContext
@@ -116,7 +110,7 @@ public class PluginAdapter extends ArrayAdapter<MainMenuItem> {
 
     /**
      * Shows uninstall dialog
-     * 
+     *
      * @param pluginPackage
      *            package name for uninstall
      */
@@ -124,5 +118,11 @@ public class PluginAdapter extends ArrayAdapter<MainMenuItem> {
         Uri packageURI = Uri.parse("package:".concat(pluginPackage));
         Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageURI);
         mContext.startActivity(uninstallIntent);
+    }
+
+    private static class RowHolder {
+        private ImageView mPluginIcon;
+        private TextView mPluginLabel;
+        private ImageView mPluginRemove;
     }
 }

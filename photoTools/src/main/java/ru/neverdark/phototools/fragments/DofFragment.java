@@ -20,8 +20,6 @@ package ru.neverdark.phototools.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -143,8 +141,7 @@ public class DofFragment extends UfoFragment {
     /**
      * Loads arrays to wheels
      *
-     * @param savedData
-     *            saved position for wheels
+     * @param savedData saved position for wheels
      */
     private void arrayToWheels(SavedData savedData) {
         final String measureUnits[] = getResources().getStringArray(
@@ -165,11 +162,11 @@ public class DofFragment extends UfoFragment {
                     mLimit.getMinSubjectDistance(),
                     mLimit.getMaxSubjectDistance());
         } else {
-            apertureList = new ArrayList<String>(
+            apertureList = new ArrayList<>(
                     Arrays.asList(Array.APERTURE_LIST));
-            focalLengthList = new ArrayList<String>(
+            focalLengthList = new ArrayList<>(
                     Arrays.asList(Array.FOCAL_LENGTH));
-            subjectDistance = new ArrayList<String>(
+            subjectDistance = new ArrayList<>(
                     Arrays.asList(Array.SUBJECT_DISTANCE));
         }
 
@@ -368,7 +365,7 @@ public class DofFragment extends UfoFragment {
     public void onActivityCreated(Bundle savedInstanceData) {
         super.onActivityCreated(savedInstanceData);
         ViewTarget target = new ViewTarget(R.id.dof_cameraManagement, getActivity());
-        ShowcaseView view = new ShowcaseView.Builder(getActivity())
+        new ShowcaseView.Builder(getActivity())
                 .setTarget(target)
                 .setContentTitle(R.string.dof_sc_title)
                 .setContentText(R.string.dof_sc_message)
@@ -475,7 +472,7 @@ public class DofFragment extends UfoFragment {
         }
 
         editor.putBoolean(IS_LIMIT_PRESENT, isLimitPresent);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -604,24 +601,24 @@ public class DofFragment extends UfoFragment {
             String maxSubjectDistance = Array.SUBJECT_DISTANCE[data
                     .getMaxSubjectDistance()];
 
-            if (minMaxAperture.getMinValue().equals(minAperture) == false
-                    || minMaxAperture.getMaxValue().equals(maxAperture) == false) {
+            if (!minMaxAperture.getMinValue().equals(minAperture)
+                    || !minMaxAperture.getMaxValue().equals(maxAperture)) {
                 savedData.setAperturePosition(0);
             } else {
                 savedData.setAperturePosition(mWheelAperture.getCurrentItem());
             }
 
-            if (minMaxFocalLength.getMinValue().equals(minFocal) == false
-                    || minMaxFocalLength.getMaxValue().equals(maxFocal) == false) {
+            if (!minMaxFocalLength.getMinValue().equals(minFocal)
+                    || !minMaxFocalLength.getMaxValue().equals(maxFocal)) {
                 savedData.setFocalLengthPosition(0);
             } else {
                 savedData.setFocalLengthPosition(mWheelFocalLength
                         .getCurrentItem());
             }
 
-            if (minMaxSubjectDistance.getMinValue().equals(minSubjectDistance) == false
-                    || minMaxSubjectDistance.getMaxValue().equals(
-                    maxSubjectDistance) == false) {
+            if (!minMaxSubjectDistance.getMinValue().equals(minSubjectDistance)
+                    || !minMaxSubjectDistance.getMaxValue().equals(
+                    maxSubjectDistance)) {
                 savedData.setSubjectDistancePosition(0);
             } else {
                 savedData.setSubjectDistancePosition(mWheelSubjectDistance

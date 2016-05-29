@@ -54,11 +54,7 @@
     <string name="dof_label_total">Total:</string>
     <string name="dof_sc_title">Manage cameras</string>
     <string name="dof_sc_message">Select existing model or create your camera</string>
-    
-    <string name="evpairs_button_calculate">Calculate</string>
-    <string name="evpairs_button_clear">Clear</string>
-    <string name="evpairs_error_calculationProblem">Problem with the calculation</string>
-    <string name="evpairs_error_onlyOneFieldMustBeEpmty">The one empty field can be only</string>
+
     <string name="evpairs_label_apperture">Aperture</string>
     <string name="evpairs_label_currentValues">Current values</string>
     <string name="evpairs_label_iso">ISO</string>
@@ -87,7 +83,6 @@
     <string name="sunset_alert_message">It isn’t possible to pick the location. Go to the settings?</string>
     <string name="sunset_alert_title">Finding of location</string>
     <string name="sunset_alert_positive">Settings</string>
-    <string name="sunset_alert_negative">Cancel</string>
     
     <string name="sunset_button_calculate">Calculate</string>
     <string name="sunset_label_date">Date</string>
@@ -172,34 +167,25 @@
     <string name="dof_label_ft">ft</string>
     <string name="dof_label_in">in</string>
     
-    <string name="dof_tab_parameters">Parameters</string>
-    <string name="dof_tab_result">Results</string>
-    <string name="dof_tab_camera">Camera</string>
-    
     <string name="evpairs_label_step">Step change</string>
     <string name="evpairs_label_stepFull">1 stop</string>
     <string name="evpairs_label_stepHalf">&#189; stop</string>
     <string name="evpairs_label_stepThird">&#8531; stop</string>
     
     <string name="zonePicker_title">Choose a time zone</string>
-    <string name="zonePicker_message">It was not possible to pick the time zone. Please, choose from the list:</string>
-    
+
     <string name="plugins_available">Available</string>
     <string name="plugins_installed">Installed</string>
-    
-    <string name="userCameraModel">Camera model</string>
+
     <string name="userCamera_label_coc">Circle of confusion</string>
     <string name="userCamera_label_resolution">Maximum resolution</string>
     <string name="userCamera_label_sensor">Sensor size</string>
-    
-    <string name="cameraManagementTitle">Cameras management</string>
-    
+
     <string name="error">Error</string>
     <string name="error_cameraAlreadyExist">Camera with same name already exist</string>
     <string name="error_cameraNameEmpty">Camera name is empty</string>
     <string name="error_notAllValuesFilled">Sensor size and maximum resolution must be specified</string>
     <string name="error_cocNotFilled">Circle of confusion must be specified</string>
-    <string name="error_availableOnlyInPaid">This feature available only in full version</string>
     <string name="error_locationNotDetermine">Location not determine. Please check your gps status or choose location from the map</string>
     <string name="error_minMaxIncorrect">Maximum values must be greater than minimum values</string>
     
@@ -210,10 +196,7 @@
     
     <string name="width">Width</string>
     <string name="height">Height</string>
-    
-    <string name="userCameraRow_resolution">Resolution</string>
-    <string name="userCameraRow_sensor">Sensor</string>
-    
+
     <string name="mm">mm</string>
     
     <string name="limitation_minimum">Minimum values:</string>
@@ -231,9 +214,9 @@
     
     <string name="evCompensation_title">Exposure compensation</string>
     <string name="confirm_action_copy_title">Copy camera</string>
-    <string formatted="false" name="confirm_action_copy_message">Do you want copy %s to user cameras?</string>
+    <string name="confirm_action_copy_message" formatted="false">Do you want copy %s to user cameras?</string>
     <string name="confirm_action_remove_title">Delete camera</string>
-    <string formatted="false" name="confirm_action_remove_message">Delete camera %s?</string>
+    <string name="confirm_action_remove_message" formatted="false">Delete camera %s?</string>
     <string name="camera_copied">Camera copied</string>
     <string name="sunset_timezone_detection_method">Time zone detection method</string>
     <string name="sunset_information_timeZoneFail">Time zone detection problem</string>

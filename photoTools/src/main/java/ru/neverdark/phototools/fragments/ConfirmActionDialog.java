@@ -14,8 +14,13 @@ public class ConfirmActionDialog extends UfoDialogFragment {
     private OnPositiveClickListener mCallback;
     private String mCamera;
 
-    public interface OnPositiveClickListener {
-        public void onPositiveClick(String camera, int action);
+    public static ConfirmActionDialog getInstance(Context context, int action, String camera, OnPositiveClickListener callback) {
+        ConfirmActionDialog dialog = new ConfirmActionDialog();
+        dialog.setContext(context);
+        dialog.mAction = action;
+        dialog.mCamera = camera;
+        dialog.mCallback = callback;
+        return dialog;
     }
 
     @Override
@@ -49,13 +54,8 @@ public class ConfirmActionDialog extends UfoDialogFragment {
         getAlertDialog().setMessage(String.format(getString(dialogMessageId), mCamera));
     }
 
-    public static ConfirmActionDialog getInstance(Context context, int action, String camera, OnPositiveClickListener callback) {
-        ConfirmActionDialog dialog = new ConfirmActionDialog();
-        dialog.setContext(context);
-        dialog.mAction = action;
-        dialog.mCamera = camera;
-        dialog.mCallback = callback;
-        return dialog;
+    public interface OnPositiveClickListener {
+        void onPositiveClick(String camera, int action);
     }
 
     private class PositiveClickListener implements DialogInterface.OnClickListener {

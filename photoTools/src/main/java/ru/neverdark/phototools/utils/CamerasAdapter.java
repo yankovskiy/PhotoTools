@@ -23,20 +23,6 @@ public class CamerasAdapter extends ArrayAdapter<String> {
     private final int mResource;
     private final OnButtonsClickListener mCallback;
 
-    public interface OnButtonsClickListener {
-        public void onCopyClick(String camera);
-
-        public void onRemoveClick(String camera);
-
-        public void onEditClick(String camera);
-    }
-
-    private static class RowHolder {
-        TextView mCameraModel;
-        ImageView mActionButton;
-        ImageView mEditButton;
-    }
-
     public CamerasAdapter(Context context, CameraData.Vendor vendor, OnButtonsClickListener callback) {
         super(context, R.layout.camera_list_item,
                 new ArrayList<>(Arrays.asList(CameraData.getCameraByVendor(vendor, context)))
@@ -49,7 +35,7 @@ public class CamerasAdapter extends ArrayAdapter<String> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        RowHolder holder = null;
+        RowHolder holder;
         View row = convertView;
 
         if (row == null) {
@@ -78,7 +64,7 @@ public class CamerasAdapter extends ArrayAdapter<String> {
             holder.mEditButton.setVisibility(View.GONE);
         }
 
-        Drawable buttonImage = null;
+        Drawable buttonImage;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             buttonImage = mContext.getResources().getDrawable(drawableResource);
         } else {
@@ -88,6 +74,20 @@ public class CamerasAdapter extends ArrayAdapter<String> {
         holder.mCameraModel.setText(camera);
         holder.mActionButton.setOnTouchListener(new ImageOnTouchListener());
         return row;
+    }
+
+    public interface OnButtonsClickListener {
+        void onCopyClick(String camera);
+
+        void onRemoveClick(String camera);
+
+        void onEditClick(String camera);
+    }
+
+    private static class RowHolder {
+        TextView mCameraModel;
+        ImageView mActionButton;
+        ImageView mEditButton;
     }
 
     private class CameraClickListener implements View.OnClickListener {
