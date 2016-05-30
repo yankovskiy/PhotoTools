@@ -19,11 +19,11 @@
     </style>
   </head>
   <body>
-$ 0.13
-  % Version 0.13
-  _ 22.11.2015
-    * New camera management system
-    * Added new cameras
+$ 0.14
+  % Version 0.14
+  _ 31.05.2016
+    * New timezone method system
+    * New cameras
 $ END_OF_CHANGE_LOG
   </body>
 </html>
