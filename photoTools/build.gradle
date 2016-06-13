@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+    buildToolsVersion '23.0.3'
     defaultConfig {
         applicationId "ru.neverdark.phototools"
         minSdkVersion 11
@@ -26,6 +26,6 @@ dependencies {
     compile project(':abslib')
     compile project(':luckycatlabs')
     compile 'com.github.amlcurran.showcaseview:library:5.4.0'
-    compile 'com.google.android.gms:play-services:8.3.0'
+    compile 'com.google.android.gms:play-services:9.0.2'
     compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
 }
