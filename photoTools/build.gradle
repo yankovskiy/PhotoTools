@@ -26,6 +26,6 @@ dependencies {
     compile project(':abslib')
     compile project(':luckycatlabs')
     compile 'com.github.amlcurran.showcaseview:library:5.4.0'
-    compile 'com.google.android.gms:play-services:9.0.2'
     compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
+    compile 'com.google.android.gms:play-services-maps:9.0.2'
 }

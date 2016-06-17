@@ -19,7 +19,7 @@ package ru.neverdark.phototools.utils;
  * Constants for PhotoTools application
  */
 public class Constants {
-    public static final boolean PAID = false;
+    public static final boolean PAID = true;
     
     public static final int STATUS_SUCCESS = 0;
     public static final int STATUS_FAIL = 1;
@@ -35,6 +35,7 @@ public class Constants {
     public static final byte DONATE_CHOICE = 5;
     public static final byte ABOUT_CHOICE = 6;
     public static final byte PLUGIN_CHOICE = 7;
+    public static final byte EVDIFF_CHOICE = 8;
     
     public static final byte LOCATION_CURRENT_POSITION_CHOICE = 0;
     public static final byte LOCATION_POINT_ON_MAP_CHOICE = 1;

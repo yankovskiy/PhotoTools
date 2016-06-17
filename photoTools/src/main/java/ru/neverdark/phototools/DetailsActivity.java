@@ -1,15 +1,15 @@
 /*******************************************************************************
- * Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
+ * Copyright (C) 2013-2016 Artem Yankovskiy (artemyankovskiy@gmail.com).
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
  *     the Free Software Foundation, either version 3 of the License, or
  *     (at your option) any later version.
- * 
+ *
  *     This program is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *     GNU General Public License for more details.
- * 
+ *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
@@ -17,6 +17,7 @@ package ru.neverdark.phototools;
 
 import ru.neverdark.phototools.fragments.AboutFragment;
 import ru.neverdark.phototools.fragments.DofFragment;
+import ru.neverdark.phototools.fragments.EvDiffFragment;
 import ru.neverdark.phototools.fragments.EvpairsFragment;
 import ru.neverdark.phototools.fragments.PluginsFragment;
 import ru.neverdark.phototools.fragments.SunsetFragment;
@@ -63,6 +64,11 @@ public class DetailsActivity extends AppCompatActivity {
             EvpairsFragment evFragment = new EvpairsFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, evFragment).commit();
+            break;
+        case Constants.EVDIFF_CHOICE:
+            EvDiffFragment evDiffFragment = new EvDiffFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(android.R.id.content, evDiffFragment).commit();
             break;
         case Constants.SUNSET_CHOICE:
             SunsetFragment sunsetFragment = new SunsetFragment();

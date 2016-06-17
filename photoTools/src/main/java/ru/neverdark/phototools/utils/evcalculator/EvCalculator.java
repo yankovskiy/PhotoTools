@@ -1,21 +1,20 @@
 /*******************************************************************************
  * Copyright (C) 2014 Rudy Dordonne (rudy@itu.dk).
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- * 
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- * 
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
- *     Modification:
- *      Artem Yankovskiy (artemyankovskiy@gmail.com)
- *     
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * <p/>
+ * Modification:
+ * Artem Yankovskiy (artemyankovskiy@gmail.com)
  ******************************************************************************/
 package ru.neverdark.phototools.utils.evcalculator;
 
@@ -46,8 +45,8 @@ public class EvCalculator {
     private Double SHUTTER_VALUE_LIST[];
 
     public void prepare(int currentAperturePosition, int currentIsoPosition,
-            int currentShutterSpeedPosition, int newAperturePosition,
-            int newIsoPostion, int newShutterSpeedPosition, int calculateIndex, int compensationShift) {
+                        int currentShutterSpeedPosition, int newAperturePosition,
+                        int newIsoPostion, int newShutterSpeedPosition, int calculateIndex, int compensationShift) {
 
         mCurrentAperturePosition = currentAperturePosition;
         mCurrentIsoPosition = currentIsoPosition;
@@ -77,9 +76,8 @@ public class EvCalculator {
 
     /**
      * Inits local arrays by EV step
-     * 
-     * @param evStep
-     *            ev step
+     *
+     * @param evStep ev step
      */
     public void initArrays(final int evStep) {
         mStopDistribution = evStep;
@@ -95,7 +93,7 @@ public class EvCalculator {
         int maxIsoIndex = limit.getMaxIso();
         int minShutterIndex = limit.getMinShutter();
         int maxShutterIndex = limit.getMaxShutter();
-        
+
         mStopDistribution = evStep;
         APERTURE_VALUE_LIST = EvData.getApertureValues(mStopDistribution,
                 minApertureIndex, maxApertureIndex);
@@ -107,7 +105,7 @@ public class EvCalculator {
 
     /**
      * Gets effective ISO values list to be displayed
-     * 
+     *
      * @return list contains possible ISO values
      */
     public List<String> getIsoList() {
@@ -123,7 +121,7 @@ public class EvCalculator {
 
     /**
      * Gets effective aperture values and formats them list to be displayed
-     * 
+     *
      * @return list contains possible aperture values
      */
     public List<String> getApertureList() {
@@ -140,7 +138,7 @@ public class EvCalculator {
 
     /**
      * Gets effective shutter values list and formats them to be displayed
-     * 
+     *
      * @return list contains possible shutter speed values
      */
     public List<String> getShutterList() {
@@ -191,13 +189,13 @@ public class EvCalculator {
     /**
      * Function calculates the required value based on indices obtained in the
      * class constructor.
-     * 
+     *
      * @return index for the empty spinner
      */
     public int calculate() {
         int wIndex = 0;
         mIndex = -mCompensationShift;
-        
+
         if (mCalculateIndex == CALCULATE_APERTURE) {
             double isoStopDifference = calculateIsoDifference();
             double shutterStopDifference = calculateShutterDifference();
@@ -244,8 +242,7 @@ public class EvCalculator {
             }
         }
 
-        
-        
+
         if (mIndex < 0) {
             mIndex = EvData.INVALID_INDEX;
         }
@@ -257,7 +254,7 @@ public class EvCalculator {
 
     /**
      * Calculate the stop difference between current and new ISO values.
-     * 
+     *
      * @return ISO stop difference between current and new ISO values.
      */
     private double calculateIsoDifference() {
@@ -267,7 +264,7 @@ public class EvCalculator {
 
     /**
      * Calculate the stop difference between current and new shutter values.
-     * 
+     *
      * @return Shutter stop difference between current and new shutter values.
      */
     private double calculateShutterDifference() {
@@ -278,7 +275,7 @@ public class EvCalculator {
 
     /**
      * Calculate the stop difference between current and new aperture values.
-     * 
+     *
      * @return Aperture stop difference between current and new aperture values.
      */
     private double calculateApertureDifference() {
@@ -290,13 +287,13 @@ public class EvCalculator {
      * Calculate the stop difference between two parameters.
      *
      * @param currentValue for calculate difference
-     * @param newValue new value for calculate difference
-     * @param base base for log
+     * @param newValue     new value for calculate difference
+     * @param base         base for log
      * @return Stop difference between the two parameters according to the base
-     *         for calculation.
+     * for calculation.
      */
     private double calculateDifference(double currentValue, double newValue,
-            double base) {
+                                       double base) {
         double difference;
 
         if (currentValue < newValue) {
@@ -308,4 +305,23 @@ public class EvCalculator {
         return difference;
     }
 
+    /**
+     * Рассчет разницы между экспотройками
+     *
+     * @return разница в EV между экспотройками
+     */
+    public String calculateEvDiff() {
+        String[] evList = EvData.getFullEvCompensationValues(mStopDistribution);
+        int zeroIndex = (evList.length - 1) / 2;
+        double diff = calculateApertureDifference() + calculateIsoDifference() + calculateShutterDifference();
+
+        int resultIndex = zeroIndex + (int)Math.round(diff * mStopDistribution);
+        Log.variable("resultIndex", String.valueOf(resultIndex));
+
+        if (resultIndex > evList.length - 1 || resultIndex < 0) {
+            return null;
+        } else {
+            return evList[resultIndex];
+        }
+    }
 }

@@ -30,7 +30,8 @@ public class Limit {
     
     private int mMinSubjectDistance;
     private int mMaxSubjectDistance;
-    
+    private int mEvStep;
+
     public int getMinAperture() {
         return mMinAperture;
     }
@@ -90,5 +91,17 @@ public class Limit {
     }
     public void setMaxSubjectDistance(int maxSubjectDistance) {
         this.mMaxSubjectDistance = maxSubjectDistance;
+    }
+
+    public void setEvStep(int evStep) {
+        mEvStep = evStep;
+    }
+
+    public int getEvStep() {
+        return mEvStep;
+    }
+
+    public boolean isLimit() {
+        return mMinAperture != mMaxAperture;
     }
 }

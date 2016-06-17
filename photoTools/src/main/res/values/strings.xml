@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
+  Copyright (C) 2013-2016 Artem Yankovskiy (artemyankovskiy@gmail.com).
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
       the Free Software Foundation, either version 3 of the License, or
       (at your option) any later version.
-  
+
       This program is distributed in the hope that it will be useful,
       but WITHOUT ANY WARRANTY; without even the implied warranty of
       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
       GNU General Public License for more details.
-  
+
       You should have received a copy of the GNU General Public License
       along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
+  -->
 <resources>
 
     <string name="about_label_author"><![CDATA[Author: <a href="mailto:artemyankovskiy@gmail.com?subject=PhotoTools">Artem Yankovskiy</a>]]></string>
@@ -220,4 +220,6 @@
     <string name="camera_copied">Camera copied</string>
     <string name="sunset_timezone_detection_method">Time zone detection method</string>
     <string name="sunset_information_timeZoneFail">Time zone detection problem</string>
+    <string name="main_button_evdiff">EV Difference</string>
+    <string name="evdiff_difference">Difference between values:</string>
 </resources>
