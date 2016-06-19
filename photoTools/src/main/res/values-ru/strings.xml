@@ -227,4 +227,6 @@
     <string name="sunset_information_timeZoneFail">Невозможно определить часовой пояс</string>
     <string name="main_button_evdiff">Разница EV-пар</string>
     <string name="evdiff_difference">Разница между значениями:</string>
+    <string name="long_tap_for_choose_location">Долгое нажатие на карте для выбора места</string>
+    <string name="hide">Скрыть</string>
 </resources>

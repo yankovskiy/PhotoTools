@@ -96,6 +96,8 @@ public class LocationSelectionDialog extends UfoDialogFragment {
         final int KEY_LOCATION_NAME = cursor.getColumnIndex(LocationsTable.KEY_LOCATION_NAME);
         final int KEY_LATITUDE = cursor.getColumnIndex(LocationsTable.KEY_LATITUDE);
         final int KEY_LONGITUDE = cursor.getColumnIndex(LocationsTable.KEY_LONGITUDE);
+        final int KEY_CAMERA_ZOOM = cursor.getColumnIndex(LocationsTable.KEY_CAMERA_ZOOM);
+        final int KEY_MAP_TYPE = cursor.getColumnIndex(LocationsTable.KEY_MAP_TYPE);
 
         while (cursor.moveToNext()) {
             LocationRecord dbRecord = new LocationRecord();
@@ -103,6 +105,8 @@ public class LocationSelectionDialog extends UfoDialogFragment {
             dbRecord.locationName = cursor.getString(KEY_LOCATION_NAME);
             dbRecord.latitude = cursor.getDouble(KEY_LATITUDE);
             dbRecord.longitude = cursor.getDouble(KEY_LONGITUDE);
+            dbRecord.cameraZoom = cursor.getFloat(KEY_CAMERA_ZOOM);
+            dbRecord.mapType = cursor.getInt(KEY_MAP_TYPE);
             mArrayList.add(dbRecord);
         }
 

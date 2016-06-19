@@ -23,6 +23,8 @@ public class LocationRecord {
     public String locationName;
     public double latitude;
     public double longitude;
+    public int mapType;
+    public float cameraZoom;
 
     public LocationRecord(long _id, String locationName, double latitude,
             double longitude) {

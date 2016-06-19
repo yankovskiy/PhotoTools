@@ -720,7 +720,8 @@ public class SunsetFragment extends UfoFragment {
                 mapIntent.putExtra(Constants.LOCATION_LONGITUDE, record.longitude);
                 mapIntent.putExtra(Constants.LOCATION_RECORD_ID, record._id);
                 mapIntent.putExtra(Constants.LOCATION_NAME, record.locationName);
-
+                mapIntent.putExtra(Constants.LOCATION_MAP_TYPE, record.mapType);
+                mapIntent.putExtra(Constants.LOCATION_CAMERA_ZOOM, record.cameraZoom);
                 startActivityForResult(mapIntent, Constants.LOCATION_POINT_ON_MAP_CHOICE);
             }
         }

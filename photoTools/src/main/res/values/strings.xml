@@ -222,4 +222,6 @@
     <string name="sunset_information_timeZoneFail">Time zone detection problem</string>
     <string name="main_button_evdiff">EV Difference</string>
     <string name="evdiff_difference">Difference between values:</string>
+    <string name="long_tap_for_choose_location">Long tap on the map for choose location</string>
+    <string name="hide">Hide</string>
 </resources>

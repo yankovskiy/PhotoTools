@@ -20,16 +20,21 @@ package ru.neverdark.phototools;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -49,6 +54,12 @@ import ru.neverdark.phototools.utils.Log;
 
 public class MapActivity extends AppCompatActivity implements OnMapLongClickListener {
 
+    private static final String MAP_LATITUDE = "map_latitude";
+    private static final String MAP_LONGITUDE = "map_longitude";
+    private static final String MAP_ZOOM = "map_zoom";
+    private static final String MAP_TYPE = "map_type";
+    private static final String SHOW_HINT = "map_show_hint";
+    MapActivity mCurrentActivity;
     private GoogleMap mMap;
     private MenuItem mMenuItemDone;
     private Marker mMarker;
@@ -63,8 +74,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
     /**
      * Inits process for searching coordinates by address
      *
-     * @param query
-     *            address for searching in GeoCoder
+     * @param query address for searching in GeoCoder
      */
     public void initSearchProcess(String query) {
         AsyncGeoCoder geo = new AsyncGeoCoder(mContext);
@@ -91,47 +101,107 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
     @SuppressLint("NewApi")
     private void initMap() {
         Log.message("Enter");
-        if (mMap == null) {
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                    .getMap();
+        ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+                .getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        mMap = googleMap;
+                        mMap.setMyLocationEnabled(true);
+                        mMap.setOnMapLongClickListener(mCurrentActivity);
+                        /* gets current coord if have */
+                        Intent intent = getIntent();
+                        Double latitude = intent.getDoubleExtra(Constants.LOCATION_LATITUDE, 0);
+                        Double longitude = intent.getDoubleExtra(Constants.LOCATION_LONGITUDE, 0);
 
-            mMap.setMyLocationEnabled(true);
-            mMap.setOnMapLongClickListener(this);
+                        /* gets action */
+                        mAction = intent.getByteExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_ADD);
+
+                        float zoom = Constants.MAP_CAMERA_ZOOM;
+                        int mapType = GoogleMap.MAP_TYPE_NORMAL;
+                        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+
+                        if (mAction == Constants.LOCATION_ACTION_EDIT) {
+                            mRecordId = intent.getLongExtra(Constants.LOCATION_RECORD_ID,
+                                    Constants.LOCATION_POINT_ON_MAP_CHOICE);
+                            mLocationName = intent.getStringExtra(Constants.LOCATION_NAME);
+                            mMarkerPosition = new LatLng(latitude, longitude);
+                            setMarker();
+
+                            if (Constants.PAID) {
+                                zoom = intent.getFloatExtra(Constants.LOCATION_CAMERA_ZOOM, Constants.MAP_CAMERA_ZOOM);
+                                mapType = intent.getIntExtra(Constants.LOCATION_MAP_TYPE, GoogleMap.MAP_TYPE_NORMAL);
+
+                                Log.variable("zoom", String.valueOf(zoom));
+                                Log.variable("mapType", String.valueOf(mapType));
+
+                                if (zoom == 0) {
+                                    zoom = Constants.MAP_CAMERA_ZOOM;
+                                }
+                                if (mapType == 0) {
+                                    mapType = GoogleMap.MAP_TYPE_NORMAL;
+                                }
+                            }
+                        } else {
+                            if (Constants.PAID) {
+                                // Если нет сохраненных данных используем данные с GPS
+
+                                latitude = (double) prefs.getFloat(MAP_LATITUDE, latitude.floatValue());
+                                longitude = (double) prefs.getFloat(MAP_LONGITUDE, longitude.floatValue());
+                                zoom = prefs.getFloat(MAP_ZOOM, zoom);
+                                mapType = prefs.getInt(MAP_TYPE, mapType);
+                            }
+                        }
+
+                        mMap.setMapType(mapType);
+                        /* checks for coordinates was received */
+                        if ((latitude != 0) || (longitude != 0)) {
+                            CameraPosition currentPosition = new CameraPosition.Builder()
+                                    .target(new LatLng(latitude, longitude)).zoom(zoom)
+                                    .build();
+                            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(currentPosition));
+                        }
+
+                        if (prefs.getBoolean(SHOW_HINT, true)) {
+                            final Snackbar snack = Snackbar.make(findViewById(android.R.id.content),
+                                    R.string.long_tap_for_choose_location,
+                                    Snackbar.LENGTH_INDEFINITE);
+                            snack.setAction(R.string.hide, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = prefs.edit();
+                                    editor.putBoolean(SHOW_HINT, false);
+                                    editor.apply();
+                                    snack.dismiss();
+                                }
+                            });
+                            snack.show();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onPause() {
+        if (Constants.PAID) {
+            SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt(MAP_TYPE, mMap.getMapType());
+            editor.putFloat(MAP_ZOOM, mMap.getCameraPosition().zoom);
+            editor.putFloat(MAP_LATITUDE, (float) mMap.getCameraPosition().target.latitude);
+            editor.putFloat(MAP_LONGITUDE, (float) mMap.getCameraPosition().target.longitude);
+            editor.apply();
         }
-
-        /* gets current coord if have */
-        Intent intent = getIntent();
-        Double latitude = intent.getDoubleExtra(Constants.LOCATION_LATITUDE, 0);
-        Double longitude = intent.getDoubleExtra(Constants.LOCATION_LONGITUDE, 0);
-
-        /* gets action */
-        mAction = intent.getByteExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_ADD);
-
-        if (mAction == Constants.LOCATION_ACTION_EDIT) {
-            mRecordId = intent.getLongExtra(Constants.LOCATION_RECORD_ID,
-                    Constants.LOCATION_POINT_ON_MAP_CHOICE);
-            mLocationName = intent.getStringExtra(Constants.LOCATION_NAME);
-            mMarkerPosition = new LatLng(latitude, longitude);
-            setMarker();
-        }
-
-        /* checks for coordinates was received */
-        if ((latitude != 0) || (longitude != 0)) {
-            CameraPosition currentPosition = new CameraPosition.Builder()
-                    .target(new LatLng(latitude, longitude)).zoom(Constants.MAP_CAMERA_ZOOM)
-                    .build();
-            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(currentPosition));
-        }
-
+        super.onPause();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.message("Enter");
         super.onCreate(savedInstanceState);
-        setTheme(R.style.Theme_AppCompat);
+        setTheme(R.style.MapTheme);
         setContentView(R.layout.map_activity);
-
+        mCurrentActivity = this;
         initMap();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mContext = this;
@@ -201,8 +271,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
     /**
      * Saves data to the database
      *
-     * @param locationName
-     *            location name for save into database
+     * @param locationName location name for save into database
      */
     private void saveDataToDatabase(String locationName) {
         Log.message("Enter");
@@ -211,10 +280,10 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
 
         if (mAction == Constants.LOCATION_ACTION_ADD) {
             mRecordId = dbAdapter.getLocations().createLocation(locationName,
-                    mMarkerPosition.latitude, mMarkerPosition.longitude);
+                    mMarkerPosition.latitude, mMarkerPosition.longitude, mMap.getMapType(), mMap.getCameraPosition().zoom);
         } else if (mAction == Constants.LOCATION_ACTION_EDIT) {
             dbAdapter.getLocations().updateLocation(mRecordId, locationName,
-                    mMarkerPosition.latitude, mMarkerPosition.longitude);
+                    mMarkerPosition.latitude, mMarkerPosition.longitude, mMap.getMapType(), mMap.getCameraPosition().zoom);
         }
 
         dbAdapter.close();
@@ -223,8 +292,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
     /**
      * Sets visible property for Done button
      *
-     * @param isVisible
-     *            true for Done button visible, false for invisible
+     * @param isVisible true for Done button visible, false for invisible
      */
     private void setButtonVisible(final boolean isVisible) {
         Log.message("Enter");
@@ -303,7 +371,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
                 // move camera to saved position
                 CameraPosition currentPosition = new CameraPosition.Builder().target(coordinates)
                         .zoom(zoom).build();
-                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(currentPosition));
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPosition));
             } else {
                 String errorMessage = String.format(getString(R.string.error_notFound),
                         searchString);
@@ -317,14 +385,13 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
 
         @Override
         public boolean onQueryTextSubmit(String query) {
-            mMenuItemSearch.collapseActionView();
+            MenuItemCompat.collapseActionView(mMenuItemSearch);
             initSearchProcess(query);
             return true;
         }
 
         @Override
         public boolean onQueryTextChange(String newText) {
-            // TODO Auto-generated method stub
             return false;
         }
 
