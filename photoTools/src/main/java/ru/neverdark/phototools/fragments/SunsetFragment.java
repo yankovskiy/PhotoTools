@@ -42,13 +42,6 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.luckycatlabs.sunrisesunset.dto.Location;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -56,10 +49,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import ru.neverdark.abs.OnCallback;
 import ru.neverdark.abs.UfoFragment;
@@ -68,6 +64,7 @@ import ru.neverdark.phototools.R;
 import ru.neverdark.phototools.fragments.DateDialog.OnDateChangeListener;
 import ru.neverdark.phototools.fragments.LocationSelectionDialog.OnLocationListener;
 import ru.neverdark.phototools.fragments.ZonePickerDialog.OnTimeZonePickerListener;
+import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.GeoLocationService;
 import ru.neverdark.phototools.utils.GeoLocationService.GeoLocationBinder;
@@ -801,7 +798,6 @@ public class SunsetFragment extends UfoFragment {
          */
         private String readTimeZoneJson() {
             Log.message("Enter");
-            StringBuilder builder = new StringBuilder();
             Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
             calendar.set(mYear, mMonth, mDay);
             /* Gets desired time as seconds since midnight, January 1, 1970 UTC */
@@ -809,29 +805,8 @@ public class SunsetFragment extends UfoFragment {
 
             String url_format = "https://maps.googleapis.com/maps/api/timezone/json?location=%f,%f&timestamp=%d";
             String url = String.format(Locale.US, url_format, mLatitude, mLongitude, timestamp);
-            Log.variable("url", url);
 
-            HttpClient client = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet(url);
-            try {
-                HttpResponse response = client.execute(httpGet);
-                StatusLine statusLine = response.getStatusLine();
-                int statusCode = statusLine.getStatusCode();
-                if (statusCode == HttpStatus.SC_OK) {
-                    HttpEntity entity = response.getEntity();
-                    InputStream content = entity.getContent();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        builder.append(line);
-                    }
-                } else {
-                    Log.message("Download fail");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return builder.toString();
+            return Common.getHttpContent(url);
         }
     }
 
