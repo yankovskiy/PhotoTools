@@ -199,8 +199,8 @@
 
     <string name="mm">mm</string>
     
-    <string name="limitation_minimum">Minimum values:</string>
-    <string name="limitation_maximum">Maximum values:</string>
+    <string name="limitation_minimum">Minimum values</string>
+    <string name="limitation_maximum">Maximum values</string>
     
     <string name="evLimitation">Ev: limitation values</string>
     <string name="dofLimitation">DoF: limitation values</string>

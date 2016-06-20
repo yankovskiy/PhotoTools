@@ -199,8 +199,8 @@
     <string name="width">Ширина</string>
     <string name="height">Высота</string>
 
-    <string name="limitation_minimum">Минимальные значения:</string>
-    <string name="limitation_maximum">Максимальные значения:</string>
+    <string name="limitation_minimum">Минимальные значения</string>
+    <string name="limitation_maximum">Максимальные значения</string>
     
     <string name="evLimitation">Ev: ограничение значений</string>
     <string name="dofLimitation">ГРИП: ограничение значений</string>
