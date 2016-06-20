@@ -508,19 +508,19 @@ public class DofFragment extends UfoFragment {
 
         switch (mMeasureResultUnit) {
             case Constants.METER:
-                Common.setBg(mLabelM, R.drawable.left_blue_button);
+                Common.setBg(mLabelM, R.drawable.left_green_button);
                 break;
 
             case Constants.CM:
-                Common.setBg(mLabelCm, R.drawable.middle_blue_button);
+                Common.setBg(mLabelCm, R.drawable.middle_green_button);
                 break;
 
             case Constants.FOOT:
-                Common.setBg(mLabelFt, R.drawable.middle_blue_button);
+                Common.setBg(mLabelFt, R.drawable.middle_green_button);
                 break;
 
             case Constants.INCH:
-                Common.setBg(mLabelIn, R.drawable.right_blue_button);
+                Common.setBg(mLabelIn, R.drawable.right_green_button);
                 break;
         }
     }

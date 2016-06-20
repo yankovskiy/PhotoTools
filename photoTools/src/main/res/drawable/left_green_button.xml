@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
+  Copyright (C) 2013-2016 Artem Yankovskiy (artemyankovskiy@gmail.com).
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
       the Free Software Foundation, either version 3 of the License, or
       (at your option) any later version.
-  
+
       This program is distributed in the hope that it will be useful,
       but WITHOUT ANY WARRANTY; without even the implied warranty of
       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
       GNU General Public License for more details.
-  
+
       You should have received a copy of the GNU General Public License
       along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
+  -->
 <shape
   xmlns:android="http://schemas.android.com/apk/res/android">
-    <gradient android:startColor="#ff33b5e5" android:endColor="#ff33b5e5" android:angle="270" android:centerColor="#ff33b5e5" />
+    <gradient android:startColor="#ff009688" android:endColor="#ff009688" android:angle="270" android:centerColor="#ff009688" />
     <stroke android:width="2dp" android:color="#ff505050" />
-    <corners android:topLeftRadius="0.100000024dp" android:topRightRadius="0.100000024dp" android:bottomLeftRadius="0.100000024dp" android:bottomRightRadius="0.100000024dp" />
+    <corners android:topLeftRadius="4dp" android:topRightRadius="0.100000024dp" android:bottomLeftRadius="0.100000024dp" android:bottomRightRadius="4dp" />
 </shape>

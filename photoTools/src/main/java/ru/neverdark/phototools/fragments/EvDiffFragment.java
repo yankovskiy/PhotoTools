@@ -230,13 +230,13 @@ public class EvDiffFragment extends UfoFragment {
 
         switch (step) {
             case EvData.FULL_STOP:
-                Common.setBg(mFullStopButton, R.drawable.left_blue_button);
+                Common.setBg(mFullStopButton, R.drawable.left_green_button);
                 break;
             case EvData.HALF_STOP:
-                Common.setBg(mHalfStopButton, R.drawable.middle_blue_button);
+                Common.setBg(mHalfStopButton, R.drawable.middle_green_button);
                 break;
             case EvData.THIRD_STOP:
-                Common.setBg(mThirdStopButton, R.drawable.right_blue_button);
+                Common.setBg(mThirdStopButton, R.drawable.right_green_button);
                 break;
         }
 

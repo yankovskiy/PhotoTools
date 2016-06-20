@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@drawable/left_blue_button"
+            android:background="@drawable/left_green_button"
             android:gravity="center"
             android:text="@string/evpairs_label_stepFull"
             android:textColor="#ffffffff"
@@ -99,7 +99,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/evpairs_label_currentValues"
-        android:textColor="#ff33b5e5" />
+        android:textColor="@color/headear" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -200,7 +200,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/evpairs_label_newValues"
-        android:textColor="#ff33b5e5" />
+        android:textColor="@color/headear" />
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -531,13 +531,13 @@ public class EvpairsFragment extends UfoFragment {
 
         switch (getCalculateIndex()) {
         case EvCalculator.CALCULATE_APERTURE:
-            Common.setBg(mLabelAperture, R.drawable.left_blue_button);
+            Common.setBg(mLabelAperture, R.drawable.left_green_button);
             break;
         case EvCalculator.CALCULATE_ISO:
-            Common.setBg(mLabelIso, R.drawable.middle_blue_button);
+            Common.setBg(mLabelIso, R.drawable.middle_green_button);
             break;
         case EvCalculator.CALCULATE_SHUTTER:
-            Common.setBg(mLabelShutter, R.drawable.right_blue_button);
+            Common.setBg(mLabelShutter, R.drawable.right_green_button);
             break;
         }
     }
@@ -580,13 +580,13 @@ public class EvpairsFragment extends UfoFragment {
 
         switch (getStepIndex()) {
         case EvData.FULL_STOP:
-            Common.setBg(mLabelStepFull, R.drawable.left_blue_button);
+            Common.setBg(mLabelStepFull, R.drawable.left_green_button);
             break;
         case EvData.HALF_STOP:
-            Common.setBg(mLabelStepHalf, R.drawable.middle_blue_button);
+            Common.setBg(mLabelStepHalf, R.drawable.middle_green_button);
             break;
         case EvData.THIRD_STOP:
-            Common.setBg(mLabelStepThird, R.drawable.right_blue_button);
+            Common.setBg(mLabelStepThird, R.drawable.right_green_button);
             break;
         }
 
