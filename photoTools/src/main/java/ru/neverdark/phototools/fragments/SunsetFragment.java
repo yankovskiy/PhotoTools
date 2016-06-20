@@ -129,14 +129,6 @@ public class SunsetFragment extends UfoFragment {
     private LinearLayout mLinearLayoutCalculationResult;
     private String mLocationName;
     private int mTimeZoneMethod;
-    private View mRowOfficialSunrise;
-    private View mRowOfficialSunset;
-    private View mRowAstroSunrise;
-    private View mRowAstroSunset;
-    private View mRowNauticalSunrise;
-    private View mRowNauticalSunset;
-    private View mRowCivilSunrise;
-    private View mRowCivilSunset;
 
     @Override
     public void bindObjects() {
@@ -171,18 +163,6 @@ public class SunsetFragment extends UfoFragment {
 
         mCivilSunriseResult = (TextView) mView.findViewById(R.id.sunset_label_civilSunriseResult);
         mCivilSunsetResult = (TextView) mView.findViewById(R.id.sunset_label_civilSunsetResult);
-
-        mRowOfficialSunrise = mView.findViewById(R.id.sunset_row_sunrise);
-        mRowOfficialSunset = mView.findViewById(R.id.sunset_row_sunset);
-
-        mRowAstroSunrise = mView.findViewById(R.id.sunset_row_astrolSunrise);
-        mRowAstroSunset = mView.findViewById(R.id.sunset_row_astrolSunset);
-
-        mRowNauticalSunrise = mView.findViewById(R.id.sunset_row_nauticalSunrise);
-        mRowNauticalSunset = mView.findViewById(R.id.sunset_row_nauticalSunset);
-
-        mRowCivilSunrise = mView.findViewById(R.id.sunset_row_civilSunrise);
-        mRowCivilSunset = mView.findViewById(R.id.sunset_row_civilSunset);
 
         mLinearLayoutCalculationResult = (LinearLayout) mView
                 .findViewById(R.id.sunsnet_LinearLayout_calculationResult);
@@ -398,14 +378,6 @@ public class SunsetFragment extends UfoFragment {
         setOnClickListeners(mEditTextDate);
         setOnClickListeners(mButtonCalculate);
         setOnClickListeners(mEditTextLocation);
-        setOnClickListeners(mRowAstroSunrise);
-        setOnClickListeners(mRowAstroSunset);
-        setOnClickListeners(mRowCivilSunrise);
-        setOnClickListeners(mRowCivilSunset);
-        setOnClickListeners(mRowNauticalSunrise);
-        setOnClickListeners(mRowNauticalSunset);
-        setOnClickListeners(mRowOfficialSunrise);
-        setOnClickListeners(mRowOfficialSunset);
         setOnClickListeners(mEditTextTimeZone);
 
         setEditTextLongClick(mEditTextDate);
@@ -567,14 +539,14 @@ public class SunsetFragment extends UfoFragment {
      */
     private void setVisibleCalculculationResult() {
         if (mIsVisibleResult) {
-            setVisibleForResultLine(mRowOfficialSunrise, !mOfficialSunrise.equals("99:99"));
-            setVisibleForResultLine(mRowOfficialSunset, !mOfficialSunset.equals("99:99"));
-            setVisibleForResultLine(mRowCivilSunrise, !mCivilSunrise.equals("99:99"));
-            setVisibleForResultLine(mRowCivilSunset, !mCivilSunset.equals("99:99"));
-            setVisibleForResultLine(mRowNauticalSunrise, !mNauticalSunrise.equals("99:99"));
-            setVisibleForResultLine(mRowNauticalSunset, !mNauticalSunset.equals("99:99"));
-            setVisibleForResultLine(mRowAstroSunrise, !mAstroSunrise.equals("99:99"));
-            setVisibleForResultLine(mRowAstroSunset, !mAstroSunset.equals("99:99"));
+            mOfficialSunrise = getCalcResult(mOfficialSunrise);
+            mOfficialSunset = getCalcResult(mOfficialSunset);
+            mCivilSunrise = getCalcResult(mCivilSunrise);
+            mCivilSunset = getCalcResult(mCivilSunset);
+            mNauticalSunrise = getCalcResult(mNauticalSunrise);
+            mNauticalSunset = getCalcResult(mNauticalSunset);
+            mAstroSunrise = getCalcResult(mAstroSunrise);
+            mAstroSunset = getCalcResult(mAstroSunset);
 
             mOfficialSunriseResult.setText(mOfficialSunrise);
             mOfficialSunsetResult.setText(mOfficialSunset);
@@ -594,8 +566,8 @@ public class SunsetFragment extends UfoFragment {
         }
     }
 
-    private void setVisibleForResultLine(View resultLine, boolean isVisible) {
-        resultLine.setVisibility(isVisible? View.VISIBLE : View.GONE);
+    private String getCalcResult(String result) {
+        return result.equals("99:99") ? getString(R.string.not) : result;
     }
 
     /**

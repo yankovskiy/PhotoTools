@@ -229,4 +229,5 @@
     <string name="evdiff_difference">Разница между значениями:</string>
     <string name="long_tap_for_choose_location">Долгое нажатие на карте для выбора места</string>
     <string name="hide">Скрыть</string>
+    <string name="not" >Нет</string>
 </resources>

@@ -224,4 +224,5 @@
     <string name="evdiff_difference">Difference between values:</string>
     <string name="long_tap_for_choose_location">Long tap on the map for choose location</string>
     <string name="hide">Hide</string>
+    <string name="not">Not</string>
 </resources>
