@@ -230,4 +230,5 @@
     <string name="long_tap_for_choose_location">Долгое нажатие на карте для выбора места</string>
     <string name="hide">Скрыть</string>
     <string name="not" >Нет</string>
+    <string name="show_ndfilter_equ">Эквивалент ND-фильтра</string>
 </resources>

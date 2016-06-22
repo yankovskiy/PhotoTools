@@ -34,7 +34,9 @@ public class EvData {
     /**
      * Table containing all possible exposure compensation values.
      */
-    private static final String EV_COMPENSATION_LIST[] = {"-10 EV", "-9 ⅔ EV",
+    private static final String EV_COMPENSATION_LIST[] = {
+            "-11 EV", "-10 ⅔ EV", "-10 ½ EV", "-10 ⅓ EV",
+            "-10 EV", "-9 ⅔ EV",
             "-9 ½ EV", "-9 ⅓ EV", "-9 EV", "-8 ⅔ EV", "-8 ½ EV", "-8 ⅓ EV",
             "-8 EV", "-7 ⅔ EV", "-7 ½ EV", "-7 ⅓ EV", "-7 EV", "-6 ⅔ EV",
             "-6 ½ EV", "-6 ⅓ EV", "-6 EV", "-5 ⅔ EV", "-5 ½ EV", "-5 ⅓ EV",
@@ -46,7 +48,32 @@ public class EvData {
             "+3 ⅓ EV", "+3 ½ EV", "+3 ⅔ EV", "+4 EV", "+4 ⅓ EV", "+4 ½ EV", "+4 ⅔ EV",
             "+5 EV", "+5 ⅓ EV", "+5 ½ EV", "+5 ⅔ EV", "+6 EV", "+6 ⅓ EV", "+6 ½ EV",
             "+6 ⅔ EV", "+7 EV", "+7 ⅓ EV", "+7 ½ EV", "+7 ⅔ EV", "+8 EV", "+8 ⅓ EV",
-            "+8 ½ EV", "+8 ⅔ EV", "+9 EV", "+9 ⅓ EV", "+9 ½ EV", "+9 ⅔ EV", "+10 EV"};
+            "+8 ½ EV", "+8 ⅔ EV", "+9 EV", "+9 ⅓ EV", "+9 ½ EV", "+9 ⅔ EV", "+10 EV",
+            "+10 ⅓ EV", "+10 ½ EV", "+10 ⅔ EV", "+11 EV"
+    };
+
+    private static final String EV_ND_COMPENSATION_LIST[] = {
+            "-11 EV", "-10 ⅔ EV", "-10 ½ EV", "-10 ⅓ EV",
+            "-10 EV", "-9 ⅔ EV",
+            "-9 ½ EV", "-9 ⅓ EV", "-9 EV", "-8 ⅔ EV", "-8 ½ EV", "-8 ⅓ EV",
+            "-8 EV", "-7 ⅔ EV", "-7 ½ EV", "-7 ⅓ EV", "-7 EV", "-6 ⅔ EV",
+            "-6 ½ EV", "-6 ⅓ EV", "-6 EV", "-5 ⅔ EV", "-5 ½ EV", "-5 ⅓ EV",
+            "-5 EV", "-4 ⅔ EV", "-4 ½ EV", "-4 ⅓ EV", "-4 EV", "-3 ⅔ EV",
+            "-3 ½ EV", "-3 ⅓ EV", "-3 EV", "-2 ⅔ EV", "-2 ½ EV", "-2 ⅓ EV",
+            "-2 EV", "-1 ⅔ EV", "-1 ½ EV", "-1 ⅓ EV", "-1 EV", "-⅔ EV",
+            "-½ EV", "-⅓ EV", "0 EV", "+⅓ EV", "+½ EV", "+⅔ EV",
+            "+1 EV / ND2", "+1 ⅓ EV / ND2 + ⅓ EV", "+1 ½ EV / ND2 + ½ EV", "+1 ⅔ EV / ND2 + ⅔ EV",
+            "+2 EV / ND4", "+2 ⅓ EV / ND4 +⅓ EV", "+2 ½ EV / ND4 +½ EV", "+2 ⅔ EV / ND4 +⅔ EV",
+            "+3 EV / ND8", "+3 ⅓ EV / ND8 +⅓ EV", "+3 ½ EV / ND8 +½ EV", "+3 ⅔ EV / ND8 +⅔ EV",
+            "+4 EV / ND16", "+4 ⅓ EV / ND16 +⅓ EV", "+4 ½ EV / ND16 +½ EV", "+4 ⅔ EV / ND16 +⅔ EV",
+            "+5 EV / ND32", "+5 ⅓ EV / ND32 +⅓ EV", "+5 ½ EV / ND32 +½ EV", "+5 ⅔ EV / ND32 +⅔ EV",
+            "+6 EV / ND64", "+6 ⅓ EV / ND64 +⅓ EV", "+6 ½ EV / ND64 +½ EV", "+6 ⅔ EV / ND64 +⅔ EV",
+            "+7 EV / ND128", "+7 ⅓ EV / ND128 +⅓ EV", "+7 ½ EV / ND128 +½ EV", "+7 ⅔ EV / ND128 +⅔ EV",
+            "+8 EV / ND256", "+8 ⅓ EV / ND256 +⅓ EV", "+8 ½ EV / ND256 +½ EV", "+8 ⅔ EV / ND256 +⅔ EV",
+            "+9 EV / ND512", "+9 ⅓ EV / ND512 +⅓ EV", "+9 ½ EV / ND512 +½ EV", "+9 ⅔ EV / ND512 +⅔ EV",
+            "+10 EV / ND1024", "+10 ⅓ EV / ND1024 +⅓ EV", "+10 ½ EV / ND1024 +½ EV", "+10 ⅔ EV / ND1024 +⅔ EV",
+            "+11 EV / ND2048"
+    };
 
     private static final String EV_FULL_COMPENSATION_LIST[] = {
             "-60 EV",
@@ -84,36 +111,36 @@ public class EvData {
             "-5 EV", "-4 ⅔ EV", "-4 ½ EV", "-4 ⅓ EV", "-4 EV", "-3 ⅔ EV", "-3 ½ EV", "-3 ⅓ EV",
             "-3 EV", "-2 ⅔ EV", "-2 ½ EV", "-2 ⅓ EV", "-2 EV", "-1 ⅔ EV", "-1 ½ EV", "-1 ⅓ EV",
             "-1 EV", "-⅔ EV", "-½ EV", "-⅓ EV",
-            "0 EV", "⅓ EV", "½ EV", "⅔ EV", "1 EV", "1 ⅓ EV", "1 ½ EV", "1 ⅔ EV", "2 EV", "2 ⅓ EV",
-            "2 ½ EV", "2 ⅔ EV", "3 EV", "3 ⅓ EV", "3 ½ EV", "3 ⅔ EV", "4 EV", "4 ⅓ EV", "4 ½ EV",
-            "4 ⅔ EV", "5 EV", "5 ⅓ EV", "5 ½ EV", "5 ⅔ EV", "6 EV", "6 ⅓ EV", "6 ½ EV", "6 ⅔ EV",
-            "7 EV", "7 ⅓ EV", "7 ½ EV", "7 ⅔ EV", "8 EV", "8 ⅓ EV", "8 ½ EV", "8 ⅔ EV", "9 EV",
-            "9 ⅓ EV", "9 ½ EV", "9 ⅔ EV", "10 EV", "10 ⅓ EV", "10 ½ EV", "10 ⅔ EV", "11 EV",
-            "11 ⅓ EV", "11 ½ EV", "11 ⅔ EV", "12 EV", "12 ⅓ EV", "12 ½ EV", "12 ⅔ EV", "13 EV",
-            "13 ⅓ EV", "13 ½ EV", "13 ⅔ EV", "14 EV", "14 ⅓ EV", "14 ½ EV", "14 ⅔ EV", "15 EV",
-            "15 ⅓ EV", "15 ½ EV", "15 ⅔ EV", "16 EV", "16 ⅓ EV", "16 ½ EV", "16 ⅔ EV", "17 EV",
-            "17 ⅓ EV", "17 ½ EV", "17 ⅔ EV", "18 EV", "18 ⅓ EV", "18 ½ EV", "18 ⅔ EV", "19 EV",
-            "19 ⅓ EV", "19 ½ EV", "19 ⅔ EV", "20 EV", "20 ⅓ EV", "20 ½ EV", "20 ⅔ EV", "21 EV",
-            "21 ⅓ EV", "21 ½ EV", "21 ⅔ EV", "22 EV", "22 ⅓ EV", "22 ½ EV", "22 ⅔ EV", "23 EV",
-            "23 ⅓ EV", "23 ½ EV", "23 ⅔ EV", "24 EV", "24 ⅓ EV", "24 ½ EV", "24 ⅔ EV", "25 EV",
-            "25 ⅓ EV", "25 ½ EV", "25 ⅔ EV", "26 EV", "26 ⅓ EV", "26 ½ EV", "26 ⅔ EV", "27 EV",
-            "27 ⅓ EV", "27 ½ EV", "27 ⅔ EV", "28 EV", "28 ⅓ EV", "28 ½ EV", "28 ⅔ EV", "29 EV",
-            "29 ⅓ EV", "29 ½ EV", "29 ⅔ EV", "30 EV", "30 ⅓ EV", "30 ½ EV", "30 ⅔ EV", "31 EV",
-            "31 ⅓ EV", "31 ½ EV", "31 ⅔ EV", "32 EV", "32 ⅓ EV", "32 ½ EV", "32 ⅔ EV", "33 EV",
-            "33 ⅓ EV", "33 ½ EV", "33 ⅔ EV", "34 EV", "34 ⅓ EV", "34 ½ EV", "34 ⅔ EV", "35 EV",
-            "35 ⅓ EV", "35 ½ EV", "35 ⅔ EV", "36 EV", "36 ⅓ EV", "36 ½ EV", "36 ⅔ EV", "37 EV",
-            "37 ⅓ EV", "37 ½ EV", "37 ⅔ EV", "38 EV", "38 ⅓ EV", "38 ½ EV", "38 ⅔ EV", "39 EV",
-            "39 ⅓ EV", "39 ½ EV", "39 ⅔ EV", "40 EV", "40 ⅓ EV", "40 ½ EV", "40 ⅔ EV", "41 EV",
-            "41 ⅓ EV", "41 ½ EV", "41 ⅔ EV", "42 EV", "42 ⅓ EV", "42 ½ EV", "42 ⅔ EV", "43 EV",
-            "43 ⅓ EV", "43 ½ EV", "43 ⅔ EV", "44 EV", "44 ⅓ EV", "44 ½ EV", "44 ⅔ EV", "45 EV",
-            "45 ⅓ EV", "45 ½ EV", "45 ⅔ EV", "46 EV", "46 ⅓ EV", "46 ½ EV", "46 ⅔ EV", "47 EV",
-            "47 ⅓ EV", "47 ½ EV", "47 ⅔ EV", "48 EV", "48 ⅓ EV", "48 ½ EV", "48 ⅔ EV", "49 EV",
-            "49 ⅓ EV", "49 ½ EV", "49 ⅔ EV", "50 EV", "50 ⅓ EV", "50 ½ EV", "50 ⅔ EV", "51 EV",
-            "51 ⅓ EV", "51 ½ EV", "51 ⅔ EV", "52 EV", "52 ⅓ EV", "52 ½ EV", "52 ⅔ EV", "53 EV",
-            "53 ⅓ EV", "53 ½ EV", "53 ⅔ EV", "54 EV", "54 ⅓ EV", "54 ½ EV", "54 ⅔ EV", "55 EV",
-            "55 ⅓ EV", "55 ½ EV", "55 ⅔ EV", "56 EV", "56 ⅓ EV", "56 ½ EV", "56 ⅔ EV", "57 EV",
-            "57 ⅓ EV", "57 ½ EV", "57 ⅔ EV", "58 EV", "58 ⅓ EV", "58 ½ EV", "58 ⅔ EV", "59 EV",
-            "59 ⅓ EV", "59 ½ EV", "59 ⅔ EV", "60 EV"
+            "+0 EV", "+⅓ EV", "+½ EV", "+⅔ EV", "+1 EV", "+1 ⅓ EV", "+1 ½ EV", "+1 ⅔ EV", "+2 EV", "+2 ⅓ EV",
+            "+2 ½ EV", "+2 ⅔ EV", "+3 EV", "+3 ⅓ EV", "+3 ½ EV", "+3 ⅔ EV", "+4 EV", "+4 ⅓ EV", "+4 ½ EV",
+            "+4 ⅔ EV", "+5 EV", "+5 ⅓ EV", "+5 ½ EV", "+5 ⅔ EV", "+6 EV", "+6 ⅓ EV", "+6 ½ EV", "+6 ⅔ EV",
+            "+7 EV", "+7 ⅓ EV", "+7 ½ EV", "+7 ⅔ EV", "+8 EV", "+8 ⅓ EV", "+8 ½ EV", "+8 ⅔ EV", "+9 EV",
+            "+9 ⅓ EV", "+9 ½ EV", "+9 ⅔ EV", "+10 EV", "+10 ⅓ EV", "+10 ½ EV", "+10 ⅔ EV", "+11 EV",
+            "+11 ⅓ EV", "+11 ½ EV", "+11 ⅔ EV", "+12 EV", "+12 ⅓ EV", "+12 ½ EV", "+12 ⅔ EV", "+13 EV",
+            "+13 ⅓ EV", "+13 ½ EV", "+13 ⅔ EV", "+14 EV", "+14 ⅓ EV", "+14 ½ EV", "+14 ⅔ EV", "+15 EV",
+            "+15 ⅓ EV", "+15 ½ EV", "+15 ⅔ EV", "+16 EV", "+16 ⅓ EV", "+16 ½ EV", "+16 ⅔ EV", "+17 EV",
+            "+17 ⅓ EV", "+17 ½ EV", "+17 ⅔ EV", "+18 EV", "+18 ⅓ EV", "+18 ½ EV", "+18 ⅔ EV", "+19 EV",
+            "+19 ⅓ EV", "+19 ½ EV", "+19 ⅔ EV", "+20 EV", "+20 ⅓ EV", "+20 ½ EV", "+20 ⅔ EV", "+21 EV",
+            "+21 ⅓ EV", "+21 ½ EV", "+21 ⅔ EV", "+22 EV", "+22 ⅓ EV", "+22 ½ EV", "+22 ⅔ EV", "+23 EV",
+            "+23 ⅓ EV", "+23 ½ EV", "+23 ⅔ EV", "+24 EV", "+24 ⅓ EV", "+24 ½ EV", "+24 ⅔ EV", "+25 EV",
+            "+25 ⅓ EV", "+25 ½ EV", "+25 ⅔ EV", "+26 EV", "+26 ⅓ EV", "+26 ½ EV", "+26 ⅔ EV", "+27 EV",
+            "+27 ⅓ EV", "+27 ½ EV", "+27 ⅔ EV", "+28 EV", "+28 ⅓ EV", "+28 ½ EV", "+28 ⅔ EV", "+29 EV",
+            "+29 ⅓ EV", "+29 ½ EV", "+29 ⅔ EV", "+30 EV", "+30 ⅓ EV", "+30 ½ EV", "+30 ⅔ EV", "+31 EV",
+            "+31 ⅓ EV", "+31 ½ EV", "+31 ⅔ EV", "+32 EV", "+32 ⅓ EV", "+32 ½ EV", "+32 ⅔ EV", "+33 EV",
+            "+33 ⅓ EV", "+33 ½ EV", "+33 ⅔ EV", "+34 EV", "+34 ⅓ EV", "+34 ½ EV", "+34 ⅔ EV", "+35 EV",
+            "+35 ⅓ EV", "+35 ½ EV", "+35 ⅔ EV", "+36 EV", "+36 ⅓ EV", "+36 ½ EV", "+36 ⅔ EV", "+37 EV",
+            "+37 ⅓ EV", "+37 ½ EV", "+37 ⅔ EV", "+38 EV", "+38 ⅓ EV", "+38 ½ EV", "+38 ⅔ EV", "+39 EV",
+            "+39 ⅓ EV", "+39 ½ EV", "+39 ⅔ EV", "+40 EV", "+40 ⅓ EV", "+40 ½ EV", "+40 ⅔ EV", "+41 EV",
+            "+41 ⅓ EV", "+41 ½ EV", "+41 ⅔ EV", "+42 EV", "+42 ⅓ EV", "+42 ½ EV", "+42 ⅔ EV", "+43 EV",
+            "+43 ⅓ EV", "+43 ½ EV", "+43 ⅔ EV", "+44 EV", "+44 ⅓ EV", "+44 ½ EV", "+44 ⅔ EV", "+45 EV",
+            "+45 ⅓ EV", "+45 ½ EV", "+45 ⅔ EV", "+46 EV", "+46 ⅓ EV", "+46 ½ EV", "+46 ⅔ EV", "+47 EV",
+            "+47 ⅓ EV", "+47 ½ EV", "+47 ⅔ EV", "+48 EV", "+48 ⅓ EV", "+48 ½ EV", "+48 ⅔ EV", "+49 EV",
+            "+49 ⅓ EV", "+49 ½ EV", "+49 ⅔ EV", "+50 EV", "+50 ⅓ EV", "+50 ½ EV", "+50 ⅔ EV", "+51 EV",
+            "+51 ⅓ EV", "+51 ½ EV", "+51 ⅔ EV", "+52 EV", "+52 ⅓ EV", "+52 ½ EV", "+52 ⅔ EV", "+53 EV",
+            "+53 ⅓ EV", "+53 ½ EV", "+53 ⅔ EV", "+54 EV", "+54 ⅓ EV", "+54 ½ EV", "+54 ⅔ EV", "+55 EV",
+            "+55 ⅓ EV", "+55 ½ EV", "+55 ⅔ EV", "+56 EV", "+56 ⅓ EV", "+56 ½ EV", "+56 ⅔ EV", "+57 EV",
+            "+57 ⅓ EV", "+57 ½ EV", "+57 ⅔ EV", "+58 EV", "+58 ⅓ EV", "+58 ½ EV", "+58 ⅔ EV", "+59 EV",
+            "+59 ⅓ EV", "+59 ½ EV", "+59 ⅔ EV", "+60 EV"
     };
 
     /**
@@ -176,6 +203,10 @@ public class EvData {
 
     public static String[] getFullEvCompensationValues(int stopDistribution) {
         return getValues(EV_FULL_COMPENSATION_LIST, stopDistribution);
+    }
+
+    public static String[] getEvNdCompensationValues(int stopDistribution) {
+        return getValues(EV_ND_COMPENSATION_LIST, stopDistribution);
     }
 
     public static Double[] getISOValues(int stopDistribution, int minIsoIndex,
