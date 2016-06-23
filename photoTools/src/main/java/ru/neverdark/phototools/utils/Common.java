@@ -1,26 +1,29 @@
 /*******************************************************************************
  * Copyright (C) 2013-2016 Artem Yankovskiy (artemyankovskiy@gmail.com).
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package ru.neverdark.phototools.utils;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Toast;
 
@@ -39,28 +42,13 @@ import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 import ru.neverdark.phototools.BuildConfig;
 
 public class Common {
-    public static class MinMaxValues {
-        public String getMinValue() {
-            return mMinValue;
-        }
-
-        public String getMaxValue() {
-            return mMaxValue;
-        }
-
-        private String mMinValue;
-        private String mMaxValue;
-
-        public static MinMaxValues getMinMax(WheelView wheel) {
-            MinMaxValues minMax = new MinMaxValues();
-            int count = wheel.getViewAdapter().getItemsCount();
-            minMax.mMinValue = (String) wheel.getViewAdapter()
-                    .getItemByIndex(0);
-            minMax.mMaxValue = (String) wheel.getViewAdapter().getItemByIndex(
-                    count - 1);
-
-            return minMax;
-        }
+    /**
+     * Проверяет наличие прав на доступ к геолокации
+     * @param context контекст приложения
+     * @return true Если права на доступ к геолокации есть
+     */
+    public static boolean isHavePermissions(Context context) {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     public static String getHttpContent(String httpUrl) {
@@ -179,6 +167,30 @@ public class Common {
             marketIntent.setData(Uri
                     .parse("market://details?id=ru.neverdark.phototoolsdonate"));
             context.startActivity(marketIntent);
+        }
+    }
+
+    public static class MinMaxValues {
+        private String mMinValue;
+        private String mMaxValue;
+
+        public static MinMaxValues getMinMax(WheelView wheel) {
+            MinMaxValues minMax = new MinMaxValues();
+            int count = wheel.getViewAdapter().getItemsCount();
+            minMax.mMinValue = (String) wheel.getViewAdapter()
+                    .getItemByIndex(0);
+            minMax.mMaxValue = (String) wheel.getViewAdapter().getItemByIndex(
+                    count - 1);
+
+            return minMax;
+        }
+
+        public String getMinValue() {
+            return mMinValue;
+        }
+
+        public String getMaxValue() {
+            return mMaxValue;
         }
     }
 }

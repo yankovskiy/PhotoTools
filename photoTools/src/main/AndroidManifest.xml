@@ -17,14 +17,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.neverdark.phototools">
 
-    <!-- Used by the API to download map tiles from Google Maps servers. -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- Allows the API to check the connection status in order to determine whether data can be downloaded. -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- Allows the API to cache map tile data in the device's external storage area. -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!-- Allows the API to access Google web-based services. -->
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <!-- Allows the API to use WiFi or mobile cell data (or both) to determine the device's location. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- Allows the API to use the Global Positioning System (GPS) to determine the device's location to within a very small area. -->

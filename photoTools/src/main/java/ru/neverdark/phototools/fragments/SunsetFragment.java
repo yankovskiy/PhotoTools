@@ -15,12 +15,14 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -38,24 +40,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.luckycatlabs.sunrisesunset.dto.Location;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import ru.neverdark.abs.OnCallback;
 import ru.neverdark.abs.UfoFragment;
@@ -75,6 +70,7 @@ import ru.neverdark.phototools.utils.Log;
  * Fragment contains sunrise / sunset UI
  */
 public class SunsetFragment extends UfoFragment {
+    private static final int SUNSET_ACCESS_FINE_LOCATION = 1;
     private EditText mEditTextDate;
     private int mYear;
     private int mMonth;
@@ -242,12 +238,14 @@ public class SunsetFragment extends UfoFragment {
         boolean success = false;
         Log.message("Enter");
 
-        if (mGeoLocationService.canGetLocation()) {
-            mLatitude = mGeoLocationService.getLatitude();
-            mLongitude = mGeoLocationService.getLongitude();
-            Log.variable("mlatitude", String.valueOf(mLatitude));
-            Log.variable("mlongitude", String.valueOf(mLongitude));
-            success = (mLatitude != 0.0 || mLongitude != 0.0);
+        if (Common.isHavePermissions(mContext)) {
+            if (mGeoLocationService.canGetLocation()) {
+                mLatitude = mGeoLocationService.getLatitude();
+                mLongitude = mGeoLocationService.getLongitude();
+                Log.variable("mlatitude", String.valueOf(mLatitude));
+                Log.variable("mlongitude", String.valueOf(mLongitude));
+                success = (mLatitude != 0.0 || mLongitude != 0.0);
+            }
         }
 
         return success;
@@ -268,7 +266,7 @@ public class SunsetFragment extends UfoFragment {
      */
     private void handleCurrentLocation() {
         Log.message("Enter");
-        // mSelectionId = Constants.LOCATION_CURRENT_POSITION_CHOICE;
+        mSelectionId = Constants.LOCATION_CURRENT_POSITION_CHOICE;
         if (mTimeZoneMethod == Constants.AUTO_TIMEZONE_METHOD) {
             setDeviceTimeZone();
             mEditTextTimeZone.setText(String.format("%s: %s", getString(R.string.sunset_label_auto), generateTzLabel()));
@@ -279,8 +277,7 @@ public class SunsetFragment extends UfoFragment {
     /**
      * Handles custom location on the map
      *
-     * @param locationRecord
-     *            object contains row from database
+     * @param locationRecord object contains row from database
      */
     private void handleCustomLocation(final LocationRecord locationRecord) {
         Log.message("Enter");
@@ -331,12 +328,13 @@ public class SunsetFragment extends UfoFragment {
      * @return true if Google service is available
      */
     private boolean isGoogleServiceAvailabe() {
-        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mContext);
+        GoogleApiAvailability api = GoogleApiAvailability.getInstance();
+        int status = api.isGooglePlayServicesAvailable(mContext);
         boolean isAvailable = false;
         if (status == ConnectionResult.SUCCESS) {
             isAvailable = true;
         } else {
-            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, getActivity(), 1);
+            Dialog dialog = api.getErrorDialog(getActivity(), status, 1);
             dialog.show();
         }
 
@@ -363,7 +361,7 @@ public class SunsetFragment extends UfoFragment {
         }
     }
 
-        @Override
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.message("Enter");
         super.onCreateView(inflater, container, savedInstanceState);
@@ -391,17 +389,38 @@ public class SunsetFragment extends UfoFragment {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (!Common.isHavePermissions(mContext)) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, SUNSET_ACCESS_FINE_LOCATION);
+        } else {
+            bindToGeoService();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case SUNSET_ACCESS_FINE_LOCATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    bindToGeoService();
+                }
+                break;
+        }
+    }
+
+            @Override
     public void onPause() {
         Log.message("Enter");
         super.onPause();
         unbindFromGeoService();
     }
 
+
     @Override
-    public void onStart() {
+    public void onResume() {
         Log.message("Enter");
-        super.onStart();
-        bindToGeoService();
+        super.onResume();
     }
 
     /**
@@ -414,8 +433,7 @@ public class SunsetFragment extends UfoFragment {
     /**
      * Sets long click listener for one EditText
      *
-     * @param editText
-     *            EditText for sets long click listener
+     * @param editText EditText for sets long click listener
      */
     private void setEditTextLongClick(final EditText editText) {
         Log.message("Enter");
@@ -441,12 +459,18 @@ public class SunsetFragment extends UfoFragment {
     /**
      * Sets onClickListeners for views
      *
-     * @param view
-     *            view for set onClickListener
+     * @param view view for set onClickListener
      */
     private void setOnClickListeners(View view) {
         Log.message("Enter");
         view.setOnClickListener(new OnClickListener() {
+
+            class SunsetCurrentLocationErrorListener implements OnCallback, ConfirmDialog.OnPositiveClickListener {
+                @Override
+                public void onPositiveClickHandler() {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, SUNSET_ACCESS_FINE_LOCATION);
+                }
+            }
 
             @Override
             public void onClick(View arg0) {
@@ -484,21 +508,28 @@ public class SunsetFragment extends UfoFragment {
                         break;
 
                     case R.id.sunset_button_calculate:
-
-                        if (mSelectionId > Constants.LOCATION_CURRENT_POSITION_CHOICE) {
-                            calculateSunset();
-                        } else {
-                        /* if we have coordinates, calculation sunset / sunrise */
-                            if (mGeoLocationService.canGetLocation()) {
+                            if (mSelectionId > Constants.LOCATION_CURRENT_POSITION_CHOICE) {
                                 calculateSunset();
-                            /*
-                             * we dont't have coordinates and we try getting
-                             * current location, show alert dialog
-                             */
                             } else {
-                                showSettingsAlert();
+                                if (Common.isHavePermissions(mContext)) {
+                                    /* if we have coordinates, calculation sunset / sunrise */
+                                    if (mGeoLocationService.canGetLocation()) {
+                                        calculateSunset();
+                                    /*
+                                     * we dont't have coordinates and we try getting
+                                     * current location, show alert dialog
+                                     */
+                                    } else {
+                                        showSettingsAlert();
+                                    }
+                                } else {
+                                    ConfirmDialog dialog = ConfirmDialog.getInstance(mContext);
+                                    dialog.setTitle(R.string.attention);
+                                    dialog.setMessage(R.string.sunset_current_location_error);
+                                    dialog.setCallback(new SunsetCurrentLocationErrorListener());
+                                    dialog.show(getFragmentManager(), ConfirmDialog.DIALOG_ID);
+                                }
                             }
-                        }
                         break;
                     case R.id.sunset_editText_location:
                         showLocationSelectionDialog();
@@ -581,8 +612,7 @@ public class SunsetFragment extends UfoFragment {
     /**
      * Shows information dialog with description for sunset/sunrise type
      *
-     * @param messageId
-     *            Id message for displaying
+     * @param messageId Id message for displaying
      */
     private void showInformationDialog(final int messageId) {
         Log.message("Enter");
@@ -594,8 +624,7 @@ public class SunsetFragment extends UfoFragment {
     /**
      * Shows information message
      *
-     * @param resourceId
-     *            string Id contains information message
+     * @param resourceId string Id contains information message
      */
     private void showInformationMesssage(int resourceId) {
         Toast.makeText(mContext, resourceId, Toast.LENGTH_LONG).show();
@@ -614,7 +643,7 @@ public class SunsetFragment extends UfoFragment {
     /**
      * Function to show settings alert dialog On pressing Settings button will
      * launch Settings Options
-     * */
+     */
     private void showSettingsAlert() {
         Log.message("Enter");
         AlertSettingsDialog alertFragment = AlertSettingsDialog.getInstance(mContext);
@@ -698,11 +727,9 @@ public class SunsetFragment extends UfoFragment {
         @Override
         public void onSelectLocationHandler(LocationRecord record) {
             Log.message("Enter");
-            mSelectionId = record._id;
-
-            if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
+            if (record._id == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
                 handleCurrentLocation();
-            } else if (mSelectionId == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
+            } else if (record._id == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
                 handlePointOnMap();
             } else {
                 Log.variable("mSelectionId", String.valueOf(mSelectionId));

@@ -226,4 +226,6 @@
     <string name="hide">Hide</string>
     <string name="not">Not</string>
     <string name="show_ndfilter_equ" >ND-filter equivalent</string>
+    <string name="attention" >Attention</string>
+    <string name="sunset_current_location_error" >It isn’t possible to pick the location. Check permissions?</string>
 </resources>

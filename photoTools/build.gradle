@@ -6,7 +6,7 @@ android {
     defaultConfig {
         applicationId "ru.neverdark.phototools"
         minSdkVersion 11
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 71
         versionName '0.14'
     }

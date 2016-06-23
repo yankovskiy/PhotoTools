@@ -231,4 +231,6 @@
     <string name="hide">Скрыть</string>
     <string name="not" >Нет</string>
     <string name="show_ndfilter_equ">Эквивалент ND-фильтра</string>
+    <string name="attention" >Внимание</string>
+    <string name="sunset_current_location_error" >Невозможно определить ваше местоположение. Проверить права доступа?</string>
 </resources>

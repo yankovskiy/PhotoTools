@@ -17,12 +17,16 @@
  */
 package ru.neverdark.phototools;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -70,6 +74,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
     private Context mContext;
     private MenuItem mMenuItemSearch;
     private boolean mIsVisible = false;
+    private static final int MAP_ACCESS_FINE_LOCATION = 1;
 
     /**
      * Inits process for searching coordinates by address
@@ -95,6 +100,17 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
         dialog.show(getSupportFragmentManager(), ShowMessageDialog.DIALOG_TAG);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MAP_ACCESS_FINE_LOCATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mMap.setMyLocationEnabled(true);
+                }
+                break;
+        }
+    }
+
     /**
      * Inits Google Map
      */
@@ -106,7 +122,6 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
                         mMap = googleMap;
-                        mMap.setMyLocationEnabled(true);
                         mMap.setOnMapLongClickListener(mCurrentActivity);
                         /* gets current coord if have */
                         Intent intent = getIntent();
@@ -177,8 +192,18 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
                             });
                             snack.show();
                         }
+
+                        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                            mMap.setMyLocationEnabled(true);
+                        } else {
+                            requirePerms();
+                        }
                     }
                 });
+    }
+
+    private void requirePerms() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MAP_ACCESS_FINE_LOCATION);
     }
 
     @Override
