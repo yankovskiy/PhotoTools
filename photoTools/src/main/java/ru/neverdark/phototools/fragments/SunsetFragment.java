@@ -344,6 +344,10 @@ public class SunsetFragment extends UfoFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.message("Enter");
+        if (mGeoLocationService == null && Common.isHavePermissions(mContext)) {
+            bindToGeoService();
+        }
+
         if (requestCode == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
             if (resultCode == Activity.RESULT_OK) {
                 mLatitude = data.getDoubleExtra(Constants.LOCATION_LATITUDE, 0.0);

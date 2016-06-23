@@ -35,7 +35,7 @@
 
         <!-- Debug API Key for Google Maps v2 -->
         <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
+            android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAlDaCEEoH8BaIY7BL1nszqDQi80mZgSjE" />
         <meta-data
             android:name="com.google.android.gms.version"
