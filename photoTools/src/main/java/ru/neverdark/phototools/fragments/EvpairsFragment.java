@@ -591,6 +591,7 @@ public class EvpairsFragment extends UfoFragment {
         }
 
         updateStep();
+        setErrorHighlight(false);
     }
 
     private void wheelsHandler() {
