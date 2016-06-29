@@ -123,6 +123,14 @@ public class SunsetFragment extends UfoFragment {
     private LinearLayout mLinearLayoutCalculationResult;
     private String mLocationName;
     private int mTimeZoneMethod;
+    private View mRowOfficialSunrise;
+    private View mRowOfficialSunset;
+    private View mRowAstroSunrise;
+    private View mRowAstroSunset;
+    private View mRowNauticalSunrise;
+    private View mRowNauticalSunset;
+    private View mRowCivilSunrise;
+    private View mRowCivilSunset;
 
     @Override
     public void bindObjects() {
@@ -160,6 +168,18 @@ public class SunsetFragment extends UfoFragment {
 
         mLinearLayoutCalculationResult = (LinearLayout) mView
                 .findViewById(R.id.sunsnet_LinearLayout_calculationResult);
+
+        mRowOfficialSunrise = mView.findViewById(R.id.sunset_row_sunrise);
+        mRowOfficialSunset = mView.findViewById(R.id.sunset_row_sunset);
+
+        mRowAstroSunrise = mView.findViewById(R.id.sunset_row_astrolSunrise);
+        mRowAstroSunset = mView.findViewById(R.id.sunset_row_astrolSunset);
+
+        mRowNauticalSunrise = mView.findViewById(R.id.sunset_row_nauticalSunrise);
+        mRowNauticalSunset = mView.findViewById(R.id.sunset_row_nauticalSunset);
+
+        mRowCivilSunrise = mView.findViewById(R.id.sunset_row_civilSunrise);
+        mRowCivilSunset = mView.findViewById(R.id.sunset_row_civilSunset);
     }
 
     /**
@@ -379,6 +399,14 @@ public class SunsetFragment extends UfoFragment {
         setOnClickListeners(mButtonCalculate);
         setOnClickListeners(mEditTextLocation);
         setOnClickListeners(mEditTextTimeZone);
+        setOnClickListeners(mRowAstroSunrise);
+        setOnClickListeners(mRowAstroSunset);
+        setOnClickListeners(mRowCivilSunrise);
+        setOnClickListeners(mRowCivilSunset);
+        setOnClickListeners(mRowNauticalSunrise);
+        setOnClickListeners(mRowNauticalSunset);
+        setOnClickListeners(mRowOfficialSunrise);
+        setOnClickListeners(mRowOfficialSunset);
 
         setEditTextLongClick(mEditTextDate);
         setEditTextLongClick(mEditTextLocation);
