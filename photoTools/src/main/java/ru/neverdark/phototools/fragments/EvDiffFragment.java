@@ -310,7 +310,7 @@ public class EvDiffFragment extends UfoFragment {
         EvWheelsData data = getWheelsPositions();
         mEvCalculator.prepare(data.getCurrentAperturePosition(), data.getCurrentIsoPosition(), data.getCurrentShutterPosition(),
                 data.getNewAperturePosition(), data.getNewIsoPosition(), data.getNewShutterPosition(), EvData.INVALID_INDEX, EvData.INVALID_INDEX);
-        String result = mEvCalculator.calculateEvDiff();
+        String result = " " + mEvCalculator.calculateEvDiff();
         mCalculationResultLabel.setText(result);
     }
 

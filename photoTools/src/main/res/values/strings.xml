@@ -40,7 +40,7 @@
     <string name="about_label_licenseInformation"><![CDATA[<b>Photo Tools</b> is distributing under the license GPL v3. You can receive the source code of the program under the link: <a href="https://github.com/yankovskiy/PhotoTools">github.com</a>]]></string>
     <string name="about_label_version">Version:</string>
     
-    <string name="app_name">Photo Tools</string>
+    <string name="app_name" translatable="false">Photo Tools</string>
     
     <string name="dof_label_aperture">Aperture</string>
     <string name="dof_label_calculationResult">Result of calculations</string>
@@ -161,7 +161,7 @@
     <string name="sunset_information_timeZoneStart">Determining of the time zone. Please, wait</string>
     <string name="sunset_information_timeZoneSuccess">The time zone is successfully picked</string>
 
-    <string name="dof_label_measureUnit">Measure units:</string>
+    <string name="dof_label_measureUnit">Measure units</string>
     <string name="dof_label_m">m</string>
     <string name="dof_label_cm">cm</string>
     <string name="dof_label_ft">ft</string>

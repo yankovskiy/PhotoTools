@@ -44,8 +44,6 @@
     <string name="about_label_licenseInformation"><![CDATA[<b>Photo Tools</b> распространяется по лицензии GPL v3. Вы можете получить исходный код на <a href="https://github.com/yankovskiy/PhotoTools">github.com</a>]]></string>
     <string name="about_label_version">Версия:</string>
     
-    <string name="app_name">Photo Tools</string>
-    
     <string name="dof_label_aperture">Диафрагма</string>
     <string name="dof_label_calculationResult">Результаты расчетов</string>
     <string name="dof_label_myCameras">Мои камеры</string>
@@ -163,7 +161,7 @@
     <string name="sunset_information_timeZoneStart">Определение часового пояса. Подождите</string>
     <string name="sunset_information_timeZoneSuccess">Часовой пояс успешно определен</string>
 
-    <string name="dof_label_measureUnit">Единицы измерения:</string>
+    <string name="dof_label_measureUnit">Единицы измерения</string>
     <string name="dof_label_m">м</string>
     <string name="dof_label_cm">см</string>
     <string name="dof_label_ft">футы</string>

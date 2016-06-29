@@ -19,11 +19,13 @@
     </style>
   </head>
   <body>
-$ 0.14
-  % Version 0.14
-  _ 31.05.2016
-    * New timezone method system
-    * New cameras
+$ 0.15
+  % Version 0.15
+  _ 29.06.2016
+    * Added EV-difference calculator
+    * Optimized APK-file size
+    * Improvement map
+    * Runtime permission supported
 $ END_OF_CHANGE_LOG
   </body>
 </html>
