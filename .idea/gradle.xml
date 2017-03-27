@@ -16,15 +16,7 @@
             <option value="$PROJECT_DIR$/wheel" />
           </set>
         </option>
-        <option name="myModules">
-          <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/abslib" />
-            <option value="$PROJECT_DIR$/luckycatlabs" />
-            <option value="$PROJECT_DIR$/photoTools" />
-            <option value="$PROJECT_DIR$/wheel" />
-          </set>
-        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>
