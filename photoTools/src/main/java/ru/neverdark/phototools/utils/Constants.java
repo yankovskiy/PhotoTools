@@ -15,11 +15,13 @@
  ******************************************************************************/
 package ru.neverdark.phototools.utils;
 
+import ru.neverdark.phototools.BuildConfig;
+
 /**
  * Constants for PhotoTools application
  */
 public class Constants {
-    public static final boolean PAID = true;
+    public static final boolean PAID = BuildConfig.FLAVOR.equals("paid");
 
     public static final int STATUS_SUCCESS = 0;
     public static final int STATUS_FAIL = 1;
