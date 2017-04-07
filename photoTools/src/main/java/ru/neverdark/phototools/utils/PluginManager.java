@@ -94,8 +94,14 @@ public class PluginManager {
      */
     public void runPlugin(String pluginPackage) {
         Intent call = new Intent(PLUGINS_LIST);
+        String classPkg;
+        if (pluginPackage.matches("ru.neverdark.+azimuth.+")) {
+            classPkg = "ru.neverdark.phototools.azimuth";
+        } else {
+            classPkg = pluginPackage;
+        }
         call.setClassName(pluginPackage,
-                pluginPackage.concat(".PluginActivity"));
+                classPkg.concat(".PluginActivity"));
         mContext.startActivity(call);
     }
 
