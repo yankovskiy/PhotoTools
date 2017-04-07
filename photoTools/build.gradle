@@ -7,8 +7,8 @@ android {
         applicationId "ru.neverdark.phototools"
         minSdkVersion 11
         targetSdkVersion 23
-        versionCode 73
-        versionName '0.15.1'
+        versionCode 74
+        versionName '0.15.2'
     }
     buildTypes {
         release {

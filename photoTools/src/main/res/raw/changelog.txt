@@ -19,10 +19,10 @@
     </style>
   </head>
   <body>
-$ 0.15.1
-  % Version 0.15.1
-  _ 29.03.2017
-    * Added new cameras
+$ 0.15.2
+  % Version 0.15.2
+  _ 07.04.2017
+    * Bug fixes
 $ END_OF_CHANGE_LOG
   </body>
 </html>
