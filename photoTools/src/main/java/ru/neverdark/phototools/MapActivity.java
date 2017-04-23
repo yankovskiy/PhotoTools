@@ -18,7 +18,6 @@
 package ru.neverdark.phototools;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -114,7 +113,6 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
     /**
      * Inits Google Map
      */
-    @SuppressLint("NewApi")
     private void initMap() {
         Log.message("Enter");
         ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))

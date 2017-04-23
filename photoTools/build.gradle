@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
         applicationId "ru.neverdark.phototools"
-        minSdkVersion 11
-        targetSdkVersion 23
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 74
         versionName '0.15.2'
     }
@@ -31,6 +31,6 @@ dependencies {
     compile project(':abslib')
     compile project(':luckycatlabs')
     compile 'com.github.amlcurran.showcaseview:library:5.4.0'
-    compile 'com.google.android.gms:play-services-maps:9.0.2'
-    compile 'com.android.support:design:23.4.0'
+    compile "com.google.android.gms:play-services-maps:${rootProject.ext.gmsVersion}"
+    compile "com.android.support:design:${rootProject.ext.supportLibraryVersion}"
 }
