@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
+  Copyright (C) 2013-2017 Artem Yankovskiy (artemyankovskiy@gmail.com).
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
       the Free Software Foundation, either version 3 of the License, or
@@ -97,239 +97,145 @@
 
             <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:padding="3dp">
 
                 <TableRow
-                    android:id="@+id/sunset_row_sunrise"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="3dp">
+                    android:paddingTop="5dp">
 
                     <TextView
-                        android:id="@+id/sunset_label_sunrise"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/sunset_label_sunrise"
-                        android:textStyle="bold" />
+                        style="@style/tdl"
+                        android:text="@string/sunset_label_night" />
+
+                    <TextView
+                        android:id="@+id/sunset_label_nightResult"
+                        style="@style/tdr" />
+                </TableRow>
+
+                <TableRow style="@style/tr">
+
+                    <TextView
+                        style="@style/tdl"
+                        android:text="@string/sunset_label_astroTwilight" />
+
+                    <TextView
+                        android:id="@+id/sunset_label_astroDawnResult"
+                        style="@style/tdr" />
+                </TableRow>
+
+                <TableRow style="@style/tr">
+
+                    <TextView
+                        style="@style/tdl"
+                        android:text="@string/sunset_label_nauticalTwilight" />
+
+                    <TextView
+                        android:id="@+id/sunset_label_nauticalDawnResult"
+                        style="@style/tdr" />
+                </TableRow>
+
+                <TableRow style="@style/tr">
+
+                    <TextView
+                        style="@style/tdl"
+                        android:text="@string/sunset_label_civilTwilight" />
+
+                    <TextView
+                        android:id="@+id/sunset_label_civilDawnResult"
+                        style="@style/tdr" />
+                </TableRow>
+
+                <TableRow style="@style/tr">
+
+                    <TextView
+                        style="@style/tdl"
+                        android:text="@string/sunset_label_sunrise" />
 
                     <TextView
                         android:id="@+id/sunset_label_sunriseResult"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:layout_weight="1" />
+                        style="@style/tdr" />
                 </TableRow>
 
-                <TableRow android:background="#cecece">
+                <TableRow style="@style/tr">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp" />
+                        style="@style/tdl"
+                        android:text="@string/sunset_label_goldenHour" />
+
+                    <TextView
+                        android:id="@+id/sunset_label_goldenHourDawnResult"
+                        style="@style/tdr" />
                 </TableRow>
 
-                <TableRow
-                    android:id="@+id/sunset_row_sunset"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="3dp">
+
+                <TableRow style="@style/tr">
 
                     <TextView
-                        android:id="@+id/sunset_label_sunset"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/sunset_label_sunset"
-                        android:textStyle="bold" />
+                        style="@style/tdl"
+                        android:text="@string/sunset_label_solarNoon" />
+
+                    <TextView
+                        android:id="@+id/sunset_label_solarNoonResult"
+                        style="@style/tdr" />
+                </TableRow>
+
+                <TableRow style="@style/tr">
+
+                    <TextView
+                        style="@style/tdl"
+                        android:text="@string/sunset_label_goldenHour" />
+
+                    <TextView
+                        android:id="@+id/sunset_label_goldenHourDuskResult"
+                        style="@style/tdr" />
+                </TableRow>
+
+                <TableRow style="@style/tr">
+
+                    <TextView
+                        style="@style/tdl"
+                        android:text="@string/sunset_label_sunset" />
 
                     <TextView
                         android:id="@+id/sunset_label_sunsetResult"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:layout_weight="1" />
+                        style="@style/tdr" />
                 </TableRow>
 
-                <TableRow android:background="#cecece">
+                <TableRow style="@style/tr">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp" />
+                        style="@style/tdl"
+                        android:text="@string/sunset_label_civilTwilight" />
+
+                    <TextView
+                        android:id="@+id/sunset_label_civilDuskResult"
+                        style="@style/tdr" />
                 </TableRow>
 
-                <TableRow
-                    android:id="@+id/sunset_row_civilSunrise"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="3dp">
+                <TableRow style="@style/tr">
 
                     <TextView
-                        android:id="@+id/sunset_label_civilSunrise"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/sunset_label_civilSunrise"
-                        android:textStyle="bold" />
+                        style="@style/tdl"
+                        android:text="@string/sunset_label_nauticalTwilight" />
 
                     <TextView
-                        android:id="@+id/sunset_label_civilSunriseResult"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:layout_weight="1" />
+                        android:id="@+id/sunset_label_nauticalDuskResult"
+                        style="@style/tdr" />
                 </TableRow>
 
-                <TableRow android:background="#cecece">
+                <TableRow style="@style/tr">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp" />
+                        style="@style/tdl"
+                        android:text="@string/sunset_label_astroTwilight" />
+
+                    <TextView
+                        android:id="@+id/sunset_label_astroDuskResult"
+                        style="@style/tdr" />
                 </TableRow>
 
-                <TableRow
-                    android:id="@+id/sunset_row_civilSunset"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="3dp">
-
-                    <TextView
-                        android:id="@+id/sunset_label_civilSunset"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/sunset_label_civilSunset"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/sunset_label_civilSunsetResult"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:layout_weight="1" />
-                </TableRow>
-
-                <TableRow android:background="#cecece">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp" />
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/sunset_row_nauticalSunrise"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="3dp">
-
-                    <TextView
-                        android:id="@+id/sunset_label_nauticalSunrise"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/sunset_label_nauticalSunrise"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/sunset_label_nauticalSunriseResult"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:layout_weight="1" />
-                </TableRow>
-
-                <TableRow android:background="#cecece">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp" />
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/sunset_row_nauticalSunset"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="3dp">
-
-                    <TextView
-                        android:id="@+id/sunset_label_nauticalSunset"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/sunset_label_nauticalSunset"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/sunset_label_nauticalSunsetResult"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:layout_weight="1" />
-                </TableRow>
-
-                <TableRow android:background="#cecece">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp" />
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/sunset_row_astrolSunrise"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="3dp">
-
-                    <TextView
-                        android:id="@+id/sunset_label_astrolSunrise"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/sunset_label_astroSunrise"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/sunset_label_astrolSunriseResult"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:layout_weight="1" />
-                </TableRow>
-
-                <TableRow android:background="#cecece">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp" />
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/sunset_row_astrolSunset"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="3dp">
-
-                    <TextView
-                        android:id="@+id/sunset_label_astrolSunset"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/sunset_label_astroSunset"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/sunset_label_astrolSunsetResult"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:layout_weight="1" />
-                </TableRow>
-
-                <TableRow android:background="#cecece">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp" />
-                </TableRow>
             </TableLayout>
         </LinearLayout>
     </LinearLayout>

@@ -89,12 +89,9 @@
     <string name="sunset_label_calculationResult">Result of calculations</string>
     <string name="sunset_label_sunrise">Sunrise:</string>
     <string name="sunset_label_sunset">Sunset:</string>
-    <string name="sunset_label_astroSunrise">Astronomical sunrise:</string>
-    <string name="sunset_label_astroSunset">Astronomical twilight:</string>
-    <string name="sunset_label_nauticalSunrise">Nautical sunrise:</string>
-    <string name="sunset_label_nauticalSunset">Nautical twilight:</string>
-    <string name="sunset_label_civilSunrise">Civil sunrise:</string>
-    <string name="sunset_label_civilSunset">Civil twilight:</string>
+    <string name="sunset_label_astroTwilight">Astronomical twilight:</string>
+    <string name="sunset_label_nauticalTwilight">Nautical twilight:</string>
+    <string name="sunset_label_civilTwilight">Civil twilight:</string>
     <string name="sunset_label_timeZone">Time zone</string>
     <string name="sunset_label_auto">Auto</string>
     <string name="sunset_label_manual">Select from list</string>
@@ -227,4 +224,7 @@
     <string name="show_ndfilter_equ" >ND-filter equivalent</string>
     <string name="attention" >Attention</string>
     <string name="sunset_current_location_error" >It isn’t possible to pick the location. Check permissions?</string>
+    <string name="sunset_label_night">Night:</string>
+    <string name="sunset_label_solarNoon">Solar noon:</string>
+    <string name="sunset_label_goldenHour">Golden hour:</string>
 </resources>

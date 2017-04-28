@@ -1,4 +1,3 @@
-include ':abslib'
-include ':luckycatlabs'
+include ':abslib', ':sunmooncalc'
 include ':wheel'
 include ':photoTools'

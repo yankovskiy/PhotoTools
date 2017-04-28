@@ -42,8 +42,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
-import com.luckycatlabs.sunrisesunset.dto.Location;
+import com.google.android.gms.maps.model.LatLng;
+
+import ru.neverdark.sunmooncalc.SunriseSunsetCalculator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,7 +84,6 @@ public class SunsetFragment extends UfoFragment {
     private EditText mEditTextTimeZone;
     private double mLatitude;
     private double mLongitude;
-    private boolean mIsVisibleResult = false;
     private TimeZone mTimeZone;
     private long mSelectionId;
     private GeoLocationService mGeoLocationService;
@@ -104,33 +104,23 @@ public class SunsetFragment extends UfoFragment {
             mBound = false;
         }
     };
-    private String mOfficialSunrise;
-    private TextView mOfficialSunriseResult;
-    private String mOfficialSunset;
-    private TextView mOfficialSunsetResult;
-    private String mAstroSunrise;
-    private TextView mAstroSunriseResult;
-    private String mAstroSunset;
-    private TextView mAstroSunsetResult;
-    private String mNauticalSunrise;
-    private TextView mNauticalSunriseResult;
-    private String mNauticalSunset;
-    private TextView mNauticalSunsetResult;
-    private String mCivilSunrise;
-    private TextView mCivilSunriseResult;
-    private String mCivilSunset;
-    private TextView mCivilSunsetResult;
+    private TextView mSunriseResult;
+    private TextView mSunsetResult;
+    private TextView mAstroDawnResult;
+    private TextView mAstroDuskResult;
+    private TextView mNauticalDawnResult;
+    private TextView mNauticalDuskResult;
+    private TextView mCivilDawnResult;
+    private TextView mCivilDuskResult;
+    private TextView mNightResult;
+    private TextView mSolarNoonResult;
+    private TextView mGoldenHourDawnResult;
+    private TextView mGoldenHourDuskResult;
+
     private LinearLayout mLinearLayoutCalculationResult;
     private String mLocationName;
     private int mTimeZoneMethod;
-    private View mRowOfficialSunrise;
-    private View mRowOfficialSunset;
-    private View mRowAstroSunrise;
-    private View mRowAstroSunset;
-    private View mRowNauticalSunrise;
-    private View mRowNauticalSunset;
-    private View mRowCivilSunrise;
-    private View mRowCivilSunset;
+
 
     @Override
     public void bindObjects() {
@@ -152,34 +142,28 @@ public class SunsetFragment extends UfoFragment {
         mEditTextLocation = (EditText) mView.findViewById(R.id.sunset_editText_location);
         mEditTextTimeZone = (EditText) mView.findViewById(R.id.sunset_editText_timeZone);
 
-        mOfficialSunriseResult = (TextView) mView.findViewById(R.id.sunset_label_sunriseResult);
-        mOfficialSunsetResult = (TextView) mView.findViewById(R.id.sunset_label_sunsetResult);
+        mSunriseResult = (TextView) mView.findViewById(R.id.sunset_label_sunriseResult);
+        mSunsetResult = (TextView) mView.findViewById(R.id.sunset_label_sunsetResult);
 
-        mAstroSunriseResult = (TextView) mView.findViewById(R.id.sunset_label_astrolSunriseResult);
-        mAstroSunsetResult = (TextView) mView.findViewById(R.id.sunset_label_astrolSunsetResult);
+        mAstroDawnResult = (TextView) mView.findViewById(R.id.sunset_label_astroDawnResult);
+        mAstroDuskResult = (TextView) mView.findViewById(R.id.sunset_label_astroDuskResult);
 
-        mNauticalSunriseResult = (TextView) mView
-                .findViewById(R.id.sunset_label_nauticalSunriseResult);
-        mNauticalSunsetResult = (TextView) mView
-                .findViewById(R.id.sunset_label_nauticalSunsetResult);
+        mNauticalDawnResult = (TextView) mView
+                .findViewById(R.id.sunset_label_nauticalDawnResult);
+        mNauticalDuskResult = (TextView) mView
+                .findViewById(R.id.sunset_label_nauticalDuskResult);
 
-        mCivilSunriseResult = (TextView) mView.findViewById(R.id.sunset_label_civilSunriseResult);
-        mCivilSunsetResult = (TextView) mView.findViewById(R.id.sunset_label_civilSunsetResult);
+        mCivilDawnResult = (TextView) mView.findViewById(R.id.sunset_label_civilDawnResult);
+        mCivilDuskResult = (TextView) mView.findViewById(R.id.sunset_label_civilDuskResult);
+
+        mNightResult = (TextView) mView.findViewById(R.id.sunset_label_nightResult);
+        mSolarNoonResult = (TextView) mView.findViewById(R.id.sunset_label_solarNoonResult);
+
+        mGoldenHourDawnResult = (TextView) mView.findViewById(R.id.sunset_label_goldenHourDawnResult);
+        mGoldenHourDuskResult = (TextView) mView.findViewById(R.id.sunset_label_goldenHourDuskResult);
 
         mLinearLayoutCalculationResult = (LinearLayout) mView
                 .findViewById(R.id.sunsnet_LinearLayout_calculationResult);
-
-        mRowOfficialSunrise = mView.findViewById(R.id.sunset_row_sunrise);
-        mRowOfficialSunset = mView.findViewById(R.id.sunset_row_sunset);
-
-        mRowAstroSunrise = mView.findViewById(R.id.sunset_row_astrolSunrise);
-        mRowAstroSunset = mView.findViewById(R.id.sunset_row_astrolSunset);
-
-        mRowNauticalSunrise = mView.findViewById(R.id.sunset_row_nauticalSunrise);
-        mRowNauticalSunset = mView.findViewById(R.id.sunset_row_nauticalSunset);
-
-        mRowCivilSunrise = mView.findViewById(R.id.sunset_row_civilSunrise);
-        mRowCivilSunset = mView.findViewById(R.id.sunset_row_civilSunset);
     }
 
     /**
@@ -224,25 +208,14 @@ public class SunsetFragment extends UfoFragment {
                 return;
             }
 
-            Location location = new Location(mLatitude, mLongitude);
-            SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(location, mTimeZone);
+            LatLng location = new LatLng(mLatitude, mLongitude);
+
             Calendar calendar = Calendar.getInstance();
+            calendar.setTimeZone(mTimeZone);
             calendar.set(mYear, mMonth, mDay);
 
-            mOfficialSunrise = calculator.getOfficialSunriseForDate(calendar);
-            mOfficialSunset = calculator.getOfficialSunsetForDate(calendar);
-
-            mAstroSunrise = calculator.getAstronomicalSunriseForDate(calendar);
-            mAstroSunset = calculator.getAstronomicalSunsetForDate(calendar);
-
-            mNauticalSunrise = calculator.getNauticalSunriseForDate(calendar);
-            mNauticalSunset = calculator.getNauticalSunsetForDate(calendar);
-
-            mCivilSunrise = calculator.getCivilSunriseForDate(calendar);
-            mCivilSunset = calculator.getCivilSunsetForDate(calendar);
-
-            mIsVisibleResult = true;
-            setVisibleCalculculationResult();
+            SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(location, calendar);
+            setVisibleCalculculationResult(calculator);
         } catch (LocationNotDetermineException e) {
             ShowMessageDialog dialog = ShowMessageDialog.getInstance(mContext);
             dialog.setMessages(R.string.error, R.string.error_locationNotDetermine);
@@ -399,14 +372,6 @@ public class SunsetFragment extends UfoFragment {
         setOnClickListeners(mButtonCalculate);
         setOnClickListeners(mEditTextLocation);
         setOnClickListeners(mEditTextTimeZone);
-        setOnClickListeners(mRowAstroSunrise);
-        setOnClickListeners(mRowAstroSunset);
-        setOnClickListeners(mRowCivilSunrise);
-        setOnClickListeners(mRowCivilSunset);
-        setOnClickListeners(mRowNauticalSunrise);
-        setOnClickListeners(mRowNauticalSunset);
-        setOnClickListeners(mRowOfficialSunrise);
-        setOnClickListeners(mRowOfficialSunset);
 
         setEditTextLongClick(mEditTextDate);
         setEditTextLongClick(mEditTextLocation);
@@ -416,7 +381,6 @@ public class SunsetFragment extends UfoFragment {
         setTextLocation();
 
         updateDate();
-        setVisibleCalculculationResult();
 
         return mView;
     }
@@ -512,57 +476,33 @@ public class SunsetFragment extends UfoFragment {
                     case R.id.sunset_editText_date:
                         showDatePicker();
                         break;
-                    case R.id.sunset_row_astrolSunrise:
-                        showInformationDialog(Constants.INFORMATION_ASTRO_SUNRISE);
-                        break;
-                    case R.id.sunset_row_astrolSunset:
-                        showInformationDialog(Constants.INFORMATION_ASTRO_SUNSET);
-                        break;
-                    case R.id.sunset_row_civilSunrise:
-                        showInformationDialog(Constants.INFORMATION_CIVIL_SUNRISE);
-                        break;
-                    case R.id.sunset_row_civilSunset:
-                        showInformationDialog(Constants.INFORMATION_CIVIL_SUNSET);
-                        break;
-                    case R.id.sunset_row_nauticalSunrise:
-                        showInformationDialog(Constants.INFORMATION_NAUTICAL_SUNRISE);
-                        break;
-                    case R.id.sunset_row_nauticalSunset:
-                        showInformationDialog(Constants.INFORMATION_NAUTICAL_SUNSET);
-                        break;
-                    case R.id.sunset_row_sunrise:
-                        showInformationDialog(Constants.INFORMATION_SUNRISE);
-                        break;
-                    case R.id.sunset_row_sunset:
-                        showInformationDialog(Constants.INFORMATION_SUNSET);
-                        break;
                     case R.id.sunset_editText_timeZone:
                         showTimeZoneMethodDialog();
                         break;
 
                     case R.id.sunset_button_calculate:
-                            if (mSelectionId > Constants.LOCATION_CURRENT_POSITION_CHOICE) {
-                                calculateSunset();
-                            } else {
-                                if (Common.isHavePermissions(mContext)) {
+                        if (mSelectionId > Constants.LOCATION_CURRENT_POSITION_CHOICE) {
+                            calculateSunset();
+                        } else {
+                            if (Common.isHavePermissions(mContext)) {
                                     /* if we have coordinates, calculation sunset / sunrise */
-                                    if (mGeoLocationService.canGetLocation()) {
-                                        calculateSunset();
+                                if (mGeoLocationService.canGetLocation()) {
+                                    calculateSunset();
                                     /*
                                      * we dont't have coordinates and we try getting
                                      * current location, show alert dialog
                                      */
-                                    } else {
-                                        showSettingsAlert();
-                                    }
                                 } else {
-                                    ConfirmDialog dialog = ConfirmDialog.getInstance(mContext);
-                                    dialog.setTitle(R.string.attention);
-                                    dialog.setMessage(R.string.sunset_current_location_error);
-                                    dialog.setCallback(new SunsetCurrentLocationErrorListener());
-                                    dialog.show(getFragmentManager(), ConfirmDialog.DIALOG_ID);
+                                    showSettingsAlert();
                                 }
+                            } else {
+                                ConfirmDialog dialog = ConfirmDialog.getInstance(mContext);
+                                dialog.setTitle(R.string.attention);
+                                dialog.setMessage(R.string.sunset_current_location_error);
+                                dialog.setCallback(new SunsetCurrentLocationErrorListener());
+                                dialog.show(getFragmentManager(), ConfirmDialog.DIALOG_ID);
                             }
+                        }
                         break;
                     case R.id.sunset_editText_location:
                         showLocationSelectionDialog();
@@ -597,38 +537,30 @@ public class SunsetFragment extends UfoFragment {
 
     /**
      * Sets visible calculation result scrollView
+     *
+     * @param calculator
      */
-    private void setVisibleCalculculationResult() {
-        if (mIsVisibleResult) {
-            mOfficialSunrise = getCalcResult(mOfficialSunrise);
-            mOfficialSunset = getCalcResult(mOfficialSunset);
-            mCivilSunrise = getCalcResult(mCivilSunrise);
-            mCivilSunset = getCalcResult(mCivilSunset);
-            mNauticalSunrise = getCalcResult(mNauticalSunrise);
-            mNauticalSunset = getCalcResult(mNauticalSunset);
-            mAstroSunrise = getCalcResult(mAstroSunrise);
-            mAstroSunset = getCalcResult(mAstroSunset);
+    private void setVisibleCalculculationResult(SunriseSunsetCalculator calculator) {
+        mNightResult.setText(calculator.getNight());
+        mAstroDawnResult.setText(calculator.getAstroDawn());
 
-            mOfficialSunriseResult.setText(mOfficialSunrise);
-            mOfficialSunsetResult.setText(mOfficialSunset);
+        mSunriseResult.setText(calculator.getSunrise());
+        mSunsetResult.setText(calculator.getSunset());
 
-            mCivilSunriseResult.setText(mCivilSunrise);
-            mCivilSunsetResult.setText(mCivilSunset);
+        mCivilDawnResult.setText(calculator.getDawn());
+        mCivilDuskResult.setText(calculator.getDusk());
 
-            mNauticalSunriseResult.setText(mNauticalSunrise);
-            mNauticalSunsetResult.setText(mNauticalSunset);
+        mNauticalDawnResult.setText(calculator.getNauticalDawn());
+        mNauticalDuskResult.setText(calculator.getNauticalDusk());
 
-            mAstroSunriseResult.setText(mAstroSunrise);
-            mAstroSunsetResult.setText(mAstroSunset);
 
-            mLinearLayoutCalculationResult.setVisibility(View.VISIBLE);
-        } else {
-            mLinearLayoutCalculationResult.setVisibility(View.GONE);
-        }
-    }
+        mAstroDuskResult.setText(calculator.getAstroDusk());
+        mSolarNoonResult.setText(calculator.getSolarNoon());
 
-    private String getCalcResult(String result) {
-        return result.equals("99:99") ? getString(R.string.not) : result;
+        mGoldenHourDawnResult.setText(calculator.getGoldenHourDawn());
+        mGoldenHourDuskResult.setText(calculator.getGoldenHourDusk());
+
+        mLinearLayoutCalculationResult.setVisibility(View.VISIBLE);
     }
 
     /**

@@ -29,8 +29,8 @@ android {
 dependencies {
     compile project(':wheel')
     compile project(':abslib')
-    compile project(':luckycatlabs')
     compile 'com.github.amlcurran.showcaseview:library:5.4.0'
     compile "com.google.android.gms:play-services-maps:${rootProject.ext.gmsVersion}"
     compile "com.android.support:design:${rootProject.ext.supportLibraryVersion}"
+    compile project(path: ':sunmooncalc')
 }

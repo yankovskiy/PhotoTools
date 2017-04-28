@@ -90,12 +90,9 @@
     <string name="sunset_label_calculationResult">Результаты расчетов</string>
     <string name="sunset_label_sunrise">Рассвет:</string>
     <string name="sunset_label_sunset">Закат:</string>
-    <string name="sunset_label_astroSunrise">Астрономический рассвет:</string>
-    <string name="sunset_label_astroSunset">Астрономические сумерки:</string>
-    <string name="sunset_label_nauticalSunrise">Навигационный рассвет:</string>
-    <string name="sunset_label_nauticalSunset">Навигационные сумерки:</string>
-    <string name="sunset_label_civilSunrise">Гражданский рассвет:</string>
-    <string name="sunset_label_civilSunset">Гражданские сумерки:</string>
+    <string name="sunset_label_astroTwilight">Астрономический сумерки:</string>
+    <string name="sunset_label_nauticalTwilight">Навигационный сумерки:</string>
+    <string name="sunset_label_civilTwilight">Гражданский сумерки:</string>
     <string name="sunset_label_timeZone">Часовой пояс</string>
     <string name="sunset_label_auto">Авто</string>
     <string name="sunset_label_manual">Выбрать из списка</string>
@@ -231,4 +228,7 @@
     <string name="show_ndfilter_equ">Эквивалент ND-фильтра</string>
     <string name="attention" >Внимание</string>
     <string name="sunset_current_location_error" >Невозможно определить ваше местоположение. Проверить права доступа?</string>
+    <string name="sunset_label_night">Ночь:</string>
+    <string name="sunset_label_solarNoon">Солнечный полдень:</string>
+    <string name="sunset_label_goldenHour">Золотой час:</string>
 </resources>
