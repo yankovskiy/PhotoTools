@@ -15,8 +15,6 @@
       along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
-
-    <string name="about_label_author"><![CDATA[Автор: <a href="mailto:artemyankovskiy@gmail.com?subject=PhotoTools">Артем Янковский</a>]]></string>
     <string name="about_label_dof">ГРИП-калькулятор</string>
     <string name="about_label_dofManual">Для расчета глубины резкости изображаемого пространства выберите 
         из списков свою модель камеры, диафрагму. Укажите фокусное расстояние, с которого будет 
@@ -100,40 +98,6 @@
     <string name="titles_emailAuthor">artemyankovskiy@gmail.com</string>
     <string name="title_activity_map">Выберите место</string>
     <string name="titles_selectEmailApplication">Выберите приложение для отправки email</string>
-    
-    <string name="information_title_sunrise">Рассвет</string>
-    <string name="information_title_sunset">Закат</string>
-    <string name="information_title_astroSunrise">Астрономический рассвет</string>
-    <string name="information_title_astroSunset">Астрономические сумерки</string>
-    <string name="information_title_nauticalSunrise">Навигационный рассвет</string>
-    <string name="information_title_nauticalSunset">Навигационные сумерки</string>
-    <string name="information_title_civilSunrise">Гражданский рассвет</string>
-    <string name="information_title_civilSunset">Гражданские сумерки</string>
-    
-    <string name="information_message_sunrise">Рассвет — явление, характерное для восхода солнца. Оно проявляется повышением 
-        освещённости окружающей среды засчёт подъёма солнечного диска относительно линии горизонта. 
-        Явление рассвета солнца противоположно явлению заката. Эти два явления похожи друг на друга с учётом лишь 
-        только восточной и западной сторон появления на горизонте.</string>
-    <string name="information_message_sunset">Закат или заход солнца — исчезновение светила под горизонтом. Заход солнца часто 
-        более яркий, чем восход, и с более яркими красными и оранжевыми оттенками. </string>
-    <string name="information_message_astroSunrise">Астрономический рассвет — период времени перед восходом солнца, в течение 
-        которого солнце находится на высоте от -12° до -18° над уровнем горизонта. Для обычного наблюдателя астрономические сумерки 
-        неотличимы от ночи.</string>
-    <string name="information_message_astroSunset">Астрономические сумерки — период времени после заката солнца, в течение 
-        которого солнце находится на высоте от -12° до -18° над уровнем горизонта. Для обычного наблюдателя астрономические сумерки 
-        неотличимы от ночи.</string>
-    <string name="information_message_nauticalSunrise">Навигационный рассвет — период времени перед восходом солнца, в течение 
-        которого солнце находится на высоте от -6° до -12° над уровнем горизонта. Общие очертания наземных объектов могут быть 
-        различимы при нормальных атмосферных условиях.</string>
-    <string name="information_message_nauticalSunset">Навигационные сумерки — период времени после заката солнца, в течение 
-        которого солнце находится на высоте от -6° до -12° над уровнем горизонта. Общие очертания наземных объектов могут быть 
-        различимы при нормальных атмосферных условиях.</string>
-    <string name="information_message_civilSunrise">Гражданский рассвет — период времени перед восходом солнца, в течение 
-        которого солнце находится на высоте от 0° до -6° над уровнем горизонта. На открытой местности в малооблачную или 
-        безоблачную погоду можно выполнять любой вид работ без дополнительного освещения.</string>
-    <string name="information_message_civilSunset">Гражданские сумерки — период времени после заката солнца, в течение которого 
-        солнце находится на высоте от 0° до -6° над уровнем горизонта. На открытой местности в малооблачную или безоблачную 
-        погоду можно выполнять любой вид работ без дополнительного освещения.</string>
     
     <string name="changelog_full_title">Список изменений</string>
     <string name="changelog_title">Что нового</string>

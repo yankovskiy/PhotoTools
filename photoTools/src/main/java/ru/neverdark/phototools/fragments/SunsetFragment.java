@@ -575,18 +575,6 @@ public class SunsetFragment extends UfoFragment {
     }
 
     /**
-     * Shows information dialog with description for sunset/sunrise type
-     *
-     * @param messageId Id message for displaying
-     */
-    private void showInformationDialog(final int messageId) {
-        Log.message("Enter");
-        InfoFragmentDialog infoFragment = InfoFragmentDialog.getInstance(mContext);
-        infoFragment.setMessageId(messageId);
-        infoFragment.show(getFragmentManager(), InfoFragmentDialog.DIALOG_TAG);
-    }
-
-    /**
      * Shows information message
      *
      * @param resourceId string Id contains information message

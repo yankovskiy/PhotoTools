@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright (C) 2013-2016 Artem Yankovskiy (artemyankovskiy@gmail.com).
+  Copyright (C) 2013-2017 Artem Yankovskiy (artemyankovskiy@gmail.com).
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
       the Free Software Foundation, either version 3 of the License, or
@@ -15,9 +15,6 @@
       along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
-    <string name="app_name" translatable="false">Photo Tools</string>
-
-    <string name="about_label_author" translatable="false"><![CDATA[Author: <a href="mailto:artemyankovskiy@gmail.com?subject=PhotoTools">Artem Yankovskiy</a>]]></string>
     <string name="about_label_dof">DoF-calculator</string>
     <string name="about_label_dofManual">For the calculation of the depth of field, choose the model of your camera and the aperture 
         from the lists. Point out the focal length from which shooting will be made, and also point out the focusing distance. For the 
