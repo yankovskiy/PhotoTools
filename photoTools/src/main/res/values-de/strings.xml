@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright (C) 2013-2017 Artem Yankovskiy (artemyankovskiy@gmail.com).
+  Copyright (C) 2017 thomas mack (email@bielefeldts.de).
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
       the Free Software Foundation, either version 3 of the License, or
@@ -15,179 +15,172 @@
       along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <resources>
-    <string name="about_label_dof">DoF-calculator</string>
-    <string name="about_label_dofManual">For the calculation of the depth of field, choose the model of your camera and the aperture 
-        from the lists. Point out the focal length from which shooting will be made, and also point out the focusing distance. For the 
-        change of the measure units of the calculation results, press the corresponding button.</string>
-    <string name="about_label_evpairs">EV Pairs</string>
-    <string name="about_label_evPairsManual">The window is divided on two parts: \"Current values\" and \"New values\". All parameters of 
-        the shooting, that is going on now, should be filled in \"Current values\". Desirable parameters of shooting except parameters 
-        that needs to calculate are brought in window \"New values\". The field with required parameter must be choosed by taped on the header</string>
-    <string name="about_label_license">License information</string>
-    <string name="about_label_sunsetSunrise">Sunsets and sunrises</string>
-    <string name="about_label_sunsetSunriseManual">For the calculation of the time of a sunset and sunrise for certain day, choose the 
-        interesting date. For the choosing of the location which distinct from the current, choose the point \"Point on the map\" in 
-        \"Location\". For the calculation, press the button \"Calculate\". For reception of the explanatory the notions \"the Navigating 
-        sunrise\", \"Civil twilight\", etc, press on corresponding field in \"Result of calculations\". </string>
-    <string name="about_label_sunsetMap">Map</string>
-    <string name="about_label_sunsetMapManual">For the choosing of a concrete location on the map, press and keep a required point. 
-        Press to \"Confirm a choice\" after occurrence of the marker on the map. 
-        For the choosing a type of the map, open the menu.
-        The note: the one marker can be established only.</string>    
-        
+    <string name="about_label_dof">Schärfentiefe (DoF)</string>
+    <string name="about_label_dofManual">Wählen Sie für die Berechnung der Schärfentiefe ihr Kameramodell und die Blende. Wöhlen Sie die Brennweite für die Aufname und die Enternung zum Fokuspunkt. Sie können die Maßeinheit durch die entsprechende Taste einstellen.</string>
+    <string name="about_label_evpairs">Lichtwerte (EV) / ND-Filter</string>
+    <string name="about_label_evPairsManual">Das Fenster ist in die Bereiche \"Aktuelle Werte\" und \"Neue Werte\" geteilt. Tagen Sie die aktuellen (Mess-)Werte ihrer Kamera bei \"Aktuelle Werte\" ein. Tippen Sie im Kopfbereich von \"Neue Werte\" auf den Paramter, den sie errechnen lassen wollen.
+        Tragen sie die beiden anderen Parameter ein, wird ihr Zeilparameter autmatisch akutalisert.</string>
+    <string name="about_label_license">Lizenzinformation</string>
+    <string name="about_label_sunsetSunrise">Sonnenaufgang und -untergang</string>
+    <string name="about_label_sunsetSunriseManual">
+        Zur Berechnung der Zeiten für Sonnenaufgang und Sonnenuntergang geben sie das gewünschte Datum ein. Wollen Sie die Zeiten für einen anderen Ort berechnen, wählen sie über \"Punkt auf der Karte\" in \"Ort\".
+        Durch beätigen der Taste \"Berechnen\" erhalten Sie die errechneten Zeiten.
+        Mit klick auf die Einträge unter \"Ergebnis der Berechnung\" erhalten Sie die Definitionen für z.B. \"nautisches Zwielicht\".</string>
+    <string name="about_label_sunsetMap">Karte</string>
+    <string name="about_label_sunsetMapManual">Um eine gewünschte Position auf der Karte zu markieren klicken und halten Sie, bis der Marker erscheint. Wählen sie anschließend im Dialog "\Auswahl bestätigen\" OK. Im Menü können Sie die Art der Karte auswählen. Hinweis: Es kann nur eine Markierung gleichzeitig gestetzt sein.</string>
     <string name="about_label_licenseInformation"><![CDATA[<b>Photo Tools</b> is distributing under the license GPL v3. You can receive the source code of the program under the link: <a href="https://github.com/yankovskiy/PhotoTools">github.com</a>]]></string>
     <string name="about_label_version">Version:</string>
     
-    <string name="dof_label_aperture">Aperture</string>
-    <string name="dof_label_calculationResult">Result of calculations</string>
-    <string name="dof_label_myCameras">My cameras</string>
-    <string name="dof_label_farLimit">Far limit:</string>
-    <string name="dof_label_focalLength">Focal length</string>
-    <string name="dof_label_hyperFocal">Hyperfocal:</string>
-    <string name="dof_label_nearLimit">Near limit:</string>
-    <string name="dof_label_shootingOptions">Shooting options</string>
-    <string name="dof_label_subjectDistance">Focus distance</string>
-    <string name="dof_label_total">Total:</string>
-    <string name="dof_sc_title">Manage cameras</string>
-    <string name="dof_sc_message">Select existing model or create your camera</string>
+    <string name="dof_label_aperture">Blende</string>
+    <string name="dof_label_calculationResult">Ergebnis der Berechnung</string>
+    <string name="dof_label_myCameras">Meine Kameras</string>
+    <string name="dof_label_farLimit">Fernpunkt:</string>
+    <string name="dof_label_focalLength">Brennweite</string>
+    <string name="dof_label_hyperFocal">Hyperfokal:</string>
+    <string name="dof_label_nearLimit">Nahpunkt:</string>
+    <string name="dof_label_shootingOptions">Aufnahme Paramater</string>
+    <string name="dof_label_subjectDistance">eingestellte Entfernung</string>
+    <string name="dof_label_total">Gesamt:</string>
+    <string name="dof_sc_title">Kameras verwalten</string>
+    <string name="dof_sc_message">Wählen sie eine existierende Kamera oder legen sie eine neue an</string>
 
-    <string name="evpairs_label_apperture">Aperture</string>
-    <string name="evpairs_label_currentValues">Current values</string>
+    <string name="evpairs_label_apperture">Blende</string>
+    <string name="evpairs_label_currentValues">aktueller Wert</string>
     <string name="evpairs_label_iso">ISO</string>
-    <string name="evpairs_label_newValues">New values</string>
-    <string name="evpairs_label_shutterSpeed">Shutter</string>
+    <string name="evpairs_label_newValues">neuer Wert</string>
+    <string name="evpairs_label_shutterSpeed">Zeit</string>
     
-    <string name="locationSelection_label_currentLocation">My location</string>
-    <string name="locationSelection_label_pointOnMap">Point on the map</string>
-    <string name="locationSelection_label_selectLocation">Choose a location</string>
+    <string name="locationSelection_label_currentLocation">Mein Standort</string>
+    <string name="locationSelection_label_pointOnMap">Punkt auf der Karte</string>
+    <string name="locationSelection_label_selectLocation">Wählen Sie einen Ort</string>
     
-    <string name="main_button_about">About</string>
-    <string name="main_button_dofcalc">DoF-calculator</string>
-    <string name="main_button_donate">Full version</string>
-    <string name="main_button_evpairs">EV Pairs / ND-filter</string>
+    <string name="main_button_about">Über</string>
+    <string name="main_button_dofcalc">Schärfentiefe (DoF)</string>
+    <string name="main_button_donate">Vollversion</string>
+    <string name="main_button_evpairs">Lichtwerte (EV) / ND-Filter</string>
     <string name="main_button_feedback">Feedback</string>
-    <string name="main_button_rateMe">Rate</string>
-    <string name="main_button_sunset">Sunsets and sunrises</string>
+    <string name="main_button_rateMe">Bewerten</string>
+    <string name="main_button_sunset">Sonnenaufgang und -untergang</string>
     <string name="main_button_plugins">Plugins</string>
     
-    <string name="map_button_confirmSelection">Confirm a choice</string>
-    <string name="map_menu_mapType_map">Map</string>
+    <string name="map_button_confirmSelection">Auswahl bestätigen</string>
+    <string name="map_menu_mapType_map">Karte</string>
     <string name="map_menu_mapType_terrain">Terrain</string>
-    <string name="map_menu_mapType_satellite">Satellite</string>
+    <string name="map_menu_mapType_satellite">Satellit</string>
     <string name="map_menu_mapType_hybrid">Hybrid</string>
     
-    <string name="sunset_alert_message">It isn’t possible to pick the location. Go to the settings?</string>
-    <string name="sunset_alert_title">Finding of location</string>
-    <string name="sunset_alert_positive">Settings</string>
+    <string name="sunset_alert_message">Die Standortdienste sind deaktiviert. Wollen Sie Einstellungen anzeigen?</string>
+    <string name="sunset_alert_title">Standortdienste</string>
+    <string name="sunset_alert_positive">Einstellungen</string>
     
-    <string name="sunset_button_calculate">Calculate</string>
-    <string name="sunset_label_date">Date</string>
-    <string name="sunset_label_location">Location</string>
-    <string name="sunset_label_calculationResult">Result of calculations</string>
-    <string name="sunset_label_sunrise">Sunrise:</string>
-    <string name="sunset_label_sunset">Sunset:</string>
-    <string name="sunset_label_astroTwilight">Astronomical twilight:</string>
-    <string name="sunset_label_nauticalTwilight">Nautical twilight:</string>
-    <string name="sunset_label_civilTwilight">Civil twilight:</string>
-    <string name="sunset_label_timeZone">Time zone</string>
+    <string name="sunset_button_calculate">Berechnen</string>
+    <string name="sunset_label_date">Datum</string>
+    <string name="sunset_label_location">Standort</string>
+    <string name="sunset_label_calculationResult">Ergebnis der Berechnung</string>
+    <string name="sunset_label_sunrise">Sonnenaufgang:</string>
+    <string name="sunset_label_sunset">Sonnenuntergang:</string>
+    <string name="sunset_label_astroTwilight">Astronomisches Zwielicht:</string>
+    <string name="sunset_label_nauticalTwilight">Nautisches Zwielicht:</string>
+    <string name="sunset_label_civilTwilight">Bürgerliches Zwielicht:</string>
+    <string name="sunset_label_timeZone">Zeitzone</string>
     <string name="sunset_label_auto">Auto</string>
-    <string name="sunset_label_manual">Select from list</string>
+    <string name="sunset_label_manual">Aus einer Liste wählen</string>
 
     <string name="titles_emailAuthor">artemyankovskiy@gmail.com</string>
-    <string name="title_activity_map">Choose a location</string>
-    <string name="titles_selectEmailApplication">Choose the app for sending of email</string>
+    <string name="title_activity_map">Wählen Sie einen Ort</string>
+    <string name="titles_selectEmailApplication">Wählen Sie ein App zum Versenden von E-Mails</string>
     
-    <string name="changelog_full_title">List of changes</string>
-    <string name="changelog_title">What\'s new</string>
+    <string name="changelog_full_title">Liste der Änderungen</string>
+    <string name="changelog_title">Was ist neu</string>
     <string name="changelog_ok_button">OK</string>
-    <string name="changelog_show_full">next&#8230;</string>
+    <string name="changelog_show_full">weiter&#8230;</string>
     
-    <string name="dialogConfirmCreate_checkbox_isSave">Save the location?</string>
-    <string name="dialogConfirmCreate_label_locationName">Location name</string>
-    <string name="dialogConfirmCreate_title">Choice confirmation</string>
-    <string name="dialogConfirmCreate_message">Do you really wish choose this location?</string>
-    <string name="dialogConfirmCreate_positive">Yes</string>
-    <string name="dialogConfirmCreate_negative">No</string>
-    <string name="dialogConfirmCreate_error_emptyLocationName">The location name cannot be empty</string>
-    <string name="dialogConfirmCreate_error_alreayExist">The location with such name is already exist</string>
+    <string name="dialogConfirmCreate_checkbox_isSave">Standort speichern?</string>
+    <string name="dialogConfirmCreate_label_locationName">Name des Standortes</string>
+    <string name="dialogConfirmCreate_title">Auswahl bestätigen</string>
+    <string name="dialogConfirmCreate_message">Wollen Sie diesen Standort auswählen</string>
+    <string name="dialogConfirmCreate_positive">OK</string>
+    <string name="dialogConfirmCreate_negative">Abbrechen</string>
+    <string name="dialogConfirmCreate_error_emptyLocationName">Der Standortname darf nicht leer sein</string>
+    <string name="dialogConfirmCreate_error_alreayExist">Es gibt bereits einen Standort mit diesem Namen</string>
     
-    <string name="deleteConfirmation_dialog_title">Delete confirmation</string>
-    <string name="deleteConfirmation_dialog_message">Do you really wish remove the record \"%s\"?</string>
+    <string name="deleteConfirmation_dialog_title">Löschen bestätigen</string>
+    <string name="deleteConfirmation_dialog_message">Wollen Sie diesen Eintrag wirklich löschen \"%s\"?</string>
     <string name="dialog_button_ok">OK</string>
-    <string name="dialog_button_cancel">Cancel</string>
-    <string name="dialog_button_close">Close</string>
+    <string name="dialog_button_cancel">Abbrechen</string>
+    <string name="dialog_button_close">Schließen</string>
     
-    <string name="sunset_information_timeZoneStart">Determining of the time zone. Please, wait</string>
-    <string name="sunset_information_timeZoneSuccess">The time zone is successfully picked</string>
+    <string name="sunset_information_timeZoneStart">Zeitzone ermitteln. Bitte warten.</string>
+    <string name="sunset_information_timeZoneSuccess">Zeitzone erfolgreich ermittelt.</string>
 
-    <string name="dof_label_measureUnit">Measure units</string>
+    <string name="dof_label_measureUnit">Maßeinheiten</string>
     <string name="dof_label_m">m</string>
     <string name="dof_label_cm">cm</string>
     <string name="dof_label_ft">ft</string>
     <string name="dof_label_in">in</string>
     
-    <string name="evpairs_label_step">Step change</string>
-    <string name="evpairs_label_stepFull">1 stop</string>
-    <string name="evpairs_label_stepHalf">&#189; stop</string>
-    <string name="evpairs_label_stepThird">&#8531; stop</string>
+    <string name="evpairs_label_step">LW-Schritte anpassen</string>
+    <string name="evpairs_label_stepFull">1 Blende</string>
+    <string name="evpairs_label_stepHalf">&#189; Blende</string>
+    <string name="evpairs_label_stepThird">&#8531; Blende</string>
     
-    <string name="zonePicker_title">Choose a time zone</string>
+    <string name="zonePicker_title">Wählen Sie eine Zeitzone</string>
 
-    <string name="plugins_available">Available</string>
-    <string name="plugins_installed">Installed</string>
+    <string name="plugins_available">Verfügbar</string>
+    <string name="plugins_installed">Installiert</string>
 
-    <string name="userCamera_label_coc">Circle of confusion</string>
-    <string name="userCamera_label_resolution">Maximum resolution</string>
-    <string name="userCamera_label_sensor">Sensor size</string>
+    <string name="userCamera_label_coc">Zerstreuungskreis</string>
+    <string name="userCamera_label_resolution">Maximale Auflösung</string>
+    <string name="userCamera_label_sensor">Sensorgröße</string>
 
-    <string name="error">Error</string>
-    <string name="error_cameraAlreadyExist">Camera with same name already exist</string>
-    <string name="error_cameraNameEmpty">Camera name is empty</string>
-    <string name="error_notAllValuesFilled">Sensor size and maximum resolution must be specified</string>
-    <string name="error_cocNotFilled">Circle of confusion must be specified</string>
-    <string name="error_locationNotDetermine">Location not determine. Please check your gps status or choose location from the map</string>
-    <string name="error_minMaxIncorrect">Maximum values must be greater than minimum values</string>
+    <string name="error">Fehler</string>
+    <string name="error_cameraAlreadyExist">Kamera mit gleichem Namen existiert bereits.</string>
+    <string name="error_cameraNameEmpty">Name der Kamera ist leer</string>
+    <string name="error_notAllValuesFilled">Sensorgröße und maximale Auflösung müssen angegeben werden.</string>
+        <string name="error_cocNotFilled">Zerstreuungskreis darf nicht leer sein</string>
+    <string name="error_locationNotDetermine">Standort konnte nicht ermittelt werden. Bitte prüfen sie GPS-Einstellungen oder wählen Sie einen Punkt auf der Karte</string>
+    <string name="error_minMaxIncorrect">Maximalwert muss größer als der Minimalwert sein</string>
     
-    <string name="userCamera_addCamera">Add new camera</string>
-    <string name="userCamera_editCamera">Edit camera</string>
-    <string name="userCamera_cameraName">Camera name</string>
-    <string name="userCamera_autoCalc">Automatic calculation</string>
+    <string name="userCamera_addCamera">Kamera hinzufügen</string>
+    <string name="userCamera_editCamera">Kamera bearbeiten</string>
+    <string name="userCamera_cameraName">Name der Kamera</string>
+    <string name="userCamera_autoCalc">Automatische berechnung</string>
     
-    <string name="width">Width</string>
-    <string name="height">Height</string>
+    <string name="width">Breite</string>
+    <string name="height">Höhe</string>
 
     <string name="mm">mm</string>
     
-    <string name="limitation_minimum">Minimum values</string>
-    <string name="limitation_maximum">Maximum values</string>
+    <string name="limitation_minimum">Minimalwerte</string>
+    <string name="limitation_maximum">Maximalwerte</string>
     
-    <string name="evLimitation">Ev: limitation values</string>
-    <string name="dofLimitation">DoF: limitation values</string>
+    <string name="evLimitation">LW: Wertbereich</string>
+    <string name="dofLimitation">DoF: Wertbereich</string>
     
-    <string name="progress_dialog_title">Calculation</string>
-    <string name="progress_dialog_message">Calculation in progress. Please wait</string>
-    <string name="menu_item_search">Search</string>
-    <string name="search_hint">Search by address</string>
-    <string name="error_geoCoderNotAvailable">Could not determine coordinates for specific address. Please, check your Internet connection</string>
-    <string name="error_notFound">No results found for address \"%s\"</string>
+    <string name="progress_dialog_title">Berechnung</string>
+    <string name="progress_dialog_message">Berechnung erfolgt. Bitte warten</string>
+    <string name="menu_item_search">Suche</string>
+    <string name="search_hint">Nach Adresse suchen</string>
+    <string name="error_geoCoderNotAvailable">Koordinaten für diese Adresse konnten nicht ermittelt werden. Bitte prüfen sie die Internetverbindung.</string>
+    <string name="error_notFound">Kein Ergebnis für die Adresse \"%s\" gefunden</string>
     
-    <string name="evCompensation_title">Exposure compensation</string>
-    <string name="confirm_action_copy_title">Copy camera</string>
-    <string name="confirm_action_copy_message" formatted="false">Do you want copy %s to user cameras?</string>
-    <string name="confirm_action_remove_title">Delete camera</string>
-    <string name="confirm_action_remove_message" formatted="false">Delete camera %s?</string>
-    <string name="camera_copied">Camera copied</string>
-    <string name="sunset_timezone_detection_method">Time zone detection method</string>
-    <string name="sunset_information_timeZoneFail">Time zone detection problem</string>
-    <string name="main_button_evdiff">EV Difference</string>
-    <string name="evdiff_difference">Difference between values:</string>
-    <string name="long_tap_for_choose_location">Long tap on the map for choose location</string>
-    <string name="hide">Hide</string>
-    <string name="not">Not</string>
-    <string name="show_ndfilter_equ" >ND-filter equivalent</string>
-    <string name="attention" >Attention</string>
-    <string name="sunset_current_location_error" >It isn’t possible to pick the location. Check permissions?</string>
-    <string name="sunset_label_night">Night:</string>
-    <string name="sunset_label_solarNoon">Solar noon:</string>
-    <string name="sunset_label_goldenHour">Golden hour:</string>
+    <string name="evCompensation_title">Belichtungskorrektur</string>
+    <string name="confirm_action_copy_title">Kamera kopieren</string>
+    <string name="confirm_action_copy_message" formatted="false">Wollen sie %s zu eigene Kameras kopieren?</string>
+    <string name="confirm_action_remove_title">Kamera entfernen</string>
+    <string name="confirm_action_remove_message" formatted="false">Kamera %s entfernen?</string>
+    <string name="camera_copied">Kamera kopiert</string>
+    <string name="sunset_timezone_detection_method">Methode zur Ermittlung der Zeitzone</string>
+    <string name="sunset_information_timeZoneFail">Problem bei der Ermittlung der Zeitzonde</string>
+    <string name="main_button_evdiff">LW Abstand</string>
+    <string name="evdiff_difference">Abstand zwischen Werten</string>
+    <string name="long_tap_for_choose_location">Lange auf die Karte klicken um eine Position zu wählen</string>
+    <string name="hide">Ausblenden</string>
+    <string name="not">nicht</string>
+    <string name="show_ndfilter_equ">ND-Filter Äquivalent</string>
+    <string name="attention">Achtung</string>
+    <string name="sunset_current_location_error">Es ist nicht möglich einen Ort zu wählen. Bitte prüfen Sie die Berechtigungen.</string>
+    <string name="sunset_label_night">Nacht:</string>
+    <string name="sunset_label_solarNoon">Zenit:</string>
+    <string name="sunset_label_goldenHour">Goldene Stunde:</string>
 </resources>
