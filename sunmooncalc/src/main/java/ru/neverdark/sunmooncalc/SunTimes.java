@@ -8,7 +8,7 @@ import java.util.Map;
  * Created by ufo on 26.04.17.
  */
 
-class Times {
+class SunTimes {
     final static double SUNRISE = -0.833;
     final static double SUNSET = SUNRISE;
     final static double SUNRISE_END = -0.3;
@@ -26,7 +26,7 @@ class Times {
     private Calendar solarNoon;
     private Calendar nadir;
 
-    Times() {
+    SunTimes() {
         mTimes.put(SUNRISE, new Time());            // sunrise & sunset
         mTimes.put(SUNRISE_END, new Time());        // sunriseEnd & sunsetStart
         mTimes.put(DAWN, new Time());               // dawn & dusk
@@ -101,5 +101,14 @@ class Times {
 
     Map<Double, Time> getTimes() {
         return mTimes;
+    }
+
+    /**
+     * Created by ufo on 26.04.17.
+     */
+
+    static class Time {
+        Calendar morning;
+        Calendar evening;
     }
 }

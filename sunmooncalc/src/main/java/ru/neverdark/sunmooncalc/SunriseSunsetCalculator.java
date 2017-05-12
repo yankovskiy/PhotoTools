@@ -10,30 +10,8 @@ import java.util.Locale;
  * Created by ufo on 25.04.17.
  */
 
-/*
-    [-0.833, 'sunrise',       'sunset'      ],
-    [  -0.3, 'sunriseEnd',    'sunsetStart' ],
-    [    -6, 'dawn',          'dusk'        ],
-    [   -12, 'nauticalDawn',  'nauticalDusk'],
-    [   -18, 'nightEnd',      'night'       ],
-    [     6, 'goldenHourEnd', 'goldenHour'  ]
- */
-
-/*
-00:00—04:24 — night
-04:24—05:05 — astronomical twilight
-05:05—05:42 — nautical twilight
-05:42—06:13 — civil twilight
-06:13—06:16 — sunrise
-06:16—20:06 — daylight
-20:06—20:09 — sunset
-20:09—20:39 — civil twilight
-20:39—21:17 — nautical twilight
-21:17—21:58 — astronomical twilight
-21:58—00:00 — night
- */
 public class SunriseSunsetCalculator {
-    private final Times mTimes;
+    private final SunTimes mSunTimes;
 
     private String getDate(Calendar from, Calendar to) {
         SimpleDateFormat dateFmt = new SimpleDateFormat("HH:mm", Locale.US);
@@ -51,55 +29,55 @@ public class SunriseSunsetCalculator {
 
     public SunriseSunsetCalculator(LatLng location, Calendar calendar) {
         Calculator calc = new Calculator();
-        mTimes = calc.getTimes(calendar, location);
+        mSunTimes = calc.getSunTimes(calendar, location);
     }
 
     public String getNight() {
-        return getDate(mTimes.getNight(), mTimes.getNightEnd());
+        return getDate(mSunTimes.getNight(), mSunTimes.getNightEnd());
     }
 
     public String getAstroDawn() {
-        return getDate(mTimes.getNightEnd(), mTimes.getNauticalDawn());
+        return getDate(mSunTimes.getNightEnd(), mSunTimes.getNauticalDawn());
     }
 
     public String getNauticalDawn() {
-        return getDate(mTimes.getNauticalDawn(), mTimes.getDawn());
+        return getDate(mSunTimes.getNauticalDawn(), mSunTimes.getDawn());
     }
 
     public String getDawn() {
-        return getDate(mTimes.getDawn(), mTimes.getSunrise());
+        return getDate(mSunTimes.getDawn(), mSunTimes.getSunrise());
     }
 
     public String getSunrise() {
-        return getDate(mTimes.getSunrise(), mTimes.getSunriseEnd());
+        return getDate(mSunTimes.getSunrise(), mSunTimes.getSunriseEnd());
     }
 
     public String getGoldenHourDawn() {
-        return getDate(mTimes.getSunriseEnd(), mTimes.getGoldenHourEnd());
+        return getDate(mSunTimes.getSunriseEnd(), mSunTimes.getGoldenHourEnd());
     }
 
     public String getSolarNoon() {
         SimpleDateFormat dateFmt = new SimpleDateFormat("HH:mm", Locale.US);
-        return isValidDate(mTimes.getSolarNoon())? dateFmt.format(mTimes.getSolarNoon().getTime()) : "n/a";
+        return isValidDate(mSunTimes.getSolarNoon())? dateFmt.format(mSunTimes.getSolarNoon().getTime()) : "n/a";
     }
 
     public String getGoldenHourDusk() {
-        return getDate(mTimes.getGoldenHour(), mTimes.getSunsetStart());
+        return getDate(mSunTimes.getGoldenHour(), mSunTimes.getSunsetStart());
     }
 
     public String getSunset() {
-        return getDate(mTimes.getSunsetStart(), mTimes.getSunset());
+        return getDate(mSunTimes.getSunsetStart(), mSunTimes.getSunset());
     }
 
     public String getDusk() {
-        return getDate(mTimes.getSunset(), mTimes.getDusk());
+        return getDate(mSunTimes.getSunset(), mSunTimes.getDusk());
     }
 
     public String getNauticalDusk() {
-        return getDate(mTimes.getDusk(), mTimes.getNauticalDusk());
+        return getDate(mSunTimes.getDusk(), mSunTimes.getNauticalDusk());
     }
 
     public String getAstroDusk() {
-        return getDate(mTimes.getNauticalDusk(), mTimes.getNight());
+        return getDate(mSunTimes.getNauticalDusk(), mSunTimes.getNight());
     }
 }

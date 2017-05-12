@@ -74,25 +74,25 @@ class Calculator {
         return M + C + P + Math.PI;
     }
 
-    private Coords sunCoords(double d) {
+    private SunCoords sunCoords(double d) {
         final double M = solarMeanAnomaly(d);
         final double L = eclipticLongitude(M);
 
-        Coords ret = new Coords();
+        SunCoords ret = new SunCoords();
         ret.dec = declination(L, 0);
         ret.ra = rightAscension(L, 0);
 
         return ret;
     }
 
-    private Position getPosition(Calendar date, LatLng latLng) {
+    private SunPosition getSunPosition(Calendar date, LatLng latLng) {
         final double lw = RAD * -latLng.longitude;
         final double phi = RAD * latLng.latitude;
         final double d = toDays(date);
-        final Coords c = sunCoords(d);
+        final SunCoords c = sunCoords(d);
         final double H = siderealTime(d, lw) - c.ra;
 
-        Position ret = new Position();
+        SunPosition ret = new SunPosition();
         ret.azimuth = azimuth(H, phi, c.dec);
         ret.altitude = altitude(H, phi, c.dec);
 
@@ -121,7 +121,7 @@ class Calculator {
         return solarTransitJ(a, M, L);
     }
 
-    Times getTimes(Calendar date, LatLng latLng) {
+    SunTimes getSunTimes(Calendar date, LatLng latLng) {
         final double lw = RAD * -latLng.longitude;
         final double phi = RAD * latLng.latitude;
         final double d = toDays(date);
@@ -132,13 +132,13 @@ class Calculator {
         final double dec = declination(L, 0);
         final double Jnoon = solarTransitJ(ds, M, L);
 
-        Times times = new Times();
-        times.setSolarNoon(fromJulian(Jnoon));
-        times.setNadir(fromJulian(Jnoon - 0.5));
+        SunTimes sunTimes = new SunTimes();
+        sunTimes.setSolarNoon(fromJulian(Jnoon));
+        sunTimes.setNadir(fromJulian(Jnoon - 0.5));
 
-        for (Map.Entry entry : times.getTimes().entrySet()) {
+        for (Map.Entry entry : sunTimes.getTimes().entrySet()) {
             double angle = (Double) entry.getKey();
-            Time time = (Time) entry.getValue();
+            SunTimes.Time time = (SunTimes.Time) entry.getValue();
 
             double Jset = getSetJ(angle * RAD, lw, phi, dec, n, M, L);
             double Jrise = Jnoon - (Jset - Jnoon);
@@ -147,6 +147,140 @@ class Calculator {
             time.evening = fromJulian(Jset);
         }
 
-        return times;
+        return sunTimes;
     }
+
+    private MoonCoords moonCoords(double d) {
+        // ecliptic longitude
+        final double L = RAD * (218.316 + 13.176396 * d);
+        // mean anomaly
+        final double M = RAD * (134.963 + 13.064993 * d);
+        // mean distance
+        final double F = RAD * (93.272 + 13.229350 * d);
+        // longitude
+        final double l =  L + RAD * 6.289 * Math.sin(M);
+        // latitude
+        final double b = RAD * 5.128 * Math.sin(F);
+        // distance to the moon in km
+        final double dt = 385001 - 20905 * Math.cos(M);
+
+        MoonCoords ret = new MoonCoords();
+        ret.ra = rightAscension(l, b);
+        ret.dec = declination(l, b);
+        ret.dist = dt;
+
+        return ret;
+    }
+
+    MoonPosition getMoonPosition(Calendar date, double lat, double lng) {
+        final double lw = RAD * -lng;
+        final double phi = RAD * lat;
+        final double d = toDays(date);
+        final MoonCoords c = moonCoords(d);
+        final double H = siderealTime(d, lw) - c.ra;
+        double h = altitude(H, phi, c.dec);
+        // formula 14.1 of "Astronomical Algorithms" 2nd edition by Jean Meeus (Willmann-Bell, Richmond) 1998.
+        final double pa = Math.atan2(Math.sin(H), Math.tan(phi) * Math.cos(c.dec) - Math.sin(c.dec) * Math.cos(H));
+
+        h += astroRefraction(h); // altitude correction for refraction
+
+        MoonPosition ret = new MoonPosition();
+        ret.azimuth = azimuth(H, phi, c.dec);
+        ret.altitude = h;
+        ret.distance = c.dist;
+        ret.parallacticAngle = pa;
+
+        return ret;
+    }
+
+    MoonIllumination getMoonIllumination(Calendar date) {
+        final double d = toDays(date);
+        final SunCoords s = sunCoords(d);
+        final MoonCoords m = moonCoords(d);
+        final int sdist = 149598000; // distance from Earth to Sun in km
+        final double phi = Math.acos(Math.sin(s.dec) * Math.sin(m.dec) + Math.cos(s.dec) * Math.cos(m.dec) * Math.cos(s.ra - m.ra));
+        final double inc = Math.atan2(sdist * Math.sin(phi), m.dist - sdist * Math.cos(phi));
+        final double angle = Math.atan2(Math.cos(s.dec) * Math.sin(s.ra - m.ra), Math.sin(s.dec) * Math.cos(m.dec) -
+                Math.cos(s.dec) * Math.sin(m.dec) * Math.cos(s.ra - m.ra));
+
+        MoonIllumination ret = new MoonIllumination();
+        ret.fraction = (1 + Math.cos(inc)) / 2;
+        ret.phase = 0.5 + 0.5 * inc * (angle < 0 ? -1 : 1) / Math.PI;
+        ret.angle = angle;
+
+        return ret;
+    }
+
+    private Calendar hoursLater(Calendar date, double h) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis((long) (date.getTimeInMillis() + h * DAY_MS / 24));
+        return calendar;
+    }
+
+    MoonTimes getMoonTimes(Calendar date, double lat, double lng) {
+        Calendar t = (Calendar) date.clone();
+        t.set(Calendar.HOUR_OF_DAY, 0);
+        t.set(Calendar.MINUTE, 0);
+        t.set(Calendar.SECOND, 0);
+        t.set(Calendar.MILLISECOND, 0);
+
+        final double hc = 0.133 * RAD;
+        double h0 = getMoonPosition(t, lat, lng).altitude - hc;
+        double h1, h2, rise = 0, set = 0, a, b, xe, ye = 0, d, roots, x1 = 0, x2 = 0, dx;
+
+        // go in 2-hour chunks, each time seeing if a 3-point quadratic curve crosses zero (which means rise or set)
+        for (int i = 1; i <= 24; i += 2) {
+            h1 = getMoonPosition(hoursLater(t, i), lat, lng).altitude - hc;
+            h2 = getMoonPosition(hoursLater(t, i + 1), lat, lng).altitude - hc;
+
+            a = (h0 + h2) / 2 - h1;
+            b = (h2 - h0) / 2;
+            xe = -b / (2 * a);
+            ye = (a * xe + b) * xe + h1;
+            d = b * b - 4 * a * h1;
+            roots = 0;
+
+            if (d >= 0) {
+                dx = Math.sqrt(d) / (Math.abs(a) * 2);
+                x1 = xe - dx;
+                x2 = xe + dx;
+                if (Math.abs(x1) <= 1) roots++;
+                if (Math.abs(x2) <= 1) roots++;
+                if (x1 < -1) x1 = x2;
+            }
+
+            if (roots == 1) {
+                if (h0 < 0) rise = i + x1;
+                else set = i + x1;
+
+            } else if (roots == 2) {
+                rise = i + (ye < 0 ? x2 : x1);
+                set = i + (ye < 0 ? x1 : x2);
+            }
+
+            if (rise != 0 && set != 0) break;
+
+            h0 = h2;
+        }
+
+        MoonTimes ret = new MoonTimes();
+        if (rise != 0) {
+            ret.rise = hoursLater(t, rise);
+        }
+
+        if (set != 0) {
+            ret.set = hoursLater(t, set);
+        }
+
+        if (rise == 0 & set == 0) {
+            if (ye > 0) {
+                ret.alwaysUp = true;
+            } else {
+                ret.alwaysDown = true;
+            }
+        }
+
+        return ret;
+    }
+
 }
