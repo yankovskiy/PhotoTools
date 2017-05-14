@@ -19,7 +19,7 @@
     android:orientation="vertical"
     android:paddingBottom="16dp"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp" >
+    android:paddingRight="16dp">
 
     <TextView
         style="?android:attr/listSeparatorTextViewStyle"
@@ -31,14 +31,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:text="@string/dof_label_aperture"
             android:textSize="@dimen/dofWheelTitleTextSize"
             android:textStyle="bold" />
@@ -46,9 +46,9 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:text="@string/dof_label_focalLength"
             android:textSize="@dimen/dofWheelTitleTextSize"
             android:textStyle="bold" />
@@ -56,8 +56,9 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:text="@string/dof_label_subjectDistance"
             android:textSize="@dimen/dofWheelTitleTextSize"
             android:textStyle="bold" />
@@ -67,7 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <kankan.wheel.widget.WheelView
             android:id="@+id/dofLimitation_minAperture"
@@ -98,14 +99,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:text="@string/dof_label_aperture"
             android:textSize="@dimen/dofWheelTitleTextSize"
             android:textStyle="bold" />
@@ -113,9 +114,9 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:text="@string/dof_label_focalLength"
             android:textSize="@dimen/dofWheelTitleTextSize"
             android:textStyle="bold" />
@@ -123,8 +124,9 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:text="@string/dof_label_subjectDistance"
             android:textSize="@dimen/dofWheelTitleTextSize"
             android:textStyle="bold" />
@@ -134,7 +136,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <kankan.wheel.widget.WheelView
             android:id="@+id/dofLimitation_maxAperture"

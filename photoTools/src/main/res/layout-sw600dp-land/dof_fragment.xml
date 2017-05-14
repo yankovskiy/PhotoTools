@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
@@ -21,11 +20,11 @@
     android:paddingBottom="10dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="10dp" >
+    android:paddingTop="10dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/dof_label_camera"
@@ -72,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:background="@drawable/grey_round_corner"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/dof_label_m"
@@ -129,11 +128,11 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp" >
+        android:layout_marginBottom="5dp">
 
         <TableRow
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/dof_label_nearLimit"
@@ -176,7 +175,7 @@
 
         <TableRow
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/dof_label_hyperFocal"
@@ -220,7 +219,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/dof_label_shootingOptions"
@@ -243,14 +242,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="5dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/dof_label_aperture"
             android:layout_width="154dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_horizontal"
             android:text="@string/dof_label_aperture"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -259,7 +258,8 @@
             android:id="@+id/dof_label_focalLength"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_horizontal"
             android:text="@string/dof_label_focalLength"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -268,7 +268,8 @@
             android:id="@+id/dof_label_subjectDistance"
             android:layout_width="253dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_horizontal"
             android:text="@string/dof_label_subjectDistance"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -279,7 +280,7 @@
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
-        android:paddingBottom="10dp" >
+        android:paddingBottom="10dp">
 
         <kankan.wheel.widget.WheelView
             android:id="@+id/dof_wheel_aperture"
