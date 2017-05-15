@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <declare-styleable name="ColorPickPreference">
+        <attr name="alphaSlider" format="boolean" />
+        <attr name="hexValue" format="boolean" />
+        <attr name="dialogTitle" format="string" />
+    </declare-styleable>
+</resources>

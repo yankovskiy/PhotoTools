@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="current_color">Текущий</string>
+    <string name="dialog_color_picker">Выбор цвета</string>
+    <string name="new_color">Новый</string>
+</resources>

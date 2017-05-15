@@ -195,4 +195,25 @@
     <string name="sunset_label_night">Ночь:</string>
     <string name="sunset_label_solarNoon">Солнечный полдень:</string>
     <string name="sunset_label_goldenHour">Золотой час:</string>
+    <string name="main_button_settings">Настройки</string>
+    <string name="title_activity_settings">Настройки</string>
+
+    <string name="settings_internetTimeZone_message">Получать часовой пояс с Internet-серверов</string>
+    <string name="settings_internetTimeZone_title">Часовой пояс с Internet</string>
+    <string name="settings_display_title">Отображение</string>
+    <string name="settings_24HourMode_message">Установить 24-часовой режим</string>
+    <string name="settings_24HourMode_title">24-часовой режим</string>
+    <string name="settings_showTip_message">Показывать совет при запуске приложения</string>
+    <string name="settings_showTip_title">Показывать совет</string>
+    <string name="settings_showSunriseAzimuth_message">Отображать солнечный азимут рассвета</string>
+    <string name="settings_sunrise_title">Рассвет</string>
+    <string name="settings_showSunsetAzimuth_message">Отображать солнечный азимут заката</string>
+    <string name="settings_sunset_title">Закат</string>
+    <string name="settings_showAltitude_message">Отображать высоту Солнца</string>
+    <string name="settings_showAltitude_title">Высота</string>
+    <string name="settings_colors_title">Цвет</string>
+    <string name="settings_sunColor_message">Цвет линии солнца</string>
+    <string name="settings_sun_title">Солнце</string>
+    <string name="settigns_sunriseColor_message">Цвет линии рассвета</string>
+    <string name="settings_sunsetColor_message">Цвет линии заката</string>
 </resources>

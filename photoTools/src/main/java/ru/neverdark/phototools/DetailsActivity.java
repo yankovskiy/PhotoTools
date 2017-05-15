@@ -55,35 +55,35 @@ public class DetailsActivity extends AppCompatActivity {
         Log.variable("index", String.valueOf(index));
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         switch (index) {
-        case Constants.DOF_CHOICE:
-            DofFragment dofFragment = new DofFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(android.R.id.content, dofFragment).commit();
-            break;
-        case Constants.EV_CHOICE:
-            EvpairsFragment evFragment = new EvpairsFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(android.R.id.content, evFragment).commit();
-            break;
-        case Constants.EVDIFF_CHOICE:
-            EvDiffFragment evDiffFragment = new EvDiffFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(android.R.id.content, evDiffFragment).commit();
-            break;
-        case Constants.SUNSET_CHOICE:
-            SunsetFragment sunsetFragment = new SunsetFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(android.R.id.content, sunsetFragment).commit();
-            break;
-        case Constants.ABOUT_CHOICE:
-            AboutFragment aboutFragment = new AboutFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(android.R.id.content, aboutFragment).commit();
-            break;
-        case Constants.PLUGIN_CHOICE:
-            PluginsFragment pluginFragment = new PluginsFragment();
-            getSupportFragmentManager().beginTransaction().add(android.R.id.content, pluginFragment).commit();
-            break;
+            case Constants.DOF_CHOICE:
+                DofFragment dofFragment = new DofFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .add(android.R.id.content, dofFragment).commit();
+                break;
+            case Constants.EV_CHOICE:
+                EvpairsFragment evFragment = new EvpairsFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .add(android.R.id.content, evFragment).commit();
+                break;
+            case Constants.EVDIFF_CHOICE:
+                EvDiffFragment evDiffFragment = new EvDiffFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .add(android.R.id.content, evDiffFragment).commit();
+                break;
+            case Constants.SUNSET_CHOICE:
+                SunsetFragment sunsetFragment = new SunsetFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .add(android.R.id.content, sunsetFragment).commit();
+                break;
+            case Constants.ABOUT_CHOICE:
+                AboutFragment aboutFragment = new AboutFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .add(android.R.id.content, aboutFragment).commit();
+                break;
+            case Constants.PLUGIN_CHOICE:
+                PluginsFragment pluginFragment = new PluginsFragment();
+                getSupportFragmentManager().beginTransaction().add(android.R.id.content, pluginFragment).commit();
+                break;
         }
     }
 }

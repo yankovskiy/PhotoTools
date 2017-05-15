@@ -38,6 +38,7 @@ public class Constants {
     public static final byte ABOUT_CHOICE = 6;
     public static final byte PLUGIN_CHOICE = 7;
     public static final byte EVDIFF_CHOICE = 8;
+    public static final byte SETTINGS_CHOICE = 9;
 
     public static final byte LOCATION_CURRENT_POSITION_CHOICE = 0;
     public static final byte LOCATION_POINT_ON_MAP_CHOICE = 1;

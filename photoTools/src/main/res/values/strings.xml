@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Copyright (C) 2013-2016 Artem Yankovskiy (artemyankovskiy@gmail.com).
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
@@ -36,11 +35,11 @@
     <string name="about_label_sunsetMapManual">For the choosing of a concrete location on the map, press and keep a required point. 
         Press to \"Confirm a choice\" after occurrence of the marker on the map. 
         For the choosing a type of the map, open the menu.
-        The note: the one marker can be established only.</string>    
-        
+        The note: the one marker can be established only.</string>
+
     <string name="about_label_licenseInformation"><![CDATA[<b>Photo Tools</b> is distributing under the license GPL v3. You can receive the source code of the program under the link: <a href="https://github.com/yankovskiy/PhotoTools">github.com</a>]]></string>
     <string name="about_label_version">Version:</string>
-    
+
     <string name="dof_label_aperture">Aperture</string>
     <string name="dof_label_calculationResult">Result of calculations</string>
     <string name="dof_label_myCameras">My cameras</string>
@@ -59,11 +58,11 @@
     <string name="evpairs_label_iso">ISO</string>
     <string name="evpairs_label_newValues">New values</string>
     <string name="evpairs_label_shutterSpeed">Shutter</string>
-    
+
     <string name="locationSelection_label_currentLocation">My location</string>
     <string name="locationSelection_label_pointOnMap">Point on the map</string>
     <string name="locationSelection_label_selectLocation">Choose a location</string>
-    
+
     <string name="main_button_about">About</string>
     <string name="main_button_dofcalc">DoF-calculator</string>
     <string name="main_button_donate">Full version</string>
@@ -72,17 +71,17 @@
     <string name="main_button_rateMe">Rate</string>
     <string name="main_button_sunset">Sunsets and sunrises</string>
     <string name="main_button_plugins">Plugins</string>
-    
+
     <string name="map_button_confirmSelection">Confirm a choice</string>
     <string name="map_menu_mapType_map">Map</string>
     <string name="map_menu_mapType_terrain">Terrain</string>
     <string name="map_menu_mapType_satellite">Satellite</string>
     <string name="map_menu_mapType_hybrid">Hybrid</string>
-    
+
     <string name="sunset_alert_message">It isn’t possible to pick the location. Go to the settings?</string>
     <string name="sunset_alert_title">Finding of location</string>
     <string name="sunset_alert_positive">Settings</string>
-    
+
     <string name="sunset_button_calculate">Calculate</string>
     <string name="sunset_label_date">Date</string>
     <string name="sunset_label_location">Location</string>
@@ -99,12 +98,12 @@
     <string name="titles_emailAuthor">artemyankovskiy@gmail.com</string>
     <string name="title_activity_map">Choose a location</string>
     <string name="titles_selectEmailApplication">Choose the app for sending of email</string>
-    
+
     <string name="changelog_full_title">List of changes</string>
     <string name="changelog_title">What\'s new</string>
     <string name="changelog_ok_button">OK</string>
     <string name="changelog_show_full">next&#8230;</string>
-    
+
     <string name="dialogConfirmCreate_checkbox_isSave">Save the location?</string>
     <string name="dialogConfirmCreate_label_locationName">Location name</string>
     <string name="dialogConfirmCreate_title">Choice confirmation</string>
@@ -113,13 +112,13 @@
     <string name="dialogConfirmCreate_negative">No</string>
     <string name="dialogConfirmCreate_error_emptyLocationName">The location name cannot be empty</string>
     <string name="dialogConfirmCreate_error_alreayExist">The location with such name is already exist</string>
-    
+
     <string name="deleteConfirmation_dialog_title">Delete confirmation</string>
     <string name="deleteConfirmation_dialog_message">Do you really wish remove the record \"%s\"?</string>
     <string name="dialog_button_ok">OK</string>
     <string name="dialog_button_cancel">Cancel</string>
     <string name="dialog_button_close">Close</string>
-    
+
     <string name="sunset_information_timeZoneStart">Determining of the time zone. Please, wait</string>
     <string name="sunset_information_timeZoneSuccess">The time zone is successfully picked</string>
 
@@ -128,12 +127,12 @@
     <string name="dof_label_cm">cm</string>
     <string name="dof_label_ft">ft</string>
     <string name="dof_label_in">in</string>
-    
+
     <string name="evpairs_label_step">Step change</string>
     <string name="evpairs_label_stepFull">1 stop</string>
     <string name="evpairs_label_stepHalf">&#189; stop</string>
     <string name="evpairs_label_stepThird">&#8531; stop</string>
-    
+
     <string name="zonePicker_title">Choose a time zone</string>
 
     <string name="plugins_available">Available</string>
@@ -150,30 +149,30 @@
     <string name="error_cocNotFilled">Circle of confusion must be specified</string>
     <string name="error_locationNotDetermine">Location not determine. Please check your gps status or choose location from the map</string>
     <string name="error_minMaxIncorrect">Maximum values must be greater than minimum values</string>
-    
+
     <string name="userCamera_addCamera">Add new camera</string>
     <string name="userCamera_editCamera">Edit camera</string>
     <string name="userCamera_cameraName">Camera name</string>
     <string name="userCamera_autoCalc">Automatic calculation</string>
-    
+
     <string name="width">Width</string>
     <string name="height">Height</string>
 
     <string name="mm">mm</string>
-    
+
     <string name="limitation_minimum">Minimum values</string>
     <string name="limitation_maximum">Maximum values</string>
-    
+
     <string name="evLimitation">Ev: limitation values</string>
     <string name="dofLimitation">DoF: limitation values</string>
-    
+
     <string name="progress_dialog_title">Calculation</string>
     <string name="progress_dialog_message">Calculation in progress. Please wait</string>
     <string name="menu_item_search">Search</string>
     <string name="search_hint">Search by address</string>
     <string name="error_geoCoderNotAvailable">Could not determine coordinates for specific address. Please, check your Internet connection</string>
     <string name="error_notFound">No results found for address \"%s\"</string>
-    
+
     <string name="evCompensation_title">Exposure compensation</string>
     <string name="confirm_action_copy_title">Copy camera</string>
     <string name="confirm_action_copy_message" formatted="false">Do you want copy %s to user cameras?</string>
@@ -187,10 +186,31 @@
     <string name="long_tap_for_choose_location">Long tap on the map for choose location</string>
     <string name="hide">Hide</string>
     <string name="not">Not</string>
-    <string name="show_ndfilter_equ" >ND-filter equivalent</string>
-    <string name="attention" >Attention</string>
-    <string name="sunset_current_location_error" >It isn’t possible to pick the location. Check permissions?</string>
+    <string name="show_ndfilter_equ">ND-filter equivalent</string>
+    <string name="attention">Attention</string>
+    <string name="sunset_current_location_error">It isn’t possible to pick the location. Check permissions?</string>
     <string name="sunset_label_night">Night:</string>
     <string name="sunset_label_solarNoon">Solar noon:</string>
     <string name="sunset_label_goldenHour">Golden hour:</string>
+    <string name="main_button_settings">Settings</string>
+
+    <string name="title_activity_settings">Settings</string>
+    <string name="settings_internetTimeZone_message">Gets a time zone from Internet-servers</string>
+    <string name="settings_internetTimeZone_title">Internet time zone</string>
+    <string name="settings_display_title">Display</string>
+    <string name="settings_24HourMode_message">Sets 24-hour mode</string>
+    <string name="settings_24HourMode_title">24-hour mode</string>
+    <string name="settings_showTip_message">Show tip on application startup</string>
+    <string name="settings_showTip_title">Show tip</string>
+    <string name="settings_showSunriseAzimuth_message">Show sunrise solar azimuth</string>
+    <string name="settings_sunrise_title">Sunrise</string>
+    <string name="settings_showSunsetAzimuth_message">Show sunset solar azimuth</string>
+    <string name="settings_sunset_title">Sunset</string>
+    <string name="settings_showAltitude_message">Show solar altitude</string>
+    <string name="settings_showAltitude_title">Altitude</string>
+    <string name="settings_colors_title">Color</string>
+    <string name="settings_sunColor_message">Color of the sun line</string>
+    <string name="settings_sun_title">Sun</string>
+    <string name="settigns_sunriseColor_message">Color of the sunrise line</string>
+    <string name="settings_sunsetColor_message">Color of the sunset line</string>
 </resources>

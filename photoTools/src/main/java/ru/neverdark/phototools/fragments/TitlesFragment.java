@@ -36,6 +36,7 @@ import java.util.List;
 import ru.neverdark.phototools.BuildConfig;
 import ru.neverdark.phototools.DetailsActivity;
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.SettingsActivity;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
@@ -55,11 +56,9 @@ public class TitlesFragment extends Fragment {
 
     /**
      * Creates main menu item
-     * 
-     * @param title
-     *            item title
-     * @param recordId
-     *            record id for local list, or 0 (zero) for plug-in
+     *
+     * @param title    item title
+     * @param recordId record id for local list, or 0 (zero) for plug-in
      * @return menu item
      */
     private MainMenuItem createMainMenuItem(String title, byte recordId) {
@@ -72,7 +71,7 @@ public class TitlesFragment extends Fragment {
 
     /**
      * Builds list for main menu
-     * 
+     *
      * @return list
      */
     private List<MainMenuItem> buildMainMenuList() {
@@ -96,6 +95,7 @@ public class TitlesFragment extends Fragment {
         // third part of the menu
         list.add(createMainMenuItem(getString(R.string.main_button_plugins),
                 Constants.PLUGIN_CHOICE));
+        list.add(createMainMenuItem(getString(R.string.main_button_settings), Constants.SETTINGS_CHOICE));
         list.add(createMainMenuItem(getString(R.string.main_button_rateMe), Constants.RATE_CHOICE));
         list.add(createMainMenuItem(getString(R.string.main_button_feedback),
                 Constants.FEEDBACK_CHOICE));
@@ -113,7 +113,7 @@ public class TitlesFragment extends Fragment {
 
     /**
      * Gets list of installed plug-in
-     * 
+     *
      * @return list of installed plug-in
      */
     private List<MainMenuItem> getPluginsList() {
@@ -224,9 +224,8 @@ public class TitlesFragment extends Fragment {
 
     /**
      * Replace current fragment to other
-     * 
-     * @param index
-     *            index fragment
+     *
+     * @param index index fragment
      */
     private void replaceFragment(int index) {
         Log.message("Enter");
@@ -236,42 +235,42 @@ public class TitlesFragment extends Fragment {
         Fragment details = getFragmentManager().findFragmentById(R.id.main_detailFragment);
 
         switch (index) {
-        case Constants.DOF_CHOICE:
-            if (!(details instanceof DofFragment)) {
-                details = new DofFragment();
-                isOperationNeed = true;
-            }
-            break;
-        case Constants.EV_CHOICE:
-            if (!(details instanceof EvpairsFragment)) {
-                details = new EvpairsFragment();
-                isOperationNeed = true;
-            }
-            break;
-        case Constants.EVDIFF_CHOICE:
-            if (!(details instanceof EvDiffFragment)) {
-                details = new EvDiffFragment();
-                isOperationNeed = true;
-            }
-            break;
-        case Constants.SUNSET_CHOICE:
-            if (!(details instanceof SunsetFragment)) {
-                details = new SunsetFragment();
-                isOperationNeed = true;
-            }
-            break;
-        case Constants.ABOUT_CHOICE:
-            if (!(details instanceof AboutFragment)) {
-                details = new AboutFragment();
-                isOperationNeed = true;
-            }
-            break;
-        case Constants.PLUGIN_CHOICE:
-            if (!(details instanceof PluginsFragment)) {
-                details = new PluginsFragment();
-                isOperationNeed = true;
-            }
-            break;
+            case Constants.DOF_CHOICE:
+                if (!(details instanceof DofFragment)) {
+                    details = new DofFragment();
+                    isOperationNeed = true;
+                }
+                break;
+            case Constants.EV_CHOICE:
+                if (!(details instanceof EvpairsFragment)) {
+                    details = new EvpairsFragment();
+                    isOperationNeed = true;
+                }
+                break;
+            case Constants.EVDIFF_CHOICE:
+                if (!(details instanceof EvDiffFragment)) {
+                    details = new EvDiffFragment();
+                    isOperationNeed = true;
+                }
+                break;
+            case Constants.SUNSET_CHOICE:
+                if (!(details instanceof SunsetFragment)) {
+                    details = new SunsetFragment();
+                    isOperationNeed = true;
+                }
+                break;
+            case Constants.ABOUT_CHOICE:
+                if (!(details instanceof AboutFragment)) {
+                    details = new AboutFragment();
+                    isOperationNeed = true;
+                }
+                break;
+            case Constants.PLUGIN_CHOICE:
+                if (!(details instanceof PluginsFragment)) {
+                    details = new PluginsFragment();
+                    isOperationNeed = true;
+                }
+                break;
         }
 
         if (isOperationNeed) {
@@ -288,7 +287,7 @@ public class TitlesFragment extends Fragment {
         Intent mailIntent = new Intent(Intent.ACTION_SEND);
         mailIntent.setType("plain/text");
         mailIntent.putExtra(Intent.EXTRA_EMAIL,
-                new String[] { getString(R.string.titles_emailAuthor) });
+                new String[]{getString(R.string.titles_emailAuthor)});
         mailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
         startActivity(Intent.createChooser(mailIntent,
                 getString(R.string.titles_selectEmailApplication)));
@@ -305,9 +304,8 @@ public class TitlesFragment extends Fragment {
 
     /**
      * Shows activity by index
-     * 
-     * @param index
-     *            activity index for shown
+     *
+     * @param index activity index for shown
      */
     private void showActivity(int index) {
         Log.message("Enter");
@@ -320,11 +318,9 @@ public class TitlesFragment extends Fragment {
     /**
      * Shows fragment if application runned on the Tablet or activity for other
      * case
-     * 
-     * @param index
-     *            index selected menu item
-     * @param recordId
-     *            record id for selected item
+     *
+     * @param index    index selected menu item
+     * @param recordId record id for selected item
      */
     private void showDetails(int index, int recordId) {
         Log.message("Enter");
@@ -335,6 +331,8 @@ public class TitlesFragment extends Fragment {
             Common.gotoDonate(mContext);
         } else if (recordId == Constants.FEEDBACK_CHOICE) {
             sendEmail();
+        } else if (recordId == Constants.SETTINGS_CHOICE) {
+            openSettings();
         } else {
             if (mDualPane) {
                 mList.setItemChecked(index, true);
@@ -348,10 +346,17 @@ public class TitlesFragment extends Fragment {
     }
 
     /**
+     * Opens application settings activity
+     */
+    private void openSettings() {
+        Intent intentSettings = new Intent(getContext(), SettingsActivity.class);
+        startActivity(intentSettings);
+    }
+
+    /**
      * Finds item position in the menu list by id
-     * 
-     * @param recordId
-     *            record id
+     *
+     * @param recordId record id
      * @return item position
      */
     private int findPositionById(int recordId) {

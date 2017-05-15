@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Copyright (C) 2013-2017 Artem Yankovskiy (artemyankovskiy@gmail.com).
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
@@ -31,8 +30,7 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/map_key" />
@@ -41,9 +39,9 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="ru.neverdark.phototools.MainActivity"
+            android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -51,17 +49,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="ru.neverdark.phototools.DetailsActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
-        <activity android:name="ru.neverdark.phototools.CameraManagementActivity"
+            android:name=".DetailsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
-            android:name="ru.neverdark.phototools.MapActivity"
+            android:name=".CameraManagementActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name=".MapActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/title_activity_map" >
-        </activity>
+            android:label="@string/title_activity_map"/>
 
-        <service android:name="ru.neverdark.phototools.utils.GeoLocationService" />
+        <service android:name=".utils.GeoLocationService" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.neverdark.phototools.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -183,4 +183,25 @@
     <string name="sunset_label_night">Nacht:</string>
     <string name="sunset_label_solarNoon">Zenit:</string>
     <string name="sunset_label_goldenHour">Goldene Stunde:</string>
+    <string name="main_button_settings">Einstellungen</string>
+    <string name="title_activity_settings">Einstellungen</string>
+    <!-- need translation -->
+    <string name="settings_internetTimeZone_message">Gets a time zone from Internet-servers</string>
+    <string name="settings_internetTimeZone_title">Internet time zone</string>
+    <string name="settings_display_title">Display</string>
+    <string name="settings_24HourMode_message">Sets 24-hour mode</string>
+    <string name="settings_24HourMode_title">24-hour mode</string>
+    <string name="settings_showTip_message">Show tip on application startup</string>
+    <string name="settings_showTip_title">Show tip</string>
+    <string name="settings_showSunriseAzimuth_message">Show sunrise solar azimuth</string>
+    <string name="settings_sunrise_title">Sunrise</string>
+    <string name="settings_showSunsetAzimuth_message">Show sunset solar azimuth</string>
+    <string name="settings_sunset_title">Sunset</string>
+    <string name="settings_showAltitude_message">Show solar altitude</string>
+    <string name="settings_showAltitude_title">Altitude</string>
+    <string name="settings_colors_title">Color</string>
+    <string name="settings_sunColor_message">Color of the sun line</string>
+    <string name="settings_sun_title">Sun</string>
+    <string name="settigns_sunriseColor_message">Color of the sunrise line</string>
+    <string name="settings_sunsetColor_message">Color of the sunset line</string>
 </resources>
