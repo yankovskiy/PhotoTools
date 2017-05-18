@@ -19,9 +19,9 @@
     </style>
   </head>
   <body>
-$ 0.15.2
-  % Version 0.15.2
-  _ 07.04.2017
+$ 0.15.3
+  % Version 0.15.3
+  _ 18.05.2017
     * Bug fixes
 $ END_OF_CHANGE_LOG
   </body>

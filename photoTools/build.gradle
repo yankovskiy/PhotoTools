@@ -7,8 +7,8 @@ android {
         applicationId "ru.neverdark.phototools"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 74
-        versionName '0.15.2'
+        versionCode 75
+        versionName '0.15.3'
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {

@@ -15,6 +15,7 @@
  ******************************************************************************/
 package ru.neverdark.phototools.fragments;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -27,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -181,7 +183,11 @@ public class PluginsFragment extends UfoFragment {
             Intent marketIntent = new Intent(Intent.ACTION_VIEW);
             marketIntent.setData(Uri.parse("market://details?id=".concat(item
                     .getPluginPackage())));
-            startActivity(marketIntent);
+            try {
+                startActivity(marketIntent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getContext(), R.string.error_googlePlayNotFound, Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

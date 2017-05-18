@@ -17,6 +17,7 @@ package ru.neverdark.phototools.utils;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -40,6 +41,7 @@ import kankan.wheel.widget.WheelView;
 import kankan.wheel.widget.adapters.AbstractWheelTextAdapter;
 import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 import ru.neverdark.phototools.BuildConfig;
+import ru.neverdark.phototools.R;
 
 public class Common {
     /**
@@ -166,7 +168,11 @@ public class Common {
             Intent marketIntent = new Intent(Intent.ACTION_VIEW);
             marketIntent.setData(Uri
                     .parse("market://details?id=ru.neverdark.phototoolsdonate"));
-            context.startActivity(marketIntent);
+            try {
+                context.startActivity(marketIntent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(context, R.string.error_googlePlayNotFound, Toast.LENGTH_LONG).show();
+            }
         }
     }
 

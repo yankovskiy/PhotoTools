@@ -98,7 +98,7 @@
     <string name="titles_emailAuthor">artemyankovskiy@gmail.com</string>
     <string name="title_activity_map">Выберите место</string>
     <string name="titles_selectEmailApplication">Выберите приложение для отправки email</string>
-    
+
     <string name="changelog_full_title">Список изменений</string>
     <string name="changelog_title">Что нового</string>
     <string name="changelog_ok_button">OK</string>
@@ -220,4 +220,5 @@
     <string name="dialog_button_reset">Сброс</string>
     <string name="dateTimeDialog_timeTab">ВРЕМЯ</string>
     <string name="dateTimeDialog_dateTab">ДАТА</string>
+    <string name="error_googlePlayNotFound">Приложение Google Play не найдено</string>
 </resources>

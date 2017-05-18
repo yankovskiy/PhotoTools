@@ -217,4 +217,5 @@
     <string name="dialog_button_reset">Reset</string>
     <string name="dateTimeDialog_timeTab">TIME</string>
     <string name="dateTimeDialog_dateTab">DATE</string>
+    <string name="error_googlePlayNotFound">Google play application not found</string>
 </resources>
