@@ -204,4 +204,8 @@
     <string name="settings_sun_title">Sun</string>
     <string name="settigns_sunriseColor_message">Color of the sunrise line</string>
     <string name="settings_sunsetColor_message">Color of the sunset line</string>
+    <string name="map_button_changeTime">Change time</string>
+    <string name="dialog_button_reset">Reset</string>
+    <string name="dateTimeDialog_timeTab">TIME</string>
+    <string name="dateTimeDialog_dateTab">DATE</string>
 </resources>

@@ -44,10 +44,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Calendar;
+
 import ru.neverdark.abs.OnCallback;
 import ru.neverdark.phototools.db.DbAdapter;
 import ru.neverdark.phototools.fragments.ConfirmCreateDialog;
 import ru.neverdark.phototools.fragments.ConfirmCreateDialog.OnConfirmDialogHandler;
+import ru.neverdark.phototools.fragments.DateTimeDialog;
 import ru.neverdark.phototools.fragments.ShowMessageDialog;
 import ru.neverdark.phototools.utils.AsyncGeoCoder;
 import ru.neverdark.phototools.utils.AsyncGeoCoder.OnGeoCoderListener;
@@ -55,7 +58,7 @@ import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
 
-public class MapActivity extends AppCompatActivity implements OnMapLongClickListener {
+public class MapActivity extends AppCompatActivity implements OnMapLongClickListener, DateTimeDialog.OnDateTimeChange {
 
     private static final String MAP_LATITUDE = "map_latitude";
     private static final String MAP_LONGITUDE = "map_longitude";
@@ -74,6 +77,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
     private MenuItem mMenuItemSearch;
     private boolean mIsVisible = false;
     private static final int MAP_ACCESS_FINE_LOCATION = 1;
+    private Calendar mCalendar;
 
     /**
      * Inits process for searching coordinates by address
@@ -225,6 +229,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
         setTheme(R.style.MapTheme);
         setContentView(R.layout.map_activity);
         mCurrentActivity = this;
+        mCalendar = Calendar.getInstance();
         initMap();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mContext = this;
@@ -283,12 +288,23 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
                 if (!Constants.PAID) {
                     Common.gotoDonate(mContext);
                 }
-                break;
+                return true;
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.map_button_changeTime:
+                showDateTimeDialog();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Shows dialog for change date and time
+     */
+    private void showDateTimeDialog() {
+        DateTimeDialog dialog = DateTimeDialog.getInstance(mCalendar, this);
+        dialog.show(getSupportFragmentManager(), null);
     }
 
     /**
@@ -351,6 +367,12 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
         confirmDialog.setAction(mAction);
         confirmDialog.setLocationName(mLocationName);
         confirmDialog.show(getSupportFragmentManager(), ConfirmCreateDialog.DIALOG_ID);
+    }
+
+    @Override
+    public void onDateTimeChange(Calendar calendar) {
+        mCalendar = calendar;
+        // TODO
     }
 
     private class ConfirmCreateDialogHandler implements OnConfirmDialogHandler, OnCallback {

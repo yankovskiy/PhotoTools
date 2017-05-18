@@ -216,4 +216,8 @@
     <string name="settings_sun_title">Солнце</string>
     <string name="settigns_sunriseColor_message">Цвет линии рассвета</string>
     <string name="settings_sunsetColor_message">Цвет линии заката</string>
+    <string name="map_button_changeTime">Сменить время</string>
+    <string name="dialog_button_reset">Сброс</string>
+    <string name="dateTimeDialog_timeTab">ВРЕМЯ</string>
+    <string name="dateTimeDialog_dateTab">ДАТА</string>
 </resources>

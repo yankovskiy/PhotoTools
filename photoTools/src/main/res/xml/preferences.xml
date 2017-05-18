@@ -2,56 +2,56 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="pref_timezone"
+        android:key="@string/pref_timezone"
         android:summary="@string/settings_internetTimeZone_message"
         android:title="@string/settings_internetTimeZone_title" />
 
     <PreferenceCategory android:title="@string/settings_display_title">
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="pref_24HourMode"
+            android:key="@string/pref_24HourMode"
             android:summary="@string/settings_24HourMode_message"
             android:title="@string/settings_24HourMode_title" />
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="pref_tip"
+            android:key="@string/pref_tip"
             android:summary="@string/settings_showTip_message"
             android:title="@string/settings_showTip_title" />
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="pref_showSunriseAzimuth"
+            android:key="@string/pref_showSunriseAzimuth"
             android:summary="@string/settings_showSunriseAzimuth_message"
             android:title="@string/settings_sunrise_title" />
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="pref_showSunsetAzimuth"
+            android:key="@string/pref_showSunsetAzimuth"
             android:summary="@string/settings_showSunsetAzimuth_message"
             android:title="@string/settings_sunset_title" />
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="pref_showAltitude"
+            android:key="@string/pref_showAltitude"
             android:summary="@string/settings_showAltitude_message"
             android:title="@string/settings_showAltitude_title" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="pref_color_title"
+        android:key="@string/pref_color_title"
         android:title="@string/settings_colors_title">
         <net.margaritov.preference.colorpicker.ColorPickerPreference xmlns:app="http://schemas.android.com/apk/res-auto"
             android:defaultValue="@color/sun_color"
-            android:key="pref_sunColor"
+            android:key="@string/pref_sunColor"
             android:summary="@string/settings_sunColor_message"
             android:title="@string/settings_sun_title"
             app:dialogTitle="@string/settings_sun_title" />
         <net.margaritov.preference.colorpicker.ColorPickerPreference xmlns:app="http://schemas.android.com/apk/res-auto"
             android:defaultValue="@color/sunrise_color"
-            android:key="pref_sunriseColor"
+            android:key="@string/pref_sunriseColor"
             android:summary="@string/settigns_sunriseColor_message"
             android:title="@string/settings_sunrise_title"
             app:dialogTitle="@string/settings_sunrise_title" />
         <net.margaritov.preference.colorpicker.ColorPickerPreference xmlns:app="http://schemas.android.com/apk/res-auto"
             android:defaultValue="@color/sunset_color"
-            android:key="pref_sunsetColor"
+            android:key="@string/pref_sunsetColor"
             android:summary="@string/settings_sunsetColor_message"
             android:title="@string/settings_sunset_title"
             app:dialogTitle="@string/settings_sunset_title" />

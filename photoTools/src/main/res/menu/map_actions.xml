@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
+<?xml version="1.0" encoding="utf-8"?><!--
+  Copyright (C) 2013-2017 Artem Yankovskiy (artemyankovskiy@gmail.com).
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
       the Free Software Foundation, either version 3 of the License, or
@@ -21,35 +20,34 @@
         android:id="@+id/map_action_search"
         android:actionViewClass="android.support.v7.widget.SearchView"
         android:icon="@drawable/ic_search_white_24dp"
-        app:showAsAction="ifRoom|collapseActionView"
-        android:title="@string/menu_item_search">
-    </item>
+        android:title="@string/menu_item_search"
+        app:showAsAction="ifRoom|collapseActionView" />
     <item
         android:id="@+id/map_button_done"
         android:icon="@drawable/ic_done_white_24dp"
-        app:showAsAction="ifRoom|collapseActionView"
         android:title="@string/map_button_confirmSelection"
-        android:visible="false">
-    </item>
+        android:visible="false"
+        app:showAsAction="ifRoom|collapseActionView" />
+    <item
+        android:id="@+id/map_button_changeTime"
+        android:icon="@drawable/ic_change_time"
+        android:title="@string/map_button_changeTime"
+        app:showAsAction="ifRoom|withText" />
     <item
         android:id="@+id/map_type_map"
-        app:showAsAction="never"
-        android:title="@string/map_menu_mapType_map">
-    </item>
+        android:title="@string/map_menu_mapType_map"
+        app:showAsAction="never" />
     <item
         android:id="@+id/map_type_terrain"
-        app:showAsAction="never"
-        android:title="@string/map_menu_mapType_terrain">
-    </item>
+        android:title="@string/map_menu_mapType_terrain"
+        app:showAsAction="never" />
     <item
         android:id="@+id/map_type_satellite"
-        app:showAsAction="never"
-        android:title="@string/map_menu_mapType_satellite">
-    </item>
+        android:title="@string/map_menu_mapType_satellite"
+        app:showAsAction="never" />
     <item
         android:id="@+id/map_type_hybrid"
-        app:showAsAction="never"
-        android:title="@string/map_menu_mapType_hybrid">
-    </item>
+        android:title="@string/map_menu_mapType_hybrid"
+        app:showAsAction="never" />
 
 </menu>
