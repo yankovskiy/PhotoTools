@@ -142,7 +142,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
                                     Constants.LOCATION_POINT_ON_MAP_CHOICE);
                             mLocationName = intent.getStringExtra(Constants.LOCATION_NAME);
                             mMarkerPosition = new LatLng(latitude, longitude);
-                            setMarker();
+                            setMarkerAndRecalc();
 
                             if (Constants.PAID) {
                                 zoom = intent.getFloatExtra(Constants.LOCATION_CAMERA_ZOOM, Constants.MAP_CAMERA_ZOOM);
@@ -262,7 +262,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
     public void onMapLongClick(LatLng point) {
         Log.message("Enter");
         mMarkerPosition = point;
-        setMarker();
+        setMarkerAndRecalc();
     }
 
     @Override
@@ -343,18 +343,25 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
     }
 
     /**
+     * Sets marker to new position and recalculate procedure
+     */
+    private void setMarkerAndRecalc() {
+        Log.message("Enter");
+        setMarker();
+        recalculate();
+        setButtonVisible(true);
+    }
+
+    /**
      * Sets marker to the long tap position If marker already exists - remove
      * old marker and set new marker in new position
      */
     private void setMarker() {
-        Log.message("Enter");
-
-        /* If we have marker - destroy */
+    /* If we have marker - destroy */
         if (mMarker != null) {
             mMap.clear();
         }
         mMarker = mMap.addMarker(new MarkerOptions().position(mMarkerPosition));
-        setButtonVisible(true);
     }
 
     /**
@@ -372,7 +379,18 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
     @Override
     public void onDateTimeChange(Calendar calendar) {
         mCalendar = calendar;
-        // TODO
+
+        /* if marker already setted run recalclate procedure */
+        if (mMarker != null) {
+            recalculate();
+        }
+    }
+
+    /**
+     * Recalculates all data
+     */
+    private void recalculate() {
+        // TODO написать код для пересчета
     }
 
     private class ConfirmCreateDialogHandler implements OnConfirmDialogHandler, OnCallback {
