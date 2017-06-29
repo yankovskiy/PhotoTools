@@ -13,9 +13,12 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package ru.neverdark.phototools.utils;
+package ru.neverdark.phototools.async;
 
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.utils.Constants;
+import ru.neverdark.phototools.utils.Geocoder;
+import ru.neverdark.phototools.utils.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 

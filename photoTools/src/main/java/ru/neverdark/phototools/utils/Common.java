@@ -22,6 +22,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
@@ -174,6 +176,18 @@ public class Common {
                 Toast.makeText(context, R.string.error_googlePlayNotFound, Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    /**
+     * Checks connection status
+     *
+     * @return true if device online, false in other case
+     */
+    public static boolean isOnline(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
     }
 
     public static class MinMaxValues {

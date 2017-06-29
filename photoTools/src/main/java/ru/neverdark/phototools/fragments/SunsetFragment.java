@@ -23,8 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -44,6 +42,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.model.LatLng;
 
+import ru.neverdark.phototools.async.AsyncGoogleTimeZone;
 import ru.neverdark.sunmooncalc.SunriseSunsetCalculator;
 
 import org.json.JSONException;
@@ -250,9 +249,38 @@ public class SunsetFragment extends UfoFragment {
      */
     private void getTimeZoneFromGoogle() {
         Log.message("Enter");
-        showInformationMesssage(R.string.sunset_information_timeZoneStart);
-        TimeZoneFromGoogle timeZoneFromGoogle = new TimeZoneFromGoogle();
-        timeZoneFromGoogle.execute();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(mYear, mMonth, mDay);
+        LatLng location = new LatLng(mLatitude, mLongitude);
+
+        AsyncGoogleTimeZone gtz = new AsyncGoogleTimeZone(calendar, location, new AsyncGoogleTimeZone.OnGoogleTimezoneListener() {
+            @Override
+            public void onGetResultSuccess(TimeZone tz) {
+                mTimeZone = tz;
+                showInformationMesssage(R.string.sunset_information_timeZoneSuccess);
+                String timeZone = String.format("%s: %s", getString(R.string.sunset_label_auto), generateTzLabel());
+                mEditTextTimeZone.setText(timeZone);
+
+            }
+
+            @Override
+            public void onGetResultFail() {
+                mTimeZone = null;
+                showInformationMesssage(R.string.sunset_information_timeZoneFail);
+            }
+
+            @Override
+            public void onPreExecute() {
+                showInformationMesssage(R.string.sunset_information_timeZoneStart);
+            }
+
+            @Override
+            public void onPostExecute() {
+
+            }
+        });
+        gtz.execute();
     }
 
     /**
@@ -699,95 +727,6 @@ public class SunsetFragment extends UfoFragment {
          */
         private static final long serialVersionUID = 5446852956370468838L;
 
-    }
-
-    /**
-     * Thread for getting timeZone from Google Online Map If Internet connection
-     * does not available we have use devices TimeZone
-     */
-    private class TimeZoneFromGoogle extends AsyncTask<Void, Void, Integer> {
-        private final int STATUS_SUCCESS = 0;
-        private final int STATUS_FAIL = 1;
-
-        @Override
-        protected Integer doInBackground(Void... arg0) {
-            Log.message("Enter");
-            int status = STATUS_FAIL;
-
-            /* we have internet, download json from timeZone google service */
-            if (isOnline()) {
-                Log.message("Get Time Zone from Google");
-                String json = readTimeZoneJson();
-                Log.variable("json", json);
-
-                /* JSON data not empty, parse it */
-                if (json.length() != 0) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(json);
-                        String timeZoneId = jsonObject.getString("timeZoneId");
-                        String rawOffset = jsonObject.getString("rawOffset");
-                        Log.variable("timeZoneId", timeZoneId);
-                        Log.variable("rawOffset", rawOffset);
-                        mTimeZone = TimeZone.getTimeZone(timeZoneId);
-                        mTimeZone.setRawOffset(Integer.valueOf(rawOffset) * 1000);
-                        status = STATUS_SUCCESS;
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            } else {
-                Log.message("Device offline.");
-            }
-
-            return status;
-        }
-
-        /**
-         * Checks connection status
-         *
-         * @return true if device online, false in other case
-         */
-        private boolean isOnline() {
-            Log.message("Enter");
-            ConnectivityManager cm = (ConnectivityManager) mContext
-                    .getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo netInfo = cm.getActiveNetworkInfo();
-            return netInfo != null && netInfo.isConnected();
-        }
-
-        @Override
-        protected void onPostExecute(Integer result) {
-            switch (result) {
-                case STATUS_SUCCESS:
-                    showInformationMesssage(R.string.sunset_information_timeZoneSuccess);
-                    String timeZone = String.format("%s: %s", getString(R.string.sunset_label_auto), generateTzLabel());
-                    mEditTextTimeZone.setText(timeZone);
-                    break;
-                case STATUS_FAIL:
-                    mTimeZone = null;
-                    showInformationMesssage(R.string.sunset_information_timeZoneFail);
-                    break;
-            }
-        }
-
-        /**
-         * Reads TimeZone from Google Json
-         *
-         * @return TimeZone JSON from Google Json or empty if cannot determine
-         */
-        private String readTimeZoneJson() {
-            Log.message("Enter");
-            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-            calendar.set(mYear, mMonth, mDay);
-            /* Gets desired time as seconds since midnight, January 1, 1970 UTC */
-            Long timestamp = calendar.getTimeInMillis() / 1000;
-
-            String url_format = "https://maps.googleapis.com/maps/api/timezone/json?location=%f,%f&timestamp=%d";
-            String url = String.format(Locale.US, url_format, mLatitude, mLongitude, timestamp);
-
-            return Common.getHttpContent(url);
-        }
     }
 
     private class TimeZonePickerMethodListener implements TimeZonePickerMethodDialog.OnTimeZonePickerMethodListener, OnCallback {
