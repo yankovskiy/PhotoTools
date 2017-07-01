@@ -65,11 +65,9 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
     private static final String MAP_ZOOM = "map_zoom";
     private static final String MAP_TYPE = "map_type";
     private static final String SHOW_HINT = "map_show_hint";
-    MapActivity mCurrentActivity;
     private GoogleMap mMap;
     private MenuItem mMenuItemDone;
     private Marker mMarker;
-    private LatLng mMarkerPosition;
     private int mAction;
     private long mRecordId;
     private String mLocationName;
@@ -108,7 +106,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
         switch (requestCode) {
             case MAP_ACCESS_FINE_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mMap.setMyLocationEnabled(true);
+                    enableMyLocationButton();
                 }
                 break;
         }
@@ -124,11 +122,11 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
                         mMap = googleMap;
-                        mMap.setOnMapLongClickListener(mCurrentActivity);
+                        mMap.setOnMapLongClickListener(MapActivity.this);
                         /* gets current coord if have */
                         Intent intent = getIntent();
-                        Double latitude = intent.getDoubleExtra(Constants.LOCATION_LATITUDE, 0);
-                        Double longitude = intent.getDoubleExtra(Constants.LOCATION_LONGITUDE, 0);
+                        double latitude = intent.getDoubleExtra(Constants.LOCATION_LATITUDE, 0);
+                        double longitude = intent.getDoubleExtra(Constants.LOCATION_LONGITUDE, 0);
 
                         /* gets action */
                         mAction = intent.getByteExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_ADD);
@@ -141,8 +139,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
                             mRecordId = intent.getLongExtra(Constants.LOCATION_RECORD_ID,
                                     Constants.LOCATION_POINT_ON_MAP_CHOICE);
                             mLocationName = intent.getStringExtra(Constants.LOCATION_NAME);
-                            mMarkerPosition = new LatLng(latitude, longitude);
-                            setMarkerAndRecalc();
+                            setMarkerAndRecalc(new LatLng(latitude, longitude));
 
                             if (Constants.PAID) {
                                 zoom = intent.getFloatExtra(Constants.LOCATION_CAMERA_ZOOM, Constants.MAP_CAMERA_ZOOM);
@@ -161,9 +158,8 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
                         } else {
                             if (Constants.PAID) {
                                 // Если нет сохраненных данных используем данные с GPS
-
-                                latitude = (double) prefs.getFloat(MAP_LATITUDE, latitude.floatValue());
-                                longitude = (double) prefs.getFloat(MAP_LONGITUDE, longitude.floatValue());
+                                latitude = (double) prefs.getFloat(MAP_LATITUDE, (float) latitude);
+                                longitude = (double) prefs.getFloat(MAP_LONGITUDE, (float) longitude);
                                 zoom = prefs.getFloat(MAP_ZOOM, zoom);
                                 mapType = prefs.getInt(MAP_TYPE, mapType);
                             }
@@ -195,17 +191,24 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
                             snack.show();
                         }
 
-                        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                            mMap.setMyLocationEnabled(true);
-                        } else {
-                            requirePerms();
-                        }
+                        enableMyLocationButton();
                     }
                 });
     }
 
-    private void requirePerms() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MAP_ACCESS_FINE_LOCATION);
+    private void enableMyLocationButton() {
+        if (checkAndRequirePermission(Manifest.permission.ACCESS_FINE_LOCATION, MAP_ACCESS_FINE_LOCATION)) {
+            mMap.setMyLocationEnabled(true);
+        }
+    }
+
+    private boolean checkAndRequirePermission(String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+            return false;
+        }
     }
 
     @Override
@@ -228,7 +231,6 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
         super.onCreate(savedInstanceState);
         setTheme(R.style.MapTheme);
         setContentView(R.layout.map_activity);
-        mCurrentActivity = this;
         mCalendar = Calendar.getInstance();
         initMap();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -261,8 +263,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
     @Override
     public void onMapLongClick(LatLng point) {
         Log.message("Enter");
-        mMarkerPosition = point;
-        setMarkerAndRecalc();
+        setMarkerAndRecalc(point);
     }
 
     @Override
@@ -319,10 +320,10 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
 
         if (mAction == Constants.LOCATION_ACTION_ADD) {
             mRecordId = dbAdapter.getLocations().createLocation(locationName,
-                    mMarkerPosition.latitude, mMarkerPosition.longitude, mMap.getMapType(), mMap.getCameraPosition().zoom);
+                    mMarker.getPosition().latitude, mMarker.getPosition().longitude, mMap.getMapType(), mMap.getCameraPosition().zoom);
         } else if (mAction == Constants.LOCATION_ACTION_EDIT) {
             dbAdapter.getLocations().updateLocation(mRecordId, locationName,
-                    mMarkerPosition.latitude, mMarkerPosition.longitude, mMap.getMapType(), mMap.getCameraPosition().zoom);
+                    mMarker.getPosition().latitude, mMarker.getPosition().longitude, mMap.getMapType(), mMap.getCameraPosition().zoom);
         }
 
         dbAdapter.close();
@@ -344,10 +345,11 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
 
     /**
      * Sets marker to new position and recalculate procedure
+     * @param point point on the map
      */
-    private void setMarkerAndRecalc() {
+    private void setMarkerAndRecalc(LatLng point) {
         Log.message("Enter");
-        setMarker();
+        setMarker(point);
         recalculate();
         setButtonVisible(true);
     }
@@ -355,13 +357,14 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
     /**
      * Sets marker to the long tap position If marker already exists - remove
      * old marker and set new marker in new position
+     * @param point point on the map
      */
-    private void setMarker() {
+    private void setMarker(LatLng point) {
     /* If we have marker - destroy */
         if (mMarker != null) {
             mMap.clear();
         }
-        mMarker = mMap.addMarker(new MarkerOptions().position(mMarkerPosition));
+        mMarker = mMap.addMarker(new MarkerOptions().position(point));
     }
 
     /**
@@ -400,8 +403,8 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
             Log.message("Enter");
 
             Intent intent = new Intent();
-            intent.putExtra(Constants.LOCATION_LATITUDE, mMarkerPosition.latitude);
-            intent.putExtra(Constants.LOCATION_LONGITUDE, mMarkerPosition.longitude);
+            intent.putExtra(Constants.LOCATION_LATITUDE, mMarker.getPosition().latitude);
+            intent.putExtra(Constants.LOCATION_LONGITUDE, mMarker.getPosition().longitude);
 
             if (locationName != null) {
                 saveDataToDatabase(locationName);

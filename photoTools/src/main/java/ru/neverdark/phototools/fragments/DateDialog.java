@@ -23,31 +23,29 @@ import android.content.Context;
 import android.os.Bundle;
 import android.widget.DatePicker;
 
+import java.util.Calendar;
+
 /**
  * Dialog fragment with DatePicker
  */
 public class DateDialog extends UfoDialogFragment implements DatePickerDialog.OnDateSetListener {
     public static final String DIALOG_ID = "dateDialog";
-    private int mYear;
-    private int mMonth;
-    private int mDay;
-    
+    private Calendar mCalendar;
+
     public static DateDialog getInstance(Context context) {
         DateDialog dialog = new DateDialog();
         dialog.setContext(context);
         return dialog;
     }
     
-    public void setDate(int year, int month, int day) {
-        mYear = year;
-        mMonth = month;
-        mDay = day;
+    public void setDate(Calendar calendar) {
+        mCalendar = calendar;
     }
     
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.message("Enter");
-        return new DatePickerDialog(getContext(), this, mYear, mMonth, mDay);
+        return new DatePickerDialog(getContext(), this, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
     }
     
     @Override

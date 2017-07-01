@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -42,21 +41,15 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.model.LatLng;
 
-import ru.neverdark.phototools.async.AsyncGoogleTimeZone;
-import ru.neverdark.sunmooncalc.SunriseSunsetCalculator;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import ru.neverdark.abs.OnCallback;
 import ru.neverdark.abs.UfoFragment;
 import ru.neverdark.phototools.MapActivity;
 import ru.neverdark.phototools.R;
+import ru.neverdark.phototools.async.AsyncGoogleTimeZone;
 import ru.neverdark.phototools.fragments.DateDialog.OnDateChangeListener;
 import ru.neverdark.phototools.fragments.LocationSelectionDialog.OnLocationListener;
 import ru.neverdark.phototools.fragments.ZonePickerDialog.OnTimeZonePickerListener;
@@ -66,6 +59,7 @@ import ru.neverdark.phototools.utils.GeoLocationService;
 import ru.neverdark.phototools.utils.GeoLocationService.GeoLocationBinder;
 import ru.neverdark.phototools.utils.LocationRecord;
 import ru.neverdark.phototools.utils.Log;
+import ru.neverdark.sunmooncalc.SunriseSunsetCalculator;
 
 /**
  * Fragment contains sunrise / sunset UI
@@ -73,16 +67,12 @@ import ru.neverdark.phototools.utils.Log;
 public class SunsetFragment extends UfoFragment {
     private static final int SUNSET_ACCESS_FINE_LOCATION = 1;
     private EditText mEditTextDate;
-    private int mYear;
-    private int mMonth;
-    private int mDay;
     private Context mContext;
     private View mView;
     private Button mButtonCalculate;
     private EditText mEditTextLocation;
     private EditText mEditTextTimeZone;
-    private double mLatitude;
-    private double mLongitude;
+    private LatLng mLocation;
     private TimeZone mTimeZone;
     private long mSelectionId;
     private GeoLocationService mGeoLocationService;
@@ -119,6 +109,7 @@ public class SunsetFragment extends UfoFragment {
     private LinearLayout mLinearLayoutCalculationResult;
     private String mLocationName;
     private int mTimeZoneMethod;
+    private Calendar mCalendar;
 
 
     @Override
@@ -175,9 +166,7 @@ public class SunsetFragment extends UfoFragment {
     }
 
     private String generateTzLabel() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(mYear, mMonth, mDay);
-        ZonePickerDialog.GMT gmt = ZonePickerDialog.getGMTOffset(mTimeZone, calendar.getTimeInMillis());
+        ZonePickerDialog.GMT gmt = ZonePickerDialog.getGMTOffset(mTimeZone, mCalendar.getTimeInMillis());
         return String.format("%s (%s)", mTimeZone.getID(), gmt.getGMT());
     }
 
@@ -207,13 +196,11 @@ public class SunsetFragment extends UfoFragment {
                 return;
             }
 
-            LatLng location = new LatLng(mLatitude, mLongitude);
-
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeZone(mTimeZone);
-            calendar.set(mYear, mMonth, mDay);
+            Common.copyCalendarWithoutTz(mCalendar, calendar);
 
-            SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(location, calendar);
+            SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(mLocation, calendar);
             setVisibleCalculculationResult(calculator);
         } catch (LocationNotDetermineException e) {
             ShowMessageDialog dialog = ShowMessageDialog.getInstance(mContext);
@@ -233,11 +220,10 @@ public class SunsetFragment extends UfoFragment {
 
         if (Common.isHavePermissions(mContext)) {
             if (mGeoLocationService.canGetLocation()) {
-                mLatitude = mGeoLocationService.getLatitude();
-                mLongitude = mGeoLocationService.getLongitude();
-                Log.variable("mlatitude", String.valueOf(mLatitude));
-                Log.variable("mlongitude", String.valueOf(mLongitude));
-                success = (mLatitude != 0.0 || mLongitude != 0.0);
+                mLocation = new LatLng(mGeoLocationService.getLatitude(), mGeoLocationService.getLongitude());
+                Log.variable("latitude", String.valueOf(mLocation.latitude));
+                Log.variable("longitude", String.valueOf(mLocation.longitude));
+                success = (mLocation.latitude != 0.0 || mLocation.longitude != 0.0);
             }
         }
 
@@ -250,11 +236,7 @@ public class SunsetFragment extends UfoFragment {
     private void getTimeZoneFromGoogle() {
         Log.message("Enter");
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(mYear, mMonth, mDay);
-        LatLng location = new LatLng(mLatitude, mLongitude);
-
-        AsyncGoogleTimeZone gtz = new AsyncGoogleTimeZone(calendar, location, new AsyncGoogleTimeZone.OnGoogleTimezoneListener() {
+        AsyncGoogleTimeZone gtz = new AsyncGoogleTimeZone(mCalendar, mLocation, new AsyncGoogleTimeZone.OnGoogleTimezoneListener() {
             @Override
             public void onGetResultSuccess(TimeZone tz) {
                 mTimeZone = tz;
@@ -304,8 +286,7 @@ public class SunsetFragment extends UfoFragment {
     private void handleCustomLocation(final LocationRecord locationRecord) {
         Log.message("Enter");
 
-        mLatitude = locationRecord.latitude;
-        mLongitude = locationRecord.longitude;
+        mLocation = new LatLng(locationRecord.latitude, locationRecord.longitude);
         mLocationName = locationRecord.locationName;
         mSelectionId = locationRecord._id;
 
@@ -321,12 +302,14 @@ public class SunsetFragment extends UfoFragment {
     private void handlePointOnMap() {
         Log.message("Enter");
         if (isGoogleServiceAvailabe()) {
-            getCurrentLocation();
+            if(!getCurrentLocation()) {
+                mLocation = new LatLng(0, 0);
+            }
             Intent mapIntent = new Intent(getActivity(), MapActivity.class);
 
             mapIntent.putExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_ADD);
-            mapIntent.putExtra(Constants.LOCATION_LATITUDE, mLatitude);
-            mapIntent.putExtra(Constants.LOCATION_LONGITUDE, mLongitude);
+            mapIntent.putExtra(Constants.LOCATION_LATITUDE, mLocation.latitude);
+            mapIntent.putExtra(Constants.LOCATION_LONGITUDE, mLocation.longitude);
 
             startActivityForResult(mapIntent, Constants.LOCATION_POINT_ON_MAP_CHOICE);
         }
@@ -337,10 +320,7 @@ public class SunsetFragment extends UfoFragment {
      */
     private void initDate() {
         Log.message("Enter");
-        Calendar localCalendar = Calendar.getInstance();
-        mYear = localCalendar.get(Calendar.YEAR);
-        mMonth = localCalendar.get(Calendar.MONTH);
-        mDay = localCalendar.get(Calendar.DAY_OF_MONTH);
+        mCalendar = Calendar.getInstance();
     }
 
     /**
@@ -372,8 +352,9 @@ public class SunsetFragment extends UfoFragment {
 
         if (requestCode == Constants.LOCATION_POINT_ON_MAP_CHOICE) {
             if (resultCode == Activity.RESULT_OK) {
-                mLatitude = data.getDoubleExtra(Constants.LOCATION_LATITUDE, 0.0);
-                mLongitude = data.getDoubleExtra(Constants.LOCATION_LONGITUDE, 0.0);
+                mLocation = new LatLng(
+                        data.getDoubleExtra(Constants.LOCATION_LATITUDE, 0.0),
+                        data.getDoubleExtra(Constants.LOCATION_LONGITUDE, 0.0));
                 mLocationName = data.getStringExtra(Constants.LOCATION_NAME);
                 mSelectionId = data.getLongExtra(Constants.LOCATION_RECORD_ID,
                         Constants.LOCATION_POINT_ON_MAP_CHOICE);
@@ -490,13 +471,6 @@ public class SunsetFragment extends UfoFragment {
         Log.message("Enter");
         view.setOnClickListener(new OnClickListener() {
 
-            class SunsetCurrentLocationErrorListener implements OnCallback, ConfirmDialog.OnPositiveClickListener {
-                @Override
-                public void onPositiveClickHandler() {
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, SUNSET_ACCESS_FINE_LOCATION);
-                }
-            }
-
             @Override
             public void onClick(View arg0) {
                 Log.message("Enter");
@@ -535,6 +509,13 @@ public class SunsetFragment extends UfoFragment {
                     case R.id.sunset_editText_location:
                         showLocationSelectionDialog();
                         break;
+                }
+            }
+
+            class SunsetCurrentLocationErrorListener implements OnCallback, ConfirmDialog.OnPositiveClickListener {
+                @Override
+                public void onPositiveClickHandler() {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, SUNSET_ACCESS_FINE_LOCATION);
                 }
             }
         });
@@ -597,7 +578,7 @@ public class SunsetFragment extends UfoFragment {
     private void showDatePicker() {
         Log.message("Enter");
         DateDialog dateFragment = DateDialog.getInstance(mContext);
-        dateFragment.setDate(mYear, mMonth, mDay);
+        dateFragment.setDate(mCalendar);
         dateFragment.setCallback(new DateChangeHandler());
         dateFragment.show(getFragmentManager(), DateDialog.DIALOG_ID);
     }
@@ -657,11 +638,9 @@ public class SunsetFragment extends UfoFragment {
      */
     private void updateDate() {
         Log.message("Enter");
-        Calendar localCalendar = Calendar.getInstance();
-        localCalendar.set(mYear, mMonth, mDay);
         /* formating date for system locale */
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy", java.util.Locale.getDefault());
-        mEditTextDate.setText(sdf.format(localCalendar.getTime()));
+        mEditTextDate.setText(sdf.format(mCalendar.getTime()));
     }
 
     private class TimeZonePickerListener implements OnTimeZonePickerListener, OnCallback {
@@ -676,15 +655,11 @@ public class SunsetFragment extends UfoFragment {
     }
 
     private class DateChangeHandler implements OnDateChangeListener, OnCallback {
-
         @Override
         public void dateChangeHandler(int year, int month, int day) {
-            mYear = year;
-            mMonth = month;
-            mDay = day;
+            mCalendar.set(year, month, day);
             updateDate();
         }
-
     }
 
     private class LocationEditListener implements OnLocationListener, OnCallback {

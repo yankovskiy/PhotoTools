@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -188,6 +189,20 @@ public class Common {
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnected();
+    }
+
+    /**
+     * Copy source calendar data except timezone to the target calendar
+     * @param sourceCalendar source Calendar object
+     * @param targetCalendar target Calendar object
+     */
+    public static void copyCalendarWithoutTz(Calendar sourceCalendar, Calendar targetCalendar) {
+        targetCalendar.set(Calendar.YEAR, sourceCalendar.get(Calendar.YEAR));
+        targetCalendar.set(Calendar.MONTH, sourceCalendar.get(Calendar.MONTH));
+        targetCalendar.set(Calendar.DAY_OF_MONTH, sourceCalendar.get(Calendar.DAY_OF_MONTH));
+        targetCalendar.set(Calendar.HOUR_OF_DAY, sourceCalendar.get(Calendar.HOUR_OF_DAY));
+        targetCalendar.set(Calendar.MINUTE, sourceCalendar.get(Calendar.MINUTE));
+        targetCalendar.set(Calendar.SECOND, sourceCalendar.get(Calendar.SECOND));
     }
 
     public static class MinMaxValues {

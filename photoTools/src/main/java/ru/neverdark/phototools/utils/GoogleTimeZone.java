@@ -40,20 +40,6 @@ public class GoogleTimeZone {
     }
 
     /**
-     * Copy source calendar data except timezone to the target calendar
-     * @param sourceCalendar source Calendar object
-     * @param targetCalendar target Calendar object
-     */
-    private void copyCalendarWithoutTz(Calendar sourceCalendar, Calendar targetCalendar) {
-        targetCalendar.set(Calendar.YEAR, sourceCalendar.get(Calendar.YEAR));
-        targetCalendar.set(Calendar.MONTH, sourceCalendar.get(Calendar.MONTH));
-        targetCalendar.set(Calendar.DAY_OF_MONTH, sourceCalendar.get(Calendar.DAY_OF_MONTH));
-        targetCalendar.set(Calendar.HOUR_OF_DAY, sourceCalendar.get(Calendar.HOUR_OF_DAY));
-        targetCalendar.set(Calendar.MINUTE, sourceCalendar.get(Calendar.MINUTE));
-        targetCalendar.set(Calendar.SECOND, sourceCalendar.get(Calendar.SECOND));
-    }
-
-    /**
      * Reads TimeZone from Google Json
      *
      * @return TimeZone JSON from Google Json or empty if cannot determine
@@ -61,7 +47,7 @@ public class GoogleTimeZone {
     private String readTimeZoneJson(Calendar calendar, LatLng location) {
         Log.message("Enter");
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        copyCalendarWithoutTz(calendar, cal);
+        Common.copyCalendarWithoutTz(calendar, cal);
 
             /* Gets desired time as seconds since midnight, January 1, 1970 UTC */
         Long timestamp = cal.getTimeInMillis() / 1000;
