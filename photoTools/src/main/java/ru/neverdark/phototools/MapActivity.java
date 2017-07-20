@@ -41,8 +41,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import ru.neverdark.abs.OnCallback;
+import ru.neverdark.phototools.async.AsyncCalculator;
 import ru.neverdark.phototools.async.AsyncGeoCoder;
 import ru.neverdark.phototools.async.AsyncGeoCoder.OnGeoCoderListener;
 import ru.neverdark.phototools.db.DbAdapter;
@@ -54,6 +56,7 @@ import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.MapApi;
+import ru.neverdark.sunmooncalc.SunriseSunsetCalculator;
 
 public class MapActivity extends AppCompatActivity implements MapApi.OnMapApiListener, DateTimeDialog.OnDateTimeChange {
     private static final String SHOW_HINT = "map_show_hint";
@@ -69,6 +72,7 @@ public class MapActivity extends AppCompatActivity implements MapApi.OnMapApiLis
     private boolean mIsVisible = false;
     private Calendar mCalendar;
     private MapApi mMapApi;
+    private TimeZone mTimeZone;
 
     /**
      * Inits process for searching coordinates by address
@@ -141,7 +145,6 @@ public class MapActivity extends AppCompatActivity implements MapApi.OnMapApiLis
         setTheme(R.style.MapTheme);
         setContentView(R.layout.map_activity);
         mContext = this;
-        mCalendar = Calendar.getInstance();
         mMapApi = MapApi.getInstance(mContext, this);
         initMap();
         ActionBar ab = getSupportActionBar();
@@ -179,6 +182,11 @@ public class MapActivity extends AppCompatActivity implements MapApi.OnMapApiLis
         mMapApi.prepareMap(intent);
 
         mAction = intent.getByteExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_ADD);
+        mTimeZone = (TimeZone) intent.getExtras().getSerializable(Constants.TIMEZONE);
+        mCalendar = (Calendar) intent.getExtras().getSerializable(Constants.CALENDAR);
+        if (mCalendar == null) {
+            mCalendar = Calendar.getInstance();
+        }
 
         if (mAction == Constants.LOCATION_ACTION_EDIT) {
             mRecordId = intent.getLongExtra(Constants.LOCATION_RECORD_ID,
@@ -293,7 +301,6 @@ public class MapActivity extends AppCompatActivity implements MapApi.OnMapApiLis
             mMenuItemDone.setVisible(isVisible);
         }
         mIsVisible = isVisible;
-
     }
 
     /**
@@ -334,7 +341,28 @@ public class MapActivity extends AppCompatActivity implements MapApi.OnMapApiLis
      * Recalculates all data
      */
     private void recalculate() {
-        // TODO написать код для пересчета
+        AsyncCalculator calc = new AsyncCalculator(mCalendar, mMapApi.getMarkerPosition(), mTimeZone, new AsyncCalculator.OnCalculatorListener() {
+            @Override
+            public void onGetResultFail() {
+
+            }
+
+            @Override
+            public void onPreExecute() {
+
+            }
+
+            @Override
+            public void onPostExecute() {
+
+            }
+
+            @Override
+            public void onGetResultSuccess(SunriseSunsetCalculator calculator) {
+
+            }
+        });
+        calc.execute();
     }
 
     private class ConfirmCreateDialogHandler implements OnConfirmDialogHandler, OnCallback {

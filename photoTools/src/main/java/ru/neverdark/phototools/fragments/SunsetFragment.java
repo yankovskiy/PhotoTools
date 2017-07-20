@@ -307,6 +307,8 @@ public class SunsetFragment extends UfoFragment {
             }
             Intent mapIntent = new Intent(getActivity(), MapActivity.class);
 
+            mapIntent.putExtra(Constants.TIMEZONE, mTimeZone);
+            mapIntent.putExtra(Constants.CALENDAR, mCalendar);
             mapIntent.putExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_ADD);
             mapIntent.putExtra(Constants.LOCATION_LATITUDE, mLocation.latitude);
             mapIntent.putExtra(Constants.LOCATION_LONGITUDE, mLocation.longitude);

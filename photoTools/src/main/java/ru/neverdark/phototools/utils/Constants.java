@@ -66,4 +66,6 @@ public class Constants {
     public static final int MANUAL_TIMEZONE_METHOD = 1;
     public static final String LOCATION_MAP_TYPE = "ru.neverdark.phototools.mapType";
     public static final String LOCATION_CAMERA_ZOOM = "ru.neverdark.phototools.cameraZoom";
+    public static final String TIMEZONE = "timezone";
+    public static final String CALENDAR = "calendar";
 }
