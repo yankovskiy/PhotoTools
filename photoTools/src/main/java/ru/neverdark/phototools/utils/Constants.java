@@ -53,17 +53,6 @@ public class Constants {
     public static final String LOCATION_RECORD_ID = "ru.neverdark.phototools.recordId";
     public static final String LOCATION_NAME = "ru.neverdark.phototools.locationName";
 
-    public static final float MAP_CAMERA_ZOOM = 17.0f;
-
-    public static final int INFORMATION_SUNRISE = 0;
-    public static final int INFORMATION_SUNSET = 1;
-    public static final int INFORMATION_ASTRO_SUNRISE = 2;
-    public static final int INFORMATION_ASTRO_SUNSET = 3;
-    public static final int INFORMATION_NAUTICAL_SUNRISE = 4;
-    public static final int INFORMATION_NAUTICAL_SUNSET = 5;
-    public static final int INFORMATION_CIVIL_SUNRISE = 6;
-    public static final int INFORMATION_CIVIL_SUNSET = 7;
-
     public static final int METER = 0;
     public static final int CM = 1;
     public static final int FOOT = 2;

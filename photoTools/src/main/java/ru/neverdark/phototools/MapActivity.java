@@ -1,4 +1,4 @@
-/**
+/*
  * ****************************************************************************
  * Copyright (C) 2013-2014 Artem Yankovskiy (artemyankovskiy@gmail.com).
  * This program is free software: you can redistribute it and/or modify
@@ -23,10 +23,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -34,48 +36,39 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Calendar;
 
 import ru.neverdark.abs.OnCallback;
+import ru.neverdark.phototools.async.AsyncGeoCoder;
+import ru.neverdark.phototools.async.AsyncGeoCoder.OnGeoCoderListener;
 import ru.neverdark.phototools.db.DbAdapter;
 import ru.neverdark.phototools.fragments.ConfirmCreateDialog;
 import ru.neverdark.phototools.fragments.ConfirmCreateDialog.OnConfirmDialogHandler;
 import ru.neverdark.phototools.fragments.DateTimeDialog;
 import ru.neverdark.phototools.fragments.ShowMessageDialog;
-import ru.neverdark.phototools.async.AsyncGeoCoder;
-import ru.neverdark.phototools.async.AsyncGeoCoder.OnGeoCoderListener;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
+import ru.neverdark.phototools.utils.MapApi;
 
-public class MapActivity extends AppCompatActivity implements OnMapLongClickListener, DateTimeDialog.OnDateTimeChange {
-
-    private static final String MAP_LATITUDE = "map_latitude";
-    private static final String MAP_LONGITUDE = "map_longitude";
-    private static final String MAP_ZOOM = "map_zoom";
-    private static final String MAP_TYPE = "map_type";
+public class MapActivity extends AppCompatActivity implements MapApi.OnMapApiListener, DateTimeDialog.OnDateTimeChange {
     private static final String SHOW_HINT = "map_show_hint";
-    private GoogleMap mMap;
+    private static final int MAP_ACCESS_FINE_LOCATION = 1;
+    //private GoogleMap mMap;
     private MenuItem mMenuItemDone;
-    private Marker mMarker;
+    //private Marker mMarker;
     private int mAction;
     private long mRecordId;
     private String mLocationName;
     private Context mContext;
     private MenuItem mMenuItemSearch;
     private boolean mIsVisible = false;
-    private static final int MAP_ACCESS_FINE_LOCATION = 1;
     private Calendar mCalendar;
+    private MapApi mMapApi;
 
     /**
      * Inits process for searching coordinates by address
@@ -102,7 +95,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case MAP_ACCESS_FINE_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -117,88 +110,12 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
      */
     private void initMap() {
         Log.message("Enter");
-        ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                .getMapAsync(new OnMapReadyCallback() {
-                    @Override
-                    public void onMapReady(GoogleMap googleMap) {
-                        mMap = googleMap;
-                        mMap.setOnMapLongClickListener(MapActivity.this);
-                        /* gets current coord if have */
-                        Intent intent = getIntent();
-                        double latitude = intent.getDoubleExtra(Constants.LOCATION_LATITUDE, 0);
-                        double longitude = intent.getDoubleExtra(Constants.LOCATION_LONGITUDE, 0);
-
-                        /* gets action */
-                        mAction = intent.getByteExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_ADD);
-
-                        float zoom = Constants.MAP_CAMERA_ZOOM;
-                        int mapType = GoogleMap.MAP_TYPE_NORMAL;
-                        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-
-                        if (mAction == Constants.LOCATION_ACTION_EDIT) {
-                            mRecordId = intent.getLongExtra(Constants.LOCATION_RECORD_ID,
-                                    Constants.LOCATION_POINT_ON_MAP_CHOICE);
-                            mLocationName = intent.getStringExtra(Constants.LOCATION_NAME);
-                            setMarkerAndRecalc(new LatLng(latitude, longitude));
-
-                            if (Constants.PAID) {
-                                zoom = intent.getFloatExtra(Constants.LOCATION_CAMERA_ZOOM, Constants.MAP_CAMERA_ZOOM);
-                                mapType = intent.getIntExtra(Constants.LOCATION_MAP_TYPE, GoogleMap.MAP_TYPE_NORMAL);
-
-                                Log.variable("zoom", String.valueOf(zoom));
-                                Log.variable("mapType", String.valueOf(mapType));
-
-                                if (zoom == 0) {
-                                    zoom = Constants.MAP_CAMERA_ZOOM;
-                                }
-                                if (mapType == 0) {
-                                    mapType = GoogleMap.MAP_TYPE_NORMAL;
-                                }
-                            }
-                        } else {
-                            if (Constants.PAID) {
-                                // Если нет сохраненных данных используем данные с GPS
-                                latitude = (double) prefs.getFloat(MAP_LATITUDE, (float) latitude);
-                                longitude = (double) prefs.getFloat(MAP_LONGITUDE, (float) longitude);
-                                zoom = prefs.getFloat(MAP_ZOOM, zoom);
-                                mapType = prefs.getInt(MAP_TYPE, mapType);
-                            }
-                        }
-
-                        mMap.setMapType(mapType);
-                        /* checks for coordinates was received */
-                        if ((latitude != 0) || (longitude != 0)) {
-                            CameraPosition currentPosition = new CameraPosition.Builder()
-                                    .target(new LatLng(latitude, longitude)).zoom(zoom)
-                                    .build();
-                            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(currentPosition));
-                        }
-
-                        if (prefs.getBoolean(SHOW_HINT, true)) {
-                            final Snackbar snack = Snackbar.make(findViewById(android.R.id.content),
-                                    R.string.long_tap_for_choose_location,
-                                    Snackbar.LENGTH_INDEFINITE);
-                            snack.setAction(R.string.hide, new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = prefs.edit();
-                                    editor.putBoolean(SHOW_HINT, false);
-                                    editor.apply();
-                                    snack.dismiss();
-                                }
-                            });
-                            snack.show();
-                        }
-
-                        enableMyLocationButton();
-                    }
-                });
+        ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(mMapApi);
     }
 
     private void enableMyLocationButton() {
         if (checkAndRequirePermission(Manifest.permission.ACCESS_FINE_LOCATION, MAP_ACCESS_FINE_LOCATION)) {
-            mMap.setMyLocationEnabled(true);
+            mMapApi.setMyLocationEnabled(true);
         }
     }
 
@@ -213,15 +130,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
 
     @Override
     public void onPause() {
-        if (Constants.PAID) {
-            SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt(MAP_TYPE, mMap.getMapType());
-            editor.putFloat(MAP_ZOOM, mMap.getCameraPosition().zoom);
-            editor.putFloat(MAP_LATITUDE, (float) mMap.getCameraPosition().target.latitude);
-            editor.putFloat(MAP_LONGITUDE, (float) mMap.getCameraPosition().target.longitude);
-            editor.apply();
-        }
+        mMapApi.saveState();
         super.onPause();
     }
 
@@ -231,10 +140,14 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
         super.onCreate(savedInstanceState);
         setTheme(R.style.MapTheme);
         setContentView(R.layout.map_activity);
-        mCalendar = Calendar.getInstance();
-        initMap();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mContext = this;
+        mCalendar = Calendar.getInstance();
+        mMapApi = MapApi.getInstance(mContext, this);
+        initMap();
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -261,6 +174,41 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
     }
 
     @Override
+    public void onMapReady() {
+        Intent intent = getIntent();
+        mMapApi.prepareMap(intent);
+
+        mAction = intent.getByteExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_ADD);
+
+        if (mAction == Constants.LOCATION_ACTION_EDIT) {
+            mRecordId = intent.getLongExtra(Constants.LOCATION_RECORD_ID,
+                    Constants.LOCATION_POINT_ON_MAP_CHOICE);
+            mLocationName = intent.getStringExtra(Constants.LOCATION_NAME);
+            setMarkerAndRecalc(mMapApi.getCameraTarget());
+        }
+
+        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+        if (prefs.getBoolean(SHOW_HINT, true)) {
+            final Snackbar snack = Snackbar.make(findViewById(android.R.id.content),
+                    R.string.long_tap_for_choose_location,
+                    Snackbar.LENGTH_INDEFINITE);
+            snack.setAction(R.string.hide, new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean(SHOW_HINT, false);
+                    editor.apply();
+                    snack.dismiss();
+                }
+            });
+            snack.show();
+        }
+
+        enableMyLocationButton();
+    }
+
+    @Override
     public void onMapLongClick(LatLng point) {
         Log.message("Enter");
         setMarkerAndRecalc(point);
@@ -273,17 +221,16 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
                 showConfirmDialog();
                 return true;
             case R.id.map_type_map:
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                mMapApi.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 return true;
-
             case R.id.map_type_terrain:
-                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                mMapApi.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
                 return true;
             case R.id.map_type_satellite:
-                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                mMapApi.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
                 return true;
             case R.id.map_type_hybrid:
-                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                mMapApi.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 return true;
             case R.id.map_action_search:
                 if (!Constants.PAID) {
@@ -320,10 +267,16 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
 
         if (mAction == Constants.LOCATION_ACTION_ADD) {
             mRecordId = dbAdapter.getLocations().createLocation(locationName,
-                    mMarker.getPosition().latitude, mMarker.getPosition().longitude, mMap.getMapType(), mMap.getCameraPosition().zoom);
+                    mMapApi.getMarkerPosition().latitude,
+                    mMapApi.getMarkerPosition().longitude,
+                    mMapApi.getMapType(),
+                    mMapApi.getCameraZoom());
         } else if (mAction == Constants.LOCATION_ACTION_EDIT) {
             dbAdapter.getLocations().updateLocation(mRecordId, locationName,
-                    mMarker.getPosition().latitude, mMarker.getPosition().longitude, mMap.getMapType(), mMap.getCameraPosition().zoom);
+                    mMapApi.getMarkerPosition().latitude,
+                    mMapApi.getMarkerPosition().longitude,
+                    mMapApi.getMapType(),
+                    mMapApi.getCameraZoom());
         }
 
         dbAdapter.close();
@@ -345,26 +298,14 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
 
     /**
      * Sets marker to new position and recalculate procedure
+     *
      * @param point point on the map
      */
     private void setMarkerAndRecalc(LatLng point) {
         Log.message("Enter");
-        setMarker(point);
+        mMapApi.setMarker(point);
         recalculate();
         setButtonVisible(true);
-    }
-
-    /**
-     * Sets marker to the long tap position If marker already exists - remove
-     * old marker and set new marker in new position
-     * @param point point on the map
-     */
-    private void setMarker(LatLng point) {
-    /* If we have marker - destroy */
-        if (mMarker != null) {
-            mMap.clear();
-        }
-        mMarker = mMap.addMarker(new MarkerOptions().position(point));
     }
 
     /**
@@ -384,7 +325,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
         mCalendar = calendar;
 
         /* if marker already setted run recalclate procedure */
-        if (mMarker != null) {
+        if (mMapApi.isHaveMarker()) {
             recalculate();
         }
     }
@@ -403,8 +344,8 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
             Log.message("Enter");
 
             Intent intent = new Intent();
-            intent.putExtra(Constants.LOCATION_LATITUDE, mMarker.getPosition().latitude);
-            intent.putExtra(Constants.LOCATION_LONGITUDE, mMarker.getPosition().longitude);
+            intent.putExtra(Constants.LOCATION_LATITUDE, mMapApi.getMarkerPosition().latitude);
+            intent.putExtra(Constants.LOCATION_LONGITUDE, mMapApi.getMarkerPosition().longitude);
 
             if (locationName != null) {
                 saveDataToDatabase(locationName);
@@ -431,13 +372,7 @@ public class MapActivity extends AppCompatActivity implements OnMapLongClickList
         @Override
         public void onGetResultSuccess(LatLng coordinates, String searchString) {
             if (coordinates != null) {
-
-                float zoom = mMap.getCameraPosition().zoom;
-
-                // move camera to saved position
-                CameraPosition currentPosition = new CameraPosition.Builder().target(coordinates)
-                        .zoom(zoom).build();
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPosition));
+                mMapApi.moveCamera(coordinates);
             } else {
                 String errorMessage = String.format(getString(R.string.error_notFound),
                         searchString);
