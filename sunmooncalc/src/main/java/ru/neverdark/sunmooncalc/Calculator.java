@@ -1,5 +1,7 @@
 package ru.neverdark.sunmooncalc;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
@@ -18,7 +20,8 @@ class Calculator {
     private static final double J0 = 0.0009;
 
     private double toJulian(Calendar date) {
-        return (date.getTimeInMillis() / DAY_MS - 0.5 + J1970);
+        double first = (double)date.getTimeInMillis() / DAY_MS;
+        return (first - 0.5 + J1970);
     }
 
     private Calendar fromJulian(double j) {
@@ -85,17 +88,30 @@ class Calculator {
         return ret;
     }
 
-    private SunPosition getSunPosition(Calendar date, LatLng latLng) {
+    private static final String TAG = "Calculator";
+
+    SunPosition getSunPosition(Calendar date, LatLng latLng) {
+        Log.v(TAG, "getSunPosition: date = " + date);
+        Log.v(TAG, "getSunPosition: lat = " + latLng.latitude);
+        Log.v(TAG, "getSunPosition: lng = " + latLng.longitude);
         final double lw = RAD * -latLng.longitude;
         final double phi = RAD * latLng.latitude;
+        Log.v(TAG, "getSunPosition: lw = " + lw);
+        Log.v(TAG, "getSunPosition: phi = " + phi);
         final double d = toDays(date);
+        Log.v(TAG, "getSunPosition: d = " + d);
         final SunCoords c = sunCoords(d);
+        Log.v(TAG, "getSunPosition: c.ra = " + c.ra);
+        Log.v(TAG, "getSunPosition: c.dec = " + c.dec);
         final double H = siderealTime(d, lw) - c.ra;
+        Log.v(TAG, "getSunPosition: H = " + H);
 
         SunPosition ret = new SunPosition();
-        ret.azimuth = azimuth(H, phi, c.dec);
-        ret.altitude = altitude(H, phi, c.dec);
+        ret.azimuth = azimuth(H, phi, c.dec) + Math.PI;
+        ret.altitude = altitude(H, phi, c.dec) * 180 / Math.PI;
 
+        Log.v(TAG, "getSunPosition: azimuth = " + ret.azimuth);
+        Log.v(TAG, "getSunPosition: altitude = " + ret.altitude);
         return ret;
     }
 

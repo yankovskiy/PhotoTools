@@ -88,9 +88,9 @@
     <string name="sunset_label_calculationResult">Результаты расчетов</string>
     <string name="sunset_label_sunrise">Рассвет:</string>
     <string name="sunset_label_sunset">Закат:</string>
-    <string name="sunset_label_astroTwilight">Астрономический сумерки:</string>
-    <string name="sunset_label_nauticalTwilight">Навигационный сумерки:</string>
-    <string name="sunset_label_civilTwilight">Гражданский сумерки:</string>
+    <string name="sunset_label_astroTwilight">Астрономические сумерки:</string>
+    <string name="sunset_label_nauticalTwilight">Навигационные сумерки:</string>
+    <string name="sunset_label_civilTwilight">Гражданские сумерки:</string>
     <string name="sunset_label_timeZone">Часовой пояс</string>
     <string name="sunset_label_auto">Авто</string>
     <string name="sunset_label_manual">Выбрать из списка</string>
@@ -221,4 +221,9 @@
     <string name="dateTimeDialog_timeTab">ВРЕМЯ</string>
     <string name="dateTimeDialog_dateTab">ДАТА</string>
     <string name="error_googlePlayNotFound">Приложение Google Play не найдено</string>
+    <string name="sun_time">ВРЕМЯ</string>
+    <string name="sunset_time">ЗАКАТ</string>
+    <string name="sunrise_time">РАССВЕТ</string>
+    <string name="sun_altitude">ВЫСОТА</string>
+    <string name="error_zoomToSmall">Масштаб слишком мал. Пожалуйста, увеличьте</string>
 </resources>

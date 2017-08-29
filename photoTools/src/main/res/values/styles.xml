@@ -86,4 +86,28 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">3dp</item>
     </style>
+
+    <style name="InfoPanelTv">
+        <item name="android:textColor">@color/default_color</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerInParent">true</item>
+    </style>
+
+    <style name="InfoPanelTv.Desc">
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="InfoPanelTv.Head">
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="InfoCard">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
 </resources>

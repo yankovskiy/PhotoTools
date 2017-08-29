@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -35,12 +36,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import ru.neverdark.abs.OnCallback;
@@ -56,14 +59,13 @@ import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.Log;
 import ru.neverdark.phototools.utils.MapApi;
+import ru.neverdark.phototools.utils.Settings;
 import ru.neverdark.sunmooncalc.SunriseSunsetCalculator;
 
 public class MapActivity extends AppCompatActivity implements MapApi.OnMapApiListener, DateTimeDialog.OnDateTimeChange {
     private static final String SHOW_HINT = "map_show_hint";
     private static final int MAP_ACCESS_FINE_LOCATION = 1;
-    //private GoogleMap mMap;
     private MenuItem mMenuItemDone;
-    //private Marker mMarker;
     private int mAction;
     private long mRecordId;
     private String mLocationName;
@@ -72,7 +74,50 @@ public class MapActivity extends AppCompatActivity implements MapApi.OnMapApiLis
     private boolean mIsVisible = false;
     private Calendar mCalendar;
     private MapApi mMapApi;
-    private TimeZone mTimeZone;
+    private View mMapInfoCard;
+    private View mSunCard;
+    private View mSunriseCard;
+    private View mSunsetCard;
+    private View mAltitudeCard;
+    private TextView mSunriseTv;
+    private TextView mSunTv;
+    private TextView mSunsetTv;
+    private TextView mAltitudeTv;
+    private TextView mSunsetTvName;
+    private TextView mSunriseTvName;
+    private TextView mSunTvName;
+    private TextView mAltitudeTvName;
+
+    private static int getContrastVersionForColor(int color) {
+        double y = (299 * Color.red(color) + 587 * Color.green(color) + 114 * Color.blue(color)) / 1000;
+        return y >= 128 ? Color.BLACK : Color.WHITE;
+    }
+
+    private void bindObjects() {
+        mMapInfoCard = findViewById(R.id.map_info_card);
+
+        mSunCard = findViewById(R.id.map_sun);
+        mSunriseCard = findViewById(R.id.map_sunrise);
+        mSunsetCard = findViewById(R.id.map_sunset);
+        mAltitudeCard = findViewById(R.id.map_altitude);
+
+        mSunriseTv = (TextView) findViewById(R.id.map_sunrise_tv);
+        mSunTv = (TextView) findViewById(R.id.map_sun_tv);
+        mSunsetTv = (TextView) findViewById(R.id.map_sunset_tv);
+        mAltitudeTv = (TextView) findViewById(R.id.map_altitude_tv);
+
+        mSunsetTvName = (TextView) findViewById(R.id.map_sunset_tv_name);
+        mSunriseTvName = (TextView) findViewById(R.id.map_sunrise_tv_name);
+        mSunTvName = (TextView) findViewById(R.id.map_sun_tv_name);
+        mAltitudeTvName = (TextView) findViewById(R.id.map_altitude_tv_name);
+
+        mMapInfoCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDateTimeDialog();
+            }
+        });
+    }
 
     /**
      * Inits process for searching coordinates by address
@@ -146,6 +191,7 @@ public class MapActivity extends AppCompatActivity implements MapApi.OnMapApiLis
         setContentView(R.layout.map_activity);
         mContext = this;
         mMapApi = MapApi.getInstance(mContext, this);
+        bindObjects();
         initMap();
         ActionBar ab = getSupportActionBar();
         if (ab != null) {
@@ -182,7 +228,6 @@ public class MapActivity extends AppCompatActivity implements MapApi.OnMapApiLis
         mMapApi.prepareMap(intent);
 
         mAction = intent.getByteExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_ADD);
-        mTimeZone = (TimeZone) intent.getExtras().getSerializable(Constants.TIMEZONE);
         mCalendar = (Calendar) intent.getExtras().getSerializable(Constants.CALENDAR);
         if (mCalendar == null) {
             mCalendar = Calendar.getInstance();
@@ -337,11 +382,13 @@ public class MapActivity extends AppCompatActivity implements MapApi.OnMapApiLis
         }
     }
 
+    private static final String TAG = "MapActivity";
+
     /**
      * Recalculates all data
      */
     private void recalculate() {
-        AsyncCalculator calc = new AsyncCalculator(mCalendar, mMapApi.getMarkerPosition(), mTimeZone, new AsyncCalculator.OnCalculatorListener() {
+        AsyncCalculator calc = new AsyncCalculator(mCalendar, mMapApi.getMarkerPosition(), new AsyncCalculator.OnCalculatorListener() {
             @Override
             public void onGetResultFail() {
 
@@ -359,10 +406,65 @@ public class MapActivity extends AppCompatActivity implements MapApi.OnMapApiLis
 
             @Override
             public void onGetResultSuccess(SunriseSunsetCalculator calculator) {
+                // TODO реализовать расчет азимута, высоты
+                int color = 0;
+                boolean isSunriseShow = Settings.isSunriseShow(mContext);
+                boolean isSunsetShow = Settings.isSunsetShow(mContext);
+                boolean isAltitudeShow = Settings.isAltitudeShow(mContext);
+                double altitude = calculator.getAltitude();
+                double azimuth = calculator.getAzimuth();
+                double sunsetAzimuth = calculator.getSunsetAzimuth();
+                double sunriseAzimuth = calculator.getSunriseAzimuth();
 
+                mMapApi.setAzimuthData(altitude, azimuth, sunsetAzimuth, sunriseAzimuth);
+                mMapApi.drawAzimuth();
+
+                if ((altitude >= 0) || isSunriseShow || isSunsetShow) {
+                    mMapInfoCard.setVisibility(View.VISIBLE);
+
+                    if (altitude >= 0) {
+                        color = Settings.getSunLineColor(mContext);
+                        setCardData(color, mSunCard, mSunTvName, mSunTv, calculator.getDate(mCalendar));
+                    } else {
+                        mSunCard.setVisibility(View.GONE);
+                    }
+
+                    if (altitude >= 0 && isAltitudeShow) {
+                        setCardData(0, mAltitudeCard, mAltitudeTvName, mAltitudeTv, String.format(Locale.US, "%.3f°", altitude));
+                    } else {
+                        mAltitudeCard.setVisibility(View.GONE);
+                    }
+
+                    if (isSunsetShow) {
+                        color = Settings.getSunsetLineColor(mContext);
+                        setCardData(color, mSunsetCard, mSunsetTvName, mSunsetTv, calculator.getSunset());
+                    } else {
+                        mSunsetCard.setVisibility(View.GONE);
+                    }
+
+                    if (isSunriseShow) {
+                        color = Settings.getSunriseLineColor(mContext);
+                        setCardData(color, mSunriseCard, mSunriseTvName, mSunriseTv, calculator.getSunrise());
+                    } else {
+                        mSunriseCard.setVisibility(View.GONE);
+                    }
+                } else {
+                    mMapInfoCard.setVisibility(View.GONE);
+                }
             }
         });
         calc.execute();
+    }
+
+    private void setCardData(int color, View card, TextView title, TextView value, String data) {
+        card.setVisibility(View.VISIBLE);
+        value.setText(data);
+        if (color != 0) {
+            int contrast = getContrastVersionForColor(color);
+            card.setBackgroundColor(color);
+            value.setTextColor(contrast);
+            title.setTextColor(contrast);
+        }
     }
 
     private class ConfirmCreateDialogHandler implements OnConfirmDialogHandler, OnCallback {

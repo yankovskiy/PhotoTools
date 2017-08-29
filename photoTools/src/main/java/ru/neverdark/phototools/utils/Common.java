@@ -205,6 +205,10 @@ public class Common {
         targetCalendar.set(Calendar.SECOND, sourceCalendar.get(Calendar.SECOND));
     }
 
+    public static void showMessage(Context context, int messsageId) {
+        Toast.makeText(context, messsageId, Toast.LENGTH_LONG).show();
+    }
+
     public static class MinMaxValues {
         private String mMinValue;
         private String mMaxValue;

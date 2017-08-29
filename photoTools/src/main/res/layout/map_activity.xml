@@ -26,4 +26,91 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true" />
 
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/map_info_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"
+        card_view:cardBackgroundColor="@color/light_grey"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="2dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp">
+
+            <RelativeLayout
+                style="@style/InfoCard"
+                android:id="@+id/map_sunrise">
+
+                <TextView
+                    android:id="@+id/map_sunrise_tv"
+                    style="@style/InfoPanelTv.Head" />
+
+                <TextView
+                    android:id="@+id/map_sunrise_tv_name"
+                    style="@style/InfoPanelTv.Desc"
+                    android:layout_below="@+id/map_sunrise_tv"
+                    android:text="@string/sunrise_time" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/map_sun"
+                style="@style/InfoCard"
+                android:layout_below="@+id/map_sunrise">
+
+                <TextView
+                    android:id="@+id/map_sun_tv"
+                    style="@style/InfoPanelTv.Head" />
+
+                <TextView
+                    android:id="@+id/map_sun_tv_name"
+                    style="@style/InfoPanelTv.Desc"
+                    android:layout_below="@+id/map_sun_tv"
+                    android:text="@string/sun_time" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/map_sunset"
+                style="@style/InfoCard"
+                android:layout_below="@+id/map_sun">
+
+                <TextView
+                    android:id="@+id/map_sunset_tv"
+                    style="@style/InfoPanelTv.Head" />
+
+                <TextView
+                    android:id="@+id/map_sunset_tv_name"
+                    style="@style/InfoPanelTv.Desc"
+                    android:layout_below="@+id/map_sunset_tv"
+                    android:text="@string/sunset_time" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/map_altitude"
+                android:layout_below="@+id/map_sunset"
+                style="@style/InfoCard">
+
+                <TextView
+                    android:id="@+id/map_altitude_tv"
+                    style="@style/InfoPanelTv.Head" />
+
+                <TextView
+                    android:id="@+id/map_altitude_tv_name"
+                    style="@style/InfoPanelTv.Desc"
+                    android:layout_below="@+id/map_altitude_tv"
+                    android:text="@string/sun_altitude" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
 </RelativeLayout>

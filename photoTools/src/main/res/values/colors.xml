@@ -20,4 +20,6 @@
     <color name="sunrise_color">#ffed9e</color>
     <color name="sunset_color">#ffc3ad</color>
     <color name="altitude_color">#d0e5ff</color>
+    <color name="light_grey">#eaeaea</color>
+    <color name="default_color">#111</color>
 </resources>

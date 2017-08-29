@@ -3,6 +3,8 @@ package ru.neverdark.phototools.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.*;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -12,23 +14,155 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import ru.neverdark.phototools.R;
 
 /**
  * API for Google Map
  */
 
-public class MapApi implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+public class MapApi implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener {
     private static final String MAP_LATITUDE = "map_latitude";
     private static final String MAP_LONGITUDE = "map_longitude";
     private static final String MAP_ZOOM = "map_zoom";
     private static final String MAP_TYPE = "map_type";
     private static final float FIND_ZOOM = 14f;
     private static final float MAP_CAMERA_ZOOM = 17.0f;
+    private static final float MINIMUM_ZOOM = 5.0f;
     private static final String MAP_PREFS = "map_prefs";
     private GoogleMap mGoogleMap;
     private Marker mMarker;
     private Context mContext;
     private OnMapApiListener mCallback;
+    private Polyline mAzimuthLine;
+    private Polyline mSunsetAzimuthLine;
+    private Polyline mSunriseAzimuthLine;
+    private double mAltitude;
+    private double mAzimuth;
+    private double mSunsetAzimuth;
+    private double mSunriseAzimuth;
+    private float mOldZoom;
+
+    private static final String TAG = "MapApi";
+
+    public void setAzimuthData(double altitude, double azimuth, double sunsetAzimuth, double sunriseAzimuth) {
+        Log.v(TAG, "setAzimuthData altitude: " + altitude);
+        Log.v(TAG, "setAzimuthData azimuth : " + azimuth);
+        Log.v(TAG, "setAzimuthData sunsetAzimuth: " + sunsetAzimuth);
+        Log.v(TAG, "setAzimuthData sunriseAzimuth: " + sunriseAzimuth);
+
+        mAltitude = altitude;
+        mAzimuth = azimuth;
+        mSunsetAzimuth = sunsetAzimuth;
+        mSunriseAzimuth = sunriseAzimuth;
+    }
+
+    public void drawAzimuth() {
+        if (getCameraZoom() >= MINIMUM_ZOOM) {
+            LatLng pos = getMarkerPosition();
+            double size = calculateLineLength();
+
+            if (mAzimuthLine != null) {
+                mAzimuthLine.remove();
+            }
+
+            if (mSunsetAzimuthLine != null) {
+                mSunsetAzimuthLine.remove();
+            }
+
+            if (mSunriseAzimuthLine != null) {
+                mSunriseAzimuthLine.remove();
+            }
+
+            if (mAltitude > 0) {
+                PolylineOptions options = polylineDraw(
+                        pos,
+                        mAzimuth,
+                        size,
+                        Settings.getSunLineColor(mContext),
+                        5
+                );
+                mAzimuthLine = mGoogleMap.addPolyline(options);
+            }
+
+            if (Settings.isSunsetShow(mContext)) {
+                PolylineOptions lsunsetAzimuth = polylineDraw(
+                        pos,
+                        mSunsetAzimuth,
+                        size,
+                        Settings.getSunsetLineColor(mContext),
+                        5
+                );
+                mSunsetAzimuthLine = mGoogleMap.addPolyline(lsunsetAzimuth);
+            }
+
+            if (Settings.isSunriseShow(mContext)) {
+                PolylineOptions lsunriseAzimuth = polylineDraw(
+                        pos,
+                        mSunriseAzimuth,
+                        size,
+                        Settings.getSunriseLineColor(mContext),
+                        5
+                );
+
+                mSunriseAzimuthLine = mGoogleMap.addPolyline(lsunriseAzimuth);
+            }
+        } else {
+            Common.showMessage(mContext, R.string.error_zoomToSmall);
+        }
+    }
+
+    /**
+     * Creates polyline object for drawing azimuth
+     *
+     * @param location start point
+     * @param azimuth  solar azimuth angle
+     * @param size     line length for drawing
+     * @param color    line color
+     * @param width    line width
+     * @return polyline object for drawing azimuth
+     */
+    private PolylineOptions polylineDraw(LatLng location, double azimuth, double size, int color,
+                                         int width) {
+        PolylineOptions options = new PolylineOptions();
+        options.add(location);
+        options.add(getDestLatLng(location, azimuth, size));
+        options.width(width);
+        options.color(color);
+
+        return options;
+    }
+
+    private LatLng getDestLatLng(LatLng location, double azimuth,
+                                 double distance) {
+        double lat2 = location.latitude + distance * Math.cos(azimuth);
+        double lng2 = location.longitude + distance * Math.sin(azimuth);
+
+        return new LatLng(lat2, lng2);
+    }
+
+    private double calculateLineLength() {
+        double size = mGoogleMap.getProjection().getVisibleRegion().farLeft.longitude -
+                mGoogleMap.getProjection().getVisibleRegion().nearRight.longitude;
+        return Math.abs(size);
+    }
+
+    @Override
+    public void onCameraIdle() {
+        if (mMarker != null) {
+            if (mOldZoom != getCameraZoom()) {
+                mOldZoom = getCameraZoom();
+                drawAzimuth();
+            }
+        }
+    }
+
+    @Override
+    public void onCameraMoveStarted(int reason) {
+        mOldZoom = getCameraZoom();
+    }
 
     public interface OnMapApiListener {
         void onMapReady();
@@ -124,6 +258,8 @@ public class MapApi implements OnMapReadyCallback, GoogleMap.OnMapLongClickListe
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         mGoogleMap.setOnMapLongClickListener(this);
+        mGoogleMap.setOnCameraIdleListener(this);
+        mGoogleMap.setOnCameraMoveStartedListener(this);
         mCallback.onMapReady();
     }
 

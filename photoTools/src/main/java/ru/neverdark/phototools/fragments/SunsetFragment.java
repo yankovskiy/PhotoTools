@@ -170,6 +170,8 @@ public class SunsetFragment extends UfoFragment {
         return String.format("%s (%s)", mTimeZone.getID(), gmt.getGMT());
     }
 
+    private static final String TAG = "SunsetFragment";
+
     /**
      * Calculates sunset and sunrise
      */
@@ -196,8 +198,7 @@ public class SunsetFragment extends UfoFragment {
                 return;
             }
 
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeZone(mTimeZone);
+            Calendar calendar = Calendar.getInstance(mTimeZone);
             Common.copyCalendarWithoutTz(mCalendar, calendar);
 
             SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(mLocation, calendar);

@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by ufo on 25.04.17.
@@ -12,12 +13,22 @@ import java.util.Locale;
 
 public class SunriseSunsetCalculator {
     private final SunTimes mSunTimes;
+    private final TimeZone mTimeZone;
+    private final SunPosition mSunPosition;
+    private final SunPosition mSunsetPosition;
+    private final SunPosition mSunrisePosition;
 
     private String getDate(Calendar from, Calendar to) {
         SimpleDateFormat dateFmt = new SimpleDateFormat("HH:mm", Locale.US);
+        dateFmt.setTimeZone(mTimeZone);
         return String.format("%s - %s",
                 isValidDate(from)? dateFmt.format(from.getTime()) : "n/a",
                 isValidDate(to)? dateFmt.format(to.getTime()) : "n/a");
+    }
+
+    public String getDate(Calendar cal) {
+        SimpleDateFormat dateFmt = new SimpleDateFormat("HH:mm", Locale.US);
+        return String.format("%s", isValidDate(cal)? dateFmt.format(cal.getTime()) : "n/a");
     }
 
     private boolean isValidDate(Calendar date) {
@@ -29,7 +40,27 @@ public class SunriseSunsetCalculator {
 
     public SunriseSunsetCalculator(LatLng location, Calendar calendar) {
         Calculator calc = new Calculator();
+        mTimeZone = calendar.getTimeZone();
         mSunTimes = calc.getSunTimes(calendar, location);
+        mSunPosition = calc.getSunPosition(calendar, location);
+        mSunsetPosition = calc.getSunPosition(mSunTimes.getSunset(), location);
+        mSunrisePosition = calc.getSunPosition(mSunTimes.getSunriseEnd(), location);
+    }
+
+    public double getAzimuth() {
+        return mSunPosition.azimuth;
+    }
+
+    public double getAltitude() {
+        return mSunPosition.altitude;
+    }
+
+    public double getSunsetAzimuth() {
+        return mSunsetPosition.azimuth;
+    }
+
+    public double getSunriseAzimuth() {
+        return mSunrisePosition.azimuth;
     }
 
     public String getNight() {

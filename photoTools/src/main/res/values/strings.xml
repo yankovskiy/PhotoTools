@@ -218,4 +218,9 @@
     <string name="dateTimeDialog_timeTab">TIME</string>
     <string name="dateTimeDialog_dateTab">DATE</string>
     <string name="error_googlePlayNotFound">Google play application not found</string>
+    <string name="sun_time">TIME</string>
+    <string name="sunset_time">SUNSET</string>
+    <string name="sunrise_time">SUNRISE</string>
+    <string name="sun_altitude">ALTITUDE</string>
+    <string name="error_zoomToSmall">The zoom is to small. Please increase</string>
 </resources>

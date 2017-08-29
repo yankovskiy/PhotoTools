@@ -1,6 +1,7 @@
 package ru.neverdark.phototools.async;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -16,8 +17,6 @@ import ru.neverdark.sunmooncalc.SunriseSunsetCalculator;
  * Async calculate sun parameters
  */
 public class AsyncCalculator extends AsyncTask<Void, Void, Integer>{
-    private final TimeZone mTimeZone;
-    private final boolean mIsInternetTimezone;
     private final OnCalculatorListener mCallback;
     private final Calendar mCalendar;
     private final LatLng mLocation;
@@ -33,25 +32,21 @@ public class AsyncCalculator extends AsyncTask<Void, Void, Integer>{
         void onGetResultSuccess(SunriseSunsetCalculator calculator);
     }
 
+    private static final String TAG = "AsyncCalculator";
+
     @Override
     protected Integer doInBackground(Void... params) {
         int status = Constants.STATUS_SUCCESS;
 
-        TimeZone tz = null;
-        if (mIsInternetTimezone) {
-            GoogleTimeZone gtz = new GoogleTimeZone();
-            tz = gtz.getTimeZone(mCalendar, mLocation);
-        } else {
-            tz = mTimeZone;
-        }
+        GoogleTimeZone gtz = new GoogleTimeZone();
+        TimeZone tz = gtz.getTimeZone(mCalendar, mLocation);
 
         if (tz == null) {
             status = Constants.STATUS_FAIL;
         }
 
         if (status != Constants.STATUS_FAIL) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeZone(tz);
+            Calendar calendar = Calendar.getInstance(tz);
             Common.copyCalendarWithoutTz(mCalendar, calendar);
             mSunSetCalc = new SunriseSunsetCalculator(mLocation, calendar);
         }
@@ -59,11 +54,9 @@ public class AsyncCalculator extends AsyncTask<Void, Void, Integer>{
         return status;
     }
 
-    public AsyncCalculator(Calendar calendar, LatLng location, TimeZone timeZone, OnCalculatorListener callback) {
+    public AsyncCalculator(Calendar calendar, LatLng location, OnCalculatorListener callback) {
         super();
         mCallback = callback;
-        mTimeZone = timeZone;
-        mIsInternetTimezone = (timeZone == null);
         mCalendar = calendar;
         mLocation = location;
     }
