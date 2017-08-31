@@ -84,21 +84,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/sunset_label_timeZone"
-            android:textColor="@color/headear" />
-
-        <EditText
-            android:id="@+id/sunset_editText_timeZone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:focusable="false"
-            android:text="@string/sunset_label_auto" />
-
         <LinearLayout
             android:id="@+id/sunsnet_LinearLayout_calculationResult"
             android:layout_width="match_parent"

@@ -26,6 +26,10 @@ public class SunriseSunsetCalculator {
                 isValidDate(to)? dateFmt.format(to.getTime()) : "n/a");
     }
 
+    public TimeZone getTimeZone() {
+        return mTimeZone;
+    }
+
     public String getDate(Calendar cal) {
         SimpleDateFormat dateFmt = new SimpleDateFormat("HH:mm", Locale.US);
         return String.format("%s", isValidDate(cal)? dateFmt.format(cal.getTime()) : "n/a");

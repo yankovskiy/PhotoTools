@@ -49,10 +49,9 @@ import ru.neverdark.abs.OnCallback;
 import ru.neverdark.abs.UfoFragment;
 import ru.neverdark.phototools.MapActivity;
 import ru.neverdark.phototools.R;
-import ru.neverdark.phototools.async.AsyncGoogleTimeZone;
+import ru.neverdark.phototools.async.AsyncCalculator;
 import ru.neverdark.phototools.fragments.DateDialog.OnDateChangeListener;
 import ru.neverdark.phototools.fragments.LocationSelectionDialog.OnLocationListener;
-import ru.neverdark.phototools.fragments.ZonePickerDialog.OnTimeZonePickerListener;
 import ru.neverdark.phototools.utils.Common;
 import ru.neverdark.phototools.utils.Constants;
 import ru.neverdark.phototools.utils.GeoLocationService;
@@ -71,9 +70,7 @@ public class SunsetFragment extends UfoFragment {
     private View mView;
     private Button mButtonCalculate;
     private EditText mEditTextLocation;
-    private EditText mEditTextTimeZone;
     private LatLng mLocation;
-    private TimeZone mTimeZone;
     private long mSelectionId;
     private GeoLocationService mGeoLocationService;
     private boolean mBound = false;
@@ -105,10 +102,10 @@ public class SunsetFragment extends UfoFragment {
     private TextView mSolarNoonResult;
     private TextView mGoldenHourDawnResult;
     private TextView mGoldenHourDuskResult;
+    private TextView mTimeZoneResult;
 
     private LinearLayout mLinearLayoutCalculationResult;
     private String mLocationName;
-    private int mTimeZoneMethod;
     private Calendar mCalendar;
 
 
@@ -130,7 +127,6 @@ public class SunsetFragment extends UfoFragment {
         mEditTextDate = (EditText) mView.findViewById(R.id.sunset_editText_date);
         mButtonCalculate = (Button) mView.findViewById(R.id.sunset_button_calculate);
         mEditTextLocation = (EditText) mView.findViewById(R.id.sunset_editText_location);
-        mEditTextTimeZone = (EditText) mView.findViewById(R.id.sunset_editText_timeZone);
 
         mSunriseResult = (TextView) mView.findViewById(R.id.sunset_label_sunriseResult);
         mSunsetResult = (TextView) mView.findViewById(R.id.sunset_label_sunsetResult);
@@ -154,6 +150,8 @@ public class SunsetFragment extends UfoFragment {
 
         mLinearLayoutCalculationResult = (LinearLayout) mView
                 .findViewById(R.id.sunsnet_LinearLayout_calculationResult);
+
+        mTimeZoneResult = (TextView) mView.findViewById(R.id.sunset_label_timeZoneResult);
     }
 
     /**
@@ -165,9 +163,31 @@ public class SunsetFragment extends UfoFragment {
         mContext.bindService(serivceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    private String generateTzLabel() {
-        ZonePickerDialog.GMT gmt = ZonePickerDialog.getGMTOffset(mTimeZone, mCalendar.getTimeInMillis());
-        return String.format("%s (%s)", mTimeZone.getID(), gmt.getGMT());
+
+    private String formatTz(TimeZone tz, Calendar date) {
+        final int offset = tz.getOffset(date.getTimeInMillis());
+        final int p = Math.abs(offset);
+        final StringBuilder name = new StringBuilder();
+        name.append("GMT");
+
+        if (offset < 0) {
+            name.append('-');
+        } else {
+            name.append('+');
+        }
+
+        name.append(p / 3600000);
+        name.append(":");
+
+        int min = p / 60000;
+        min %= 60;
+
+        if (min < 10) {
+            name.append('0');
+        }
+        name.append(min);
+
+        return String.format("%s (%s)", tz.getID(), name);
     }
 
     private static final String TAG = "SunsetFragment";
@@ -179,30 +199,47 @@ public class SunsetFragment extends UfoFragment {
         Log.message("Enter");
 
         try {
+            TimeZone tz;
+
             if (mSelectionId == Constants.LOCATION_CURRENT_POSITION_CHOICE) {
                 if (!getCurrentLocation()) {
                     throw new LocationNotDetermineException();
                 }
 
-                String timeZone;
+                tz = getDeviceTimeZone();
+                updateTzLabel(tz, mCalendar);
 
-                if (mTimeZoneMethod == Constants.AUTO_TIMEZONE_METHOD) {
-                    setDeviceTimeZone();
-                    timeZone = String.format("%s: %s", getString(R.string.sunset_label_auto), generateTzLabel());
-                    mEditTextTimeZone.setText(timeZone);
-                }
+                Calendar calendar = Calendar.getInstance(tz);
+                Common.copyCalendarWithoutTz(mCalendar, calendar);
+
+                SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(mLocation, calendar);
+                setVisibleCalculculationResult(calculator);
+            } else {
+                AsyncCalculator calculator = new AsyncCalculator(mCalendar, mLocation, new AsyncCalculator.OnCalculatorListener() {
+                    @Override
+                    public void onGetResultFail() {
+
+                    }
+
+                    @Override
+                    public void onPreExecute() {
+
+                    }
+
+                    @Override
+                    public void onPostExecute() {
+
+                    }
+
+                    @Override
+                    public void onGetResultSuccess(SunriseSunsetCalculator calculator) {
+                        setVisibleCalculculationResult(calculator);
+                        updateTzLabel(calculator.getTimeZone(), mCalendar);
+                    }
+                });
+                calculator.execute();
             }
 
-            if (mTimeZone == null) {
-                showTimeZoneSelectionDialog();
-                return;
-            }
-
-            Calendar calendar = Calendar.getInstance(mTimeZone);
-            Common.copyCalendarWithoutTz(mCalendar, calendar);
-
-            SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(mLocation, calendar);
-            setVisibleCalculculationResult(calculator);
         } catch (LocationNotDetermineException e) {
             ShowMessageDialog dialog = ShowMessageDialog.getInstance(mContext);
             dialog.setMessages(R.string.error, R.string.error_locationNotDetermine);
@@ -231,39 +268,9 @@ public class SunsetFragment extends UfoFragment {
         return success;
     }
 
-    /**
-     * Gets Timezone from Google Online Map
-     */
-    private void getTimeZoneFromGoogle() {
-        Log.message("Enter");
-
-        AsyncGoogleTimeZone gtz = new AsyncGoogleTimeZone(mCalendar, mLocation, new AsyncGoogleTimeZone.OnGoogleTimezoneListener() {
-            @Override
-            public void onGetResultSuccess(TimeZone tz) {
-                mTimeZone = tz;
-                showInformationMesssage(R.string.sunset_information_timeZoneSuccess);
-                String timeZone = String.format("%s: %s", getString(R.string.sunset_label_auto), generateTzLabel());
-                mEditTextTimeZone.setText(timeZone);
-
-            }
-
-            @Override
-            public void onGetResultFail() {
-                mTimeZone = null;
-                showInformationMesssage(R.string.sunset_information_timeZoneFail);
-            }
-
-            @Override
-            public void onPreExecute() {
-                showInformationMesssage(R.string.sunset_information_timeZoneStart);
-            }
-
-            @Override
-            public void onPostExecute() {
-
-            }
-        });
-        gtz.execute();
+    private void updateTzLabel(TimeZone tz, Calendar calendar) {
+        String timeZone = String.format("%s: %s", getString(R.string.sunset_label_auto), formatTz(tz, calendar));
+        mTimeZoneResult.setText(timeZone);
     }
 
     /**
@@ -272,10 +279,7 @@ public class SunsetFragment extends UfoFragment {
     private void handleCurrentLocation() {
         Log.message("Enter");
         mSelectionId = Constants.LOCATION_CURRENT_POSITION_CHOICE;
-        if (mTimeZoneMethod == Constants.AUTO_TIMEZONE_METHOD) {
-            setDeviceTimeZone();
-            mEditTextTimeZone.setText(String.format("%s: %s", getString(R.string.sunset_label_auto), generateTzLabel()));
-        }
+        updateTzLabel(getDeviceTimeZone(), mCalendar);
         setTextLocation();
     }
 
@@ -291,9 +295,6 @@ public class SunsetFragment extends UfoFragment {
         mLocationName = locationRecord.locationName;
         mSelectionId = locationRecord._id;
 
-        if (mTimeZoneMethod == Constants.AUTO_TIMEZONE_METHOD) {
-            getTimeZoneFromGoogle();
-        }
         setTextLocation();
     }
 
@@ -308,7 +309,6 @@ public class SunsetFragment extends UfoFragment {
             }
             Intent mapIntent = new Intent(getActivity(), MapActivity.class);
 
-            mapIntent.putExtra(Constants.TIMEZONE, mTimeZone);
             mapIntent.putExtra(Constants.CALENDAR, mCalendar);
             mapIntent.putExtra(Constants.LOCATION_ACTION, Constants.LOCATION_ACTION_ADD);
             mapIntent.putExtra(Constants.LOCATION_LATITUDE, mLocation.latitude);
@@ -362,10 +362,6 @@ public class SunsetFragment extends UfoFragment {
                 mSelectionId = data.getLongExtra(Constants.LOCATION_RECORD_ID,
                         Constants.LOCATION_POINT_ON_MAP_CHOICE);
 
-                if (mTimeZoneMethod == Constants.AUTO_TIMEZONE_METHOD) {
-                    getTimeZoneFromGoogle();
-                }
-
                 setTextLocation();
             }
         }
@@ -383,11 +379,9 @@ public class SunsetFragment extends UfoFragment {
         setOnClickListeners(mEditTextDate);
         setOnClickListeners(mButtonCalculate);
         setOnClickListeners(mEditTextLocation);
-        setOnClickListeners(mEditTextTimeZone);
 
         setEditTextLongClick(mEditTextDate);
         setEditTextLongClick(mEditTextLocation);
-        setEditTextLongClick(mEditTextTimeZone);
 
         initDate();
         setTextLocation();
@@ -433,10 +427,10 @@ public class SunsetFragment extends UfoFragment {
     }
 
     /**
-     * Sets default timezone
+     * Gets default timezone
      */
-    private void setDeviceTimeZone() {
-        mTimeZone = TimeZone.getDefault();
+    private TimeZone getDeviceTimeZone() {
+        return TimeZone.getDefault();
     }
 
     /**
@@ -481,9 +475,6 @@ public class SunsetFragment extends UfoFragment {
                     case R.id.sunset_editText_date:
                         showDatePicker();
                         break;
-                    case R.id.sunset_editText_timeZone:
-                        showTimeZoneMethodDialog();
-                        break;
 
                     case R.id.sunset_button_calculate:
                         if (mSelectionId > Constants.LOCATION_CURRENT_POSITION_CHOICE) {
@@ -522,15 +513,6 @@ public class SunsetFragment extends UfoFragment {
                 }
             }
         });
-    }
-
-    /**
-     * Shows dialog for choosing time zone picker method
-     */
-    private void showTimeZoneMethodDialog() {
-        TimeZonePickerMethodDialog dialog = TimeZonePickerMethodDialog.getInstance(mContext);
-        dialog.setCallback(new TimeZonePickerMethodListener());
-        dialog.show(getFragmentManager(), TimeZonePickerMethodDialog.DIALOG_ID);
     }
 
     /**
@@ -616,16 +598,6 @@ public class SunsetFragment extends UfoFragment {
     }
 
     /**
-     * Shows TimeZone selection dialog
-     */
-    private void showTimeZoneSelectionDialog() {
-        Log.enter();
-        ZonePickerDialog dialog = ZonePickerDialog.getInstance(mContext);
-        dialog.setCallback(new TimeZonePickerListener());
-        dialog.show(getFragmentManager(), ZonePickerDialog.DIALOG);
-    }
-
-    /**
      * Unbinds from GeoLocationService
      */
     private void unbindFromGeoService() {
@@ -644,17 +616,6 @@ public class SunsetFragment extends UfoFragment {
         /* formating date for system locale */
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy", java.util.Locale.getDefault());
         mEditTextDate.setText(sdf.format(mCalendar.getTime()));
-    }
-
-    private class TimeZonePickerListener implements OnTimeZonePickerListener, OnCallback {
-
-        @Override
-        public void onTimeZonePickerHandler(TimeZone tz) {
-            mTimeZone = tz;
-            //calculateSunset();
-            mEditTextTimeZone.setText(generateTzLabel());
-            mTimeZoneMethod = Constants.MANUAL_TIMEZONE_METHOD;
-        }
     }
 
     private class DateChangeHandler implements OnDateChangeListener, OnCallback {
@@ -706,23 +667,4 @@ public class SunsetFragment extends UfoFragment {
         private static final long serialVersionUID = 5446852956370468838L;
 
     }
-
-    private class TimeZonePickerMethodListener implements TimeZonePickerMethodDialog.OnTimeZonePickerMethodListener, OnCallback {
-        @Override
-        public void onMethodClick(int position) {
-            if (position != mTimeZoneMethod && position == Constants.AUTO_TIMEZONE_METHOD) {
-                mTimeZoneMethod = position;
-                if (mSelectionId != Constants.LOCATION_CURRENT_POSITION_CHOICE) {
-                    mEditTextTimeZone.setText(getString(R.string.sunset_label_auto));
-                    getTimeZoneFromGoogle();
-                } else {
-                    setDeviceTimeZone();
-                    mEditTextTimeZone.setText(String.format("%s: %s", getString(R.string.sunset_label_auto), generateTzLabel()));
-                }
-            } else if (position == Constants.MANUAL_TIMEZONE_METHOD) {
-                showTimeZoneSelectionDialog();
-            }
-        }
-    }
-
 }

@@ -44,21 +44,6 @@
             android:focusable="false" />
 
         <TextView
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/sunset_label_timeZone"
-            android:textColor="@color/headear" />
-
-        <EditText
-            android:id="@+id/sunset_editText_timeZone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:focusable="false"
-            android:text="@string/sunset_label_auto" />
-
-        <TextView
             android:id="@+id/sunset_label_location"
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
@@ -233,6 +218,17 @@
 
                     <TextView
                         android:id="@+id/sunset_label_astroDuskResult"
+                        style="@style/tdr" />
+                </TableRow>
+
+                <TableRow style="@style/tr">
+
+                    <TextView
+                        style="@style/tdl"
+                        android:text="@string/sunset_label_timeZone" />
+
+                    <TextView
+                        android:id="@+id/sunset_label_timeZoneResult"
                         style="@style/tdr" />
                 </TableRow>
 
